@@ -284,7 +284,32 @@ class MapperORM extends Mapper {
 				} elseif (!in_array($value,array('asc','desc'))) {
 					$value='asc';
 				}
-				$key = $this->oDb->escape($oEntitySample->_getField($key),true);
+				/**
+				 * Проверяем на простые выражения: field1 + field2 * field3
+				 */
+				$aKeyPath=preg_split("#\s?([\-\+\*\\\])\s?#",$key,-1,PREG_SPLIT_DELIM_CAPTURE);
+				if (count($aKeyPath)>2) {
+					$key='';
+					foreach($aKeyPath as $i=>$sKey) {
+						if ($i%2==0) {
+							$key.=$this->oDb->escape($oEntitySample->_getField(trim($sKey)),true);
+						} else {
+							$key.=" {$sKey} ";
+						}
+					}
+				} else {
+					/**
+					 * Проверяем на FIELD:id -> FIELD(id,?a)
+					 */
+					$aKeys=explode(':',$key);
+					if (count($aKeys)==2 and strtolower($aKeys[0])=='field' and is_array($aFilter['#order'][$key]) and count($aFilter['#order'][$key])) {
+						$key = 'FIELD('.$this->oDb->escape($oEntitySample->_getField(trim($aKeys[1])),true).','.join(',',$aFilter['#order'][$key]).')';
+						$value='';
+					} else {
+						$key = $this->oDb->escape($oEntitySample->_getField($key),true);
+					}
+				}
+
 				$sOrder.=" {$key} {$value},";
 			}
 			$sOrder=trim($sOrder,',');

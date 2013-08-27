@@ -483,7 +483,9 @@ ls = (function ($) {
 	            	form.find('[type=submit]').prop('disabled', false).removeClass('loading');
 	                ls.msg.error(null, result.sMsg);
 
-	                more.warning(result, status, xhr, form);
+					if (more.warning) {
+	                	more.warning(result, status, xhr, form);
+					}
 	            } else {
 	                if (result.sMsg) {
 	                    form.find('[type=submit]').prop('disabled', false).removeClass('loading');
@@ -497,6 +499,10 @@ ls = (function ($) {
 			}.bind(this),
 			error: more.error || function(){
 				ls.debug("ajax error: ");
+				ls.debug.apply(this, arguments);
+			}.bind(this),
+			complete: more.complete || function(){
+				ls.debug("ajax complete: ");
 				ls.debug.apply(this, arguments);
 			}.bind(this)
 		};

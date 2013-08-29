@@ -1,5 +1,11 @@
-/*
- * Modal
+/**
+ * Modals
+ *
+ * @module modal
+ * 
+ * @license   GNU General Public License, version 2
+ * @copyright 2013 OOO "ЛС-СОФТ" {@link http://livestreetcms.com}
+ * @author    Denis Shakhov <denis.shakhov@gmail.com>
  */
 
 
@@ -26,9 +32,8 @@
 .modal .modal-close,
 .modal .close {
 	position: absolute;
-	top: 9px;
+	top: 11px;
 	right: 14px;
-	font-weight: bold;
 	font-size: 26px;
 	line-height: 1em;
 	color: #000;
@@ -43,11 +48,11 @@
 .modal .modal-header    {
 	background: #fafafa;
 	border-bottom: 1px solid #f7f7f7;
-	padding: 5px 20px;
+	padding: 10px 20px;
 	position: relative;
 	min-height: 10px;
 }
-.modal .modal-header h3 { font-size: 20px; font-weight: bold; margin-right: 20px; }
+.modal .modal-header h3 { font-size: 17px; margin-right: 20px; }
 
 
 /* Nav */

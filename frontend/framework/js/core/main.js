@@ -458,8 +458,12 @@ ls = (function ($) {
 	* Выполнение AJAX отправки формы, включая загрузку файлов
 	*/
 	this.ajaxSubmit = function(url, form, callback, more) {
-		var more = more || {}
-			form = typeof form == 'string' ? $(form) : form;
+		var more = more || {},
+			form = typeof form == 'string' ? $(form) : form,
+			button = more.submitButton || form.find('[type=submit]').eq(0),
+			params = more.params || {};
+
+		params.security_ls_key = LIVESTREET_SECURITY_KEY
 
 		if (url.indexOf('http://') != 0 && url.indexOf('https://') != 0 && url.indexOf('/') != 0) {
 			url = aRouter['ajax'] + url + '/';
@@ -469,26 +473,26 @@ ls = (function ($) {
 			type: 'POST',
 			url: url,
 			dataType: more.dataType || 'json',
-			data: {
-				security_ls_key: LIVESTREET_SECURITY_KEY
-			},
-			beforeSubmit: function (arr, form, options) {
-                form.find('[type=submit]').prop('disabled', true).addClass('loading');
+			data: params,
+			beforeSubmit: function (arr, form, options) {	
+                button && button.prop('disabled', true).addClass('loading');
             },
             beforeSerialize: function (form, options) {
-                return form.parsley('validate');
+            	if (typeof more.validate == 'undefined' || more.validate === true) {
+            		return form.parsley('validate');
+            	}
+
+            	return true;
             },
 			success: typeof callback == 'function' ? function (result, status, xhr, form) {
+				button.prop('disabled', false).removeClass('loading');
+
 				if (result.bStateError) {
-	            	form.find('[type=submit]').prop('disabled', false).removeClass('loading');
 	                ls.msg.error(null, result.sMsg);
 
-					if (more.warning) {
-	                	more.warning(result, status, xhr, form);
-					}
+	                // more.warning(result, status, xhr, form);
 	            } else {
 	                if (result.sMsg) {
-	                    form.find('[type=submit]').prop('disabled', false).removeClass('loading');
 	                    ls.msg.notice(null, result.sMsg);
 	                }
 					callback(result, status, xhr, form);
@@ -499,10 +503,6 @@ ls = (function ($) {
 			}.bind(this),
 			error: more.error || function(){
 				ls.debug("ajax error: ");
-				ls.debug.apply(this, arguments);
-			}.bind(this),
-			complete: more.complete || function(){
-				ls.debug("ajax complete: ");
 				ls.debug.apply(this, arguments);
 			}.bind(this)
 		};
@@ -542,7 +542,7 @@ ls = (function ($) {
 	* Лог сообщений
 	*/
 	this.log = function() {
-		if (!$.browser.msie && window.console && window.console.log) {
+		if (/*!$.browser.msie &&*/ window.console && window.console.log) {
 			Function.prototype.bind.call(console.log, console).apply(console, arguments);
 		} else {
 			//alert(msg);

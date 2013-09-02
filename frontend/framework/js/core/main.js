@@ -504,6 +504,10 @@ ls = (function ($) {
 			error: more.error || function(){
 				ls.debug("ajax error: ");
 				ls.debug.apply(this, arguments);
+			}.bind(this),
+			complete: more.complete || function(){
+				ls.debug("ajax complete: ");
+				ls.debug.apply(this, arguments);
 			}.bind(this)
 		};
 

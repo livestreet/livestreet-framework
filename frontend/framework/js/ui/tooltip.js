@@ -1,8 +1,11 @@
 /**
  * Tooltip
  *
- * @version 1.0
- * @author Denis Shakhov <denis.shakhov@gmail.com>
+ * @module tooltip
+ * 
+ * @license   GNU General Public License, version 2
+ * @copyright 2013 OOO "ЛС-СОФТ" {@link http://livestreetcms.com}
+ * @author    Denis Shakhov <denis.shakhov@gmail.com>
  */
 
 var ls = ls || {};
@@ -10,11 +13,18 @@ var ls = ls || {};
 (function($) {
     "use strict";
 
+    /**
+     * Constructs tooltip objects
+     *
+     * @constructor
+     * @param {Object} element jQuery объект тултипа
+     * @param {Object} options Опции
+     */
     var Tooltip = function (element, options) {
     	this.init('tooltip', element, options);
   	};
 
-    Tooltip.prototype = $.extend({}, $.fn.popup.Constructor.prototype, {
+    Tooltip.prototype = $.extend({}, $.fn.over.Constructor.prototype, {
         constructor: Tooltip,
 
         hooks : {
@@ -41,12 +51,12 @@ var ls = ls || {};
     });
 
     $.fn.tooltip = function (options, variable, value) {
-        return ls.popup.initPlugin('tooltip', this, options, variable, value);
+        return ls.over.initPlugin('tooltip', this, options, variable, value);
     };
 
     $.fn.tooltip.Constructor = Tooltip;
 
-    $.fn.tooltip.defaults = $.extend({} , $.fn.popup.defaults, {
+    $.fn.tooltip.defaults = $.extend({} , $.fn.over.defaults, {
     	template: '<div class="tooltip" data-type="tooltip-target"><div class="tip-arrow"></div><div class="tooltip-content" data-type="tooltip-content"></div></div>',
         alignX: 'center',
         alignY: 'top',
@@ -58,7 +68,7 @@ var ls = ls || {};
         preventDefault: false
     });
 
-    $.fn.tooltip.settings = $.extend({} , $.fn.popup.settings, { 
+    $.fn.tooltip.settings = $.extend({} , $.fn.over.settings, { 
         toggleSelector: '[data-type=tooltip-toggle]',
         targetSelector: '[data-type=tooltip-target]'
     });

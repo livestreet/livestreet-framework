@@ -1,5 +1,11 @@
 /**
  * Alerts
+ *
+ * @module alerts
+ * 
+ * @license   GNU General Public License, version 2
+ * @copyright 2013 OOO "ЛС-СОФТ" {@link http://livestreetcms.com}
+ * @author    Denis Shakhov <denis.shakhov@gmail.com>
  */
 
 .alert {
@@ -25,3 +31,7 @@
 
 /* Info */
 .alert.alert-info { background-color: #D9EDF7; color: #3A87AD; border-color: #BCE8F1; }
+
+
+/* Empty */
+.alert.alert-empty { background-color: #fafafa; color: #777; border-color: #eee; }

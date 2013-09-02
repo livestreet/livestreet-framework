@@ -1,7 +1,7 @@
 /**
  * JavaScript-hooks
  *
- * Examples:
+ * @example
  *
  * - inject function call/code at top of function body
  * ls.hook.inject([ls.lang,'get'], function(){ls.msg.notice('lang debug');})});

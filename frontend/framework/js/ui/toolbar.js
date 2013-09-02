@@ -1,96 +1,54 @@
-/*
+/**
  * Toolbar
  *
- * @version 1.0
- * @author Denis Shakhov <denis.shakhov@gmail.com>
+ * @module toolbar
+ * 
+ * @license   GNU General Public License, version 2
+ * @copyright 2013 OOO "ЛС-СОФТ" {@link http://livestreetcms.com}
+ * @author    Denis Shakhov <denis.shakhov@gmail.com>
  */
 
-var ls = ls || {};
-
-(function($) {
-    "use strict";
+$.widget( "livestreet.toolbar", {
+    /**
+     * Дефолтные опции
+     */
+    options: {
+        // Селектор объекта относительно которого будет позиционироваться тулбар
+        target: null,
+        // Выравнивание по правой/левой стороне относителного целевого элемента
+        // Возможные значения: 'left', 'right'
+        align: 'right',
+        // Смещение по оси X
+        offsetX: 0,
+        // Смещение по оси Y
+        offsetY: 0,
+        // Callback вызываемый при начале вычисления нового положения тулбара
+        onReposition: null
+    },
 
     /**
-     * Constructs toolbar objects
+     * Конструктор
+     *
      * @constructor
-     * @class Toolbar
-     * @param {Object} options Options
+     * @private
      */
-    var Toolbar = function (element, options) {
-        this.options = $.extend({}, $.fn.toolbar.defaults, options);
+    _create: function() {
+        this.target = $(this.options.target);
 
-        this.$toolbar = $(element);
-        this.$target = $(this.options.alignTo);
-
-        this.position();
-    };
-
-    Toolbar.prototype = {
-    	/**
-    	 * Position
-    	 */
-    	position: function () {
-            typeof this.options.onPosition === 'function' && $.proxy(this.options.onPosition, this)();
-
-            var targetPos = this.$target.offset();
-
-            this.$toolbar.css({
-                'top': targetPos.top + this.options.offsetY,
-                'left': (this.options.align == 'right' ? targetPos.left + this.$target.outerWidth() + this.options.offsetX : targetPos.left - this.$toolbar.outerWidth() - this.options.offsetX) - $(document).scrollLeft()
-            })
-    	}
-    };
-
+        $(window).on('ready resize scroll', this.reposition.bind(this));
+    },
 
     /**
-     * Plugin defention
+     * Вычисление нового положения тулбара
      */
-    $.fn.toolbar = function (options, variable, value) {
-        var returnValue = false;
+    reposition: function () {
+        this.targetPos = this.target.offset();
 
-        this.each(function () {
-            var toolbar  = $(this),
-                object   = toolbar.data('object');
+        this._trigger("onReposition", null, this);
 
-            if ( ! object ) toolbar.data('object', (object = new Toolbar(this, $.extend({}, options, ls.tools.getDataOptions(toolbar)))));
-            if (typeof options === 'string') {
-                if (options === "option") {
-                    if (value) object.options[variable] = value; else returnValue = object.options[variable];
-                } else {
-                    object[options]();
-                }
-            }
+        this.element.css({
+            'top': this.targetPos.top + this.options.offsetY,
+            'left': (this.options.align == 'right' ? this.targetPos.left + this.target.outerWidth() + this.options.offsetX : this.targetPos.left - this.element.outerWidth() - this.options.offsetX) - $(document).scrollLeft()
         });
-
-        return returnValue;
-    };
-
-
-    /**
-     * Default options
-     * @type {Object}
-     */
-    $.fn.toolbar.defaults = {
-        alignTo:   false,
-        offsetX:   0,
-        offsetY:   0,
-        onPosition: false
-    };
-
-
-    $(window).on('resize scroll', function () {
-        $($.fn.toolbar.settings.toolbarSelector).each(function () {
-            var obj = $(this).data('object');
-            obj && obj.position();
-        })
-    })
-
-
-    /**
-     * Global settings
-     * @type {Object}
-     */
-    $.fn.toolbar.settings = {
-        toolbarSelector:    '[data-type=toolbar]'
-    };
-})(jQuery);
+    }
+});

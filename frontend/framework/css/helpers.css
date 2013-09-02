@@ -1,5 +1,9 @@
-/* 
+/**
  * Helpers
+ * 
+ * @license   GNU General Public License, version 2
+ * @copyright 2013 OOO "ЛС-СОФТ" {@link http://livestreetcms.com}
+ * @author    Denis Shakhov <denis.shakhov@gmail.com>
  */
 
 
@@ -63,21 +67,20 @@
 
 
 /* Width */
-/* TODO: Delete input-width */
-.input-width-full, .width-full { width: 100%; }
-.input-width-50 ,  .width-50   { width: 50px; }
-.input-width-100,  .width-100  { width: 100px; }
-.input-width-150,  .width-150  { width: 150px; }
-.input-width-200,  .width-200  { width: 200px; }
-.input-width-250,  .width-250  { width: 250px; }
-.input-width-300,  .width-300  { width: 300px; }
-.input-width-350,  .width-350  { width: 350px; }
-.input-width-400,  .width-400  { width: 400px; }
-.input-width-450,  .width-450  { width: 450px; }
-.input-width-500,  .width-500  { width: 500px; }
-.input-width-550,  .width-550  { width: 550px; }
-.input-width-600,  .width-600  { width: 600px; }
-.input-width-650,  .width-650  { width: 650px; }
+.width-full { width: 100%; }
+.width-50   { width: 50px; }
+.width-100  { width: 100px; }
+.width-150  { width: 150px; }
+.width-200  { width: 200px; }
+.width-250  { width: 250px; }
+.width-300  { width: 300px; }
+.width-350  { width: 350px; }
+.width-400  { width: 400px; }
+.width-450  { width: 450px; }
+.width-500  { width: 500px; }
+.width-550  { width: 550px; }
+.width-600  { width: 600px; }
+.width-650  { width: 650px; }
 
 
 /* Links */

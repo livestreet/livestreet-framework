@@ -1,8 +1,11 @@
 /**
  * Dropdowns
  *
- * @version 1.0
- * @author Denis Shakhov <denis.shakhov@gmail.com>
+ * @module dropdown
+ * 
+ * @license   GNU General Public License, version 2
+ * @copyright 2013 OOO "ЛС-СОФТ" {@link http://livestreetcms.com}
+ * @author    Denis Shakhov <denis.shakhov@gmail.com>
  */
 
 var ls = ls || {};
@@ -14,7 +17,7 @@ var ls = ls || {};
         this.init('dropdown', element, options);
     };
 
-    Dropdown.prototype = $.extend({}, $.fn.popup.Constructor.prototype, {
+    Dropdown.prototype = $.extend({}, $.fn.over.Constructor.prototype, {
         constructor: Dropdown,
 
         hooks : {
@@ -48,17 +51,17 @@ var ls = ls || {};
     });
 
     $.fn.dropdown = function (options, variable, value) {
-        return ls.popup.initPlugin('dropdown', this, options, variable, value);
+        return ls.over.initPlugin('dropdown', this, options, variable, value);
     };
 
     $.fn.dropdown.Constructor = Dropdown;
 
-    $.fn.dropdown.defaults = $.extend({} , $.fn.popup.defaults, { 
+    $.fn.dropdown.defaults = $.extend({} , $.fn.over.defaults, { 
         effect: 'slide',
         duration: 300
     });
 
-    $.fn.dropdown.settings = $.extend({} , $.fn.popup.settings, { 
+    $.fn.dropdown.settings = $.extend({} , $.fn.over.settings, { 
         toggleSelector: '[data-type=dropdown-toggle]',
         targetSelector: '[data-type=dropdown-target]'
     });

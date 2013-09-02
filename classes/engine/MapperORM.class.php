@@ -306,7 +306,12 @@ class MapperORM extends Mapper {
 						$key = 'FIELD('.$this->oDb->escape($oEntitySample->_getField(trim($aKeys[1])),true).','.join(',',$aFilter['#order'][$key]).')';
 						$value='';
 					} else {
-						$key = $this->oDb->escape($oEntitySample->_getField($key),true);
+						/**
+						 * Пропускаем экранирование функций
+						 */
+						if (!in_array($key,array('rand()'))) {
+							$key = $this->oDb->escape($oEntitySample->_getField($key),true);
+						}
 					}
 				}
 

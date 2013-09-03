@@ -255,7 +255,7 @@ $config['head']['default']['js'] = array(
 	"___path.framework.frontend.web___/js/core/hook.js",
 
 	/* User Interface */
-	"___path.framework.frontend.web___/js/ui/popup.js",
+	"___path.framework.frontend.web___/js/ui/over.js",
 	"___path.framework.frontend.web___/js/ui/dropdown.js",
 	"___path.framework.frontend.web___/js/ui/tooltip.js",
 	"___path.framework.frontend.web___/js/ui/popover.js",

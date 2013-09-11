@@ -35,23 +35,23 @@ var ls = ls || {};
  */
 ls.msg = (function ($) {
 	/**
-	* Опции
-	*/
+	 * Опции
+	 */
 	this.options = {
 		class_notice: 'n-notice',
 		class_error: 'n-error'
 	};
 
 	/**
-	* Отображение информационного сообщения
-	*/
+	 * Отображение информационного сообщения
+	 */
 	this.notice = function(title,msg){
 		$.notifier.broadcast(title, msg, this.options.class_notice);
 	};
 
 	/**
-	* Отображение сообщения об ошибке
-	*/
+	 * Отображение сообщения об ошибке
+	 */
 	this.error = function(title,msg){
 		$.notifier.broadcast(title, msg, this.options.class_error);
 	};
@@ -61,24 +61,24 @@ ls.msg = (function ($) {
 
 
 /**
-* Доступ к языковым текстовкам (предварительно должны быть прогружены в шаблон)
-*/
+ * Доступ к языковым текстовкам (предварительно должны быть прогружены в шаблон)
+ */
 ls.lang = (function ($) {
 	/**
-	* Набор текстовок
-	*/
+	 * Набор текстовок
+	 */
 	this.msgs = {};
 
 	/**
-	* Загрузка текстовок
-	*/
+	 * Загрузка текстовок
+	 */
 	this.load = function(msgs){
 		$.extend(true,this.msgs,msgs);
 	};
 
 	/**
-	* Отображение сообщения об ошибке
-	*/
+	 * Отображение сообщения об ошибке
+	 */
 	this.get = function(name,replace){
 		if (this.msgs[name]) {
 			var value=this.msgs[name];
@@ -148,8 +148,8 @@ ls.registry = (function ($) {
 }).call(ls.registry || {},jQuery);
 
 /**
-* Flash загрузчик
-*/
+ * Flash загрузчик
+ */
 ls.swfupload = (function ($) {
 
 	this.swfu = null;
@@ -292,21 +292,21 @@ ls.swfupload = (function ($) {
 
 
 /**
-* Вспомогательные функции
-*/
+ * Вспомогательные функции
+ */
 ls.tools = (function ($) {
 
 	/**
-	* Переводит первый символ в верхний регистр
-	*/
+	 * Переводит первый символ в верхний регистр
+	 */
 	this.ucfirst = function(str) {
 		var f = str.charAt(0).toUpperCase();
 		return f + str.substr(1, str.length-1);
 	};
 
 	/**
-	* Выделяет все chekbox с определенным css классом
-	*/
+	 * Выделяет все chekbox с определенным css классом
+	 */
 	this.checkAll = function(cssclass, checkbox, invert) {
 		$('.'+cssclass).each(function(index, item){
 			if (invert) {
@@ -318,8 +318,8 @@ ls.tools = (function ($) {
 	};
 
 	/**
-	* Предпросмотр
-	*/
+	 * Предпросмотр
+	 */
 	this.textPreview = function(textId, save, divPreview) {
 		var text = WYSIWYG ? tinyMCE.activeEditor.getContent() : $('#' + textId).val();
 		var ajaxUrl = aRouter['ajax']+'preview/text/';
@@ -346,8 +346,8 @@ ls.tools = (function ($) {
 	};
 
 	/**
-	* Возвращает выделенный текст на странице
-	*/
+	 * Возвращает выделенный текст на странице
+	 */
 	this.getSelectedText = function(){
 		var text = '';
 		if(window.getSelection){
@@ -403,18 +403,18 @@ ls.tools = (function ($) {
 
 
 /**
-* Дополнительные функции
-*/
+ * Дополнительные функции
+ */
 ls = (function ($) {
 
 	/**
-	* Глобальные опции
-	*/
+	 * Глобальные опции
+	 */
 	this.options = this.options || {};
 
 	/**
-	* Выполнение AJAX запроса, автоматически передает security key
-	*/
+	 * Выполнение AJAX запроса, автоматически передает security key
+	 */
 	this.ajax = function(url, params, callback, more) {
 		more = more || {};
 		params = params || {};
@@ -455,8 +455,8 @@ ls = (function ($) {
 	};
 
 	/**
-	* Выполнение AJAX отправки формы, включая загрузку файлов
-	*/
+	 * Выполнение AJAX отправки формы, включая загрузку файлов
+	 */
 	this.ajaxSubmit = function(url, form, callback, more) {
 		var more = more || {},
 			form = typeof form == 'string' ? $(form) : form,
@@ -474,29 +474,29 @@ ls = (function ($) {
 			url: url,
 			dataType: more.dataType || 'json',
 			data: params,
-			beforeSubmit: function (arr, form, options) {	
-                button && button.prop('disabled', true).addClass('loading');
-            },
-            beforeSerialize: function (form, options) {
-            	if (typeof more.validate == 'undefined' || more.validate === true) {
-            		return form.parsley('validate');
-            	}
+			beforeSubmit: function (arr, form, options) {
+				button && button.prop('disabled', true).addClass('loading');
+			},
+			beforeSerialize: function (form, options) {
+				if (typeof more.validate == 'undefined' || more.validate === true) {
+					return form.parsley('validate');
+				}
 
-            	return true;
-            },
+				return true;
+			},
 			success: typeof callback == 'function' ? function (result, status, xhr, form) {
 				button.prop('disabled', false).removeClass('loading');
 
 				if (result.bStateError) {
-	                ls.msg.error(null, result.sMsg);
+					ls.msg.error(null, result.sMsg);
 
-	                // more.warning(result, status, xhr, form);
-	            } else {
-	                if (result.sMsg) {
-	                    ls.msg.notice(null, result.sMsg);
-	                }
+					// more.warning(result, status, xhr, form);
+				} else {
+					if (result.sMsg) {
+						ls.msg.notice(null, result.sMsg);
+					}
 					callback(result, status, xhr, form);
-	            }
+				}
 			} : function () {
 				ls.debug("ajax success: ");
 				ls.debug.apply(this, arguments);
@@ -534,8 +534,8 @@ ls = (function ($) {
 	};
 
 	/**
-	* Дебаг сообщений
-	*/
+	 * Дебаг сообщений
+	 */
 	this.debug = function() {
 		if (this.options.debug) {
 			this.log.apply(this,arguments);
@@ -543,8 +543,8 @@ ls = (function ($) {
 	};
 
 	/**
-	* Лог сообщений
-	*/
+	 * Лог сообщений
+	 */
 	this.log = function() {
 		if (/*!$.browser.msie &&*/ window.console && window.console.log) {
 			Function.prototype.bind.call(console.log, console).apply(console, arguments);
@@ -559,47 +559,50 @@ ls = (function ($) {
 
 
 /**
-* Автокомплитер
-*/
+ * Автокомплитер
+ */
 ls.autocomplete = (function ($) {
 	/**
-	* Добавляет автокомплитер к полю ввода
-	*/
-	this.add = function(obj, sPath, multiple) {
+	 * Добавляет автокомплитер к полю ввода
+	 */
+	this.add = function(obj, sPath, multiple, params) {
+		params = params || {};
 		if (multiple) {
 			obj.bind("keydown", function(event) {
 				if ( event.keyCode === $.ui.keyCode.TAB && $( this ).data( "autocomplete" ).menu.active ) {
 					event.preventDefault();
 				}
 			})
-			.autocomplete({
-				source: function(request, response) {
-					ls.ajax(sPath,{value: ls.autocomplete.extractLast(request.term)},function(data){
-						response(data.aItems);
-					});
-				},
-				search: function() {
-					var term = ls.autocomplete.extractLast(this.value);
-					if (term.length < 2) {
+				.autocomplete({
+					source: function(request, response) {
+						params.value = ls.autocomplete.extractLast(request.term);
+						ls.ajax(sPath, params, function(data){
+							response(data.aItems);
+						});
+					},
+					search: function() {
+						var term = ls.autocomplete.extractLast(this.value);
+						if (term.length < 2) {
+							return false;
+						}
+					},
+					focus: function() {
+						return false;
+					},
+					select: function(event, ui) {
+						var terms = ls.autocomplete.split(this.value);
+						terms.pop();
+						terms.push(ui.item.value);
+						terms.push("");
+						this.value = terms.join(", ");
 						return false;
 					}
-				},
-				focus: function() {
-					return false;
-				},
-				select: function(event, ui) {
-					var terms = ls.autocomplete.split(this.value);
-					terms.pop();
-					terms.push(ui.item.value);
-					terms.push("");
-					this.value = terms.join(", ");
-					return false;
-				}
-			});
+				});
 		} else {
 			obj.autocomplete({
 				source: function(request, response) {
-					ls.ajax(sPath,{value: ls.autocomplete.extractLast(request.term)},function(data){
+					params.value = ls.autocomplete.extractLast(request.term);
+					ls.ajax(sPath, params, function(data){
 						response(data.aItems);
 					});
 				}

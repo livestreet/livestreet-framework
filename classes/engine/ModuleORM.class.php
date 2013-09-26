@@ -344,7 +344,16 @@ abstract class ModuleORM extends Module {
 		} elseif (!substr_count($sEntityFull,'_')) {
 			$sEntityFull=Engine::GetPluginPrefix($this).'Module'.Engine::GetModuleName($this).'_Entity'.$sEntityFull;
 		}
-		return $this->oMapperORM->GetByFilter($aFilter,$sEntityFull);
+		/**
+		 * Хук для возможности изменения фильтра
+		 */
+		$this->Hook_Run('module_orm_GetByFilter_before', array('aFilter'=>&$aFilter,'sEntityFull'=>$sEntityFull));
+		$aEntities=$this->oMapperORM->GetByFilter($aFilter,$sEntityFull);
+		/**
+		 * Хук для возможности кастомной обработки результата
+		 */
+		$this->Hook_Run('module_orm_GetByFilter_after', array('aEntities'=>$aEntities,'aFilter'=>$aFilter,'sEntityFull'=>$sEntityFull));
+		return $aEntities;
 	}
 	/**
 	 * Получить список сущностей по фильтру
@@ -363,6 +372,10 @@ abstract class ModuleORM extends Module {
 		} elseif (!substr_count($sEntityFull,'_')) {
 			$sEntityFull=Engine::GetPluginPrefix($this).'Module'.Engine::GetModuleName($this).'_Entity'.$sEntityFull;
 		}
+		/**
+		 * Хук для возможности изменения фильтра
+		 */
+		$this->Hook_Run('module_orm_GetItemsByFilter_before', array('aFilter'=>&$aFilter,'sEntityFull'=>$sEntityFull));
 
 		// Если параметр #cache указан и пуст, значит игнорируем кэширование для запроса
 		if (array_key_exists('#cache', $aFilter) && !$aFilter['#cache']) {
@@ -454,6 +467,10 @@ abstract class ModuleORM extends Module {
 		if (in_array('#index-from-primary', $aFilter) || !empty($aFilter['#index-from'])) {
 			$aEntities = $this->_setIndexesFromField($aEntities, $aFilter);
 		}
+		/**
+		 * Хук для возможности кастомной обработки результата
+		 */
+		$this->Hook_Run('module_orm_GetItemsByFilter_after', array('aEntities'=>$aEntities,'aFilter'=>$aFilter,'sEntityFull'=>$sEntityFull));
 		/**
 		 * Если запрашиваем постраничный список, то возвращаем сам список и общее количество записей
 		 */

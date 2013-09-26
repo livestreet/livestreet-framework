@@ -105,9 +105,10 @@ class MapperORM extends Mapper {
 		$oEntitySample=Engine::GetEntity($sEntityFull);
 		$sTableName = self::GetTableName($sEntityFull);
 
-		list($aFilterFields,$sFilterFields)=$this->BuildFilter($aFilter,$oEntitySample);
+		list($aFilterFields,$sFilterFields,$sJoinTables)=$this->BuildFilter($aFilter,$oEntitySample);
+		list($sOrder,$sLimit,$sGroup)=$this->BuildFilterMore($aFilter,$oEntitySample);
 
-		$sql = "SELECT * FROM ".$sTableName." WHERE 1=1 {$sFilterFields}  LIMIT 0,1";
+		$sql = "SELECT t.* FROM ".$sTableName." t {$sJoinTables} WHERE 1=1 {$sFilterFields} {$sGroup} {$sOrder} LIMIT 0,1";
 		$aQueryParams=array_merge(array($sql),array_values($aFilterFields));
 
 		if($aRow=call_user_func_array(array($this->oDb,'selectRow'),$aQueryParams)) {
@@ -128,10 +129,10 @@ class MapperORM extends Mapper {
 		$oEntitySample=Engine::GetEntity($sEntityFull);
 		$sTableName = self::GetTableName($sEntityFull);
 
-		list($aFilterFields,$sFilterFields)=$this->BuildFilter($aFilter,$oEntitySample);
+		list($aFilterFields,$sFilterFields,$sJoinTables)=$this->BuildFilter($aFilter,$oEntitySample);
 		list($sOrder,$sLimit,$sGroup)=$this->BuildFilterMore($aFilter,$oEntitySample);
 
-		$sql = "SELECT * FROM ".$sTableName." WHERE 1=1 {$sFilterFields} {$sGroup} {$sOrder} {$sLimit} ";
+		$sql = "SELECT t.* FROM ".$sTableName." t {$sJoinTables} WHERE 1=1 {$sFilterFields} {$sGroup} {$sOrder} {$sLimit} ";
 		$aQueryParams=array_merge(array($sql),array_values($aFilterFields));
 		$aItems=array();
 		if($aRows=call_user_func_array(array($this->oDb,'select'),$aQueryParams)) {
@@ -154,16 +155,16 @@ class MapperORM extends Mapper {
 		$oEntitySample=Engine::GetEntity($sEntityFull);
 		$sTableName = self::GetTableName($sEntityFull);
 
-		list($aFilterFields,$sFilterFields)=$this->BuildFilter($aFilter,$oEntitySample);
+		list($aFilterFields,$sFilterFields,$sJoinTables)=$this->BuildFilter($aFilter,$oEntitySample);
 		list($sOrder,$sLimit,$sGroup)=$this->BuildFilterMore($aFilter,$oEntitySample);
 
 		if ($sGroup) {
 			/**
 			 * Т.к. count меняет свою логику при наличии группировки
 			 */
-			$sql = "SELECT SQL_CALC_FOUND_ROWS * FROM `".$sTableName."` WHERE 1=1 {$sFilterFields} {$sGroup} ";
+			$sql = "SELECT SQL_CALC_FOUND_ROWS * FROM `".$sTableName."` t {$sJoinTables} WHERE 1=1 {$sFilterFields} {$sGroup} ";
 		} else {
-			$sql = "SELECT count(*) as c FROM ".$sTableName." WHERE 1=1 {$sFilterFields} {$sGroup} ";
+			$sql = "SELECT count(*) as c FROM ".$sTableName." t {$sJoinTables} WHERE 1=1 {$sFilterFields} {$sGroup} ";
 		}
 		$aQueryParams=array_merge(array($sql),array_values($aFilterFields));
 		if($aRow=call_user_func_array(array($this->oDb,'selectRow'),$aQueryParams)) {
@@ -189,7 +190,7 @@ class MapperORM extends Mapper {
 		list($aFilterFields,$sFilterFields)=$this->BuildFilter($aFilter,$oEntitySample);
 		list($sOrder,$sLimit)=$this->BuildFilterMore($aFilter,$oEntitySample);
 
-		$sql = "SELECT a.*, b.* FROM ?# a LEFT JOIN ".$sTableName." b ON b.?# = a.?# WHERE a.?#=? {$sFilterFields} {$sOrder} {$sLimit}";
+		$sql = "SELECT t.*, b.* FROM ?# t LEFT JOIN ".$sTableName." b ON b.?# = t.?# WHERE t.?#=? {$sFilterFields} {$sOrder} {$sLimit}";
 		$aQueryParams=array_merge(array($sql,$aFilter['#join_table'],$sPrimaryKey,$aFilter['#relation_key'],$aFilter['#by_key'],$aFilter['#by_value']),array_values($aFilterFields));
 
 		$aItems = array();
@@ -214,7 +215,7 @@ class MapperORM extends Mapper {
 		$oEntitySample=Engine::GetEntity($sEntityFull);
 		list($aFilterFields,$sFilterFields)=$this->BuildFilter($aFilter,$oEntitySample);
 
-		$sql = "SELECT count(*) as c FROM ?# a  WHERE a.?#=? {$sFilterFields}";
+		$sql = "SELECT count(*) as c FROM ?# t  WHERE t.?#=? {$sFilterFields}";
 		$aQueryParams=array_merge(array($sql,$aFilter['#join_table'],$aFilter['#by_key'],$aFilter['#by_value']),array_values($aFilterFields));
 
 		if($aRow=call_user_func_array(array($this->oDb,'selectRow'),$aQueryParams)) {
@@ -242,10 +243,16 @@ class MapperORM extends Mapper {
 		$sFilterFields='';
 		foreach ($aFilterFields as $k => $v) {
 			$aK=explode(' ',trim($k));
-			$sFieldCurrent=$this->oDb->escape($aK[0],true);
+			$sFieldCurrent=$aK[0];
 			$sConditionCurrent=' = ';
 			if (count($aK)>1) {
 				$sConditionCurrent=strtolower($aK[1]);
+			}
+			/**
+			 * У поля уже может быть указан префикс таблицы, поэтому делаем проверку
+			 */
+			if (!strpos($sFieldCurrent,'.')) {
+				$sFieldCurrent='t.'.$this->oDb->escape($sFieldCurrent,true);
 			}
 			if (strtolower($sConditionCurrent)=='in') {
 				$sFilterFields.=" and {$sFieldCurrent} {$sConditionCurrent} ( ?a ) ";
@@ -254,13 +261,29 @@ class MapperORM extends Mapper {
 			}
 		}
 		if (isset($aFilter['#where']) and is_array($aFilter['#where'])) {
-			// '#where' => array('id = ?d OR name = ?' => array(1,'admin'));
+			// '#where' => array('t.id = ?d OR t.name = ?' => array(1,'admin'));
 			foreach ($aFilter['#where'] as $sFilterKey => $aValues) {
 				$aFilterFields = array_merge($aFilterFields, $aValues);
 				$sFilterFields .= ' and '. trim($sFilterKey) .' ';
 			}
 		}
-		return array($aFilterFields,$sFilterFields);
+		/**
+		 * Формируем JOIN запрос
+		 */
+		$sJoinTables='';
+		if (isset($aFilter['#join']) and is_array($aFilter['#join'])) {
+			$aValuesForMerge=array();
+			foreach($aFilter['#join'] as $sJoin => $aValues) {
+				if (is_int($sJoin)) {
+					$sJoinTables.=' '.$aValues.' ';
+				} else {
+					$sJoinTables.=' '.$sJoin.' ';
+					$aValuesForMerge=array_merge($aValuesForMerge,$aValues);
+				}
+			}
+			$aFilterFields = array_merge($aValuesForMerge,$aFilterFields);
+		}
+		return array($aFilterFields,$sFilterFields,$sJoinTables);
 	}
 	/**
 	 * Построение дополнительного фильтра
@@ -292,7 +315,7 @@ class MapperORM extends Mapper {
 					$key='';
 					foreach($aKeyPath as $i=>$sKey) {
 						if ($i%2==0) {
-							$key.=$this->oDb->escape($oEntitySample->_getField(trim($sKey)),true);
+							$key.='t.'.$this->oDb->escape($oEntitySample->_getField(trim($sKey)),true);
 						} else {
 							$key.=" {$sKey} ";
 						}
@@ -302,15 +325,29 @@ class MapperORM extends Mapper {
 					 * Проверяем на FIELD:id -> FIELD(id,?a)
 					 */
 					$aKeys=explode(':',$key);
-					if (count($aKeys)==2 and strtolower($aKeys[0])=='field' and is_array($aFilter['#order'][$key]) and count($aFilter['#order'][$key])) {
-						$key = 'FIELD('.$this->oDb->escape($oEntitySample->_getField(trim($aKeys[1])),true).','.join(',',$aFilter['#order'][$key]).')';
-						$value='';
+					if (count($aKeys)==2) {
+						if (strtolower($aKeys[0])=='field' and is_array($aFilter['#order'][$key]) and count($aFilter['#order'][$key])) {
+							$key = 'FIELD(t.'.$this->oDb->escape($oEntitySample->_getField(trim($aKeys[1])),true).','.join(',',$aFilter['#order'][$key]).')';
+							$value='';
+						} else {
+							/**
+							 * Неизвестное выражение
+							 */
+							continue;
+						}
 					} else {
 						/**
 						 * Пропускаем экранирование функций
 						 */
 						if (!in_array($key,array('rand()'))) {
-							$key = $this->oDb->escape($oEntitySample->_getField($key),true);
+							/**
+							 * Проверяем наличие префикса таблицы
+							 */
+							if (!strpos($oEntitySample->_getField($key),'.')) {
+								$key = 't.'.$this->oDb->escape($oEntitySample->_getField($key),true);
+							} else {
+								$key=$oEntitySample->_getField($key);
+							}
 						}
 					}
 				}
@@ -355,7 +392,7 @@ class MapperORM extends Mapper {
 			}
 			foreach ($aFilter['#group'] as $sField) {
 				$sField = $this->oDb->escape($oEntitySample->_getField($sField),true);
-				$sGroup.=" {$sField},";
+				$sGroup.=" t.{$sField},";
 			}
 			$sGroup=trim($sGroup,',');
 			if ($sGroup!='') {

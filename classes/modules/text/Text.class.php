@@ -149,6 +149,7 @@ class ModuleText extends Module {
 		$sResult=$this->JevixParser($sResult);
 		$sResult=$this->VideoParser($sResult);
 		$sResult=$this->CodeSourceParser($sResult);
+		$sResult=$this->HashtagParser($sResult);
 		return $sResult;
 	}
 	/**
@@ -238,6 +239,18 @@ class ModuleText extends Module {
 		}
 
 		return array($sTextShort,$sTextNew,$sTextCut ? htmlspecialchars($sTextCut) : null);
+	}
+
+	/**
+	* Обработка хеш-тегов в тексте, заменяем все #tag на <a href="/search/topics/?q=tag">#tag</a>
+	* 
+	* @param string $sText	Исходный текст
+	* @return string
+	*/
+	protected function HashtagParser($sText) {
+		$sPattern = '/#(.\S+)/';
+		$sReplacement = '<a href="/search/topics/?q=$1">#$1</a>';
+		return preg_replace($sPattern, $sReplacement, $sText);
 	}
 }
 ?>

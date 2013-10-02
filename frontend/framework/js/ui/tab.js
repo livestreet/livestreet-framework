@@ -6,12 +6,7 @@
  * @license   GNU General Public License, version 2
  * @copyright 2013 OOO "ЛС-СОФТ" {@link http://livestreetcms.com}
  * @author    Denis Shakhov <denis.shakhov@gmail.com>
- *
- * Depends:
- *     jquery.ui.widget.js
  */
-
-var ls = ls || {};
 
 (function($) {
     "use strict";
@@ -27,22 +22,12 @@ var ls = ls || {};
         pane:  '[data-type=tab-pane]'
     };
 
-    // Обработка ивентов
-    $(document).on('ready', function (e) {
-        $(_selectors.tab).tab();
-    });
-
-    $(document).on('click.livestreet.tab', _selectors.tab, function (e) {
-        $(e.currentTarget).tab('activate');
-        e.preventDefault();
-    });
-
     $.widget( "livestreet.tab", {
         /**
          * Дефолтные опции
          */
         options: {
-            // Селектор объекта относительно которого будет позиционироваться тулбар
+            // Блок с содержимым таба
             target: null,
 
             // Настройки аякса
@@ -69,13 +54,21 @@ var ls = ls || {};
          * @private
          */
         _create: function() {
-            this.options.params = ls.tools.getDataOptions(this.element, 'param');
-            this.options = $.extend({}, this.options, ls.tools.getDataOptions(this.element));
+            this.options.params = ls.utilities.getDataOptions(this.element, 'param');
+            this.options = $.extend({}, this.options, ls.utilities.getDataOptions(this.element, 'tab'));
 
             this.pane = $( '#' + this.options.target );
+
+            this._on({
+                click: function (e) {
+                    this.activate();
+                    e.preventDefault();
+                }
+            });
             
             // Поддержка активации табов с помощью хэшей
-            if ( this.options.target == location.hash.substring(1) ) this.activate();
+            // Активируем таб с классом active
+            if ( this.options.target == location.hash.substring(1) || ( this.options.url && this.element.hasClass( ls.options.classes.states.active ) && ! this.pane.text() ) ) this.activate();
         },
 
 
@@ -121,21 +114,21 @@ var ls = ls || {};
         _load: function () {
             this.pane.empty().addClass('loading');
 
-            ls.ajax(this.options.url, this.options.params, function (result) {
+            ls.ajax.load(this.options.url, this.options.params, function (result) {
                 this.pane.removeClass('loading');
 
                 if (result.bStateError) {
-                    ls.msg.error('Error', result.sMsg);
+                    this.pane.removeClass('loading');
+                    //this.pane.html('Error');
                 } else {
                     this.pane.html(result[this.options.result]);
                 }
                 
                 this._trigger("activate", null, this);
             }.bind(this), {
-                error: function () {
+                error: function (result) {
                     this.pane.removeClass('loading');
-                    this.pane.html('Error');
-                    ls.msg.error('Error', 'Please try again later');
+                    //this.pane.html('Error');
                 }.bind(this)
             });
         }

@@ -51,7 +51,7 @@
 
 /* Clearfix */
 .clearfix:before,
-.clearfix:after { content: ""; display: table; }
+.clearfix:after { content: ""; display: table; line-height: 0; }
 .clearfix:after { clear: both; }
 
 
@@ -83,15 +83,10 @@
 .width-650  { width: 650px; }
 
 
-/* Links */
-.link-dashed { text-decoration: none; border-bottom: 1px dashed; }
-.link-dotted { text-decoration: none; border-bottom: 1px dotted; }
-
-
 /* Loader */
 /* TODO: Change gif */
 .loading {
-	background-image: url(../images/modal-loader.gif);
+	background-image: url(../images/loader.gif);
 	background-position: 50% 50%;
 	background-repeat: no-repeat;
 }

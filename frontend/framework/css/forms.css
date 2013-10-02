@@ -9,6 +9,7 @@
 
 /* Input Text */
 textarea,
+select,
 input[type="password"],
 input[type="text"] {
 	padding: 5px;
@@ -24,8 +25,10 @@ input[type="password"]:focus {
 	border-color: #4d90fe;
 	-webkit-box-shadow: 0 2px 4px rgba(0,0,0,.07) inset, 0 0 3px #4d90fe;
 	        box-shadow: 0 2px 4px rgba(0,0,0,.07) inset, 0 0 3px #4d90fe;
+	outline: none;
 }
 
+select,
 input[type="password"],
 input[type="text"] {
 	height: 28px;
@@ -45,7 +48,7 @@ textarea { line-height: 1.4em; }
 
 
 /* Select */
-select { padding: 4px; border: 1px solid #ddd; border-radius: 3px; }
+select { padding: 4px; }
 
 
 /* Fieldset */

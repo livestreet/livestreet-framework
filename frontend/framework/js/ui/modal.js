@@ -10,332 +10,355 @@
 
 var ls = ls || {};
 
-(function ($) {
+(function($) {
     "use strict";
 
-    /**
-     * Private vars and methods
-     */
-    var windowWidth  = null,
-        windowHeight = null,
-        overlay      = null,
-        loader       = null,
-        scrollTop    = 0;
+    var scrollbarWidth, html, body, _window = $(window);
 
-    /**
-     * Resize
-     */
-    var resize = function () {
-        windowWidth = $(window).width();
-        windowHeight = $(window).height();
-        overlay.height(windowHeight);
-    };
+    // Overlay
+    // ----------
 
-    /**
-     * Show overlay
-     */
-    var showOverlay = function () {
-        if (overlay.is(':visible')) {
-            overlay.find($.fn.modal.settings.modalSelector).hide();
-            Modal.hideLoader(false);
-            return false;
-        }
-
-        scrollTop = $(window).scrollTop();
-
-        $('html').css({'overflow': 'hidden'});
-
-        // Prevent content from shifting
-        $('body').css({'margin-right': $(window).width() - windowWidth});
-        $(window).scrollTop(scrollTop);
-
-        // Show overlay
-        overlay.fadeIn(300);
-    };
-
-    /**
-     * Constructs modal objects
-     * @constructor
-     * @class Modal
-     * @param {Object} options Options
-     */
-    var Modal = ls.modal = function (element, options) {
-        var self = this;
-
-        this.$element = $(element);
-        this.options = $.extend({}, $.fn.modal.defaults, options);
-        this.$element.appendTo(overlay);
-
-        this.$element.find($.fn.modal.settings.closeSelector).on('click.modal', function (e) {
-            Modal.hideAll();
-            e.preventDefault();
-        });
-
-        // Close on esc
-        if (this.options.closeOnEsc) {
-            $(document).on('keyup.modal', function (e) {
-                e.keyCode === 27 && Modal.hideAll();
-            });
-        }
-    };
-
-    /**
-     * Show loader
-     * @param  {Boolean} bText        Use text instead of animation
-     * @param  {String}  sText        Text
-     * @param  {String}  bLock        Lock overlay and active modal, default: false
-     * @param  {Number}  iLockTime    Lock time
-     */
-    Modal.showLoader = function (bText, sText, bLock, iLockTime) {
-        ! overlay && Modal.initOverlay();
-        overlay.find('.' + $.fn.modal.settings.lockClass).remove();
-
-        if ( ! overlay.is(':visible')) showOverlay();
-        if (bLock) {
-            var ts = new Date().getTime();
-
-            overlay.data('locked', true);
-            overlay.find($.fn.modal.settings.modalSelector + ':visible').append('<div class="' + $.fn.modal.settings.lockClass + '" />');
-        
-            loader.data('id', ts);
-
-            setTimeout(function () {
-                if (loader.data('id') == ts) {
-                    Modal.hideAll();
-                    ls.msg.error('Ошибка', 'Ошибка загрузки');
-                }
-            }, (iLockTime || $.fn.modal.defaults.lockTime) * 1000);
-        }
-
-        if (bText) {
-            loader
-                .addClass($.fn.modal.settings.loaderTextClass)
-                .text(sText || $.fn.modal.defaults.loaderText)
-                .show();
-        } else {
-            loader.show();
-        }
-    };
-
-    /**
-     * Hide loader
-     */
-    Modal.hideLoader = function (bHideOverlay) {
-        bHideOverlay = typeof bHideOverlay === 'undefined' ? true : bHideOverlay;
-
-        overlay.data('locked', false);
-        overlay.find('.' + $.fn.modal.settings.lockClass).remove();
-
-        if (overlay.find($.fn.modal.settings.modalSelector + ':visible').length == 0 && bHideOverlay) Modal.hideAll();
-
-        loader
-            .removeClass($.fn.modal.settings.loaderTextClass)
-            .text('')
-            .hide();
-    };
-
-    /**
-     * Init overlay
-     */
-    Modal.initOverlay = function () {
-        overlay = $('<div class="' + $.fn.modal.settings.overlayClass + '" data-type="modal-overlay" />').height(windowHeight).appendTo('body');
-        loader = $('<div class="' + $.fn.modal.settings.loaderClass + '" data-type="modal-loader" />').height(windowHeight).css('z-index', 9999).appendTo(overlay);
-        resize();
-
-        overlay.on('click.modal', function (e) {
-            if (e.target === this && overlay.data('locked') !== true) {
-                Modal.hideAll();
-            }
-        });
-
-        $(window).on('resize.modal', function () {
-            resize();
-        });
+    var _overlay = (function ($) {
+        this.element = $('<div class="modal-overlay js-modal-overlay" />');
 
         /**
-         * Init toggles
+         * Init
          */
-        $(document).on('click.modal', $.fn.modal.settings.toggleSelector, function (e) {
-            var toggle  = $(this),
-                options = ls.tools.getDataOptions(toggle);
+        this.init = function () {
+            html = $('html');
+            body = $('body');
+            scrollbarWidth = this.getScrollbarWidth();
 
-            if (options.url) {
-                Modal.load(options.url, ls.tools.getDataOptions(toggle, 'param'), options);
-            } else {
-                // TODO: Options extend
-                $('#' + options.target).data('object').show();
-            }
-            e.preventDefault();
-        });
-    };
+            body.append( this.element );
+            this.resize();
+        };
 
-    /**
-     * Hide overlay, loader and all modals
-     * @param  {Function} callback onHide callback
-     */
-    Modal.hideAll = function (callback) {
-        if ( ! overlay.is(':visible')) {
-            return false;
-        }
+        /**
+         * Show
+         */
+        this.show = function () {
+            // Скрываем скролл
+            html.css('overflow', 'hidden');
 
-        overlay.fadeOut(300, function () {
-            $('html').css('overflow', 'visible');
-            $('body').css({'margin-right': 0});
+            // Добавляем отступ чтобы контент не смещался после убирания скроллбара
+            if ( body.outerHeight() > _window.height() ) body.css('margin-right', scrollbarWidth);
 
-            Modal.hideLoader(false);
-
-            overlay.find($.fn.modal.settings.modalSelector).each(function () {
-                var object = $(this).data('object');
-                object.options.url ? object.$element.remove() : object.$element.hide();
+            this.element.css({
+                overflow: 'auto'
             });
 
-            $(window).scrollTop(scrollTop);
+            this.element.show({
+                effect: 'fade',
+                duration: 300
+            });
+        };
 
-            callback && $.proxy(callback, this)();
-        });
-    };
-
-    /**
-     * Load modal from url
-     * @param  {String} url     URL
-     * @param  {Object} params  Params
-     * @param  {Object} options Options
-     */
-    Modal.load = function (url, params, options) {
-        ! overlay && Modal.initOverlay();
-
-        showOverlay();
-        Modal.showLoader();
-
-        options = $.extend({}, $.fn.modal.defaults, options);
-
-        ls.ajax(url, params, function (result) {
-            if (result.bStateError) {
-                Modal.hideAll();
-                ls.msg.error('Error', result.sMsg);
-            } else {
-                var modal = $($.trim(result[options.ajaxVar])), 
-                    object;
-
-                Modal.hideLoader(false);
-                modal.data('object', (object = new Modal(modal, options)));
-                object.options.params = params;
-                object.show();
-            }
-        }, {
-            error: function () {
-                Modal.hideLoader();
-                Modal.hideAll(function () {
-                    // TODO: Move text to lang file
-                    ls.msg.error('Error', 'Please try again later');
-                });
-            }
-        });
-    };
-
-    /**
-     * Reload active ajax modal
-     */
-    ls.modal.reload = function () {
-        var modal = $($.fn.modal.settings.modalSelector + ':visible').data('object');
-        ls.modal.load(modal.options.url, modal.options.params, modal.options);
-    };
-    
-
-    Modal.prototype = {
         /**
-         * Show modal
+         * Hide
          */
-        show: function (options) {
-            if (options) $.extend(this.options, options);
+        this.hide = function () {
+            html.css('overflow', 'auto');
+            body.css('margin-right', 0);
 
-            showOverlay();
-            this.$element.show();
-            overlay.scrollTop(0);
+            this.element.hide({
+                effect: 'fade',
+                duration: 300
+            });
+        };
 
-            // onShow
-            this.options.onShow && $.proxy(this.options.onShow, this)();
+        /**
+         * Resize
+         */
+        this.resize = function () {
+            this.element.height( _window.height() );
 
-            // Center
-            if (this.options.center && windowHeight > this.$element.outerHeight()) { 
-                this.$element.css({'margin-top': (windowHeight - this.$element.outerHeight()) / 2});
-            }
+            // Центрирование мод. окна при ресайзе
+            // Необходимо из за того что в FF м IE анимация воспроизводится
+            // криво при margin: 0 auto
+            var modal = this.getActiveModal();
+            if ( ! modal.length ) return;
+            modal.css('margin-left', ( _overlay.element.width() - modal.outerWidth() ) / 2);
+        };
+
+        /**
+         * Is overlay visible or not
+         */
+        this.isVisible = function () {
+            return this.element.is(':visible');
+        };
+
+        /**
+         * Return active modal window
+         */
+        this.getActiveModal = function () {
+            return _overlay.element.find('[data-type=modal]:visible').eq(0);
+        };
+
+        /**
+         * Получает ширину скроллбара в браузере
+         */
+        this.getScrollbarWidth = function () {
+            var holder = $('<div>').css({ 'width': 100, 'height': 100, 'overflow': 'auto', 'position': 'absolute', 'bottom': 0, 'left': 0 });
+            var width = 100 - $('<div>').css('height', 200).appendTo( holder.appendTo('body') ).width();
+            holder.remove();
+            return width;
+        };
+
+        return this;
+    }).call(_overlay || {}, jQuery);
+
+
+    // Loader
+    // ----------
+
+    var _loader = (function ($) {
+        this.element = $('<div class="modal-loader js-modal-loader" />');
+
+        /**
+         * Init
+         */
+        this.init = function () {
+            _overlay.element.append( this.element );
+        };
+
+        /**
+         * Show
+         */
+        this.show = function () {
+            this.element.show();
+        };
+
+        /**
+         * Hide
+         */
+        this.hide = function () {
+            this.element.hide();
+        };
+
+        return this;
+    }).call(_loader || {}, jQuery);
+
+
+    // Plugin
+    // ----------
+
+    $.widget( "livestreet.modal", {
+        /**
+         * Дефолтные опции
+         */
+        options: {
+            // Анимация при показе
+            show: {
+                effect: 'slide',
+                duration: 300,
+                direction: 'up'
+            },
+            // Анимация при скрытии
+            hide: {
+                effect: 'drop',
+                duration: 200,
+                direction: 'up'
+            },
+            // Центрирование окна по вертикали
+            center: true,
+
+            // Ajax
+            url: null,
+            params: null,
+
+            // Callbacks
+            create: null,
+            aftershow: null,
+            afterhide: null
         },
 
         /**
-         * Hide modal
+         * Конструктор
+         *
+         * @constructor
+         * @private
          */
-        hide: function () {
-            Modal.hideAll();
-        }
-    };
+        _create: function() {
+            this.options = $.extend({}, this.options, ls.utilities.getDataOptions(this.element, 'modal'));
 
-
-    /**
-     * Plugin defention
-     */
-    
-    // Fallback
-    $.fn.jqmShow = function (options) {
-        $(this).modal('show');
-    };
-
-    // Fallback
-    $.fn.jqmHide = function () {
-        Modal.hideAll();
-    };
-
-    $.fn.modal = function (options, variable, value) {
-        var returnValue = false;
-
-        ! $($.fn.modal.settings.overlaySelector).length && Modal.initOverlay();
-
-        this.each(function () {
-            var element = $(this),
-                object = element.data('object');
-
-            if ( ! object ) element.data('object', (object = new Modal(this, $.extend({}, options, typeof options === 'string' ? {} : options))));
-
-            if (typeof options === 'string') {
-                if (options === "option") {
-                    if (value) object.options[variable] = value; else returnValue = object.options[variable];
-                } else {
-                    object[options]();
-                }
+            this._toggle = $( '[data-modal-target=' + this.element.attr('id') + ']' );
+            this.closeButton = this.element.find('[data-type=modal-close]');
+            
+            // Переносим все модальные в оверлей
+            if ( this.options.url ) {
+                _overlay.element.append(this.element);
+            } else {
+                $(document).on('ready', function (e) {
+                    _overlay.element.append(this.element);
+                }.bind(this));
             }
+
+            // События
+            // ----------
+
+            // Триггер при клике по которому появляется модальное окно
+            this._on(true, this._toggle, {
+                click: function (e) {
+                    this.toggle();
+                    e.preventDefault();
+                }
+            });
+
+            // Кнопки закрытия модального окна
+            this._on(true, this.closeButton, {
+                click: function (e) {
+                    this.hide();
+                    e.preventDefault();
+                }
+            });
+
+            this._trigger("create", null, this);
+        },
+
+        /**
+         * Показавает модальное окно
+         */
+        show: function () {
+            var isOverlayVisible = _overlay.isVisible();
+
+            _overlay.getActiveModal().modal('hide', false);
+
+            if ( ! isOverlayVisible ) _overlay.element.css({ 'display' : 'block', 'visibility' : 'hidden' });
+
+            this.element.css({
+                // Центрируем по вертикали только если высота
+                // модального меньше высоты окна
+                'margin-top': this.options.center && this.element.outerHeight() < _overlay.element.height() ? ( _overlay.element.height() - this.element.outerHeight() ) / 2 : 50,
+                'margin-left': ( _overlay.element.width() - this.element.outerWidth() ) / 2
+            });
+
+            if ( ! isOverlayVisible ) _overlay.element.css({ 'display' : 'none', 'visibility' : 'visible' });
+
+            // Показываем модальное
+            if ( ! isOverlayVisible ) _overlay.show();
+
+            this._show(this.element, this.options.show);
+
+            this._trigger("aftershow", null, this);
+        },
+
+        /**
+         * Скрывает модальное окно
+         */
+        hide: function ( hideOverlay ) {
+            hideOverlay = typeof hideOverlay === 'undefined' ? true : hideOverlay;
+
+            _overlay.element.css('overflow', 'hidden');
+
+            // Если есть другие открытые окна, то оверлей не скрываем
+            if ( hideOverlay && ! _overlay.getActiveModal().not(this.element).length ) _overlay.hide();
+
+            this._hide(this.element, this.options.hide, function () {
+                if ( this.options.url ) this.element.remove();
+
+                this._trigger("afterhide", null, this);
+            }.bind(this)); 
+        },
+
+        /**
+         * Показавает/скрывает модальное окно
+         */
+        toggle: function () {
+            this[ this.element.is(':visible') ? 'hide' : 'show' ]();
+        }
+    });
+
+
+    // Ajax
+    // ----------
+
+    ls.modal = (function ($) {
+        /**
+         * Load modal from url
+         * 
+         * @param  {String} url     URL
+         * @param  {Object} params  Params
+         * @param  {Object} options Options
+         */
+        this.load = function (url, params, options) {
+            if ( ! _overlay.isVisible() ) _overlay.show();
+            _overlay.getActiveModal().modal('hide', false);
+            _loader.show();
+
+            options.url = url;
+            options.params = params || {};
+
+            ls.ajax.load(url, params, function (result) {
+                if (result.bStateError) {
+                    _loader.hide();
+                    _overlay.hide();
+                    //ls.msg.error('Error', result.sMsg);
+                } else {
+                    _loader.hide();
+                    $( $.trim( result['sText'] ) ).modal( options ).modal('show');
+                }
+            }, {
+                error: function () {
+                    _loader.hide();
+                    _overlay.hide();
+                    //ls.msg.error('Error', result.sMsg);
+                }
+            });
+        };
+
+        /**
+         * Перезагрузка активного аякс окна
+         */
+        this.reload = function () {
+            var modal = _overlay.getActiveModal();
+
+            if ( ! modal.length ) return;
+
+            var options = modal.data('livestreet-modal').options;
+
+            modal.remove();
+            ls.modal.load( options.url, options.params, options );
+        };
+
+        return this;
+    }).call(ls.modal || {}, jQuery);
+
+
+
+    // События
+    // ----------
+
+    // Клик по оверлею
+    _overlay.element.on('click', function (e) {
+        if ( e.target == this ) {
+            _overlay.getActiveModal().modal('hide');
+            _loader.hide();
+        }
+    });
+
+    // Закрытие модального по нажатию на Esc
+    $(document).on('keyup.modal', function (e) {
+        var modal = _overlay.getActiveModal();
+
+        if ( e.keyCode === 27 && modals.length ) modal.modal('hide');
+    });
+
+
+    // Инизиализация
+    $(document).on('ready', function (e) {
+        _overlay.init();
+        _loader.init();    
+
+        // Ajax
+        $(document).on('click', '[data-type=modal-toggle][data-modal-url]', function (e) {
+            var options = ls.utilities.getDataOptions($(this), 'modal');
+            var params = ls.utilities.getDataOptions($(this), 'param') || {};
+
+            ls.modal.load(options.url, options.params, options);
         });
+    });
 
-        return returnValue;
-    };
-
-
-    /**
-     * Default options
-     * @type {Object}
-     */
-    $.fn.modal.defaults = {
-        url: false,
-        center: true,
-        ajaxVar:         'sText',
-        loaderText:      'Идет загрузка...',
-        lockTime:        30,
-        closeOnEsc:      true
-    };
-
-    /**
-     * Global settings
-     * @type {Object}
-     */
-    $.fn.modal.settings = {
-        modalClass:      'modal',
-        overlayClass:    'modal-overlay',
-        loaderClass:     'modal-loader',
-        loaderTextClass: 'modal-loader-text',
-        lockClass:       'modal-lock',
-
-        modalSelector:   '[data-type=modal]',
-        toggleSelector:  '[data-type=modal-toggle]',
-        closeSelector:   '[data-type=modal-close]',
-        overlaySelector: '[data-type=modal-overlay]'
-    };
+    _window.on('resize', function () {
+        _overlay.resize();
+    });
 })(jQuery);

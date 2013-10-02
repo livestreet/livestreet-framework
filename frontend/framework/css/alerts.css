@@ -9,16 +9,26 @@
  */
 
 .alert {
+	position: relative;
 	border: 1px solid #EED3D7;
 	background-color: #F2DEDE;
 	color: #B94A48;
-	padding: 10px 15px;
+	padding: 10px 35px 10px 15px;
 	margin-bottom: 15px;
 	-webkit-border-radius: 3px;
 	   -moz-border-radius: 3px;
 	        border-radius: 3px;
 }
 .alert--title { font-size: 14px; font-weight: bold; }
+.alert--close {
+	position: absolute;
+	top: 11px;
+	right: 10px;
+	font-size: 23px;
+	cursor: pointer;
+	opacity: .6;
+}
+.alert--close:hover { opacity: 1; }
 
 
 /* Error */

@@ -23,7 +23,7 @@ $.widget( "livestreet.toolbar", {
         // Смещение по оси Y
         offsetY: 0,
         // Callback вызываемый при начале вычисления нового положения тулбара
-        onReposition: null
+        reposition: null
     },
 
     /**
@@ -44,7 +44,7 @@ $.widget( "livestreet.toolbar", {
     reposition: function () {
         this.targetPos = this.target.offset();
 
-        this._trigger("onReposition", null, this);
+        this._trigger("reposition", null, this);
 
         this.element.css({
             'top': this.targetPos.top + this.options.offsetY,

@@ -1,5 +1,5 @@
 /**
- * Dropdowns
+ * Выпадающее меню
  *
  * @module dropdown
  * 
@@ -8,61 +8,138 @@
  * @author    Denis Shakhov <denis.shakhov@gmail.com>
  */
 
-var ls = ls || {};
+$.widget( "livestreet.dropdown", {
+    /**
+     * Дефолтные опции
+     */
+    options: {
+        // Позиционирование
+        // Для позиционирования используется модуль position библиотеки jQuery UI
+        position: {
+            my: "left top+5",
+            at: "left bottom",
+            collision: "flipfit flip"
+        },
+        // Анимация при показе
+        show: {
+            effect: 'slideDown',
+            duration: 200
+        },
+        // Анимация при скрытии
+        hide: {
+            effect: 'slideUp',
+            duration: 200
+        },
+        // Поведение как у select'а
+        selectable: false,
+        // Выносить меню в тег body или нет
+        body: false,
+        // Коллбэк вызываемый при изменении положения меню
+        reposition: null
+    },
 
-(function($) {
-    "use strict";
+    /**
+     * Конструктор
+     *
+     * @constructor
+     * @private
+     */
+    _create: function() {
+        this.options = $.extend({}, this.options, ls.utilities.getDataOptions(this.element, 'dropdown'));
+        
+        this._target = $( '#' + this.element.data('dropdown-target') );
 
-    var Dropdown = function (element, options) {
-        this.init('dropdown', element, options);
-    };
+        // Вынос меню в тег body
+        if ( this.options.body ) this._target.appendTo('body');
 
-    Dropdown.prototype = $.extend({}, $.fn.over.Constructor.prototype, {
-        constructor: Dropdown,
+        // Пункты меню
+        var items = this._target.find('li:not(.dropdown-separator)');
+        
+        // Присваиваем текст активного пункта меню переключателю
+        if ( this.options.selectable ) {
+            var text = items.filter('.active').eq(0).find('a').text();
+            if ( text ) this.element.text( text );
+        }
 
-        hooks : {
-            onInitTarget: function () {
-                var self = this;
+        // Объект относительно которого позиционируется меню
+        this.options.position.of = this.options.position.of || this.element;
 
-                // Toggle's text
-                if (this.options.changeText) {
-                    var activeText = this.$target.find('li.active').text();
-                    activeText && this.$toggle.find('[data-type=dropdown-text]').text(activeText);
+
+        // События
+        // ----------
+        
+        // Клик по переключателю
+        this._on({
+            click : function (event) {
+                this.toggle();
+                event.preventDefault();
+            }
+        });
+
+        // Обработка кликов по пунктам меню
+        this._on(true, items.find('a'), {
+            click: function (event) {
+                if ( this.options.selectable ) {
+                    var itemLink = $(event.currentTarget);
+
+                    items.removeClass('active');
+                    itemLink.closest('li').addClass('active');
+                    this.element.text( itemLink.text() );
                 }
 
-                this.$target.on('click', 'li > a', function (e) {
-                    var $link = $(this),
-                        duration = self.options.duration;
-
-                    if (self.options.activateItems) {
-                        self.$target.find('li').removeClass('active');
-                        $link.parent('li').addClass('active');
-                    }
-                    if (self.options.changeText) {
-                        self.$toggle.find('[data-type=dropdown-text]').text($link.text());
-                    }
-                    
-                    self.options.duration = 0;
-                    self.hide();
-                    self.options.duration = duration;
-                });
+                this.hide();
             }
+        });
+
+        // Reposition menu on window scroll or resize
+        $(window).on('resize scroll', this._reposition.bind(this));
+        
+        // Hide when click anywhere but menu or toggle
+        $(document).on('click', function (event) {
+            if ( ! this._target.is(event.target) && this._target.has(event.target).length === 0 && ! this.element.is(event.target) && this.element.has(event.target).length === 0 ) this.hide();
+        }.bind(this));
+    },
+
+    /**
+     * Показавает/скрывает меню
+     */
+    toggle: function () {
+        if ( this._target.is(':visible') ) {
+            this.hide();
+        } else {
+            this.show();
         }
-    });
+    },
 
-    $.fn.dropdown = function (options, variable, value) {
-        return ls.over.initPlugin('dropdown', this, options, variable, value);
-    };
+    /**
+     * Показывает меню
+     */
+    show: function () {
+        this._show(this._target, this.options.show);
+        this._reposition();
+        this.element.addClass('open');
+    },
 
-    $.fn.dropdown.Constructor = Dropdown;
+    /**
+     * Скрывает меню
+     */
+    hide: function () {
+        if ( ! this._target.is(':visible') || this.element.data('dropdown-state-hide') === true ) return false;
 
-    $.fn.dropdown.defaults = $.extend({} , $.fn.over.defaults, { 
-        effect: 'slide',
-        duration: 300
-    });
+        this.element.data('dropdown-state-hide', true);
 
-    $.fn.dropdown.settings = $.extend({} , $.fn.over.settings, { 
-        toggleSelector: '[data-type=dropdown-toggle]',
-        targetSelector: '[data-type=dropdown-target]'
-    });
-})(jQuery);
+        this._hide(this._target, this.options.hide, function () {
+            this.element.removeClass('open').removeData('dropdown-state-hide');
+        }.bind(this));
+    },
+
+    /**
+     * Изменение положения меню
+     */
+    _reposition: function () {
+        if ( ! this._target.is(':visible') ) return false;
+
+        this._target.position(this.options.position);
+        this._trigger("reposition", null, this);
+    }
+});

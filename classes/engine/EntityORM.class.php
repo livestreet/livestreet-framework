@@ -28,8 +28,8 @@
  * $aUsers=$this->User_GetUserItemsByAgeAndSex(18,'male');
  * // эквивалентно
  * $aUsers=$this->User_GetUserItemsByFilter(array('age'=>18,'sex'=>'male'));
- * // эквивалентно
- * $aUsers=$this->User_GetUserItemsByFilter(array('#where'=>array('age = ?d and sex = ?' => array(18,'male'))));
+ * // эквивалентно, но при использовании #where необходимо указывать префикс таблицы "t"
+ * $aUsers=$this->User_GetUserItemsByFilter(array('#where'=>array('t.age = ?d and t.sex = ?' => array(18,'male'))));
  * </pre>
  *
  * @package engine.orm

@@ -46,7 +46,7 @@ $config['path']['root']['web']=isset($_SERVER['HTTP_HOST']) ? 'http://'.$_SERVER
 $config['path']['application']['server']='___path.root.server___/application';
 $config['path']['application']['web']='___path.root.web___/application';
 $config['path']['framework']['server']=dirname(dirname(__FILE__));
-$config['path']['framework']['web']='___path.root.web___/'.trim(str_replace(dirname(dirname(dirname(__FILE__))),'',$config['path']['framework']['server']),'/'); // Подставляет название каталога в котором фреймворк, относительно корня сайта. Необходимо переопределить при изменении расположения фреймворка.
+$config['path']['framework']['web']='___path.root.web___/'.trim(str_replace(dirname(dirname(dirname(__FILE__))),'',$config['path']['framework']['server']),'/\\'); // Подставляет название каталога в котором фреймворк, относительно корня сайта. Необходимо переопределить при изменении расположения фреймворка.
 /**
  * Производные
  */
@@ -255,7 +255,7 @@ $config['head']['default']['js'] = array(
 	"___path.framework.frontend.web___/js/core/hook.js",
 
 	/* User Interface */
-	"___path.framework.frontend.web___/js/ui/popup.js",
+	"___path.framework.frontend.web___/js/ui/over.js",
 	"___path.framework.frontend.web___/js/ui/dropdown.js",
 	"___path.framework.frontend.web___/js/ui/tooltip.js",
 	"___path.framework.frontend.web___/js/ui/popover.js",

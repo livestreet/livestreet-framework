@@ -392,10 +392,11 @@ class ModuleImage extends Module {
 	 * Используется фомат хранения данных (/images/us/er/id/yyyy/mm/dd/file.jpg)
 	 *
 	 * @param  int $sId	Целое число, обычно это ID пользователя
+	 * @param  string $sSubDir	Подкаталог
 	 * @return string
 	 */
-	public function GetIdDir($sId) {
-		return Config::Get('path.uploads.images').'/'.preg_replace('~(.{2})~U', "\\1/", str_pad($sId, 6, "0", STR_PAD_LEFT)).date('Y/m/d');
+	public function GetIdDir($sId,$sSubDir=null) {
+		return Config::Get('path.uploads.images').'/'.($sSubDir ? $sSubDir.'/' : '').preg_replace('~(.{2})~U', "\\1/", str_pad($sId, 6, "0", STR_PAD_LEFT)).date('Y/m/d');
 	}
 	/**
 	 * Возвращает валидный Html код тега <img>

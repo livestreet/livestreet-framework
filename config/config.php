@@ -253,15 +253,23 @@ $config['head']['default']['js'] = array(
 	/* Core */
 	"___path.framework.frontend.web___/js/core/main.js",
 	"___path.framework.frontend.web___/js/core/hook.js",
+	"___path.framework.frontend.web___/js/core/i18n.js",
+	"___path.framework.frontend.web___/js/core/ie.js",
+	"___path.framework.frontend.web___/js/core/ajax.js",
+	"___path.framework.frontend.web___/js/core/registry.js",
+	"___path.framework.frontend.web___/js/core/swfupload.js",
+	"___path.framework.frontend.web___/js/core/utilities.js",
+	"___path.framework.frontend.web___/js/core/timer.js",
 
 	/* User Interface */
-	"___path.framework.frontend.web___/js/ui/over.js",
 	"___path.framework.frontend.web___/js/ui/dropdown.js",
-	"___path.framework.frontend.web___/js/ui/tooltip.js",
-	"___path.framework.frontend.web___/js/ui/popover.js",
 	"___path.framework.frontend.web___/js/ui/tab.js",
 	"___path.framework.frontend.web___/js/ui/modal.js",
 	"___path.framework.frontend.web___/js/ui/toolbar.js",
+	"___path.framework.frontend.web___/js/ui/tooltip.js",
+	"___path.framework.frontend.web___/js/ui/autocomplete.js",
+	"___path.framework.frontend.web___/js/ui/notification.js",
+	"___path.framework.frontend.web___/js/ui/alert.js",
 );
 
 $config['head']['default']['css'] = array(
@@ -275,9 +283,10 @@ $config['head']['default']['css'] = array(
 	"___path.framework.frontend.web___/css/navs.css",
 	"___path.framework.frontend.web___/css/modals.css",
 	"___path.framework.frontend.web___/css/tooltip.css",
-	"___path.framework.frontend.web___/css/popover.css",
 	"___path.framework.frontend.web___/css/alerts.css",
-	"___path.framework.frontend.web___/css/toolbar.css"
+	"___path.framework.frontend.web___/css/toolbar.css",
+	"___path.framework.frontend.web___/css/typography.css",
+	"___path.framework.frontend.web___/css/grid.css"
 );
 
 /**

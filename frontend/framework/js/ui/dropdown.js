@@ -34,8 +34,13 @@ $.widget( "livestreet.dropdown", {
         selectable: false,
         // Выносить меню в тег body или нет
         body: false,
-        // Коллбэк вызываемый при изменении положения меню
-        reposition: null
+
+        // Коллбэки
+        reposition: null,
+        aftershow: null,
+        afterhide: null,
+        beforeshow: null,
+        beforehide: null
     },
 
     /**
@@ -115,7 +120,12 @@ $.widget( "livestreet.dropdown", {
      * Показывает меню
      */
     show: function () {
-        this._show(this._target, this.options.show);
+        this._trigger("beforeshow", null, this);
+
+        this._show(this._target, this.options.show, function () {
+            this._trigger("aftershow", null, this);
+        }.bind(this));
+
         this._reposition();
         this.element.addClass('open');
     },
@@ -126,10 +136,13 @@ $.widget( "livestreet.dropdown", {
     hide: function () {
         if ( ! this._target.is(':visible') || this.element.data('dropdown-state-hide') === true ) return false;
 
+        this._trigger("beforehide", null, this);
+
         this.element.data('dropdown-state-hide', true);
 
         this._hide(this._target, this.options.hide, function () {
             this.element.removeClass('open').removeData('dropdown-state-hide');
+            this._trigger("afterhide", null, this);
         }.bind(this));
     },
 

@@ -340,7 +340,7 @@ var ls = ls || {};
     $(document).on('keyup.modal', function (e) {
         var modal = _overlay.getActiveModal();
 
-        if ( e.keyCode === 27 && modals.length ) modal.modal('hide');
+        if ( e.keyCode === 27 && modal.length ) modal.modal('hide');
     });
 
 

@@ -2,7 +2,7 @@
  * Ajax
  *
  * @module ajax
- * 
+ *
  * @license   GNU General Public License, version 2
  * @copyright 2013 OOO "ЛС-СОФТ" {@link http://livestreetcms.com}
  * @author    Denis Shakhov <denis.shakhov@gmail.com>
@@ -19,7 +19,7 @@ ls.ajax = (function ($) {
 	this.load = function(url, params, callback, more) {
 		more = more || {};
 		params = params || {};
-		
+
 		if ( typeof LIVESTREET_SECURITY_KEY !== 'undefined' ) params.security_ls_key = LIVESTREET_SECURITY_KEY;
 
 		$.each(params, function(k, v){
@@ -76,35 +76,39 @@ ls.ajax = (function ($) {
 			url: url,
 			dataType: more.dataType || 'json',
 			data: params,
-			beforeSubmit: function (arr, form, options) {	
-                button && button.prop('disabled', true).addClass('loading');
-            },
-            beforeSerialize: function (form, options) {
-            	if (typeof more.validate == 'undefined' || more.validate === true) {
-            		return form.parsley('validate');
-            	}
+			beforeSubmit: function (arr, form, options) {
+				button && button.prop('disabled', true).addClass('loading');
+			},
+			beforeSerialize: function (form, options) {
+				if (typeof more.validate == 'undefined' || more.validate === true) {
+					return form.parsley('validate');
+				}
 
-            	return true;
-            },
+				return true;
+			},
 			success: typeof callback == 'function' ? function (result, status, xhr, form) {
 				button.prop('disabled', false).removeClass('loading');
 
 				if (result.bStateError) {
-	                ls.msg.error(null, result.sMsg);
+					ls.msg.error(null, result.sMsg);
 
-	                // more.warning(result, status, xhr, form);
-	            } else {
-	                if (result.sMsg) {
-	                    ls.msg.notice(null, result.sMsg);
-	                }
+					// more.warning(result, status, xhr, form);
+				} else {
+					if (result.sMsg) {
+						ls.msg.notice(null, result.sMsg);
+					}
 					callback(result, status, xhr, form);
-	            }
+				}
 			} : function () {
 				ls.debug("ajax success: ");
 				ls.debug.apply(ls, arguments);
 			}.bind(this),
 			error: more.error || function(){
 				ls.debug("ajax error: ");
+				ls.debug.apply(ls, arguments);
+			}.bind(this),
+			complete: more.complete || function(){
+				ls.debug("ajax complete: ");
 				ls.debug.apply(ls, arguments);
 			}.bind(this)
 		};

@@ -16,6 +16,9 @@
 	color: #fff;
 	-webkit-box-shadow: 0 0 5px rgba(0,0,0,.2);
 	        box-shadow: 0 0 5px rgba(0,0,0,.2);
+	-webkit-border-radius: 4px;
+	   -moz-border-radius: 4px;
+	        border-radius: 4px;
 }
 .tooltip-title { padding: 13px 15px 0; font-weight: bold; }
 .tooltip-content { padding: 15px 15px; }

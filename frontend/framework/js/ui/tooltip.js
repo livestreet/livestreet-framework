@@ -18,7 +18,7 @@ $.widget( "livestreet.tooltip", {
         // Позиционирование
         // Для позиционирования используется модуль position библиотеки jQuery UI
         position: {
-            my: "center bottom-10",
+            my: "center bottom-15",
             at: "center top",
             collision: "flipfit flip"
         },

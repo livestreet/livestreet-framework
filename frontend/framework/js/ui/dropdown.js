@@ -68,6 +68,14 @@ $.widget( "livestreet.dropdown", {
 
         // Объект относительно которого позиционируется меню
         this.options.position.of = this.options.position.of || this.element;
+        
+        this.options.position.using = this.options.position.using || function ( position, feedback ) {
+            ls.utilities.removeClassByPrefix( this._target, 'position-' );
+
+            this._target
+                    .addClass( 'position-y-' + feedback.vertical + ' ' +  'position-x-' + feedback.horizontal )
+                    .css( position );
+        }.bind(this);
 
 
         // События

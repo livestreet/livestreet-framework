@@ -319,6 +319,7 @@ class Engine extends LsObject {
 				$sHookPrefix .= "plugin{$sPluginName}_";
 			}
 			$sHookPrefix .= self::GetModuleName($sClassName).'_init_';
+			$sHookPrefix=strtolower($sHookPrefix);
 		}
 		if($bRunHooks){
 			$this->Hook_Run($sHookPrefix.'before');

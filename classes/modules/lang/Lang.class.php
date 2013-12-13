@@ -59,10 +59,16 @@ class ModuleLang extends Module {
 	public function Init() {
 		$this->Hook_Run('lang_init_start');
 
+		$this->InitConfig();
+		$this->InitLang();
+	}
+	/**
+	 * Инициализирует языковые параметры из конфига
+	 */
+	protected function InitConfig() {
 		$this->sCurrentLang = Config::Get('lang.current');
 		$this->sDefaultLang = Config::Get('lang.default');
 		$this->sLangPath = Config::Get('lang.path');
-		$this->InitLang();
 	}
 	/**
 	 * Инициализирует языковой файл

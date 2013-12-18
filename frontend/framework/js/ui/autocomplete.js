@@ -24,8 +24,7 @@ ls.autocomplete = (function ($) {
 			})
 			.autocomplete({
 				source: function(request, response) {
-					params.value = ls.autocomplete.extractLast(request.term);
-					ls.ajax(sPath, params, function(data){
+					ls.ajax.load(sPath, { value: ls.autocomplete.extractLast(request.term) }, function(data){
 						response(data.aItems);
 					});
 				},
@@ -53,7 +52,7 @@ ls.autocomplete = (function ($) {
 					var params = {};
 					params.value = ls.autocomplete.extractLast(request.term);
 					
-+          			ls.ajax(sPath, params, function(data){
++          			ls.ajax.load(sPath, params, function(data){
 						response(data.aItems);
 					});
 				}

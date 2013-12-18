@@ -52,7 +52,7 @@ ls.autocomplete = (function ($) {
 					var params = {};
 					params.value = ls.autocomplete.extractLast(request.term);
 					
-+          			ls.ajax.load(sPath, params, function(data){
+					ls.ajax.load(sPath, params, function(data){
 						response(data.aItems);
 					});
 				}

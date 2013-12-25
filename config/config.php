@@ -61,6 +61,7 @@ $config['path']['skin']['web']='___path.application.web___/frontend/skin/___view
 $config['path']['skin']['assets']['web']='___path.skin.web___/assets';
 $config['path']['uploads']['base']='/uploads';
 $config['path']['uploads']['images']='___path.uploads.base___/images';
+$config['path']['tmp']['server']='___path.application.server___/tmp';
 $config['path']['offset_request_url']       = 0;                                                       // иногда помогает если сервер использует внутренние реврайты
 /**
  * Для совместимости с прошлыми версиями
@@ -80,8 +81,8 @@ $config['path']['uploads']['root']          = '___path.uploads.base___';        
  * Настройки шаблонизатора Smarty
  */
 $config['path']['smarty']['template'] = '___path.application.server___/frontend/skin/___view.skin___';
-$config['path']['smarty']['compiled'] = '___path.application.server___/tmp/templates/compiled';
-$config['path']['smarty']['cache']    = '___path.application.server___/tmp/templates/cache';
+$config['path']['smarty']['compiled'] = '___path.tmp.server___/templates/compiled';
+$config['path']['smarty']['cache']    = '___path.tmp.server___/templates/cache';
 $config['path']['smarty']['plug']     = '___path.framework.server___/classes/modules/viewer/plugs';
 $config['smarty']['compile_check']    = true; // Проверять или нет файлы шаблона на изменения перед компиляцией, false может значительно увеличить быстродействие, но потребует ручного удаления кеша при изменения шаблона
 $config['smarty']['force_compile']    = false; // Принудительно компилировать шаблоны при каждом запросе, true - существенно снижает производительность
@@ -124,7 +125,7 @@ $config['sys']['mail']['include_talk']     = true;                   // Вклю
 // Устанавливаем настройки кеширования
 $config['sys']['cache']['use']    = true;               // использовать кеширование или нет
 $config['sys']['cache']['type']   = 'file';             // тип кеширования: file, xcache и memory. memory использует мемкеш, xcache - использует XCache
-$config['sys']['cache']['dir']    = '___path.application.server___/tmp/';       // каталог для файлового кеша, также используется для временных картинок. По умолчанию подставляем каталог для хранения сессий
+$config['sys']['cache']['dir']    = '___path.tmp.server___/';       // каталог для файлового кеша, также используется для временных картинок. По умолчанию подставляем каталог для хранения сессий
 $config['sys']['cache']['prefix'] = 'livestreet_cache'; // префикс кеширования, чтоб можно было на одной машине держать несколько сайтов с общим кешевым хранилищем
 $config['sys']['cache']['directory_level'] = 1;         // уровень вложенности директорий файлового кеша
 $config['sys']['cache']['solid']  = true;               // Настройка использования раздельного и монолитного кеша для отдельных операций
@@ -244,6 +245,7 @@ $config['head']['default']['js'] = array(
 	"___path.framework.frontend.web___/js/vendor/jquery.placeholder.min.js",
 	"___path.framework.frontend.web___/js/vendor/jquery.charcount.js",
 	"___path.framework.frontend.web___/js/vendor/jquery.imagesloaded.js",
+	"___path.framework.frontend.web___/js/vendor/jquery.fileupload.js",
 	"___path.framework.frontend.web___/js/vendor/notifier/jquery.notifier.js",
 	"___path.framework.frontend.web___/js/vendor/prettify/prettify.js",
 	"___path.framework.frontend.web___/js/vendor/prettyphoto/js/jquery.prettyphoto.js",

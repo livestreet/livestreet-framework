@@ -49,10 +49,7 @@ ls.autocomplete = (function ($) {
 		} else {
 			obj.autocomplete({
 				source: function(request, response) {
-					var params = {};
-					params.value = ls.autocomplete.extractLast(request.term);
-					
-					ls.ajax.load(sPath, params, function(data){
+					ls.ajax.load(sPath, { value: ls.autocomplete.extractLast(request.term) }, function(data){
 						response(data.aItems);
 					});
 				}

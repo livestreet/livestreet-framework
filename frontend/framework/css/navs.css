@@ -110,7 +110,7 @@
 /* Main
  * TODO: Fix
 -------------------------------------------------- */
-.nav.nav-main 					{ background: #222; background: -moz-linear-gradient(top, #333 0%, #222 100%); }
-.nav.nav-main li a 				{ color: #ddd; }
+.nav.nav-main 					{ background: #222; }
+.nav.nav-main li a 				{ color: #ddd; padding: 15px 20px; }
 .nav.nav-main li a:hover 		{ background: #333; }
 .nav.nav-main li.active a 		{ background: #3a3a3a; color: #bbb; -webkit-box-shadow: 0 0 7px rgba(0,0,0,.15) inset; box-shadow: 0 0 7px rgba(0,0,0,.15) inset; }

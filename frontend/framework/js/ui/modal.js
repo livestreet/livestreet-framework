@@ -57,12 +57,13 @@ var ls = ls || {};
          * Hide
          */
         this.hide = function () {
-            html.css('overflow', 'auto');
-            body.css('margin-right', 0);
-
             this.element.hide({
                 effect: 'fade',
-                duration: 300
+                duration: 300, 
+                complete: function () {
+                    html.css('overflow', 'auto');
+                    body.css('margin-right', 0);
+                }
             });
         };
 
@@ -73,7 +74,7 @@ var ls = ls || {};
             this.element.height( _window.height() );
 
             // Центрирование мод. окна при ресайзе
-            // Необходимо из за того что в FF м IE анимация воспроизводится
+            // Необходимо из за того что в FF и IE анимация воспроизводится
             // криво при margin: 0 auto
             var modal = this.getActiveModal();
             if ( ! modal.length ) return;
@@ -224,22 +225,25 @@ var ls = ls || {};
             _overlay.getActiveModal().modal('hide', false);
 
             if ( ! isOverlayVisible ) _overlay.element.css({ 'display' : 'block', 'visibility' : 'hidden' });
+            this.element.css({ 'display' : 'block', 'visibility' : 'hidden' });
 
             this.element.css({
                 // Центрируем по вертикали только если высота
                 // модального меньше высоты окна
                 'margin-top': this.options.center && this.element.outerHeight() < _overlay.element.height() ? ( _overlay.element.height() - this.element.outerHeight() ) / 2 : 50,
+                // В FF и IE исправляет баг с анимацией
                 'margin-left': ( _overlay.element.width() - this.element.outerWidth() ) / 2
             });
 
             if ( ! isOverlayVisible ) _overlay.element.css({ 'display' : 'none', 'visibility' : 'visible' });
+            this.element.css({ 'display' : 'none', 'visibility' : 'visible' });
 
             // Показываем модальное
             if ( ! isOverlayVisible ) _overlay.show();
 
-            this._show(this.element, this.options.show);
-
-            this._trigger("aftershow", null, this);
+            this._show(this.element, this.options.show, function () {
+                this._trigger("aftershow", null, this);
+            }.bind(this));
         },
 
         /**

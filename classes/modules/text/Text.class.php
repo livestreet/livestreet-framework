@@ -35,6 +35,15 @@ class ModuleText extends Module {
 	 * @var Jevix
 	 */
 	protected $oJevix;
+	/**
+	 * Дополнительные параметры, которые необходимо учитывать при обработке текста
+	 * Можно задавать произвольные параметры, главное чтобы логика обработки текста их учитывала
+	 * Желеательно после установки параметров и выполнения обработки эти параметры сбросить методом
+	 * @see ModuleText::AddExecHook
+	 *
+	 * @var array
+	 */
+	protected $aParams=array();
 
 	/**
 	 * Инициализация модуля
@@ -93,6 +102,46 @@ class ModuleText extends Module {
 	 */
 	public function GetJevix() {
 		return $this->oJevix;
+	}
+	/**
+	 * Добавляет параметры
+	 *
+	 * @param $aParams
+	 */
+	public function AddParams($aParams) {
+		$this->aParams=array_merge($this->aParams,$aParams);
+	}
+	/**
+	 * Возвращает параметр по имени или сразу все параметры
+	 *
+	 * @param string|null $sName	Если null, то вернет массив всех параметров
+	 *
+	 * @return array|mixed
+	 */
+	public function GetParam($sName=null) {
+		if (is_null($sName)) {
+			return $this->aParams;
+		}
+		if (isset($this->aParams[$sName])) {
+			return $this->aParams[$sName];
+		}
+		return null;
+	}
+	/**
+	 * Удаляет параметры
+	 *
+	 * @param array|string|null $aNames	Название параметра или список названий параметров. Если null, то удалятся все параметры
+	 */
+	public function RemoveParams($aNames=null) {
+		if (is_null($aNames)) {
+			$this->aParams=array();
+		}
+		if (!is_array($aNames)) {
+			$aNames=array($aNames);
+		}
+		foreach($aNames as $sName) {
+			unset($this->aParams[$sName]);
+		}
 	}
 	/**
 	 * Парсинг текста с помощью Jevix

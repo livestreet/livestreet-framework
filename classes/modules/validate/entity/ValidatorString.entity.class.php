@@ -93,6 +93,9 @@ class ModuleValidate_EntityValidatorString extends ModuleValidate_EntityValidato
 		if($this->is!==null && $iLength!==$this->is) {
 			return $this->getMessage($this->Lang_Get('validate_string_no_lenght',null,false),'msg',array('length'=>$this->is));
 		}
+		if (!$this->allowEmpty && $this->isEmpty($sValue)) {
+			return $this->getMessage($this->Lang_Get('validate_empty_error',null,false),'msg');
+		}
 		return true;
 	}
 }

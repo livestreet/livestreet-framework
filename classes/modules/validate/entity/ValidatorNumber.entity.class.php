@@ -108,6 +108,9 @@ class ModuleValidate_EntityValidatorNumber extends ModuleValidate_EntityValidato
 		if($this->max!==null && $sValue>$this->max) {
 			return $this->getMessage($this->Lang_Get('validate_number_too_big',null,false),'msgTooBig',array('max'=>$this->max));
 		}
+		if (!$this->allowEmpty && $this->isEmpty($sValue)) {
+			return $this->getMessage($this->Lang_Get('validate_empty_error',null,false),'msg');
+		}
 		return true;
 	}
 }

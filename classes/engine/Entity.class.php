@@ -106,9 +106,12 @@ abstract class Entity extends LsObject {
 		 * Составляем список доступных полей
 		 */
 		if(is_array($aData)) {
+			$sScenario=$this->_getValidateScenario();
 			$aFields=array();
 			foreach($this->aValidateRules as $aRule) {
-				$aFields=array_merge($aFields,preg_split('/[\s,]+/',$aRule[0],-1,PREG_SPLIT_NO_EMPTY));
+				if ((empty($aRule['on']) && !$sScenario) || in_array($sScenario,$aRule['on'])) {
+					$aFields=array_merge($aFields,preg_split('/[\s,]+/',$aRule[0],-1,PREG_SPLIT_NO_EMPTY));
+				}
 			}
 			$aFields=array_unique($aFields);
 			foreach ($aData as $sKey => $val)    {
@@ -373,4 +376,3 @@ abstract class Entity extends LsObject {
 		$this->sValidateScenario=$sValue;
 	}
 }
-?>

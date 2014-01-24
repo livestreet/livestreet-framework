@@ -587,8 +587,8 @@ class Engine extends LsObject {
 		$aInfo = self::GetClassInfo(
 			$sName,
 			self::CI_MODULE
-				|self::CI_PPREFIX
-				|self::CI_METHOD
+			|self::CI_PPREFIX
+			|self::CI_METHOD
 		);
 		if($aInfo[self::CI_MODULE] && $aInfo[self::CI_METHOD]){
 			$sName = $aInfo[self::CI_MODULE].'_'.$aInfo[self::CI_METHOD];
@@ -713,16 +713,15 @@ class Engine extends LsObject {
 		}
 		return null;
 	}
-
 	/**
-	 * Создает объект сущности, контролируя варианты кастомизации
+	 * Возвращает класс сущности, контролируя варианты кастомизации
 	 *
-	 * @param  string $sName	Имя сущности, возможны сокращенные варианты.
-	 * Например <pre>ModuleUser_EntityUser</pre> эквивалентно <pre>User_User</pre> и эквивалентно <pre>User</pre> т.к. имя сущности совпадает с именем модуля
-	 * @param  array  $aParams
-	 * @return Entity
+	 * @param $sName
+	 *
+	 * @return mixed
+	 * @throws Exception
 	 */
-	public static function GetEntity($sName,$aParams=array()) {
+	public static function GetEntityClass($sName) {
 		/**
 		 * Сущности, имеющие такое же название как модуль,
 		 * можно вызывать сокращенно. Например, вместо User_User -> User
@@ -739,8 +738,8 @@ class Engine extends LsObject {
 				$aInfo = self::GetClassInfo(
 					$sName,
 					self::CI_ENTITY
-						|self::CI_MODULE
-						|self::CI_PLUGIN
+					|self::CI_MODULE
+					|self::CI_PLUGIN
 				);
 				if ($aInfo[self::CI_MODULE]
 					&& $aInfo[self::CI_ENTITY]) {
@@ -765,8 +764,8 @@ class Engine extends LsObject {
 				$aInfo = self::GetClassInfo(
 					$sName,
 					self::CI_ENTITY
-						|self::CI_MODULE
-						|self::CI_PLUGIN
+					|self::CI_MODULE
+					|self::CI_PLUGIN
 				);
 				if ($aInfo[self::CI_PLUGIN]
 					&& $aInfo[self::CI_MODULE]
@@ -817,11 +816,41 @@ class Engine extends LsObject {
 		 * Делегирование указывается только в полной форме!
 		 */
 		$sClass=self::getInstance()->Plugin_GetDelegate('entity',$sClass);
-
+		return $sClass;
+	}
+	/**
+	 * Создает объект сущности
+	 *
+	 * @param  string $sName	Имя сущности, возможны сокращенные варианты.
+	 * Например <pre>ModuleUser_EntityUser</pre> эквивалентно <pre>User_User</pre> и эквивалентно <pre>User</pre> т.к. имя сущности совпадает с именем модуля
+	 * @param  array  $aParams
+	 * @return Entity
+	 */
+	public static function GetEntity($sName,$aParams=array()) {
+		$sClass=self::GetEntityClass($sName);
 		$oEntity=new $sClass($aParams);
 		return $oEntity;
 	}
-
+	/**
+	 * Создает набор сущностей
+	 *
+	 * @param string $sName	Имя сущности, возможны сокращенные варианты
+	 * @param array $aItems	Двумерный массив набора данных сущностей
+	 * @param null|string $sIndexKey Ключ массива из набора данных, по которому будут формироваться ключи результирующего набора сущностей
+	 *
+	 * @return array
+	 */
+	public static function GetEntityItems($sName,$aItems,$sIndexKey=null) {
+		$aReturn=array();
+		foreach ($aItems as $aRow) {
+			if (is_null($sIndexKey)) {
+				$aReturn[]=self::GetEntity($sName,$aRow);
+			} else {
+				$aReturn[$aRow[$sIndexKey]]=self::GetEntity($sName,$aRow);
+			}
+		}
+		return $aReturn;
+	}
 	/**
 	 * Возвращает имя плагина моудля если модул принадлежит плагину.
 	 * Например <pre>Openid</pre>

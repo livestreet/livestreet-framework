@@ -464,7 +464,13 @@ class Router extends LsObject {
 		$sAdditional=join('/',$aUrl);
 		// Смотрим, есть ли правило rewrite
 		$sPage = self::getInstance()->Rewrite($sPage);
-		return rtrim(Config::Get('path.root.web'),'/')."/$sPage/".($sAdditional ? "{$sAdditional}/" : '');
+		/**
+		 * Если нет GET параметров, то добавляем в конец '/'
+		 */
+		if ($sAdditional and strpos($sAdditional,'?')===false) {
+			$sAdditional.='/';
+		}
+		return rtrim(Config::Get('path.root.web'),'/')."/$sPage/".($sAdditional ? "{$sAdditional}" : '');
 	}
 	/**
 	 * Try to find rewrite rule for given page.
@@ -503,5 +509,13 @@ class Router extends LsObject {
 		self::getInstance()->oEngine->Shutdown();
 		func_header_location($sLocation);
 	}
+	/**
+	 * Выполняет локальный редирект, предварительно завершая работу Engine
+	 *
+	 * @param string $sLocation	локальный адрес, который можно использовать в Router::GetPath();, например, 'blog/news'
+	 */
+	static public function LocationAction($sLocation) {
+		self::getInstance()->oEngine->Shutdown();
+		func_header_location(self::GetPath($sLocation));
+	}
 }
-?>

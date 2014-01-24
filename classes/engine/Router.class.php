@@ -224,7 +224,9 @@ class Router extends LsObject {
 		$this->Viewer_Assign('sAction',$this->Standart(self::$sAction));
 		$this->Viewer_Assign('sEvent',self::$sActionEvent);
 		$this->Viewer_Assign('aParams',self::$aParams);
-		$this->Viewer_Assign('PATH_WEB_CURRENT',$this->Tools_Urlspecialchars(self::$sPathWebCurrent));
+		$sPathWeb=self::$sPathWebCurrent;
+		func_urlspecialchars($sPathWeb);
+		$this->Viewer_Assign('PATH_WEB_CURRENT',$sPathWeb);
 	}
 	/**
 	 * Запускает на выполнение экшен

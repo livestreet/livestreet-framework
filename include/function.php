@@ -154,6 +154,16 @@ function func_htmlspecialchars(&$data, $walkIndex = null)
 	}
 }
 
+function func_urlspecialchars(&$data, $walkIndex = null) {
+	if(is_string($data)){
+		$aTable=get_html_translation_table();
+		unset($aTable['&']);
+		$data=strtr($data,$aTable);
+	}elseif(is_array($data)){
+		array_walk($data, __FUNCTION__);
+	}
+}
+
 /**
  * stripslashes умеющая обрабатывать массивы
  *

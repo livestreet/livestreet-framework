@@ -273,6 +273,7 @@ $config['head']['default']['js'] = array(
 	"___path.framework.frontend.web___/js/ui/autocomplete.js",
 	"___path.framework.frontend.web___/js/ui/notification.js",
 	"___path.framework.frontend.web___/js/ui/alert.js",
+	"___path.framework.frontend.web___/js/ui/captcha.js",
 );
 
 $config['head']['default']['css'] = array(

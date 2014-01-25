@@ -171,6 +171,7 @@
             value: val
           }
         };
+		data.params=ls.utilities.getDataOptions(self.$element, 'remoteParam') || {};
 
         data.security_ls_key = LIVESTREET_SECURITY_KEY;
         /* @livestreet end */

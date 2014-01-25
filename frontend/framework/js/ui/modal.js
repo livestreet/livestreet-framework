@@ -296,7 +296,7 @@ var ls = ls || {};
                 if (result.bStateError) {
                     _loader.hide();
                     _overlay.hide();
-                    //ls.msg.error('Error', result.sMsg);
+                    ls.msg.error('Error', result.sMsg);
                 } else {
                     _loader.hide();
                     $( $.trim( result['sText'] ) ).modal( options ).modal('show');
@@ -305,7 +305,7 @@ var ls = ls || {};
                 error: function () {
                     _loader.hide();
                     _overlay.hide();
-                    //ls.msg.error('Error', result.sMsg);
+                    ls.msg.error('Error');
                 }
             });
         };
@@ -358,7 +358,8 @@ var ls = ls || {};
             var options = ls.utilities.getDataOptions($(this), 'modal');
             var params = ls.utilities.getDataOptions($(this), 'param') || {};
 
-            ls.modal.load(options.url, options.params, options);
+            ls.modal.load(options.url, params, options);
+			e.preventDefault();
         });
     });
 

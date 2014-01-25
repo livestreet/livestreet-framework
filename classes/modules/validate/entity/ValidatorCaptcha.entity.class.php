@@ -28,6 +28,12 @@ class ModuleValidate_EntityValidatorCaptcha extends ModuleValidate_EntityValidat
 	 * @var bool
 	 */
 	public $allowEmpty=false;
+	/**
+	 * Название каптчи для возможности создавать несколько независимых каптч на странице
+	 *
+	 * @var string
+	 */
+	public $name='';
 
 	/**
 	 * Запуск валидации
@@ -44,7 +50,8 @@ class ModuleValidate_EntityValidatorCaptcha extends ModuleValidate_EntityValidat
 			return true;
 		}
 
-		if (!isset($_SESSION['captcha_keystring']) or $_SESSION['captcha_keystring']!=strtolower($sValue)) {
+		$sSessionName='captcha_keystring'.($this->name ? '_'.$this->name : '');
+		if (!isset($_SESSION[$sSessionName]) or $_SESSION[$sSessionName]!=strtolower($sValue)) {
 			return $this->getMessage($this->Lang_Get('validate_captcha_not_valid',null,false),'msg');
 		}
 		return true;

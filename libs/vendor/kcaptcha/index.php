@@ -40,10 +40,11 @@ foreach ($_REQUEST as $key => $value) {
 	}
 }
 
+$name='';
+if (isset($_GET['name']) and is_string($_GET['name']) and $_GET['name']) {
+	$name=$_GET['name'];
+}
+
 $captcha = new KCAPTCHA();
 
-
-$_SESSION['captcha_keystring'] = $captcha->getKeyString();
-
-
-?>
+$_SESSION['captcha_keystring'.($name ? '_'.$name : '')] = $captcha->getKeyString();

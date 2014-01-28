@@ -445,6 +445,34 @@ abstract class Action extends LsObject {
 	}
 
 	/**
+	 * Выводит отладочную информацию в стандартном сообщении
+	 * Этим методом можно завершать выполнение евента в случае системной ошибки, например, не удалось найти топик по его ID при голосовании в ajax обработчике
+	 *
+	 */
+	protected function EventErrorDebug() {
+		if (Config::Get('sys.debug.action_error')) {
+			$aTrace=debug_backtrace(false);
+			$aCaller=array_shift($aTrace);
+			$aCallerSource=array_shift($aTrace);
+			$aPathinfo=pathinfo($aCaller['file']);
+
+			$sMsg=$aPathinfo['basename'].' ['.$aCallerSource['class'].$aCallerSource['type'].$aCallerSource['function'].': '.$aCaller['line'].']';
+			$this->Message_AddErrorSingle($sMsg,'System error');
+			if ($this->Viewer_GetResponseAjax()) {
+				return true;
+			} else {
+				return Router::Action('error','500');
+			}
+		} else {
+			if ($this->Viewer_GetResponseAjax()) {
+				$this->Message_AddErrorSingle('System error');
+				return true;
+			} else {
+				return Router::Action('error','500');
+			}
+		}
+	}
+	/**
 	 * Ставим хук на вызов неизвестного метода и считаем что хотели вызвать метод какого либо модуля
 	 * @see Engine::_CallModule
 	 *

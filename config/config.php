@@ -209,7 +209,8 @@ $config['db']['params']['dbname'] = 'social';
  * Настройка таблиц базы данных
  */
 $config['db']['table']['prefix'] = 'prefix_';
-$config['db']['table']['notify_task']         = '___db.table.prefix___notify_task';
+$config['db']['table']['notify_task']		= '___db.table.prefix___notify_task';
+$config['db']['table']['storage']			= '___db.table.prefix___storage';
 $config['db']['tables']['engine'] = 'InnoDB';  // InnoDB или MyISAM
 /**
  * Настройка memcache

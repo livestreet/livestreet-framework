@@ -170,7 +170,7 @@ class Engine extends LsObject {
 	 */
 	protected $aPlugins=array();
 	/**
-	 * Содержит конфиг модулей.
+	 * Содержит список модулей для автозагрузки.
 	 * Используется для получания списка модулей для авто-загрузки. Остальные модули загружаются при первом обращении.
 	 * В конфиге определен так:
 	 * <pre>
@@ -179,7 +179,7 @@ class Engine extends LsObject {
 	 *
 	 * @var array
 	 */
-	protected $aConfigModule;
+	protected $aModuleAutoload;
 	/**
 	 * Время загрузки модулей в микросекундах
 	 *
@@ -402,7 +402,7 @@ class Engine extends LsObject {
 	 */
 	protected function LoadModules() {
 		$this->LoadConfig();
-		foreach ($this->aConfigModule['autoLoad'] as $sModuleName) {
+		foreach ($this->aModuleAutoload as $sModuleName) {
 			$sModuleClass='Module'.$sModuleName;
 			if(!in_array($sModuleName,array('Plugin','Hook'))) $sModuleClass=$this->Plugin_GetDelegate('module',$sModuleClass);
 
@@ -416,7 +416,7 @@ class Engine extends LsObject {
 	 *
 	 */
 	protected function LoadConfig() {
-		$this->aConfigModule = Config::Get('module');
+		$this->aModuleAutoload = Config::Get('module.autoLoad');
 	}
 	/**
 	 * Регистрирует хуки из /classes/hooks/

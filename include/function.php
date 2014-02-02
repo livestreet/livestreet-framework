@@ -154,14 +154,18 @@ function func_htmlspecialchars(&$data, $walkIndex = null)
 	}
 }
 
-function func_urlspecialchars(&$data, $walkIndex = null) {
+function func_urlspecialchars_array(&$data, $walkIndex = null) {
 	if(is_string($data)){
-		$aTable=get_html_translation_table();
-		unset($aTable['&']);
-		$data=strtr($data,$aTable);
+		$data=func_urlspecialchars($data);
 	}elseif(is_array($data)){
 		array_walk($data, __FUNCTION__);
 	}
+}
+
+function func_urlspecialchars($data) {
+	$aTable=get_html_translation_table();
+	unset($aTable['&']);
+	return strtr($data,$aTable);
 }
 
 /**

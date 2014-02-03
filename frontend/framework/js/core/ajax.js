@@ -20,6 +20,10 @@ ls.ajax = (function ($) {
 		more = more || {};
 		params = params || {};
 
+		if (!more.progressNotShow) {
+			NProgress.start();
+		}
+
 		if ( typeof LIVESTREET_SECURITY_KEY !== 'undefined' ) params.security_ls_key = LIVESTREET_SECURITY_KEY;
 
 		$.each(params, function(k, v){
@@ -46,6 +50,7 @@ ls.ajax = (function ($) {
 				ls.debug.apply(ls, arguments);
 			}.bind(this),
 			complete: function(msg){
+				NProgress.done();
 				ls.debug("ajax complete: ");
 				ls.debug.apply(ls, arguments);
 			}.bind(this)
@@ -66,6 +71,10 @@ ls.ajax = (function ($) {
 			params = more.params || {};
 
 		params.security_ls_key = LIVESTREET_SECURITY_KEY;
+
+		if (!more.progressNotShow) {
+			NProgress.start();
+		}
 
 		if (url.indexOf('http://') != 0 && url.indexOf('https://') != 0 && url.indexOf('/') != 0) {
 			url = aRouter['ajax'] + url + '/';
@@ -107,9 +116,14 @@ ls.ajax = (function ($) {
 				ls.debug("ajax error: ");
 				ls.debug.apply(ls, arguments);
 			}.bind(this),
-			complete: more.complete || function(){
+			complete: function(){
+				NProgress.done();
 				ls.debug("ajax complete: ");
 				ls.debug.apply(ls, arguments);
+
+				if (more.complete) {
+					more.complete.apply(ls,arguments);
+				}
 			}.bind(this)
 		};
 

@@ -96,8 +96,6 @@ ls.ajax = (function ($) {
 				return true;
 			},
 			success: typeof callback == 'function' ? function (result, status, xhr, form) {
-				button.prop('disabled', false).removeClass('loading');
-
 				if (result.bStateError) {
 					ls.msg.error(null, result.sMsg);
 
@@ -118,6 +116,7 @@ ls.ajax = (function ($) {
 			}.bind(this),
 			complete: function(){
 				NProgress.done();
+				button.prop('disabled', false).removeClass('loading');
 				ls.debug("ajax complete: ");
 				ls.debug.apply(ls, arguments);
 

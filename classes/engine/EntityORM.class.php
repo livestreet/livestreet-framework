@@ -384,6 +384,18 @@ abstract class EntityORM extends Entity {
 		return $this->_aOriginalData;
 	}
 	/**
+	 * Возвращает "оригинальные" данные по конкретному полю
+	 *
+	 * @param string $sKey	Название поля, например <pre>'my_property'</pre>
+	 * @return null|mixed
+	 */
+	public function _getOriginalDataOne($sKey) {
+		if(array_key_exists($sKey,$this->_aOriginalData)) {
+			return $this->_aOriginalData[$sKey];
+		}
+		return null;
+	}
+	/**
 	 * Возвращает данные для списка полей сущности
 	 *
 	 * @return array

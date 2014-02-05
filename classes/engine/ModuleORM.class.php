@@ -403,6 +403,10 @@ abstract class ModuleORM extends Module {
 				$aFilter['#with']=array($aFilter['#with']);
 			}
 			/**
+			 * Приводим значение к единой форме ассоциативного массива: array('user'=>array(), 'topic'=>array('blog_id'=>123) )
+			 */
+			func_array_simpleflip($aFilter['#with'],array());
+			/**
 			 * Формируем список примари ключей
 			 */
 			$aEntityPrimaryKeys=array();
@@ -412,7 +416,20 @@ abstract class ModuleORM extends Module {
 			$oEntityEmpty=Engine::GetEntity($sEntityFull);
 			$aRelations=$oEntityEmpty->_getRelations();
 			$aEntityKeys=array();
-			foreach ($aFilter['#with'] as $sRelationName) {
+			foreach ($aFilter['#with'] as $sRelationName => $aRelationFilter) {
+				if (!isset($aRelations[$sRelationName])) {
+					continue;
+				}
+				/**
+				 * Если необходимо, то выставляем сразу нужное значение и не делаем никаких запросов
+				 */
+				if (isset($aRelationFilter['#value-set'])) {
+					foreach ($aEntities as $oEntity) {
+						$oEntity->_setData(array($sRelationName => $aRelationFilter['#value-set']));
+					}
+					continue;
+				}
+
 				$sRelType=$aRelations[$sRelationName][0];
 				$sRelEntity=$this->Plugin_GetRootDelegater('entity',$aRelations[$sRelationName][1]); // получаем корневую сущность, без учета наследников
 				$sRelKey=$aRelations[$sRelationName][2];
@@ -441,9 +458,11 @@ abstract class ModuleORM extends Module {
 					$aRelData=Engine::GetInstance()->_CallModule("{$sRelPluginPrefix}{$sRelModuleName}_get{$sRelEntityName}ItemsByArray{$sRelPrimaryKey}", array($aEntityKeys[$sRelKey]));
 				} elseif ($sRelType==EntityORM::RELATION_TYPE_HAS_ONE) {
 					$aFilterRel=array($sRelKey.' in'=>$aEntityPrimaryKeys,'#index-from'=>$sRelKey);
+					$aFilterRel=array_merge($aFilterRel,$aRelationFilter);
 					$aRelData=Engine::GetInstance()->_CallModule("{$sRelPluginPrefix}{$sRelModuleName}_get{$sRelEntityName}ItemsByFilter", array($aFilterRel));
 				} elseif ($sRelType==EntityORM::RELATION_TYPE_HAS_MANY) {
 					$aFilterRel=array($sRelKey.' in'=>$aEntityPrimaryKeys,'#index-group'=>$sRelKey);
+					$aFilterRel=array_merge($aFilterRel,$aRelationFilter);
 					$aRelData=Engine::GetInstance()->_CallModule("{$sRelPluginPrefix}{$sRelModuleName}_get{$sRelEntityName}ItemsByFilter", array($aFilterRel));
 				}
 				/**
@@ -459,6 +478,8 @@ abstract class ModuleORM extends Module {
 					}
 					if (isset($aRelData[$sKeyData])) {
 						$oEntity->_setData(array($sRelationName => $aRelData[$sKeyData]));
+					} elseif (isset($aRelationFilter['#value-default'])) {
+						$oEntity->_setData(array($sRelationName => $aRelationFilter['#value-default']));
 					}
 				}
 			}

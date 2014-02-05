@@ -417,7 +417,7 @@ abstract class ModuleORM extends Module {
 				$sRelEntity=$this->Plugin_GetRootDelegater('entity',$aRelations[$sRelationName][1]); // получаем корневую сущность, без учета наследников
 				$sRelKey=$aRelations[$sRelationName][2];
 
-				if (!array_key_exists($sRelationName,$aRelations) or !in_array($sRelType,array(EntityORM::RELATION_TYPE_BELONGS_TO,EntityORM::RELATION_TYPE_HAS_ONE))) {
+				if (!array_key_exists($sRelationName,$aRelations) or !in_array($sRelType,array(EntityORM::RELATION_TYPE_BELONGS_TO,EntityORM::RELATION_TYPE_HAS_ONE,EntityORM::RELATION_TYPE_HAS_MANY))) {
 					throw new Exception("The entity <{$sEntityFull}> not have relation <{$sRelationName}>");
 				}
 
@@ -442,6 +442,9 @@ abstract class ModuleORM extends Module {
 				} elseif ($sRelType==EntityORM::RELATION_TYPE_HAS_ONE) {
 					$aFilterRel=array($sRelKey.' in'=>$aEntityPrimaryKeys,'#index-from'=>$sRelKey);
 					$aRelData=Engine::GetInstance()->_CallModule("{$sRelPluginPrefix}{$sRelModuleName}_get{$sRelEntityName}ItemsByFilter", array($aFilterRel));
+				} elseif ($sRelType==EntityORM::RELATION_TYPE_HAS_MANY) {
+					$aFilterRel=array($sRelKey.' in'=>$aEntityPrimaryKeys,'#index-group'=>$sRelKey);
+					$aRelData=Engine::GetInstance()->_CallModule("{$sRelPluginPrefix}{$sRelModuleName}_get{$sRelEntityName}ItemsByFilter", array($aFilterRel));
 				}
 				/**
 				 * Собираем набор
@@ -449,7 +452,7 @@ abstract class ModuleORM extends Module {
 				foreach ($aEntities as $oEntity) {
 					if ($sRelType==EntityORM::RELATION_TYPE_BELONGS_TO) {
 						$sKeyData=$oEntity->_getDataOne($sRelKey);
-					} elseif ($sRelType==EntityORM::RELATION_TYPE_HAS_ONE) {
+					} elseif (in_array($sRelType,array(EntityORM::RELATION_TYPE_HAS_ONE,EntityORM::RELATION_TYPE_HAS_MANY))) {
 						$sKeyData=$oEntity->_getPrimaryKeyValue();
 					} else {
 						break;
@@ -466,6 +469,12 @@ abstract class ModuleORM extends Module {
 		 */
 		if (in_array('#index-from-primary', $aFilter) || !empty($aFilter['#index-from'])) {
 			$aEntities = $this->_setIndexesFromField($aEntities, $aFilter);
+		}
+		/**
+		 * Группирует результирующий массив по ключам необходимого поля
+		 */
+		if (!empty($aFilter['#index-group'])) {
+			$aEntities = $this->_setIndexesGroupField($aEntities, $aFilter);
 		}
 		/**
 		 * Хук для возможности кастомной обработки результата
@@ -493,6 +502,22 @@ abstract class ModuleORM extends Module {
 				$oEntity->_getPrimaryKey() :
 				$oEntity->_getField($aFilter['#index-from']);
 			$aIndexedEntities[$oEntity->_getDataOne($sKey)]=$oEntity;
+		}
+		return $aIndexedEntities;
+	}
+	/**
+	 * Возвращает сгруппированный массив по нужному полю
+	 *
+	 * @param array $aEntities
+	 * @param array $aFilter
+	 *
+	 * @return array
+	 */
+	protected function _setIndexesGroupField($aEntities, $aFilter) {
+		$aIndexedEntities=array();
+		foreach ($aEntities as $oEntity) {
+			$sKey = $oEntity->_getField($aFilter['#index-group']);
+			$aIndexedEntities[$oEntity->_getDataOne($sKey)][]=$oEntity;
 		}
 		return $aIndexedEntities;
 	}

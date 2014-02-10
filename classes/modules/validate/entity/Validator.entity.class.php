@@ -109,7 +109,7 @@ abstract class ModuleValidate_EntityValidator extends Entity {
 	 */
 	protected function getMessage($sMsgDefault,$sMsgFieldCustom=null,$aReplace=array()) {
 		if (!is_null($sMsgFieldCustom)) {
-			if (!is_null($this->$sMsgFieldCustom)) {
+			if (property_exists($this,$sMsgFieldCustom) and !is_null($this->$sMsgFieldCustom)) {
 				$sMsgDefault=$this->$sMsgFieldCustom;
 			} else {
 				$sMsgFieldCustomId=$sMsgFieldCustom.'Id';

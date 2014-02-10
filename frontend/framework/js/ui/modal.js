@@ -245,10 +245,9 @@ var ls = ls || {};
 				if (this.options.aftershow) {
 					if (typeof( this.options.aftershow ) == 'string') {
 						$.proxy(eval(this.options.aftershow), this);
-					} else {
-						this._trigger("aftershow", null, this);
 					}
 				}
+				this._trigger("aftershow", null, this);
 			}.bind(this));
 		},
 

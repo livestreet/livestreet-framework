@@ -259,6 +259,7 @@ $config['head']['default']['js'] = array(
 	"___path.framework.frontend.web___/js/vendor/parsley/i18n/messages.ru.js",
 	"___path.framework.frontend.web___/js/vendor/fotorama/fotorama.js",
 	"___path.framework.frontend.web___/js/vendor/nprogress/nprogress.js",
+	"___path.framework.frontend.web___/js/vendor/colorbox/jquery.colorbox.js",
 
 	/* Core */
 	"___path.framework.frontend.web___/js/core/main.js",

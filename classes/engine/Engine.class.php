@@ -1177,6 +1177,24 @@ class Engine extends LsObject {
 			require_once $aInfo[Engine::CI_CLASSPATH];
 			return true;
 		}elseif(!class_exists($sClassName)){
+			/**
+			 * Проверяем соответствие PSR-0
+			 */
+			$sClassName = ltrim($sClassName, '\\');
+			$sFileName  = '';
+			$sNameSpace = '';
+			if ($iLastNsPos = strrpos($sClassName, '\\')) {
+				$sNameSpace = substr($sClassName, 0, $iLastNsPos);
+				$sClassName = substr($sClassName, $iLastNsPos + 1);
+				$sFileName  = str_replace('\\', DIRECTORY_SEPARATOR, $sNameSpace) . DIRECTORY_SEPARATOR;
+			}
+			$sFileName .= str_replace('_', DIRECTORY_SEPARATOR, $sClassName) . '.php';
+			$sFileName=Config::Get('path.framework.libs_vendor.server').DIRECTORY_SEPARATOR.$sFileName;
+			if (file_exists($sFileName)) {
+				require_once($sFileName);
+				return true;
+			}
+
 			dump("(autoload $sClassName) Can not load CLASS-file");
 			dump($aInfo);
 			//throw new Exception("(autoload '$sClassName') Can not load CLASS-file");

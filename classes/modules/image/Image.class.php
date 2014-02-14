@@ -1,68 +1,71 @@
 <?php
-/*-------------------------------------------------------
-*
-*   LiveStreet Engine Social Networking
-*   Copyright © 2008 Mzhelskiy Maxim
-*
-*--------------------------------------------------------
-*
-*   Official site: www.livestreet.ru
-*   Contact e-mail: rus.engine@gmail.com
-*
-*   GNU General Public License, version 2:
-*   http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
-*
----------------------------------------------------------
-*/
-
-require_once Config::Get('path.framework.libs_vendor.server').'/LiveImage/Image.php';
 
 /**
  * Модуль обработки изображений
- * Использует библиотеку LiveImage
- *
- * @package engine.modules
- * @since 1.0
+ * Используется библиотека Imagine
  */
 class ModuleImage extends Module {
-	/**
-	 * Неопределенный тип ошибки при загрузке изображения
-	 */
-	const UPLOAD_IMAGE_ERROR      = 1;
-	/**
-	 * Ошибка избыточного размера при загрузке изображения
-	 */
-	const UPLOAD_IMAGE_ERROR_SIZE = 2;
-	/**
-	 * Неизвестный тип изображения
-	 */
-	const UPLOAD_IMAGE_ERROR_TYPE = 4;
-	/**
-	 * Ошибка чтения файла при загрузке изображения
-	 */
-	const UPLOAD_IMAGE_ERROR_READ = 8;
 
 	/**
-	 * Настройки модуля по умолчанию
+	 * Дефолтные параметры
+	 * Основная задача в определении списка доступных ключей массива с параметрами
 	 *
 	 * @var array
 	 */
-	protected $aParamsDefault = array();
+	protected $aParamsDefault = array(
+		'size_max_width'=>7000,
+		'size_max_height'=>7000,
+		'format'=>'jpg',
+		'format_auto'=>true,
+		'quality'=>95,
+	);
 	/**
 	 * Тескт последней ошибки
 	 *
 	 * @var string
 	 */
 	protected $sLastErrorText = null;
+	/**
+	 * Список поддерживаемых драйверов обработки изображений
+	 *
+	 * @var array
+	 */
+	protected $aDriversSupport=array(
+		'gd','imagick','gmagick'
+	);
 
 	/**
-	 * Инициализация модуля
+	 * Текущий драйвер обработки изображений
+	 *
+	 * @var string
 	 */
+	protected $sDriverCurrent='gd';
+
 	public function Init() {
-		$this->aParamsDefault = array(
-			'watermark_use'=>false,
-			'round_corner' =>false
-		);
+		$this->SetDriverCurrent(Config::Get('module.image.driver'));
+	}
+	/**
+	 * Устанавливает текущий драйвер обработки изображений
+	 *
+	 * @param $sDriver
+	 *
+	 * @return bool
+	 */
+	public function SetDriverCurrent($sDriver) {
+		$sDriver=strtolower($sDriver);
+		if (in_array($sDriver,$this->aDriversSupport)) {
+			$this->sDriverCurrent=$sDriver;
+			return true;
+		}
+		return false;
+	}
+	/**
+	 * Возвращает текущий драйвер
+	 *
+	 * @return string
+	 */
+	public function GetDriverCurrent() {
+		return $this->sDriverCurrent;
 	}
 	/**
 	 * Получает текст последней ошибки
@@ -85,7 +88,101 @@ class ModuleImage extends Module {
 	 *
 	 */
 	public function ClearLastError() {
-		$this->sLastErrorText=null;
+		$this->SetLastError(null);
+	}
+	/**
+	 * Возвращает класс текущего драйвера
+	 *
+	 * @return string
+	 */
+	protected function GetClassDriverCurrent() {
+		$sDrive=ucfirst($this->sDriverCurrent);
+		return "Imagine\\{$sDrive}\\Imagine";
+	}
+	/**
+	 * Открывает файл изображения и возвращает объект
+	 *
+	 * @param $sFile	Путь до изображения
+	 * @param $aParams	Параметры
+	 * @return ModuleImage_EntityImage|bool
+	 */
+	public function Open($sFile,$aParams=null) {
+		if(!is_array($aParams)) {
+			$aParams=$this->BuildParams();
+		} else {
+			$aParams=func_array_merge_assoc($this->aParamsDefault,$aParams);
+		}
+
+		$sClassDriver=$this->GetClassDriverCurrent();
+
+		try {
+			/**
+			 * Создаем объект изображения библиотеки Imagine
+			 */
+			$oImagine=new $sClassDriver();
+			$oImageObject=$oImagine->open($sFile);
+
+			if (!$aSize=getimagesize($sFile,$aImageInfo)) {
+				$this->SetLastError('The file is not an image');
+				return false;
+			}
+			/**
+			 * Проверяем на максимальный размер
+			 */
+			$oBox=$oImageObject->getSize();
+			if ($oBox->getWidth()>$aParams['size_max_width'] or $oBox->getHeight()>$aParams['size_max_height']) {
+				$this->SetLastError('Maximum size image '.$aParams['size_max_width'].'x'.$aParams['size_max_height']);
+				return false;
+			}
+			/**
+			 * Создаем объект для работы с изображением
+			 */
+			$oImage=Engine::GetEntity('ModuleImage_EntityImage');
+			$oImage->setImage($oImageObject);
+			$oImage->setParams($aParams);
+			$oImage->setInfoSize($aSize);
+			$oImage->setInfoAdditional($aImageInfo);
+			return $oImage;
+		} catch (Imagine\Exception\Exception $e) {
+			$this->SetLastError($e->getMessage());
+			return false;
+		}
+	}
+	/**
+	 * Создает пустой объект изображения
+	 *
+	 * @param int  $iWidth
+	 * @param int  $iHeight
+	 * @param array|null $aParams
+	 *
+	 * @return ModuleImage_EntityImage|bool
+	 */
+	public function Create($iWidth,$iHeight,$aParams=null) {
+		if(!is_array($aParams)) {
+			$aParams=$this->BuildParams();
+		} else {
+			$aParams=func_array_merge_assoc($this->aParamsDefault,$aParams);
+		}
+
+		$sClassDriver=$this->GetClassDriverCurrent();
+
+		try {
+			/**
+			 * Создаем объект изображения библиотеки Imagine
+			 */
+			$oImagine = new $sClassDriver();
+			$oImageObject=$oImagine->create(new Imagine\Image\Box($iWidth,$iHeight));
+			/**
+			 * Создаем объект для работы с изображением
+			 */
+			$oImage=Engine::GetEntity('ModuleImage_EntityImage');
+			$oImage->setImage($oImageObject);
+			$oImage->setParams($aParams);
+			return $oImage;
+		} catch (Imagine\Exception\Exception $e) {
+			$this->SetLastError($e->getMessage());
+			return false;
+		}
 	}
 	/**
 	 * Возврашает параметры для группы, если каких то параметров в группе нет, то используются дефолтные
@@ -94,203 +191,17 @@ class ModuleImage extends Module {
 	 * @return array
 	 */
 	public function BuildParams($sName=null) {
+		$aDefault=func_array_merge_assoc($this->aParamsDefault,(array)Config::Get('module.image.params.default'));
 		if(is_null($sName)) {
-			return Config::Get('module.image.default');
+			return $aDefault;
 		}
-
-		$aDefault = (array)Config::Get('module.image.default');
-		$aNamed   = (array)Config::Get('module.image.'.strtolower($sName));
-
+		$aNamed   = (array)Config::Get('module.image.params.'.strtolower($sName));
 		return func_array_merge_assoc($aDefault,$aNamed);
 	}
-	/**
-	 * Возвращает объект изображения
-	 *
-	 * @param $sFile	Путь до изображения
-	 * @return LiveImage
-	 */
-	public function CreateImageObject($sFile) {
-		return new LiveImage($sFile);
-	}
-	/**
-	 * Resize,copy image,
-	 * make rounded corners and add watermark
-	 *
-	 * @param  string $sFileSrc	Исходный файл изображения
-	 * @param  string $sDirDest	Директория куда нужно сохранить изображение относительно корня сайта (path.root.server)
-	 * @param  string $sFileDest	Имя файла для сохранения, без расширения
-	 * @param  int    $iWidthMax	Максимально допустимая ширина изображения
-	 * @param  int    $iHeightMax	Максимало допустимая высота изображения
-	 * @param  int|null    $iWidthDest	Ширина необходимого изображения на выходе
-	 * @param  int|null    $iHeightDest	Высота необходимого изображения на выходе
-	 * @param  bool   $bForcedMinSize	Растягивать изображение по ширине или нет, если исходное меньше. При false - изображение будет растянуто
-	 * @param  array|null  $aParams		Параметры
-	 * @param  LiveImage|null $oImage	Объект изображения, если null то будет содано автоматически
-	 * @return string|bool	Полный серверный путь до сохраненного изображения
-	 */
-	public function Resize($sFileSrc,$sDirDest,$sFileDest,$iWidthMax,$iHeightMax,$iWidthDest=null,$iHeightDest=null,$bForcedMinSize=true,$aParams=null,$oImage=null) {
-		$this->ClearLastError();
-		/**
-		 * Если параметры не переданы, устанавливаем действия по умолчанию
-		 */
-		if(!is_array($aParams)) {
-			$aParams=$this->aParamsDefault;
-		}
-		/**
-		 * Если объект не передан как параметр,
-		 * создаем новый
-		 */
-		if(!$oImage) $oImage=$this->CreateImageObject($sFileSrc);
 
-		if($oImage->get_last_error()){
-			$this->SetLastError($oImage->get_last_error());
-			return false;
-		}
 
-		$sFileDest.='.'.$oImage->get_image_params('format');
-		if (($oImage->get_image_params('width')>$iWidthMax)
-			or ($oImage->get_image_params('height')>$iHeightMax)) {
-			return false;
-		}
 
-		if ($iWidthDest) {
-			if ($bForcedMinSize and ($iWidthDest>$oImage->get_image_params('width'))) {
-				$iWidthDest=$oImage->get_image_params('width');
-			}
-			/**
-			 * Ресайзим и выводим результат в файл.
-			 * Если не задана новая высота, то применяем масштабирование.
-			 * Если нужно добавить Watermark, то запрещаем ручное управление alfa-каналом
-			 */
-			$oImage->resize($iWidthDest,$iHeightDest,(!$iHeightDest),(!$aParams['watermark_use']));
 
-			/**
-			 * Добавляем watermark согласно в конфигурации заданым параметрам
-			 */
-			if($aParams['watermark_use']) {
-				if ($oImage->get_image_params('width')>$aParams['watermark_min_width'] and $oImage->get_image_params('height')>$aParams['watermark_min_height']) {
-					switch($aParams['watermark_type']) {
-						default:
-						case 'text':
-							$oImage->set_font(
-								$aParams['watermark_font_size'],  0,
-								$aParams['path']['fonts'].$aParams['watermark_font'].'.ttf'
-							);
-
-							$oImage->watermark(
-								$aParams['watermark_text'],
-								explode(',',$aParams['watermark_position'],2),
-								explode(',',$aParams['watermark_font_color']),
-								explode(',',$aParams['watermark_back_color']),
-								$aParams['watermark_font_alfa'],
-								$aParams['watermark_back_alfa']
-							);
-							break;
-						case 'image':
-							$oImage->paste_image(
-								$aParams['path']['watermarks'].$aParams['watermark_image'],
-								false, explode(',',$aParams['watermark_position'],2)
-							);
-							break;
-					}
-				}
-			}
-			/**
-			 * Скругляем углы
-			 */
-			if($aParams['round_corner']) {
-				$oImage->round_corners($aParams['round_corner_radius'], $aParams['round_corner_rate']);
-			}
-			/**
-			 * Для JPG формата устанавливаем output quality, если это предусмотрено в конфигурации
-			 */
-			if(isset($aParams['jpg_quality']) and $oImage->get_image_params('format')=='jpg') {
-				$oImage->set_jpg_quality($aParams['jpg_quality']);
-			}
-
-			$sFileTmp=Config::Get('sys.cache.dir').func_generator(20);
-			$oImage->output(null,$sFileTmp);
-			return $this->SaveFile($sFileTmp,$sDirDest,$sFileDest,0666,true);
-		} else{
-			return $this->SaveFile($sFileSrc,$sDirDest,$sFileDest,0666,false);
-		}
-		return false;
-	}
-	/**
-	 * Вырезает максимально возможный квадрат
-	 *
-	 * @param  LiveImage $oImage	Объект изображения
-	 * @return LiveImage
-	 */
-	public function CropSquare(LiveImage $oImage,$bCenter=true) {
-		if(!$oImage || $oImage->get_last_error()) {
-			return false;
-		}
-		$iWidth  = $oImage->get_image_params('width');
-		$iHeight = $oImage->get_image_params('height');
-		/**
-		 * Если высота и ширина совпадают, то возвращаем изначальный вариант
-		 */
-		if($iWidth==$iHeight){ return $oImage; }
-
-		/**
-		 * Вырезаем квадрат из центра
-		 */
-		$iNewSize = min($iWidth,$iHeight);
-
-		if ($bCenter) {
-			$oImage->crop($iNewSize,$iNewSize,($iWidth-$iNewSize)/2,($iHeight-$iNewSize)/2);
-		} else {
-			$oImage->crop($iNewSize,$iNewSize,0,0);
-		}
-		/**
-		 * Возвращаем объект изображения
-		 */
-		return $oImage;
-	}
-	/**
-	 * Вырезает максимально возможный прямоугольный в нужной пропорции
-	 *
-	 * @param LiveImage $oImage	Объект изображения
-	 * @param int $iW	Ширина для определения пропорции
-	 * @param int $iH	Высота для определения пропорции
-	 * @param bool $bCenter	Вырезать из центра
-	 * @return LiveImage
-	 */
-	public function CropProportion(LiveImage $oImage,$iW,$iH,$bCenter=true) {
-
-		if(!$oImage || $oImage->get_last_error()) {
-			return false;
-		}
-		$iWidth  = $oImage->get_image_params('width');
-		$iHeight = $oImage->get_image_params('height');
-		/**
-		 * Если высота и ширина уже в нужных пропорциях, то возвращаем изначальный вариант
-		 */
-		$iProp=round($iW/$iH, 2);
-		if(round($iWidth/$iHeight, 2)==$iProp){ return $oImage; }
-
-		/**
-		 * Вырезаем прямоугольник из центра
-		 */
-		if (round($iWidth/$iHeight, 2)<=$iProp) {
-			$iNewWidth=$iWidth;
-			$iNewHeight=round($iNewWidth/$iProp);
-		} else {
-			$iNewHeight=$iHeight;
-			$iNewWidth=$iNewHeight*$iProp;
-		}
-
-		if ($bCenter) {
-			$oImage->crop($iNewWidth,$iNewHeight,($iWidth-$iNewWidth)/2,($iHeight-$iNewHeight)/2);
-		} else {
-			$oImage->crop($iNewWidth,$iNewHeight,0,0);
-		}
-		/**
-		 * Возвращаем объект изображения
-		 */
-		return $oImage;
-	}
 	/**
 	 * Сохраняет(копирует) файл изображения на сервер
 	 * Если переопределить данный метод, то можно сохранять изображения, например, на Amazon S3
@@ -300,133 +211,40 @@ class ModuleImage extends Module {
 	 * @param string $sFileDest	Имя файла для сохранения
 	 * @param int|null $iMode	Права chmod для файла, например, 0777
 	 * @param bool $bRemoveSource	Удалять исходный файл или нет
-	 * @return bool | string
+	 * @return bool | string	При успешном сохранении возвращает полный путь до файла с типом, например, [server]/home/webmaster/site.com/image.jpg
 	 */
-	public function SaveFile($sFileSource,$sDirDest,$sFileDest,$iMode=null,$bRemoveSource=false) {
-		$sFileDestFullPath=rtrim(Config::Get('path.root.server'),"/").'/'.trim($sDirDest,"/").'/'.$sFileDest;
-		$this->CreateDirectory($sDirDest);
-
-		$bResult=copy($sFileSource,$sFileDestFullPath);
-		if ($bResult and !is_null($iMode)) {
-			chmod($sFileDestFullPath,$iMode);
-		}
-		if ($bRemoveSource) {
-			unlink($sFileSource);
-		}
-		/**
-		 * Если копирование прошло успешно, возвращаем новый серверный путь до файла
-		 */
-		if ($bResult) {
-			return $sFileDestFullPath;
+	public function SaveFileSmart($sFileSource,$sDirDest,$sFileDest,$iMode=null,$bRemoveSource=false) {
+		if ($sPathFile=$this->Fs_SaveFileLocalSmart($sFileSource,$sDirDest,$sFileDest,$iMode,$bRemoveSource)) {
+			return $this->Fs_MakePath($sPathFile,ModuleFs::PATH_TYPE_SERVER);
 		}
 		return false;
 	}
 	/**
-	 * Удаление файла изображения
+	 * Сохраняет(копирует) файл изображения на сервер
+	 * Если переопределить данный метод, то можно сохранять изображения, например, на Amazon S3
 	 *
-	 * @param string $sFile	Полный серверный путь до файла
-	 * @return bool
+	 * @param string $sFileSource	Полный путь до исходного файла
+	 * @param string $sFileDest	Полный путь до файла для сохранения
+	 * @param int|null $iMode	Права chmod для файла, например, 0777
+	 * @param bool $bRemoveSource	Удалять исходный файл или нет
+	 * @return bool | string	При успешном сохранении возвращает полный путь до файла с типом, например, [server]/home/webmaster/site.com/image.jpg
 	 */
-	public function RemoveFile($sFile) {
-		if (file_exists($sFile)) {
-			return unlink($sFile);
+	public function SaveFile($sFileSource,$sFileDest,$iMode=null,$bRemoveSource=false) {
+		if ($this->Fs_SaveFileLocal($sFileSource,$sFileDest,$iMode,$bRemoveSource)) {
+			return $this->Fs_MakePath($sFileDest,ModuleFs::PATH_TYPE_SERVER);
 		}
 		return false;
 	}
 	/**
-	 * Копирует файл изображения в локальную файловую систему
+	 * Удаляет файл изображения
+	 * Если переопределить данный метод, то можно удалять изображения, например, с Amazon S3
 	 *
-	 * @param string $sFileSource	Полный серверный путь до файла (может быть на удаленном сервере)
-	 * @param string $sFileDistLocal	Полный серверный путь до локального файла
-	 * @return bool
-	 */
-	public function CopyFileToLocal($sFileSource,$sFileDistLocal) {
-		if (@copy($sFileSource,$sFileDistLocal)) {
-			return true;
-		}
-		return false;
-	}
-	/**
-	 * Создает каталог по указанному адресу (с учетом иерархии)
+	 * @param string $sPathFile	Полный путь до файла с типом, например, [relative]/image.jpg
 	 *
-	 * @param string $sDirDest	Каталог относительно корня сайта
+	 * @return mixed
 	 */
-	public function CreateDirectory($sDirDest) {
-		@func_mkdir(Config::Get('path.root.server'),$sDirDest);
-	}
-	/**
-	 * Возвращает серверный адрес по переданному web-адресу
-	 *
-	 * @param  string $sPath	WEB адрес изображения
-	 * @return string
-	 */
-	public function GetServerPath($sPath) {
-		/**
-		 * Определяем, принадлежит ли этот адрес основному домену
-		 */
-		if(parse_url($sPath,PHP_URL_HOST)!=parse_url(Config::Get('path.root.web'),PHP_URL_HOST)) {
-			return $sPath;
-		}
-		/**
-		 * Выделяем адрес пути
-		 */
-		$sPath = ltrim(parse_url($sPath,PHP_URL_PATH),'/');
-		if($iOffset = Config::Get('path.offset_request_url')){
-			$sPath = preg_replace('#^([^/]+/*){'.$iOffset.'}#msi', '', $sPath);
-		}
-		return rtrim(Config::Get('path.root.server'),'/').'/'.$sPath;
-	}
-	/**
-	 * Возвращает WEB адрес по переданному серверному адресу
-	 *
-	 * @param  string $sPath	Серверный адрес(путь) изображения
-	 * @return string
-	 */
-	public function GetWebPath($sPath) {
-		$sServerPath = rtrim(str_replace(DIRECTORY_SEPARATOR,'/',Config::Get('path.root.server')),'/');
-		$sWebPath    = rtrim(Config::Get('path.root.web'), '/');
-		return str_replace($sServerPath, $sWebPath, str_replace(DIRECTORY_SEPARATOR,'/',$sPath));
-	}
-	/**
-	 * Получает директорию для данного пользователя
-	 * Используется фомат хранения данных (/images/us/er/id/yyyy/mm/dd/file.jpg)
-	 *
-	 * @param  int $sId	Целое число, обычно это ID пользователя
-	 * @param  string $sSubDir	Подкаталог
-	 * @return string
-	 */
-	public function GetIdDir($sId,$sSubDir=null) {
-		return Config::Get('path.uploads.images').'/'.($sSubDir ? $sSubDir.'/' : '').preg_replace('~(.{2})~U', "\\1/", str_pad($sId, 6, "0", STR_PAD_LEFT)).date('Y/m/d');
-	}
-	/**
-	 * Возвращает валидный Html код тега <img>
-	 *
-	 * @param  string $sPath	WEB адрес изображения
-	 * @param  array $aParams	Параметры
-	 * @return string
-	 */
-	public function BuildHTML($sPath,$aParams) {
-		$sText='<img src="'.$sPath.'" ';
-		if (isset($aParams['title']) and $aParams['title']!='') {
-			$sText.=' title="'.htmlspecialchars($aParams['title']).'" ';
-			/**
-			 * Если не определен ALT заполняем его тайтлом
-			 */
-			if(!isset($aParams['alt'])) $aParams['alt']=$aParams['title'];
-		}
-		if (isset($aParams['align']) and in_array($aParams['align'],array('left','right','center'))) {
-			if ($aParams['align'] == 'center') {
-				$sText.=' class="image-center"';
-			} else {
-				$sText.=' align="'.htmlspecialchars($aParams['align']).'" ';
-			}
-		}
-		$sAlt = isset($aParams['alt'])
-			? ' alt="'.htmlspecialchars($aParams['alt']).'"'
-			: ' alt=""';
-		$sText.=$sAlt.' />';
-
-		return $sText;
+	public function RemoveFile($sPathFile) {
+		$sPathFile=$this->Fs_GetPathServer($sPathFile);
+		return $this->Fs_RemoveFileLocal($sPathFile);
 	}
 }
-?>

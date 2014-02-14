@@ -33,6 +33,17 @@ class ModuleFs extends Module {
 		$this->sPathTypeDefault=self::PATH_TYPE_SERVER;
 	}
 	/**
+	 * Формирует полный путь с учетом типа
+	 *
+	 * @param string $sPath
+	 * @param string $sType
+	 *
+	 * @return string
+	 */
+	public function MakePath($sPath,$sType) {
+		return '['.$sType.']'.$sPath;
+	}
+	/**
 	 * Возвращает серверный путь
 	 *
 	 * @param string $sPath	Исходный путь с префиксом, например, [relative]/image.jpg
@@ -42,16 +53,9 @@ class ModuleFs extends Module {
 	 */
 	public function GetPathServer($sPath,$bWithType=false) {
 		list($sType,$sPath)=$this->GetParsedPath($sPath);
-		if ($sType==self::PATH_TYPE_SERVER) {
-			// не изменяем
-		} elseif ($sType==self::PATH_TYPE_WEB) {
-			$sPath=$this->GetPathServerFromWeb($sPath);
-		} elseif ($sType==self::PATH_TYPE_RELATIVE) {
-			$sPath=$this->GetPathServerFromRelative($sPath);
-		} else {
+		if ($sType!=self::PATH_TYPE_SERVER) {
 			/**
-			 * Кастомный тип
-			 * Пробуем вызвать метод GetPathServerFrom[CustomType]()
+			 * Пробуем вызвать метод GetPathServerFrom[Type]()
 			 */
 			$sMethod='GetPathServerFrom'.func_camelize($sType);
 			if (method_exists($this,$sMethod)) {
@@ -59,7 +63,7 @@ class ModuleFs extends Module {
 			}
 		}
 		if ($bWithType) {
-			$sPath='['.self::PATH_TYPE_SERVER.']'.$sPath;
+			$sPath=$this->MakePath($sPath,self::PATH_TYPE_SERVER);
 		}
 		return $sPath;
  	}
@@ -73,16 +77,9 @@ class ModuleFs extends Module {
 	 */
 	public function GetPathWeb($sPath,$bWithType=false) {
 		list($sType,$sPath)=$this->GetParsedPath($sPath);
-		if ($sType==self::PATH_TYPE_SERVER) {
-			$sPath=$this->GetPathWebFromServer($sPath);
-		} elseif ($sType==self::PATH_TYPE_WEB) {
-			// не изменяем
-		} elseif ($sType==self::PATH_TYPE_RELATIVE) {
-			$sPath=$this->GetPathWebFromRelative($sPath);
-		} else {
+		if ($sType!=self::PATH_TYPE_WEB) {
 			/**
-			 * Кастомный тип
-			 * Пробуем вызвать метод GetPathWebFrom[CustomType]()
+			 * Пробуем вызвать метод GetPathWebFrom[Type]()
 			 */
 			$sMethod='GetPathWebFrom'.func_camelize($sType);
 			if (method_exists($this,$sMethod)) {
@@ -90,7 +87,7 @@ class ModuleFs extends Module {
 			}
 		}
 		if ($bWithType) {
-			$sPath='['.self::PATH_TYPE_WEB.']'.$sPath;
+			$sPath=$this->MakePath($sPath,self::PATH_TYPE_WEB);
 		}
 		return $sPath;
 	}
@@ -104,16 +101,9 @@ class ModuleFs extends Module {
 	 */
 	public function GetPathRelative($sPath,$bWithType=false) {
 		list($sType,$sPath)=$this->GetParsedPath($sPath);
-		if ($sType==self::PATH_TYPE_SERVER) {
-			$sPath=$this->GetPathRelativeFromServer($sPath);
-		} elseif ($sType==self::PATH_TYPE_WEB) {
-			$sPath=$this->GetPathRelativeFromWeb($sPath);
-		} elseif ($sType==self::PATH_TYPE_RELATIVE) {
-			// не изменяем
-		} else {
+		if ($sType!=self::PATH_TYPE_RELATIVE) {
 			/**
-			 * Кастомный тип
-			 * Пробуем вызвать метод GetPathRelativeFrom[CustomType]()
+			 * Пробуем вызвать метод GetPathRelativeFrom[Type]()
 			 */
 			$sMethod='GetPathRelativeFrom'.func_camelize($sType);
 			if (method_exists($this,$sMethod)) {
@@ -121,7 +111,7 @@ class ModuleFs extends Module {
 			}
 		}
 		if ($bWithType) {
-			$sPath='['.self::PATH_TYPE_RELATIVE.']'.$sPath;
+			$sPath=$this->MakePath($sPath,self::PATH_TYPE_RELATIVE);
 		}
 		return $sPath;
 	}
@@ -295,5 +285,18 @@ class ModuleFs extends Module {
 	 */
 	public function CreateDirectoryLocalSmart($sDirDest) {
 		$this->CreateDirectoryLocal(rtrim(Config::Get('path.root.server'),'/').'/'.$sDirDest);
+	}
+	/**
+	 * Удаляет локальный файл
+	 *
+	 * @param string $sFile
+	 *
+	 * @return bool
+	 */
+	public function RemoveFileLocal($sFile) {
+		if (file_exists($sFile)) {
+			return @unlink($sFile);
+		}
+		return false;
 	}
 }

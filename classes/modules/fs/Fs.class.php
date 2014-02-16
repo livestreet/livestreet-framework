@@ -284,7 +284,7 @@ class ModuleFs extends Module {
 	 * @param string $sDirDest	Каталог относительно корня сайта
 	 */
 	public function CreateDirectoryLocalSmart($sDirDest) {
-		$this->CreateDirectoryLocal(rtrim(Config::Get('path.root.server'),'/').'/'.$sDirDest);
+		$this->CreateDirectoryLocal(rtrim(Config::Get('path.root.server'),'/').'/'.ltrim($sDirDest,'/'));
 	}
 	/**
 	 * Удаляет локальный файл

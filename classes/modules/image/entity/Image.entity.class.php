@@ -154,6 +154,15 @@ class ModuleImage_EntityImage extends Entity {
 		return $this;
 	}
 	/**
+	 * Вырезает максимально возможный квадрат
+	 *
+	 * @param string $sPosition	Вырезать из центра
+	 * @return ModuleImage_EntityImage
+	 */
+	public function cropSquare($sPosition='center') {
+		return $this->cropProportion(1,$sPosition);
+	}
+	/**
 	 * Сохраняет изображение в файл
 	 *
 	 * @param string $sFile	Полный путь до файла сохранения

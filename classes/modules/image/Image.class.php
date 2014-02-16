@@ -247,4 +247,16 @@ class ModuleImage extends Module {
 		$sPathFile=$this->Fs_GetPathServer($sPathFile);
 		return $this->Fs_RemoveFileLocal($sPathFile);
 	}
+	/**
+	 * Получает директорию для загрузки изображений
+	 * Используется фомат хранения данных (/images/subdir/obj/ect/id/yyyy/mm/dd/file.jpg)
+	 * Например, для хранения изображений пользователя (аватары и т.п.) c ID=1 можно так: /images/users/000/000/001/2014/02/15/avatar.jpg
+	 *
+	 * @param  int $sId	Целое число, обычно это ID объекта
+	 * @param  string $sSubDir	Подкаталог
+	 * @return string
+	 */
+	public function GetIdDir($sId,$sSubDir=null) {
+		return Config::Get('path.uploads.images').'/'.($sSubDir ? $sSubDir.'/' : '').preg_replace('~(.{3})~U', "\\1/", str_pad($sId, 9, "0", STR_PAD_LEFT)).date('Y/m/d');
+	}
 }

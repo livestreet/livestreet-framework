@@ -72,8 +72,8 @@ ls.lang = ls.i18n = (function ($) {
 	this.pluralize = function(iNumber, mText, sLanguage) {
 		var aWords    = $.isArray(mText) ? mText : this.get(mText).split(';'),
 			sLanguage = sLanguage || LANGUAGE,
-			mIndex    = eval(this.oPluralRules[sLanguage]),
-			n         = Math.abs(iNumber);
+			n         = Math.abs(iNumber),
+			mIndex    = eval(this.oPluralRules[sLanguage]);
 
 		return iNumber + ' ' + aWords[ typeof mIndex === 'boolean' ? (mIndex ? 1 : 0) : mIndex ];
 	};

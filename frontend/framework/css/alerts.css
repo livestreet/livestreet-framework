@@ -19,6 +19,7 @@
 	   -moz-border-radius: 3px;
 	        border-radius: 3px;
 }
+.alert:last-child { margin-bottom: 0; }
 .alert--title { font-size: 14px; font-weight: bold; }
 .alert--close {
 	position: absolute;

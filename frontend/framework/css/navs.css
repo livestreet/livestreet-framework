@@ -104,7 +104,7 @@
 
 /* Tabs content */
 .tab-pane { display: none; }
-.tab-pane.loading { min-height: 150px; }
+.tab-pane.loading { min-height: 150px; background-position: 50% 45px; }
 
 
 /* Main

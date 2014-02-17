@@ -88,6 +88,8 @@ form .icon-question-sign { cursor: help; }
 .form-field-inline .form-field-label  { float: left; width: 135px; padding-top: 5px; }
 .form-field-inline .form-field-holder { padding-left: 150px; min-width: 200px; }
 
+.form-field-display-inline { display: inline-block; }
+
 
 /* Placeholder */
 :-moz-placeholder           { color: #afafaf; }

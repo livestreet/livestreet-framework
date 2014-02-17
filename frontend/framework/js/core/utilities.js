@@ -10,7 +10,7 @@
 
 var ls = ls || {};
 
-ls.utilities = ls.tools = (function ($) {
+ls.utilities = ls.tools = ls.utils = (function ($) {
 	/**
 	 * Переводит первый символ в верхний регистр
 	 */
@@ -35,25 +35,24 @@ ls.utilities = ls.tools = (function ($) {
 	/**
 	 * Предпросмотр
 	 */
-	this.textPreview = function(textId, save, divPreview) {
-		var text = WYSIWYG ? tinyMCE.activeEditor.getContent() : $('#' + textId).val();
-		var ajaxUrl = aRouter['ajax']+'preview/text/';
-		var ajaxOptions = {text: text, save: save};
+	this.textPreview = function(mTextSelector, mPreviewSelector, bSave) {
+		var sText   = WYSIWYG ? tinyMCE.activeEditor.getContent() : (typeof mTextSelector === 'string' ? $(mTextSelector) : mTextSelector).val(),
+			sUrl    = aRouter['ajax'] + 'preview/text/',
+			oParams = { text: sText, save: bSave };
+
 		ls.hook.marker('textPreviewAjaxBefore');
-		ls.ajax.load(ajaxUrl, ajaxOptions, function(result){
-			if (!result) {
-				ls.msg.error('Error','Please try again later');
-			}
+
+		ls.ajax.load(sUrl, oParams, function(result) {
 			if (result.bStateError) {
-				ls.msg.error(result.sMsgTitle||'Error',result.sMsg||'Please try again later');
+				ls.msg.error(result.sMsgTitle || 'Error', result.sMsg || 'Please try again later');
 			} else {
-				if (!divPreview) {
-					divPreview = 'text_preview';
-				}
-				var elementPreview = $('#'+divPreview);
+				var oPreview = typeof mTextSelector === 'string' ? $(mPreviewSelector || '#text_preview') : mPreviewSelector;
+
 				ls.hook.marker('textPreviewDisplayBefore');
-				if (elementPreview.length) {
-					elementPreview.html(result.sText);
+
+				if (oPreview.length) {
+					oPreview.html(result.sText);
+
 					ls.hook.marker('textPreviewDisplayAfter');
 				}
 			}

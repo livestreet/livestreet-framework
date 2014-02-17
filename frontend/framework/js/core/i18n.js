@@ -21,6 +21,16 @@ ls.lang = ls.i18n = (function ($) {
 	var _msgs = {};
 
 	/**
+	 * Правило образования слов во множественном числе
+	 * TODO: Вынести в лок-ию или конфиг
+	 */
+	this.oPluralRules = {
+		ru: '(n % 10 == 1 && n % 100 != 11 ? 0 : n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 10 || n % 100 >= 20) ? 1 : 2)',
+		ua: '(n % 10 == 1 && n % 100 != 11 ? 0 : n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 10 || n % 100 >= 20) ? 1 : 2)',
+		en: '(n != 1)'
+	};
+
+	/**
 	 * Загрузка текстовок
 	 *
 	 * @param {Object} msgs Текстовки
@@ -47,6 +57,25 @@ ls.lang = ls.i18n = (function ($) {
 		}
 
 		return '';
+	};
+
+	/**
+	 * Склонение слов после числительных
+	 *
+	 * @param  {String} iNumber   Кол-во объектов
+	 * @param  {Mixed}  mText     Ключ с текстовкам разделенными символом ';', либо массив
+	 * @param  {String} sLanguage Язык, опциональный параметр, по дефолту берется из настроек
+	 * @return {String}
+	 *
+	 * TODO: Добавить автозамену ## на число
+	 */
+	this.pluralize = function(iNumber, mText, sLanguage) {
+		var aWords    = $.isArray(mText) ? mText : this.get(mText).split(';'),
+			sLanguage = sLanguage || LANGUAGE,
+			mIndex    = eval(this.oPluralRules[sLanguage]),
+			n         = Math.abs(iNumber);
+
+		return iNumber + ' ' + aWords[ typeof mIndex === 'boolean' ? (mIndex ? 1 : 0) : mIndex ];
 	};
 
 	return this;

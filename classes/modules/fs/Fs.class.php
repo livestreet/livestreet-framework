@@ -299,4 +299,14 @@ class ModuleFs extends Module {
 		}
 		return false;
 	}
+	/**
+	 * Проверяет на существование локальный файл
+	 *
+	 * @param string $sFile
+	 *
+	 * @return bool
+	 */
+	public function IsExistsFileLocal($sFile) {
+		return file_exists($sFile);
+	}
 }

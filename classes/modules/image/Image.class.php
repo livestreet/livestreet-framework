@@ -102,7 +102,7 @@ class ModuleImage extends Module {
 	/**
 	 * Открывает файл изображения и возвращает объект
 	 *
-	 * @param $sFile	Путь до изображения
+	 * @param $sFile	Локальны путь до изображения
 	 * @param $aParams	Параметры
 	 * @return ModuleImage_EntityImage|bool
 	 */
@@ -211,11 +211,11 @@ class ModuleImage extends Module {
 	 * @param string $sFileDest	Имя файла для сохранения
 	 * @param int|null $iMode	Права chmod для файла, например, 0777
 	 * @param bool $bRemoveSource	Удалять исходный файл или нет
-	 * @return bool | string	При успешном сохранении возвращает полный путь до файла с типом, например, [server]/home/webmaster/site.com/image.jpg
+	 * @return bool | string	При успешном сохранении возвращает относительный путь до файла с типом, например, [relative]/image.jpg
 	 */
 	public function SaveFileSmart($sFileSource,$sDirDest,$sFileDest,$iMode=null,$bRemoveSource=false) {
 		if ($sPathFile=$this->Fs_SaveFileLocalSmart($sFileSource,$sDirDest,$sFileDest,$iMode,$bRemoveSource)) {
-			return $this->Fs_MakePath($sPathFile,ModuleFs::PATH_TYPE_SERVER);
+			return $this->Fs_MakePath($this->Fs_GetPathRelativeFromServer($sPathFile),ModuleFs::PATH_TYPE_RELATIVE);
 		}
 		return false;
 	}
@@ -224,14 +224,14 @@ class ModuleImage extends Module {
 	 * Если переопределить данный метод, то можно сохранять изображения, например, на Amazon S3
 	 *
 	 * @param string $sFileSource	Полный путь до исходного файла
-	 * @param string $sFileDest	Полный путь до файла для сохранения
+	 * @param string $sFileDest	Полный путь до файла для сохранения с типом, например, [server]/home/var/site.ru/image.jpg
 	 * @param int|null $iMode	Права chmod для файла, например, 0777
 	 * @param bool $bRemoveSource	Удалять исходный файл или нет
-	 * @return bool | string	При успешном сохранении возвращает полный путь до файла с типом, например, [server]/home/webmaster/site.com/image.jpg
+	 * @return bool | string	При успешном сохранении возвращает относительный путь до файла с типом, например, [relative]/image.jpg
 	 */
 	public function SaveFile($sFileSource,$sFileDest,$iMode=null,$bRemoveSource=false) {
-		if ($this->Fs_SaveFileLocal($sFileSource,$sFileDest,$iMode,$bRemoveSource)) {
-			return $this->Fs_MakePath($sFileDest,ModuleFs::PATH_TYPE_SERVER);
+		if ($this->Fs_SaveFileLocal($sFileSource,$this->Fs_GetPathServer($sFileDest),$iMode,$bRemoveSource)) {
+			return $this->Fs_MakePath($this->Fs_GetPathRelativeFromServer($sFileDest),ModuleFs::PATH_TYPE_RELATIVE);
 		}
 		return false;
 	}
@@ -246,6 +246,31 @@ class ModuleImage extends Module {
 	public function RemoveFile($sPathFile) {
 		$sPathFile=$this->Fs_GetPathServer($sPathFile);
 		return $this->Fs_RemoveFileLocal($sPathFile);
+	}
+	/**
+	 * Проверяет изображение на существование
+	 * Если переопределить данный метод, то можно проверить существование изображения, например, на Amazon S3
+	 *
+	 * @param string $sPathFile Полный путь до файла с типом, например, [relative]/image.jpg
+	 *
+	 * @return mixed
+	 */
+	public function IsExistsFile($sPathFile) {
+		$sPathFile=$this->Fs_GetPathServer($sPathFile);
+		return $this->Fs_IsExistsFileLocal($sPathFile);
+	}
+	/**
+	 * Открывает файл изображения, в качестве источника изображения может использоваться полный путь до файла с типом, например, [relative]/image.jpg
+	 * Если переопределить данный метод, то можно открывать изображения, например, с Amazon S3
+	 *
+	 * @param string $sFile	Полный путь до файла с типом, например, [relative]/image.jpg
+	 * @param null $aParams
+	 *
+	 * @return bool|ModuleImage_EntityImage
+	 */
+	public function OpenFrom($sFile,$aParams=null) {
+		$sFile=$this->Fs_GetPathServer($sFile);
+		return $this->Open($sFile,$aParams);
 	}
 	/**
 	 * Получает директорию для загрузки изображений

@@ -162,12 +162,94 @@ class ModuleImage_EntityImage extends Entity {
 	public function cropSquare($sPosition='center') {
 		return $this->cropProportion(1,$sPosition);
 	}
+
+	/**
+	 * Вырезает область выделенную пользователем с помощью библиотеки jCrop
+	 *
+	 * @param      $aSelectedSize
+	 * @param null $iCanvasWidth
+	 *
+	 * @return ModuleImage_EntityImage
+	 */
+	public function cropFromSelected($aSelectedSize,$iCanvasWidth=null) {
+		if ($oImage=$this->getImage()) {
+			$iWSource=$this->getWidth();
+			$iHSource=$this->getHeight();
+			/**
+			 * Определяем коэффициент масштабируемости
+			 */
+			$fRation=1;
+			if ($iWSource and $iCanvasWidth) {
+				$fRation=$iWSource/$iCanvasWidth;
+				if ($fRation<1) {
+					$fRation=1;
+				}
+			}
+			/**
+			 * Проверяем корректность выделенной области
+			 */
+			if (isset($aSelectedSize['x']) and is_numeric($aSelectedSize['x'])
+				and isset($aSelectedSize['y']) and is_numeric($aSelectedSize['y'])
+					and isset($aSelectedSize['x2']) and is_numeric($aSelectedSize['x2'])
+						and isset($aSelectedSize['y2']) and is_numeric($aSelectedSize['y2'])) {
+				$aSelectedSize=array('x1'=>round($fRation*$aSelectedSize['x']),'y1'=>round($fRation*$aSelectedSize['y']),'x2'=>round($fRation*$aSelectedSize['x2']),'y2'=>round($fRation*$aSelectedSize['y2']));
+			} else {
+				$this->setLastError('Incorrect image selected size');
+				return $this;
+			}
+			/**
+			 * Достаем переменные x1 и т.п. из $aSelectedSize
+			 */
+			extract($aSelectedSize,EXTR_PREFIX_SAME,'ops');
+			if ($x1>$x2) {
+				// меняем значения переменных
+				$x1 = $x1 + $x2;
+				$x2 = $x1 - $x2;
+				$x1 = $x1 - $x2;
+			}
+			if ($y1>$y2) {
+				$y1 = $y1 + $y2;
+				$y2 = $y1 - $y2;
+				$y1 = $y1 - $y2;
+			}
+			if ($x1<0) {
+				$x1=0;
+			}
+			if ($y1<0) {
+				$y1=0;
+			}
+			if ($x2>$iWSource) {
+				$x2=$iWSource;
+			}
+			if ($y2>$iHSource) {
+				$y2=$iHSource;
+			}
+
+			$iW=$x2-$x1;
+			// Допускаем минимальный клип в 32px (исключая маленькие изображения)
+			if ($iW<32 && $x1+32<=$iWSource) {
+				$iW=32;
+			}
+			$iH=$y2-$y1;
+			/**
+			 * Вырезаем
+			 */
+			try {
+				$oPointStart=new Imagine\Image\Point($x1,$y1);
+				$oBoxCrop=new Imagine\Image\Box($iW,$iH);
+				$oImage->crop($oPointStart,$oBoxCrop);
+			} catch (Imagine\Exception\Exception $e) {
+				$this->setLastError($e->getMessage());
+			}
+		}
+		return $this;
+	}
 	/**
 	 * Сохраняет изображение в файл
 	 *
 	 * @param string $sFile	Полный путь до файла сохранения
 	 *
-	 * @return bool
+	 * @return bool | string	При успешном сохранении возвращает полный путь до файла
 	 */
 	public function save($sFile) {
 		if (!$oImage=$this->getImage()) {
@@ -191,12 +273,42 @@ class ModuleImage_EntityImage extends Entity {
 		return false;
 	}
 	/**
+	 * Сохраняет изображение во временный локальный файл
+	 *
+	 * @return bool | string	При успешном сохранении возвращает полный локальный путь до файла
+	 */
+	public function saveTmp() {
+		if (!$oImage=$this->getImage()) {
+			return false;
+		}
+		try {
+			$sDirTmp=Config::Get('path.tmp.server').DIRECTORY_SEPARATOR.'image';
+			if (!is_dir($sDirTmp)) {
+				@mkdir($sDirTmp,0777,true);
+			}
+			$sFileTmp=$sDirTmp.DIRECTORY_SEPARATOR.func_generator(20);
+			$oImage->save($sFileTmp,array(
+				'format'=>$this->getParam('format'),
+				'quality'=>$this->getParam('quality'),
+			));
+
+			return $sFileTmp;
+		} catch (Imagine\Exception\Exception $e) {
+			$this->setLastError($e->getMessage());
+			// TODO: fix exception for Gd driver
+			if (strpos($e->getFile(),'Imagine'.DIRECTORY_SEPARATOR.'Gd')) {
+				restore_error_handler();
+			}
+		}
+		return false;
+	}
+	/**
 	 * Сохраняет изображения в файл
 	 *
 	 * @param string $sDir	Директория куда нужно сохранить изображение относительно корня сайта (path.root.server)
 	 * @param string $sFile	Имя файла для сохранения, без расширения (расширение подставляется автоматически в зависимости от типа изображения)
 	 *
-	 * @return bool | string	При успешном сохранении возвращает полный серверный путь до файла
+	 * @return bool | string	При успешном сохранении возвращает полный путь до файла
 	 */
 	public function saveSmart($sDir,$sFile) {
 		if (!$oImage=$this->getImage()) {

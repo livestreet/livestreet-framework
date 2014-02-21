@@ -784,10 +784,17 @@ abstract class DbSimple_Database extends DbSimple_LastError
                             $field = array_values($field);
                         foreach ($field as $k => $v)
                         {
-                            if ($v instanceof DbSimple_SubQuery)
+                            if ($v instanceof DbSimple_SubQuery) {
                                 $v = $v->get($this->_placeholderNativeArgs);
-                            else
-                            $v = $v === null? 'NULL' : $this->escape($v);
+							} else {
+                            	if ($v === null) {
+									$v = 'NULL';
+								} elseif ($v === false) {
+									$v = '0';
+								} else {
+									$v = $this->escape($v);
+								}
+							}
                             if (!is_int($k)) {
                                 $k = $this->escape($k, true);
                                 $parts[] = "$prefix$k=$v";

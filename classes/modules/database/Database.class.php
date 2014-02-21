@@ -55,7 +55,7 @@ class ModuleDatabase extends Module {
 		if (is_null($aConfig)) {
 			$aConfig = Config::Get('db.params');
 		}
-		$sDSN=$aConfig['type'].'wrapper://'.$aConfig['user'].':'.$aConfig['pass'].'@'.$aConfig['host'].':'.$aConfig['port'].'/'.$aConfig['dbname'];
+		$sDSN=$aConfig['type'].'://'.$aConfig['user'].':'.$aConfig['pass'].'@'.$aConfig['host'].':'.$aConfig['port'].'/'.$aConfig['dbname'];
 		/**
 		 * Создаём хеш подключения, уникальный для каждого конфига
 		 */
@@ -101,13 +101,16 @@ class ModuleDatabase extends Module {
 	 * @return array
 	 */
 	public function GetStats() {
-		$aQueryStats=array('time'=>0,'count'=>-1); // не считаем тот самый костыльный запрос, который устанавливает настройки DB соединения
+		$aQueryStats=array('time'=>0,'count'=>0);
 		foreach ($this->aInstance as $oDb) {
-			$aStats=$oDb->_statistics;
+			$aStats=$oDb->getStatistics();
 			$aQueryStats['time']+=$aStats['time'];
 			$aQueryStats['count']+=$aStats['count'];
 		}
 		$aQueryStats['time']=round($aQueryStats['time'],3);
+		if ($aQueryStats['count']>0) {
+			$aQueryStats['count']--; // не считаем тот самый костыльный запрос, который устанавливает настройки DB соединения
+		}
 		return $aQueryStats;
 	}
 	/**

@@ -549,7 +549,6 @@ class Router extends LsObject {
 	 * @param string $sLocation	локальный адрес, который можно использовать в Router::GetPath();, например, 'blog/news'
 	 */
 	static public function LocationAction($sLocation) {
-		self::getInstance()->oEngine->Shutdown();
-		func_header_location(self::GetPath($sLocation));
+		self::Location(self::GetPath($sLocation));
 	}
 }

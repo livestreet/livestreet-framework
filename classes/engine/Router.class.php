@@ -33,6 +33,12 @@ class Router extends LsObject {
 	 */
 	protected $aConfigRoute=array();
 	/**
+	 * Текущий префикс в URL, может указывать, например, на язык: ru или en
+	 *
+	 * @var string|null
+	 */
+	static protected $sPrefixUrl=null;
+	/**
 	 * Текущий экшен
 	 *
 	 * @var string|null
@@ -150,6 +156,18 @@ class Router extends LsObject {
 	protected function ParseUrl() {
 		$sReq = $this->GetRequestUri();
 		$aRequestUrl=$this->GetRequestArray($sReq);
+
+		/**
+		 * Проверяем на наличие префикса в URL
+		 */
+		if ($sPrefixRule=Config::Get('router.prefix')) {
+			if (isset($aRequestUrl[0]) and preg_match('#^'.$sPrefixRule.'$#i',$aRequestUrl[0])) {
+				self::$sPrefixUrl=array_shift($aRequestUrl);
+			} elseif($sPrefixDefault=Config::Get('router.prefix_default')) {
+				self::$sPrefixUrl=$sPrefixDefault;
+			}
+		}
+
 		$aRequestUrl=$this->RewriteRequest($aRequestUrl);
 
 		self::$sAction=array_shift($aRequestUrl);
@@ -334,6 +352,22 @@ class Router extends LsObject {
 		return self::$sPathWebCurrent;
 	}
 	/**
+	 * Возвращает текущий префикс URL
+	 *
+	 * @return string
+	 */
+	static public function GetPrefixUrl() {
+		return self::$sPrefixUrl;
+	}
+	/**
+	 * Устанавливает текущий префикс URL
+	 *
+	 * @param string $sPrefix
+	 */
+	static public function SetPrefixUrl($sPrefix) {
+		self::$sPrefixUrl=$sPrefix;
+	}
+	/**
 	 * Возвращает текущий экшен
 	 *
 	 * @return string
@@ -453,7 +487,7 @@ class Router extends LsObject {
 	 */
 	static public function GetPath($sAction) {
 		if (!$sAction or $sAction=='/') {
-			return rtrim(Config::Get('path.root.web'),'/').'/';
+			return rtrim(Config::Get('path.root.web'),'/').(self::$sPrefixUrl ? '/'.self::$sPrefixUrl : '').'/';
 		}
 		// Если пользователь запросил action по умолчанию
 		$sPage = ($sAction == 'default')
@@ -470,7 +504,7 @@ class Router extends LsObject {
 		if ($sAdditional and strpos($sAdditional,'?')===false) {
 			$sAdditional.='/';
 		}
-		return rtrim(Config::Get('path.root.web'),'/')."/$sPage/".($sAdditional ? "{$sAdditional}" : '');
+		return rtrim(Config::Get('path.root.web'),'/').(self::$sPrefixUrl ? '/'.self::$sPrefixUrl : '')."/$sPage/".($sAdditional ? "{$sAdditional}" : '');
 	}
 	/**
 	 * Try to find rewrite rule for given page.

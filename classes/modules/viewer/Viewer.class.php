@@ -1063,7 +1063,7 @@ class ModuleViewer extends Module {
 			 * если таковая отсутствует
 			 */
 			if(!is_dir($sCacheDir)){
-				@mkdir($sCacheDir);
+				@mkdir($sCacheDir,0777,true);
 			}
 			/**
 			 * Считываем содержимое

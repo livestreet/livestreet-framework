@@ -190,13 +190,38 @@ class MapperORM extends Mapper {
 		list($aFilterFields,$sFilterFields)=$this->BuildFilter($aFilter,$oEntitySample);
 		list($sOrder,$sLimit)=$this->BuildFilterMore($aFilter,$oEntitySample);
 
-		$sql = "SELECT t.*, b.* FROM ?# t LEFT JOIN ".$sTableName." b ON b.?# = t.?# WHERE t.?#=? {$sFilterFields} {$sOrder} {$sLimit}";
+		$aFieldsReturn=$oEntitySample->_getFields();
+		foreach($aFieldsReturn as $k=>$sField) {
+			if (!is_numeric($k)) {
+				// Удаляем служебные (примари) поля
+				unset($aFieldsReturn[$k]);
+				continue;
+			}
+			$aFieldsReturn[$k]="b.`{$sField}` as b_result_{$sField}";
+		}
+		$sFieldsReturn=join(', ',$aFieldsReturn);
+
+		if (!is_array($aFilter['#by_value'])) {
+			$aFilter['#by_value']=array($aFilter['#by_value']);
+		}
+
+		$sql = "SELECT t.*, {$sFieldsReturn} FROM ?# t LEFT JOIN ".$sTableName." b ON b.?# = t.?# WHERE t.?# in ( ?a ) {$sFilterFields} {$sOrder} {$sLimit}";
 		$aQueryParams=array_merge(array($sql,$aFilter['#join_table'],$sPrimaryKey,$aFilter['#relation_key'],$aFilter['#by_key'],$aFilter['#by_value']),array_values($aFilterFields));
 
 		$aItems = array();
 		if($aRows=call_user_func_array(array($this->oDb,'select'),$aQueryParams)) {
 			foreach($aRows as $aRow) {
-				$oEntity=Engine::GetEntity($sEntityFull,$aRow);
+				$aData=array();
+				$aDataRelation=array();
+				foreach($aRow as $k=>$v) {
+					if (strpos($k,'b_result_')===0) {
+						$aData[str_replace('b_result_','',$k)]=$v;
+					} else {
+						$aDataRelation[$k]=$v;
+					}
+				}
+				$aData['_relation_data']=$aDataRelation;
+				$oEntity=Engine::GetEntity($sEntityFull,$aData);
 				$oEntity->_SetIsNew(false);
 				$aItems[] = $oEntity;
 			}

@@ -104,5 +104,32 @@ ls.utilities = ls.tools = ls.utils = (function ($) {
 		element[0].className = $.trim( ( element[0].className + ' ' ).replace(new RegExp('\\b' + prefix + '.*?\\s', 'g'), '') );
 	};
 
+	/**
+	 * Блокирует/разблокировывает форму
+	 */
+	this.formLockAccessor = function(sName) {
+		return function (oForm) {
+			var oElements = oForm.find('input, select, textarea, button').filter(sName == 'lock' ? ':not(:disabled)' : '.js-ls-form-disabled');
+
+			oElements.each(function (iIndex, oInput) {
+				$(this).prop('disabled', sName == 'lock' ? true : false)[sName == 'lock' ? 'addClass' : 'removeClass']('js-ls-form-disabled');
+			});
+		}
+	};
+
+	/**
+	 * Блокирует форму
+	 */
+	this.formLock = function(oForm) {
+		this.formLockAccessor('lock').apply(this, arguments);
+	};
+
+	/**
+	 * Разблокировывает форму
+	 */
+	this.formUnlock = function(oForm) {
+		this.formLockAccessor('unlock').apply(this, arguments);
+	};
+
 	return this;
 }).call(ls.utilities || {},jQuery);

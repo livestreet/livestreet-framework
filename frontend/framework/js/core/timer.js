@@ -18,7 +18,7 @@ ls.timer = (function ($) {
 	/**
 	 * Запуск метода через определенный период, поддерживает пролонгацию
 	 */
-	this.run = function(fMethod, sUniqKey, aParams, iTime) {
+	this.run = function(oContext, fMethod, sUniqKey, aParams, iTime) {
 		iTime = iTime || 1500;
 		aParams = aParams || [];
 		sUniqKey = sUniqKey || Math.random();
@@ -31,7 +31,7 @@ ls.timer = (function ($) {
 		var timeout = setTimeout(function(){
 			clearTimeout(_aTimers[sUniqKey]);
 			_aTimers[sUniqKey] = null;
-			fMethod.apply(ls, aParams);
+			fMethod.apply(oContext, aParams);
 		}.bind(this), iTime);
 
 		_aTimers[sUniqKey] = timeout;

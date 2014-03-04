@@ -44,6 +44,11 @@ abstract class EntityORM extends Entity {
 	const RELATION_TYPE_HAS_MANY='has_many';
 	const RELATION_TYPE_HAS_ONE='has_one';
 	const RELATION_TYPE_MANY_TO_MANY='many_to_many';
+	/**
+	 * Оптимизированый тип many_to_many
+	 * TODO: после тестов заменить основной тип
+	 */
+	const RELATION_TYPE_MANY_TO_MANY_NEW='many_to_many_new';
 	const RELATION_TYPE_TREE='tree';
 
 	/**
@@ -514,13 +519,6 @@ abstract class EntityORM extends Entity {
 					$sEntityRel=$this->aRelations[$sKey][1];
 					$sRelationType=$this->aRelations[$sKey][0];
 					$sRelationKey=$this->aRelations[$sKey][2];
-					$sRelationJoinTable=null;
-					$sRelationJoinTableKey=0;	// foreign key в join-таблице для текущей сущности
-					if($sRelationType == self::RELATION_TYPE_MANY_TO_MANY && array_key_exists(3, $this->aRelations[$sKey])) {
-						$sRelationJoinTable=$this->aRelations[$sKey][3];
-						$sRelationJoinTableKey=isset($this->aRelations[$sKey][4]) ? $this->aRelations[$sKey][4] : $this->_getPrimaryKey();
-					}
-
 					/**
 					 * Если связь уже загруженна, то возвращаем сразу результат
 					 */
@@ -538,16 +536,17 @@ abstract class EntityORM extends Entity {
 					}
 
 					$iPrimaryKeyValue=$this->_getDataOne($this->_getPrimaryKey());
+					$bUseFilter=array_key_exists(0,$aArgs) && is_array($aArgs[0]);
 					$sCmd='';
 					$mCmdArgs=array();
 					switch ($sRelationType) {
 						case self::RELATION_TYPE_BELONGS_TO :
 							$sCmd="{$sRelPluginPrefix}{$sRelModuleName}_get{$sRelEntityName}By".func_camelize($sRelPrimaryKey);
-							$mCmdArgs=$this->_getDataOne($sRelationKey);
+							$mCmdArgs=array($this->_getDataOne($sRelationKey));
 							break;
 						case self::RELATION_TYPE_HAS_ONE :
 							$sCmd="{$sRelPluginPrefix}{$sRelModuleName}_get{$sRelEntityName}By".func_camelize($sRelationKey);
-							$mCmdArgs=$iPrimaryKeyValue;
+							$mCmdArgs=array($iPrimaryKeyValue);
 							break;
 						case self::RELATION_TYPE_HAS_MANY :
 							if (isset($this->aRelations[$sKey][3])) {
@@ -556,33 +555,57 @@ abstract class EntityORM extends Entity {
 								$aFilterAdd=array();
 							}
 							$sCmd="{$sRelPluginPrefix}{$sRelModuleName}_get{$sRelEntityName}ItemsByFilter";
-							$mCmdArgs=array_merge(array($sRelationKey => $iPrimaryKeyValue),$aFilterAdd);
+							$aFilterAdd=array_merge(array($sRelationKey => $iPrimaryKeyValue),$aFilterAdd);
+							if($bUseFilter) {
+								$aFilterAdd = array_merge($aFilterAdd, $aArgs[0]);
+							}
+							$mCmdArgs=array($aFilterAdd);
+							break;
+						case self::RELATION_TYPE_MANY_TO_MANY_NEW :
+							$sEntityJoin=$this->aRelations[$sKey][3];
+							$sKeyJoin=$this->aRelations[$sKey][4];
+							if (isset($this->aRelations[$sKey][5])) {
+								$aFilterAdd=$this->aRelations[$sKey][5];
+							} else {
+								$aFilterAdd=array();
+							}
+							$sCmd="{$sRelPluginPrefix}Module{$sRelModuleName}_get{$sRelEntityName}ItemsByJoinEntity";
+							if($bUseFilter) {
+								$aFilterAdd = array_merge($aFilterAdd, $aArgs[0]);
+							}
+							$mCmdArgs=array($sEntityJoin,$sKeyJoin,$sRelationKey,$iPrimaryKeyValue,$aFilterAdd);
 							break;
 						case self::RELATION_TYPE_MANY_TO_MANY :
+							$sRelationJoinTable=null;
+							$sRelationJoinTableKey=0;	// foreign key в join-таблице для текущей сущности
+							if($sRelationType == self::RELATION_TYPE_MANY_TO_MANY && array_key_exists(3, $this->aRelations[$sKey])) {
+								$sRelationJoinTable=$this->aRelations[$sKey][3];
+								$sRelationJoinTableKey=isset($this->aRelations[$sKey][4]) ? $this->aRelations[$sKey][4] : $this->_getPrimaryKey();
+							}
 							if (isset($this->aRelations[$sKey][5])) {
 								$aFilterAdd=$this->aRelations[$sKey][5];
 							} else {
 								$aFilterAdd=array();
 							}
 							$sCmd="{$sRelPluginPrefix}Module{$sRelModuleName}_get{$sRelEntityName}ItemsByJoinTable";
-							$mCmdArgs=array(
+							$aJoinParams=array(
 								'#join_table'		=> Config::Get($sRelationJoinTable),
 								'#relation_key'		=> $sRelationKey,
 								'#by_key'			=> $sRelationJoinTableKey,
 								'#by_value'			=> $iPrimaryKeyValue,
 								'#index-from-primary' => true // Для MANY_TO_MANY необходимо индексами в $aRelationsData иметь первичные ключи сущностей
 							);
-							$mCmdArgs=array_merge($mCmdArgs,$aFilterAdd);
+							$aFilterAdd=array_merge($aJoinParams,$aFilterAdd);
+							if($bUseFilter) {
+								$aFilterAdd = array_merge($aFilterAdd, $aArgs[0]);
+							}
+							$mCmdArgs=array($aFilterAdd);
 							break;
 						default:
 							break;
 					}
 					// Нужно ли учитывать дополнительный фильтр
-					$bUseFilter = is_array($mCmdArgs) && array_key_exists(0,$aArgs) && is_array($aArgs[0]);
-					if($bUseFilter) {
-						$mCmdArgs = array_merge($mCmdArgs, $aArgs[0]);
-					}
-					$res=Engine::GetInstance()->_CallModule($sCmd, array($mCmdArgs));
+					$res=Engine::GetInstance()->_CallModule($sCmd,$mCmdArgs);
 
 					// Сохраняем данные только в случае "чистой" выборки
 					if(!$bUseFilter) {

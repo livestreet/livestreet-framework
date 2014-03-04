@@ -434,7 +434,7 @@ abstract class ModuleORM extends Module {
 				$sRelEntity=$this->Plugin_GetRootDelegater('entity',$aRelations[$sRelationName][1]); // получаем корневую сущность, без учета наследников
 				$sRelKey=$aRelations[$sRelationName][2];
 
-				if (!array_key_exists($sRelationName,$aRelations) or !in_array($sRelType,array(EntityORM::RELATION_TYPE_BELONGS_TO,EntityORM::RELATION_TYPE_HAS_ONE,EntityORM::RELATION_TYPE_HAS_MANY))) {
+				if (!array_key_exists($sRelationName,$aRelations) or !in_array($sRelType,array(EntityORM::RELATION_TYPE_BELONGS_TO,EntityORM::RELATION_TYPE_HAS_ONE,EntityORM::RELATION_TYPE_HAS_MANY,EntityORM::RELATION_TYPE_MANY_TO_MANY_NEW))) {
 					throw new Exception("The entity <{$sEntityFull}> not have relation <{$sRelationName}>");
 				}
 
@@ -445,7 +445,6 @@ abstract class ModuleORM extends Module {
 					$aEntityKeys[$sRelKey][]=$oEntity->_getDataOne($sRelKey);
 				}
 				$aEntityKeys[$sRelKey]=array_unique($aEntityKeys[$sRelKey]);
-
 				/**
 				 * Делаем общий запрос по всем ключам
 				 */
@@ -464,6 +463,20 @@ abstract class ModuleORM extends Module {
 					$aFilterRel=array($sRelKey.' in'=>$aEntityPrimaryKeys,'#index-group'=>$sRelKey);
 					$aFilterRel=array_merge($aFilterRel,$aRelationFilter);
 					$aRelData=Engine::GetInstance()->_CallModule("{$sRelPluginPrefix}{$sRelModuleName}_get{$sRelEntityName}ItemsByFilter", array($aFilterRel));
+				} elseif ($sRelType==EntityORM::RELATION_TYPE_MANY_TO_MANY_NEW) {
+					$sEntityJoin=$aRelations[$sRelationName][3];
+					$sKeyJoin=$aRelations[$sRelationName][4];
+					if (isset($aRelations[$sRelationName][5])) {
+						$aFilterAdd=$aRelations[$sRelationName][5];
+					} else {
+						$aFilterAdd=array();
+					}
+					if (!array_key_exists('#value-default',$aRelationFilter)) {
+						$aRelationFilter['#value-default']=array();
+					}
+					$aFilterRel=array_merge($aFilterAdd,$aRelationFilter);
+					$aRelData=Engine::GetInstance()->_CallModule("{$sRelPluginPrefix}{$sRelModuleName}_get{$sRelEntityName}ItemsByJoinEntity", array($sEntityJoin,$sKeyJoin,$sRelKey,$aEntityPrimaryKeys,$aFilterRel));
+					$aRelData=$this->_setIndexesGroupJoinField($aRelData,$sKeyJoin);
 				}
 				/**
 				 * Собираем набор
@@ -471,7 +484,7 @@ abstract class ModuleORM extends Module {
 				foreach ($aEntities as $oEntity) {
 					if ($sRelType==EntityORM::RELATION_TYPE_BELONGS_TO) {
 						$sKeyData=$oEntity->_getDataOne($sRelKey);
-					} elseif (in_array($sRelType,array(EntityORM::RELATION_TYPE_HAS_ONE,EntityORM::RELATION_TYPE_HAS_MANY))) {
+					} elseif (in_array($sRelType,array(EntityORM::RELATION_TYPE_HAS_ONE,EntityORM::RELATION_TYPE_HAS_MANY,EntityORM::RELATION_TYPE_MANY_TO_MANY_NEW))) {
 						$sKeyData=$oEntity->_getPrimaryKeyValue();
 					} else {
 						break;
@@ -543,6 +556,24 @@ abstract class ModuleORM extends Module {
 		return $aIndexedEntities;
 	}
 	/**
+	 * Возвращает сгруппированный массив по нужному полю из данных таблицы связей
+	 *
+	 * @param array $aEntities
+	 * @param string $sField
+	 *
+	 * @return array
+	 */
+	protected function _setIndexesGroupJoinField($aEntities, $sField) {
+		$aIndexedEntities=array();
+		foreach ($aEntities as $oEntity) {
+			$aDataRel=$oEntity->_getDataOne('_relation_data');
+			if (isset($aDataRel[$sField])) {
+				$aIndexedEntities[$aDataRel[$sField]][]=$oEntity;
+			}
+		}
+		return $aIndexedEntities;
+	}
+	/**
 	 * Получить количество сущностей по фильтру
 	 *
 	 * @param array $aFilter	Фильтр
@@ -590,6 +621,96 @@ abstract class ModuleORM extends Module {
 		}
 		$aFilter[] = '#index-from-primary';
 		return $this->GetItemsByFilter($aFilter,$sEntityFull);
+	}
+
+	public function GetItemsByJoinEntity($sEntityJoin,$sKeyJoin,$sRelationKey,$aRelationValues,$aFilter,$sEntityFull=null) {
+		if (is_null($sEntityFull)) {
+			$sEntityFull=Engine::GetPluginPrefix($this).'Module'.Engine::GetModuleName($this).'_Entity'.Engine::GetModuleName(get_class($this));
+		} elseif (!substr_count($sEntityFull,'_')) {
+			$sEntityFull=Engine::GetPluginPrefix($this).'Module'.Engine::GetModuleName($this).'_Entity'.$sEntityFull;
+		}
+
+		/**
+		 * Кеширование
+		 * Если параметр #cache указан и пуст, значит игнорируем кэширование для запроса
+		 */
+		if (array_key_exists('#cache', $aFilter) && !$aFilter['#cache']) {
+			$aEntities = $this->oMapperORM->GetItemsByJoinEntity($sEntityJoin,$sKeyJoin,$sRelationKey,$aRelationValues,$aFilter,$sEntityFull);
+		} else {
+			$sEntityFullRoot=$this->Plugin_GetRootDelegater('entity',$sEntityFull);
+			$sEntityJoin=$this->Plugin_GetRootDelegater('entity',$sEntityJoin);
+
+			$sCacheKey='items_by_join_entity_'.serialize(array($sEntityJoin,$sKeyJoin,$sRelationKey,$aRelationValues,$aFilter,$sEntityFullRoot));
+			/**
+			 * Формируем теги для сброса кеша
+			 * Сброс идет по обновлению запрашиваемой сущности
+			 * Дополнительно по обновлению таблицы связей
+			 */
+			$aCacheTags=array($sEntityFullRoot.'_save',$sEntityFullRoot.'_delete',$sEntityJoin.'_save',$sEntityJoin.'_delete');
+			$iCacheTime=60*60*24; // todo: скорее лучше хранить в свойстве сущности, для возможности выборочного переопределения
+			/**
+			 * Переопределяем из параметров
+			 */
+			if (isset($aJoinData['#cache'][0])) $sCacheKey=$aJoinData['#cache'][0];
+			if (isset($aJoinData['#cache'][1])) $aCacheTags=$aJoinData['#cache'][1];
+			if (isset($aJoinData['#cache'][2])) $iCacheTime=$aJoinData['#cache'][2];
+			/**
+			 * Смотрим в кеше
+			 */
+			if (false === ($aEntities = $this->Cache_Get($sCacheKey))) {
+				$aEntities = $this->oMapperORM->GetItemsByJoinEntity($sEntityJoin,$sKeyJoin,$sRelationKey,$aRelationValues,$aFilter,$sEntityFull);
+				$this->Cache_Set($aEntities,$sCacheKey, $aCacheTags, $iCacheTime);
+			}
+		}
+		/**
+		 * Если запрашиваем постраничный список, то возвращаем сам список и общее количество записей
+		 */
+		if (isset($aFilter['#page'])) {
+			return array('collection'=>$aEntities,'count'=>$this->GetCountItemsByJoinEntity($sEntityJoin,$sKeyJoin,$sRelationKey,$aRelationValues,$aFilter,$sEntityFull=null));
+		}
+		return $aEntities;
+	}
+
+	public function GetCountItemsByJoinEntity($sEntityJoin,$sKeyJoin,$sRelationKey,$aRelationValues,$aFilter,$sEntityFull=null) {
+		if (is_null($sEntityFull)) {
+			$sEntityFull=Engine::GetPluginPrefix($this).'Module'.Engine::GetModuleName($this).'_Entity'.Engine::GetModuleName(get_class($this));
+		} elseif (!substr_count($sEntityFull,'_')) {
+			$sEntityFull=Engine::GetPluginPrefix($this).'Module'.Engine::GetModuleName($this).'_Entity'.$sEntityFull;
+		}
+
+		/**
+		 * Кеширование
+		 * Если параметр #cache указан и пуст, значит игнорируем кэширование для запроса
+		 */
+		if (array_key_exists('#cache', $aFilter) && !$aFilter['#cache']) {
+			$iCount=$this->oMapperORM->GetCountItemsByJoinEntity($sEntityJoin,$sKeyJoin,$sRelationKey,$aRelationValues,$aFilter,$sEntityFull);
+		} else {
+			$sEntityFullRoot=$this->Plugin_GetRootDelegater('entity',$sEntityFull);
+			$sEntityJoin=$this->Plugin_GetRootDelegater('entity',$sEntityJoin);
+
+			$sCacheKey='count_items_by_join_entity_'.serialize(array($sEntityJoin,$sKeyJoin,$sRelationKey,$aRelationValues,$aFilter,$sEntityFullRoot));
+			/**
+			 * Формируем теги для сброса кеша
+			 * Сброс идет по обновлению таблицы связей
+			 */
+			$aCacheTags=array($sEntityJoin.'_save',$sEntityJoin.'_delete');
+			$iCacheTime=60*60*24; // todo: скорее лучше хранить в свойстве сущности, для возможности выборочного переопределения
+			/**
+			 * Переопределяем из параметров
+			 */
+			if (isset($aJoinData['#cache'][0])) $sCacheKey=$aJoinData['#cache'][0];
+			if (isset($aJoinData['#cache'][1])) $aCacheTags=$aJoinData['#cache'][1];
+			if (isset($aJoinData['#cache'][2])) $iCacheTime=$aJoinData['#cache'][2];
+			/**
+			 * Смотрим в кеше
+			 */
+			if (false === ($iCount = $this->Cache_Get($sCacheKey))) {
+				$iCount=$this->oMapperORM->GetCountItemsByJoinEntity($sEntityJoin,$sKeyJoin,$sRelationKey,$aRelationValues,$aFilter,$sEntityFull);
+				$this->Cache_Set($iCount,$sCacheKey, $aCacheTags, $iCacheTime);
+			}
+		}
+
+		return $iCount;
 	}
 	/**
 	 * Получить сущности по связанной таблице
@@ -783,6 +904,13 @@ abstract class ModuleORM extends Module {
 		 */
 		if (preg_match("@^get_([a-z]+)_items_by_join_table$@i",$sNameUnderscore,$aMatch)) {
 			return $this->GetItemsByJoinTable($aArgs[0],func_camelize($sEntityName));
+		}
+
+		/**
+		 * getUserItemsByJoinEntity() get_user_items_by_join_entity
+		 */
+		if (preg_match("@^get_([a-z]+)_items_by_join_entity$@i",$sNameUnderscore,$aMatch)) {
+			return $this->GetItemsByJoinEntity($aArgs[0],$aArgs[1],$aArgs[2],$aArgs[3],$aArgs[4],func_camelize($sEntityName));
 		}
 
 		/**

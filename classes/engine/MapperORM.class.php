@@ -175,6 +175,89 @@ class MapperORM extends Mapper {
 		}
 		return 0;
 	}
+
+	public function GetItemsByJoinEntity($sEntityJoin,$sKeyJoin,$sRelationKey,$aRelationValues,$aFilter,$sEntityFull) {
+		$oEntitySample=Engine::GetEntity($sEntityFull);
+		$oEntityJoinSample=Engine::GetEntity($sEntityJoin);
+		$sTableName = self::GetTableName($sEntityFull);
+		$sTableJoinName = self::GetTableName($sEntityJoin);
+
+		/**
+		 * Формируем параметры по таблице связей
+		 */
+		list($aFilterFields,$sFilterFields)=$this->BuildFilter($aFilter,$oEntityJoinSample);
+		list($sOrder,$sLimit)=$this->BuildFilterMore($aFilter,$oEntityJoinSample);
+		/**
+		 * Формируем список полей для возврата у таблице связей
+		 */
+		$aFieldsJoinReturn=$oEntityJoinSample->_getFields();
+		foreach($aFieldsJoinReturn as $k=>$sField) {
+			if (!is_numeric($k)) {
+				// Удаляем служебные (примари) поля
+				unset($aFieldsJoinReturn[$k]);
+				continue;
+			}
+			$aFieldsJoinReturn[$k]="t.`{$sField}` as t_join_{$sField}";
+		}
+		$sFieldsJoinReturn=join(', ',$aFieldsJoinReturn);
+
+		if (!is_array($aRelationValues)) {
+			$aRelationValues=array($aRelationValues);
+		}
+		/**
+		 * SQL и параметры
+		 */
+		$sql = "SELECT {$sFieldsJoinReturn}, b.* FROM ?# t LEFT JOIN ?# b ON b.?# = t.?# WHERE t.?# in ( ?a ) {$sFilterFields} {$sOrder} {$sLimit}";
+		$aQueryParams=array_merge(array($sql,$sTableJoinName,$sTableName,$oEntitySample->_getPrimaryKey(),$sRelationKey,$sKeyJoin,$aRelationValues),array_values($aFilterFields));
+		$aItems = array();
+		/**
+		 * Выполняем запрос
+		 */
+		if($aRows=call_user_func_array(array($this->oDb,'select'),$aQueryParams)) {
+			foreach($aRows as $aRow) {
+				$aData=array();
+				$aDataRelation=array();
+				foreach($aRow as $k=>$v) {
+					if (strpos($k,'t_join_')===0) {
+						$aDataRelation[str_replace('t_join_','',$k)]=$v;
+					} else {
+						$aData[$k]=$v;
+					}
+				}
+				$aData['_relation_data']=$aDataRelation;
+				$oEntity=Engine::GetEntity($sEntityFull,$aData);
+				$oEntity->_SetIsNew(false);
+				$aItems[] = $oEntity;
+			}
+		}
+		return $aItems;
+	}
+
+	public function GetCountItemsByJoinEntity($sEntityJoin,$sKeyJoin,$sRelationKey,$aRelationValues,$aFilter,$sEntityFull) {
+		$oEntitySample=Engine::GetEntity($sEntityFull);
+		$oEntityJoinSample=Engine::GetEntity($sEntityJoin);
+		$sTableName = self::GetTableName($sEntityFull);
+		$sTableJoinName = self::GetTableName($sEntityJoin);
+
+		/**
+		 * Формируем параметры по таблице связей
+		 */
+		list($aFilterFields,$sFilterFields)=$this->BuildFilter($aFilter,$oEntityJoinSample);
+
+		if (!is_array($aRelationValues)) {
+			$aRelationValues=array($aRelationValues);
+		}
+		/**
+		 * SQL и параметры
+		 */
+		$sql = "SELECT count(*) as c FROM ?# t LEFT JOIN ?# b ON b.?# = t.?# WHERE t.?# in ( ?a ) {$sFilterFields} ";
+		$aQueryParams=array_merge(array($sql,$sTableJoinName,$sTableName,$oEntitySample->_getPrimaryKey(),$sRelationKey,$sKeyJoin,$aRelationValues),array_values($aFilterFields));
+		if($aRow=call_user_func_array(array($this->oDb,'selectRow'),$aQueryParams)) {
+			return $aRow['c'];
+		}
+		return 0;
+	}
+
 	/**
 	 * Получение сущностей по связанной таблице
 	 *

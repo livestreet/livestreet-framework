@@ -32,7 +32,7 @@ require_once("ModuleORM.class.php");
 require_once("EntityORM.class.php");
 require_once("MapperORM.class.php");
 
-require_once("ManyToManyRelation.class.php");
+require_once("ORMRelationManyToMany.class.php");
 
 
 /**

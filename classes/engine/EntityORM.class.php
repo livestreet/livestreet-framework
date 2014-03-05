@@ -44,11 +44,6 @@ abstract class EntityORM extends Entity {
 	const RELATION_TYPE_HAS_MANY='has_many';
 	const RELATION_TYPE_HAS_ONE='has_one';
 	const RELATION_TYPE_MANY_TO_MANY='many_to_many';
-	/**
-	 * Оптимизированый тип many_to_many
-	 * TODO: после тестов заменить основной тип
-	 */
-	const RELATION_TYPE_MANY_TO_MANY_NEW='many_to_many_new';
 	const RELATION_TYPE_TREE='tree';
 
 	/**
@@ -458,6 +453,7 @@ abstract class EntityORM extends Entity {
 	}
 	/**
 	 * Возвращает список связей
+	 * TODO: странная логика
 	 *
 	 * @return array
 	 */
@@ -478,7 +474,13 @@ abstract class EntityORM extends Entity {
 	 *
 	 * @return array
 	 */
-	public function _getRelationsData() {
+	public function _getRelationsData($sKey=null) {
+		if ($sKey) {
+			if (array_key_exists($sKey,$this->aRelationsData)) {
+				return $this->aRelationsData[$sKey];
+			}
+			return null;
+		}
 		return $this->aRelationsData;
 	}
 	/**
@@ -488,6 +490,19 @@ abstract class EntityORM extends Entity {
 	 */
 	public function _setRelationsData($aData) {
 		$this->aRelationsData=$aData;
+	}
+	/**
+	 * Устанавливает вспомогательные объекты для связи many_to_many
+	 *
+	 * @param array $aData
+	 * @param string|null $sRelationKey
+	 */
+	public function _setManyToManyRelations($aData,$sRelationKey=null) {
+		if ($sRelationKey) {
+			$this->_aManyToManyRelations[$sRelationKey]=$aData;
+		} else {
+			$this->_aManyToManyRelations=$aData;
+		}
 	}
 	/**
 	 * Ставим хук на вызов неизвестного метода и считаем что хотели вызвать метод какого либо модуля
@@ -561,7 +576,7 @@ abstract class EntityORM extends Entity {
 							}
 							$mCmdArgs=array($aFilterAdd);
 							break;
-						case self::RELATION_TYPE_MANY_TO_MANY_NEW :
+						case self::RELATION_TYPE_MANY_TO_MANY :
 							$sEntityJoin=$this->aRelations[$sKey][3];
 							$sKeyJoin=$this->aRelations[$sKey][4];
 							if (isset($this->aRelations[$sKey][5])) {
@@ -575,32 +590,6 @@ abstract class EntityORM extends Entity {
 							}
 							$mCmdArgs=array($sEntityJoin,$sKeyJoin,$sRelationKey,$iPrimaryKeyValue,$aFilterAdd);
 							break;
-						case self::RELATION_TYPE_MANY_TO_MANY :
-							$sRelationJoinTable=null;
-							$sRelationJoinTableKey=0;	// foreign key в join-таблице для текущей сущности
-							if($sRelationType == self::RELATION_TYPE_MANY_TO_MANY && array_key_exists(3, $this->aRelations[$sKey])) {
-								$sRelationJoinTable=$this->aRelations[$sKey][3];
-								$sRelationJoinTableKey=isset($this->aRelations[$sKey][4]) ? $this->aRelations[$sKey][4] : $this->_getPrimaryKey();
-							}
-							if (isset($this->aRelations[$sKey][5])) {
-								$aFilterAdd=$this->aRelations[$sKey][5];
-							} else {
-								$aFilterAdd=array();
-							}
-							$sCmd="{$sRelPluginPrefix}Module{$sRelModuleName}_get{$sRelEntityName}ItemsByJoinTable";
-							$aJoinParams=array(
-								'#join_table'		=> Config::Get($sRelationJoinTable),
-								'#relation_key'		=> $sRelationKey,
-								'#by_key'			=> $sRelationJoinTableKey,
-								'#by_value'			=> $iPrimaryKeyValue,
-								'#index-from-primary' => true // Для MANY_TO_MANY необходимо индексами в $aRelationsData иметь первичные ключи сущностей
-							);
-							$aFilterAdd=array_merge($aJoinParams,$aFilterAdd);
-							if($bUseFilter) {
-								$aFilterAdd = array_merge($aFilterAdd, $aArgs[0]);
-							}
-							$mCmdArgs=array($aFilterAdd);
-							break;
 						default:
 							break;
 					}
@@ -613,7 +602,7 @@ abstract class EntityORM extends Entity {
 					}
 					// Создаём объекты-обёртки для связей MANY_TO_MANY
 					if ($sRelationType == self::RELATION_TYPE_MANY_TO_MANY) {
-						$this->_aManyToManyRelations[$sKey] = new LS_ManyToManyRelation($res);
+						$this->_aManyToManyRelations[$sKey] = new ORMRelationManyToMany($res);
 					}
 					return $res;
 				}

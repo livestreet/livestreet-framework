@@ -29,13 +29,13 @@
  * @package engine.orm
  * @since 1.0
  */
-class LS_ManyToManyRelation extends LsObject {
+class ORMRelationManyToMany extends LsObject {
 	/**
 	 * Список объектов связи
 	 *
 	 * @var array
 	 */
-	protected $_aCollection = array();
+	protected $aCollection = array();
 	/**
 	 * Флаг обновления списка объектов связи
 	 *
@@ -49,7 +49,15 @@ class LS_ManyToManyRelation extends LsObject {
 	 * @param $aCollection	Список объектов связи
 	 */
 	public function __construct($aCollection) {
-		$this->_aCollection = $aCollection;
+		if (!$aCollection) {
+			$aCollection=array();
+		}
+		if (!is_array($aCollection)) {
+			$aCollection=array($aCollection);
+		}
+		foreach($aCollection as $oEntity) {
+			$this->aCollection[$oEntity->_getPrimaryKeyValue()]=$oEntity;
+		}
 	}
 	/**
 	 * Добавление объекта в список
@@ -58,7 +66,7 @@ class LS_ManyToManyRelation extends LsObject {
 	 */
 	public function add($oEntity) {
 		$this->bUpdated = true;
-		$this->_aCollection[$oEntity->_getPrimaryKeyValue()] = $oEntity;
+		$this->aCollection[$oEntity->_getPrimaryKeyValue()] = $oEntity;
 	}
 	/**
 	 * Удаление объекта из списка по его id или массиву id
@@ -69,12 +77,20 @@ class LS_ManyToManyRelation extends LsObject {
 		$this->bUpdated = true;
 		if (is_array($iId)) {
 			foreach ($iId as $id) {
-				if (isset($this->_aCollection[$id])) {
-					unset($this->_aCollection[$id]);
+				if (is_object($id)) {
+					$id=$id->_getPrimaryKeyValue();
+				}
+				if (isset($this->aCollection[$id])) {
+					unset($this->aCollection[$id]);
 				}
 			}
-		} elseif (isset($this->_aCollection[$iId])) {
-			unset($this->_aCollection[$iId]);
+		} else {
+			if (is_object($iId)) {
+				$iId=$iId->_getPrimaryKeyValue();
+			}
+			if (isset($this->aCollection[$iId])) {
+				unset($this->aCollection[$iId]);
+			}
 		}
 	}
 	/**
@@ -82,7 +98,7 @@ class LS_ManyToManyRelation extends LsObject {
 	 */
 	public function clear() {
 		$this->bUpdated = true;
-		$this->_aCollection=array();
+		$this->aCollection=array();
 	}
 	/**
 	 * Возвращает список объектов связи
@@ -90,7 +106,7 @@ class LS_ManyToManyRelation extends LsObject {
 	 * @return array
 	 */
 	public function getCollection() {
-		return $this->_aCollection;
+		return $this->aCollection;
 	}
 	/**
 	 * Проверка списка на обновление

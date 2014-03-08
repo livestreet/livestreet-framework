@@ -193,6 +193,7 @@ abstract class Entity extends LsObject {
 				return null;
 			} elseif ($sType=='set' and array_key_exists(0,$aArgs)) {
 				$this->_aData[$sKey]=$aArgs[0];
+				return $this;
 			}
 		} else {
 			return Engine::getInstance()->_CallModule($sName,$aArgs);

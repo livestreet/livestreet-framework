@@ -614,6 +614,7 @@ abstract class EntityORM extends Entity {
 				} else {
 					$this->_aData[$this->_getField($sKey)]=$aArgs[0];
 				}
+				return $this;
 			} elseif ($sType=='reload') {
 				if (array_key_exists($sKey,$this->aRelationsData)) {
 					unset($this->aRelationsData[$sKey]);

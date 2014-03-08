@@ -428,13 +428,7 @@ class ModuleViewer extends Module {
 	 * @param mixed $value	Значение переменной
 	 */
 	public function Assign($sName,$value=null) {
-		if (is_array($sName)) {
-			foreach($sName as $sKey=>$mVal) {
-				$this->oSmarty->assign($sKey, $mVal);
-			}
-		} else {
-			$this->oSmarty->assign($sName, $value);
-		}
+		$this->oSmarty->assign($sName, $value);
 	}
 	/**
 	 * Загружаем переменную в ajax ответ

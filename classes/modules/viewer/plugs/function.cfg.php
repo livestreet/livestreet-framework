@@ -28,7 +28,6 @@ function smarty_function_cfg($aParams,&$oSmarty) {
 		trigger_error("Config: missing 'name' parametr",E_USER_WARNING);
 		return ;
 	}
-	require_once(Config::Get('path.framework.libs_application.server').'/ConfigSimple/Config.class.php');
 	if(!isset($aParams['instance'])) {
 		$aParams['instance'] = Config::DEFAULT_CONFIG_INSTANCE;
 	}

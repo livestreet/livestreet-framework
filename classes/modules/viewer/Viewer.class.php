@@ -424,11 +424,11 @@ class ModuleViewer extends Module {
 	/**
 	 * Загружает переменную в шаблон
 	 *
-	 * @param string|array $sName	Имя переменной в шаблоне или ассоциативный массив со списком параметров
-	 * @param mixed $value	Значение переменной
+	 * @param string|array $mName	Имя переменной в шаблоне или ассоциативный массив со списком параметров
+	 * @param mixed $mValue	Значение переменной
 	 */
-	public function Assign($sName,$value=null) {
-		$this->oSmarty->assign($sName, $value);
+	public function Assign($mName,$mValue=null) {
+		$this->oSmarty->assign($mName, $mValue);
 	}
 	/**
 	 * Загружаем переменную в ajax ответ

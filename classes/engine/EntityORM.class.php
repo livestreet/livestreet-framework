@@ -345,17 +345,11 @@ abstract class EntityORM extends Entity {
 	 * @return mixed
 	 */
 	protected function _Method($sName) {
-		$sModuleName=Engine::GetModuleName($this);
-		$sEntityName=Engine::GetEntityName($this);
-		$sPluginPrefix=Engine::GetPluginPrefix($this);
-		/**
-		 * If Module not exists, try to find its root Delegater
-		 */
-		$aClassInfo = Engine::GetClassInfo($sPluginPrefix.'Module_'.$sModuleName,Engine::CI_MODULE);
-		if(empty($aClassInfo[Engine::CI_MODULE]) && $sRootDelegater=$this->Plugin_GetRootDelegater('entity',get_class($this))) {
-			$sModuleName=Engine::GetModuleName($sRootDelegater);
-			$sPluginPrefix=Engine::GetPluginPrefix($sRootDelegater);
-		}
+		$sRootDelegater=$this->Plugin_GetRootDelegater('entity',get_class($this));
+
+		$sModuleName=Engine::GetModuleName($sRootDelegater);
+		$sPluginPrefix=Engine::GetPluginPrefix($sRootDelegater);
+		$sEntityName=Engine::GetEntityName($sRootDelegater);
 		return Engine::GetInstance()->_CallModule("{$sPluginPrefix}{$sModuleName}_{$sName}{$sEntityName}",array($this));
 	}
 	/**
@@ -422,6 +416,8 @@ abstract class EntityORM extends Entity {
 	 * @return null|string
 	 */
 	public function _getField($sField,$iPersistence=3) {
+		$sRootDelegater=$this->Plugin_GetRootDelegater('entity',get_class($this));
+
 		if($aFields=$this->_getFields()) {
 			if(in_array($sField,$aFields)) {
 				return $sField;
@@ -430,21 +426,21 @@ abstract class EntityORM extends Entity {
 				return null;
 			}
 			$sFieldU = func_camelize($sField);
-			$sEntityField = func_underscore(Engine::GetEntityName($this).$sFieldU);
+			$sEntityField = func_underscore(Engine::GetEntityName($sRootDelegater).$sFieldU);
 			if(in_array($sEntityField,$aFields)) {
 				return $sEntityField;
 			}
 			if($iPersistence==1) {
 				return null;
 			}
-			$sModuleEntityField = func_underscore(Engine::GetModuleName($this).Engine::GetEntityName($this).$sFieldU);
+			$sModuleEntityField = func_underscore(Engine::GetModuleName($sRootDelegater).Engine::GetEntityName($sRootDelegater).$sFieldU);
 			if(in_array($sModuleEntityField,$aFields)) {
 				return $sModuleEntityField;
 			}
 			if($iPersistence==2) {
 				return null;
 			}
-			$sModuleField = func_underscore(Engine::GetModuleName($this).$sFieldU);
+			$sModuleField = func_underscore(Engine::GetModuleName($sRootDelegater).$sFieldU);
 			if(in_array($sModuleField,$aFields)) {
 				return $sModuleField;
 			}

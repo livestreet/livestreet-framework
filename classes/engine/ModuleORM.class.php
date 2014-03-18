@@ -364,11 +364,7 @@ abstract class ModuleORM extends Module {
 			$aFilter = array();
 		}
 
-		if (is_null($sEntityFull)) {
-			$sEntityFull=Engine::GetPluginPrefix($this).'Module'.Engine::GetModuleName($this).'_Entity'.Engine::GetModuleName(get_class($this));
-		} elseif (!substr_count($sEntityFull,'_')) {
-			$sEntityFull=Engine::GetPluginPrefix($this).'Module'.Engine::GetModuleName($this).'_Entity'.$sEntityFull;
-		}
+		$sEntityFull=$this->_NormalizeEntityRootName($sEntityFull);
 		/**
 		 * Хук для возможности изменения фильтра
 		 */
@@ -378,9 +374,8 @@ abstract class ModuleORM extends Module {
 		if (array_key_exists('#cache', $aFilter) && !$aFilter['#cache']) {
 			$aEntities=$this->oMapperORM->GetItemsByFilter($aFilter,$sEntityFull);
 		} else {
-			$sEntityFullRoot=$this->Plugin_GetRootDelegater('entity',$sEntityFull);
-			$sCacheKey=$sEntityFullRoot.'_items_by_filter_'.serialize($aFilter);
-			$aCacheTags=array($sEntityFullRoot.'_save',$sEntityFullRoot.'_delete');
+			$sCacheKey=$sEntityFull.'_items_by_filter_'.serialize($aFilter);
+			$aCacheTags=array($sEntityFull.'_save',$sEntityFull.'_delete');
 			$iCacheTime=60*60*24; // скорее лучше хранить в свойстве сущности, для возможности выборочного переопределения
 			// переопределяем из параметров
 			if (isset($aFilter['#cache'][0])) $sCacheKey=$aFilter['#cache'][0];
@@ -582,18 +577,13 @@ abstract class ModuleORM extends Module {
 	 * @return int
 	 */
 	public function GetCountItemsByFilter($aFilter=array(),$sEntityFull=null) {
-		if (is_null($sEntityFull)) {
-			$sEntityFull=Engine::GetPluginPrefix($this).'Module'.Engine::GetModuleName($this).'_Entity'.Engine::GetModuleName(get_class($this));
-		} elseif (!substr_count($sEntityFull,'_')) {
-			$sEntityFull=Engine::GetPluginPrefix($this).'Module'.Engine::GetModuleName($this).'_Entity'.$sEntityFull;
-		}
+		$sEntityFull=$this->_NormalizeEntityRootName($sEntityFull);
 		// Если параметр #cache указан и пуст, значит игнорируем кэширование для запроса
 		if (array_key_exists('#cache', $aFilter) && !$aFilter['#cache']) {
 			$iCount=$this->oMapperORM->GetCountItemsByFilter($aFilter,$sEntityFull);
 		} else {
-			$sEntityFullRoot=$this->Plugin_GetRootDelegater('entity',$sEntityFull);
-			$sCacheKey=$sEntityFullRoot.'_count_items_by_filter_'.serialize($aFilter);
-			$aCacheTags=array($sEntityFullRoot.'_save',$sEntityFullRoot.'_delete');
+			$sCacheKey=$sEntityFull.'_count_items_by_filter_'.serialize($aFilter);
+			$aCacheTags=array($sEntityFull.'_save',$sEntityFull.'_delete');
 			$iCacheTime=60*60*24; // скорее лучше хранить в свойстве сущности, для возможности выборочного переопределения
 			// переопределяем из параметров
 			if (isset($aFilter['#cache'][0])) $sCacheKey=$aFilter['#cache'][0];
@@ -625,12 +615,7 @@ abstract class ModuleORM extends Module {
 	}
 
 	public function GetItemsByJoinEntity($sEntityJoin,$sKeyJoin,$sRelationKey,$aRelationValues,$aFilter,$sEntityFull=null) {
-		if (is_null($sEntityFull)) {
-			$sEntityFull=Engine::GetPluginPrefix($this).'Module'.Engine::GetModuleName($this).'_Entity'.Engine::GetModuleName(get_class($this));
-		} elseif (!substr_count($sEntityFull,'_')) {
-			$sEntityFull=Engine::GetPluginPrefix($this).'Module'.Engine::GetModuleName($this).'_Entity'.$sEntityFull;
-		}
-
+		$sEntityFull=$this->_NormalizeEntityRootName($sEntityFull);
 		/**
 		 * Кеширование
 		 * Если параметр #cache указан и пуст, значит игнорируем кэширование для запроса
@@ -638,16 +623,15 @@ abstract class ModuleORM extends Module {
 		if (array_key_exists('#cache', $aFilter) && !$aFilter['#cache']) {
 			$aEntities = $this->oMapperORM->GetItemsByJoinEntity($sEntityJoin,$sKeyJoin,$sRelationKey,$aRelationValues,$aFilter,$sEntityFull);
 		} else {
-			$sEntityFullRoot=$this->Plugin_GetRootDelegater('entity',$sEntityFull);
 			$sEntityJoin=$this->Plugin_GetRootDelegater('entity',$sEntityJoin);
 
-			$sCacheKey='items_by_join_entity_'.serialize(array($sEntityJoin,$sKeyJoin,$sRelationKey,$aRelationValues,$aFilter,$sEntityFullRoot));
+			$sCacheKey='items_by_join_entity_'.serialize(array($sEntityJoin,$sKeyJoin,$sRelationKey,$aRelationValues,$aFilter,$sEntityFull));
 			/**
 			 * Формируем теги для сброса кеша
 			 * Сброс идет по обновлению запрашиваемой сущности
 			 * Дополнительно по обновлению таблицы связей
 			 */
-			$aCacheTags=array($sEntityFullRoot.'_save',$sEntityFullRoot.'_delete',$sEntityJoin.'_save',$sEntityJoin.'_delete');
+			$aCacheTags=array($sEntityFull.'_save',$sEntityFull.'_delete',$sEntityJoin.'_save',$sEntityJoin.'_delete');
 			$iCacheTime=60*60*24; // todo: скорее лучше хранить в свойстве сущности, для возможности выборочного переопределения
 			/**
 			 * Переопределяем из параметров
@@ -673,12 +657,7 @@ abstract class ModuleORM extends Module {
 	}
 
 	public function GetCountItemsByJoinEntity($sEntityJoin,$sKeyJoin,$sRelationKey,$aRelationValues,$aFilter,$sEntityFull=null) {
-		if (is_null($sEntityFull)) {
-			$sEntityFull=Engine::GetPluginPrefix($this).'Module'.Engine::GetModuleName($this).'_Entity'.Engine::GetModuleName(get_class($this));
-		} elseif (!substr_count($sEntityFull,'_')) {
-			$sEntityFull=Engine::GetPluginPrefix($this).'Module'.Engine::GetModuleName($this).'_Entity'.$sEntityFull;
-		}
-
+		$sEntityFull=$this->_NormalizeEntityRootName($sEntityFull);
 		/**
 		 * Кеширование
 		 * Если параметр #cache указан и пуст, значит игнорируем кэширование для запроса
@@ -686,10 +665,9 @@ abstract class ModuleORM extends Module {
 		if (array_key_exists('#cache', $aFilter) && !$aFilter['#cache']) {
 			$iCount=$this->oMapperORM->GetCountItemsByJoinEntity($sEntityJoin,$sKeyJoin,$sRelationKey,$aRelationValues,$aFilter,$sEntityFull);
 		} else {
-			$sEntityFullRoot=$this->Plugin_GetRootDelegater('entity',$sEntityFull);
 			$sEntityJoin=$this->Plugin_GetRootDelegater('entity',$sEntityJoin);
 
-			$sCacheKey='count_items_by_join_entity_'.serialize(array($sEntityJoin,$sKeyJoin,$sRelationKey,$aRelationValues,$aFilter,$sEntityFullRoot));
+			$sCacheKey='count_items_by_join_entity_'.serialize(array($sEntityJoin,$sKeyJoin,$sRelationKey,$aRelationValues,$aFilter,$sEntityFull));
 			/**
 			 * Формируем теги для сброса кеша
 			 * Сброс идет по обновлению таблицы связей
@@ -963,5 +941,47 @@ abstract class ModuleORM extends Module {
 		foreach($aRelationItemsSaved as $oRelation) {
 			$oRelation->Delete();
 		}
+	}
+
+	/**
+	 * Приводит название сущности к единому формату полного имени класса
+	 * Если используется наследование, то возвращается корневой класс
+	 * $sEntity может содержать как короткое имя сущности (без плагина и модуля), так и полное
+	 *
+	 * @param string|object|null $sEntity
+	 *
+	 * @return string
+	 */
+	protected function _NormalizeEntityRootName($sEntity) {
+		/**
+		 * Если передан объект сущности, то просто возвращаем ее корневой класс
+		 */
+		if (is_object($sEntity)) {
+			return $this->Plugin_GetRootDelegater('entity',get_class($sEntity));
+		}
+		/**
+		 * Разбиваем сущность на составляющие
+		 */
+		if (is_null($sEntity)) {
+			$sPluginPrefix=Engine::GetPluginPrefix($this);
+			$sModuleName=Engine::GetModuleName($this);
+			$sEntityName=Engine::GetEntityName($this);
+		} elseif (substr_count($sEntity,'_')) {
+			$sPluginPrefix=Engine::GetPluginPrefix($sEntity);
+			$sModuleName=Engine::GetModuleName($sEntity);
+			$sEntityName=Engine::GetEntityName($sEntity);
+		} else {
+			$sPluginPrefix=Engine::GetPluginPrefix($this);
+			$sModuleName=Engine::GetModuleName($this);
+			$sEntityName=$sEntity;
+		}
+		/**
+		 * Получаем корневой модуль
+		 */
+		$sModuleRoot=$this->Plugin_GetRootDelegater('module',$sPluginPrefix.'Module'.$sModuleName);
+		/**
+		 * Возвращаем корневую сущность
+		 */
+		return $this->Plugin_GetRootDelegater('entity',$sModuleRoot.'_Entity'.$sEntityName);
 	}
 }

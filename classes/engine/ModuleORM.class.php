@@ -562,9 +562,12 @@ abstract class ModuleORM extends Module {
 	protected function _setIndexesGroupJoinField($aEntities, $sField) {
 		$aIndexedEntities=array();
 		foreach ($aEntities as $oEntity) {
-			$aDataRel=$oEntity->_getDataOne('_relation_data');
-			if (isset($aDataRel[$sField])) {
-				$aIndexedEntities[$aDataRel[$sField]][]=$oEntity;
+			$oRelEntity=$oEntity->_getDataOne('_relation_entity');
+			if ($oRelEntity) {
+				$sVal=$oRelEntity->_getDataOne($oRelEntity->_getField($sField));
+				if (!is_null($sVal)) {
+					$aIndexedEntities[$sVal][]=$oEntity;
+				}
 			}
 		}
 		return $aIndexedEntities;

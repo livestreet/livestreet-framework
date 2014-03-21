@@ -224,7 +224,7 @@ class MapperORM extends Mapper {
 						$aData[$k]=$v;
 					}
 				}
-				$aData['_relation_data']=$aDataRelation;
+				$aData['_relation_entity']=Engine::GetEntity($sEntityJoin,$aDataRelation);
 				$oEntity=Engine::GetEntity($sEntityFull,$aData);
 				$oEntity->_SetIsNew(false);
 				$aItems[] = $oEntity;

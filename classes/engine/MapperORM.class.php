@@ -106,9 +106,13 @@ class MapperORM extends Mapper {
 		$sTableName = self::GetTableName($sEntityFull);
 
 		list($aFilterFields,$sFilterFields,$sJoinTables)=$this->BuildFilter($aFilter,$oEntitySample);
-		list($sOrder,$sLimit,$sGroup)=$this->BuildFilterMore($aFilter,$oEntitySample);
+		list($sOrder,$sLimit,$sGroup,$sSelect)=$this->BuildFilterMore($aFilter,$oEntitySample);
 
-		$sql = "SELECT t.* FROM ".$sTableName." t {$sJoinTables} WHERE 1=1 {$sFilterFields} {$sGroup} {$sOrder} LIMIT 0,1";
+		if (!$sSelect) {
+			$sSelect='t.*';
+		}
+
+		$sql = "SELECT {$sSelect} FROM ".$sTableName." t {$sJoinTables} WHERE 1=1 {$sFilterFields} {$sGroup} {$sOrder} LIMIT 0,1";
 		$aQueryParams=array_merge(array($sql),array_values($aFilterFields));
 
 		if($aRow=call_user_func_array(array($this->oDb,'selectRow'),$aQueryParams)) {
@@ -130,9 +134,13 @@ class MapperORM extends Mapper {
 		$sTableName = self::GetTableName($sEntityFull);
 
 		list($aFilterFields,$sFilterFields,$sJoinTables)=$this->BuildFilter($aFilter,$oEntitySample);
-		list($sOrder,$sLimit,$sGroup)=$this->BuildFilterMore($aFilter,$oEntitySample);
+		list($sOrder,$sLimit,$sGroup,$sSelect)=$this->BuildFilterMore($aFilter,$oEntitySample);
 
-		$sql = "SELECT t.* FROM ".$sTableName." t {$sJoinTables} WHERE 1=1 {$sFilterFields} {$sGroup} {$sOrder} {$sLimit} ";
+		if (!$sSelect) {
+			$sSelect='t.*';
+		}
+
+		$sql = "SELECT {$sSelect} FROM ".$sTableName." t {$sJoinTables} WHERE 1=1 {$sFilterFields} {$sGroup} {$sOrder} {$sLimit} ";
 		$aQueryParams=array_merge(array($sql),array_values($aFilterFields));
 		$aItems=array();
 		if($aRows=call_user_func_array(array($this->oDb,'select'),$aQueryParams)) {
@@ -433,7 +441,17 @@ class MapperORM extends Mapper {
 				$sGroup="GROUP BY {$sGroup}";
 			}
 		}
-		return array($sOrder,$sLimit,$sGroup);
+
+		// Определение полей в select
+		$sSelect='';
+		if (isset($aFilter['#select'])) {
+			// todo: добавить экранирование полей с учетом префикса таблицы
+			if(!is_array($aFilter['#select'])) {
+				$aFilter['#select'] = array($aFilter['#select']);
+			}
+			$sSelect=join(', ',$aFilter['#select']);
+		}
+		return array($sOrder,$sLimit,$sGroup,$sSelect);
 	}
 	/**
 	 * Список колонок/полей сущности

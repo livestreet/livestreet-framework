@@ -152,6 +152,25 @@ if($aPluginsList=@file($sPluginsListFile)) {
 			}
 		}
 		/**
+		 * Смотрим конфиг плагина в /application/config/plugins/config.php
+		 */
+		$sFileUserConfig=Config::get('path.application.server')."/config/plugins/{$sPlugin}/config.php";
+		if (file_exists($sFileUserConfig)) {
+			$aConfig = $fGetConfig($sFileUserConfig);
+			// Если конфиг этого плагина пуст, то загружаем массив целиком
+			$sKey = "plugin.$sPlugin";
+			if(!Config::isExist($sKey)) {
+				Config::Set($sKey,$aConfig);
+			} else {
+				// Если уже существую привязанные к плагину ключи,
+				// то сливаем старые и новое значения ассоциативно
+				Config::Set(
+					$sKey,
+					func_array_merge_assoc(Config::Get($sKey), $aConfig)
+				);
+			}
+		}
+		/**
 		 * Подключаем include-файлы
 		 */
 		$aIncludeFiles = glob($sPluginsDir.'/'.$sPlugin.'/include/*.php');

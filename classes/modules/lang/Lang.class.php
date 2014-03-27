@@ -142,7 +142,7 @@ class ModuleLang extends Module {
 		 * Ищет языковые файлы модулей и объединяет их с текущим
 		 */
 		$sDirConfig=$this->sLangPath.'/modules/';
-		if ($hDirConfig = opendir($sDirConfig)) {
+		if (is_dir($sDirConfig) and $hDirConfig = opendir($sDirConfig)) {
 			while (false !== ($sDirModule = readdir($hDirConfig))) {
 				if ($sDirModule !='.' and $sDirModule !='..' and is_dir($sDirConfig.$sDirModule)) {
 					$sFileConfig=$sDirConfig.$sDirModule.'/'.$sLangName.'.php';
@@ -154,7 +154,7 @@ class ModuleLang extends Module {
 			closedir($hDirConfig);
 		}
 		/**
-		 * Ищет языковые файлы актвиированных плагинов
+		 * Ищет языковые файлы активированных плагинов
 		 */
 		if($aPluginList = Engine::getInstance()->GetPlugins()) {
 			$aPluginList=array_keys($aPluginList);

@@ -38,7 +38,7 @@ $fGetConfig = create_function('$sPath', '$config=array(); return include $sPath;
  * Загружает конфиги модулей вида /config/modules/[module_name]/config.php
  */
 $sDirConfig=Config::get('path.application.server').'/config/modules/';
-if ($hDirConfig = opendir($sDirConfig)) {
+if (is_dir($sDirConfig) and $hDirConfig = opendir($sDirConfig)) {
 	while (false !== ($sDirModule = readdir($hDirConfig))) {
 		if ($sDirModule !='.' and $sDirModule !='..' and is_dir($sDirConfig.$sDirModule)) {
 			$sFileConfig=$sDirConfig.$sDirModule.'/config.php';
@@ -86,7 +86,7 @@ if ($hDirInclude = opendir($sDirInclude)) {
  * Инклудим все *.php файлы из каталога {path.root.application}/include/ - пользовательские файлы
  */
 $sDirInclude=Config::get('path.application.server').'/include/';
-if ($hDirInclude = opendir($sDirInclude)) {
+if (is_dir($sDirInclude) and $hDirInclude = opendir($sDirInclude)) {
 	while (false !== ($sFileInclude = readdir($hDirInclude))) {
 		$sFileIncludePathFull=$sDirInclude.$sFileInclude;
 		if ($sFileInclude !='.' and $sFileInclude !='..' and is_file($sFileIncludePathFull)) {
@@ -97,37 +97,6 @@ if ($hDirInclude = opendir($sDirInclude)) {
 		}
 	}
 	closedir($hDirInclude);
-}
-
-/**
- * Ищет routes-конфиги модулей и объединяет их с текущим
- * @see Router.class.php
- */
-$sDirConfig=Config::get('path.application.server').'/config/modules/';
-if ($hDirConfig = opendir($sDirConfig)) {
-	while (false !== ($sDirModule = readdir($hDirConfig))) {
-		if ($sDirModule !='.' and $sDirModule !='..' and is_dir($sDirConfig.$sDirModule)) {
-			$sFileConfig=$sDirConfig.$sDirModule.'/config.route.php';
-			if (file_exists($sFileConfig)) {
-				$aConfig = $fGetConfig($sFileConfig);
-				if(!empty($aConfig) && is_array($aConfig)) {
-					// Если конфиг этого модуля пуст, то загружаем массив целиком
-					$sKey = "router";
-					if(!Config::isExist($sKey)) {
-						Config::Set($sKey,$aConfig);
-					} else {
-						// Если уже существую привязанные к модулю ключи,
-						// то сливаем старые и новое значения ассоциативно
-						Config::Set(
-							$sKey,
-							func_array_merge_assoc(Config::Get($sKey), $aConfig)
-						);
-					}
-				}
-			}
-		}
-	}
-	closedir($hDirConfig);
 }
 
 if(isset($_SERVER['HTTP_APP_ENV']) && $_SERVER['HTTP_APP_ENV']=='test') {

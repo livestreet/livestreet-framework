@@ -56,6 +56,13 @@ abstract class ModuleValidate_EntityValidator extends Entity {
 	 */
 	public $on=null;
 	/**
+	 * Условие срабатывания валидации
+	 * Поддерживается только для валидации сущности, значение соответствует методу сущности, который будет вызван перед валидацией, если метод вернет false, то валидация будет пропущена
+	 *
+	 * @var null|string
+	 */
+	public $condition=null;
+	/**
 	 * Объект текущей сущности, которая проходит валидацию
 	 *
 	 * @var null|Entity
@@ -162,7 +169,12 @@ abstract class ModuleValidate_EntityValidator extends Entity {
 		 * Получаем значение поля у сущности через геттер
 		 */
 		$sValue=call_user_func_array(array($oEntity,'get'.func_camelize($sField)),array());
-
+		/**
+		 * Если условие валидации возвращает false, то пропускаем валидацию
+		 */
+		if ($this->condition and method_exists($oEntity,$this->condition) and !call_user_func_array(array($oEntity,$this->condition),array())) {
+			return true;
+		}
 		if (($sMsg=$this->validate($sValue))!==true) {
 			/**
 			 * Подставляем имя поля в сообщение об ошибке валидации

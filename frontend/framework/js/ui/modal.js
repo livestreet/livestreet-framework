@@ -180,7 +180,7 @@ var ls = ls || {};
 		 * @private
 		 */
 		_create: function() {
-			this.options = $.extend({}, this.options, ls.utilities.getDataOptions(this.element, 'modal'));
+			this.options = $.extend({}, this.options, ls.utils.getDataOptions(this.element, 'modal'));
 
 			this._toggle = $( '[data-modal-target=' + this.element.attr('id') + ']' );
 			this.closeButton = this.element.find('[data-type=modal-close]');
@@ -360,8 +360,8 @@ var ls = ls || {};
 
 		// Ajax
 		$(document).on('click', '[data-type=modal-toggle][data-modal-url]', function (e) {
-			var options = ls.utilities.getDataOptions($(this), 'modal');
-			var params = ls.utilities.getDataOptions($(this), 'param') || {};
+			var options = ls.utils.getDataOptions($(this), 'modal');
+			var params = ls.utils.getDataOptions($(this), 'param') || {};
 
 			ls.modal.load(options.url, params, options);
 			e.preventDefault();

@@ -1,4 +1,4 @@
-/**
+	/**
  * Ajax
  *
  * @module ajax
@@ -42,17 +42,17 @@ ls.ajax = (function ($) {
 			data: params,
 			dataType: 'json',
 			success: callback || function(){
-				ls.debug("ajax success: ");
-				ls.debug.apply(ls, arguments);
+				ls.dev.debug("ajax success: ");
+				ls.dev.debug.apply(ls.dev, arguments);
 			}.bind(this),
 			error: function(msg){
-				ls.debug("ajax error: ");
-				ls.debug.apply(ls, arguments);
+				ls.dev.debug("ajax error: ");
+				ls.dev.debug.apply(ls.dev, arguments);
 			}.bind(this),
 			complete: function(msg){
 				NProgress.done();
-				ls.debug("ajax complete: ");
-				ls.debug.apply(ls, arguments);
+				ls.dev.debug("ajax complete: ");
+				ls.dev.debug.apply(ls.dev, arguments);
 			}.bind(this)
 		}, more);
 
@@ -107,21 +107,21 @@ ls.ajax = (function ($) {
 					callback(result, status, xhr, form);
 				}
 			} : function () {
-				ls.debug("ajax success: ");
-				ls.debug.apply(ls, arguments);
+				ls.dev.debug("ajax success: ");
+				ls.dev.debug.apply(ls.dev, arguments);
 			}.bind(this),
 			error: more.error || function(){
-				ls.debug("ajax error: ");
-				ls.debug.apply(ls, arguments);
+				ls.dev.debug("ajax error: ");
+				ls.dev.debug.apply(ls.dev, arguments);
 			}.bind(this),
 			complete: function(){
 				NProgress.done();
 				button.prop('disabled', false).removeClass('loading');
-				ls.debug("ajax complete: ");
-				ls.debug.apply(ls, arguments);
+				ls.dev.debug("ajax complete: ");
+				ls.dev.debug.apply(ls.dev, arguments);
 
 				if (more.complete) {
-					more.complete.apply(ls,arguments);
+					more.complete.apply(ls.dev,arguments);
 				}
 			}.bind(this)
 		};

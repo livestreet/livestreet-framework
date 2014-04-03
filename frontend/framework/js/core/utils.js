@@ -1,8 +1,8 @@
 /**
  * Вспомогательные функции
  *
- * @module utilities
- * 
+ * @module utils
+ *
  * @license   GNU General Public License, version 2
  * @copyright 2013 OOO "ЛС-СОФТ" {@link http://livestreetcms.com}
  * @author    Denis Shakhov <denis.shakhov@gmail.com>
@@ -10,7 +10,7 @@
 
 var ls = ls || {};
 
-ls.utilities = ls.tools = ls.utils = (function ($) {
+ls.utils = (function ($) {
 	/**
 	 * Переводит первый символ в верхний регистр
 	 */
@@ -132,4 +132,4 @@ ls.utilities = ls.tools = ls.utils = (function ($) {
 	};
 
 	return this;
-}).call(ls.utilities || {},jQuery);
+}).call(ls.utils || {},jQuery);

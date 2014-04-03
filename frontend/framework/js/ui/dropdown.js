@@ -50,7 +50,7 @@ $.widget( "livestreet.dropdown", {
      * @private
      */
     _create: function() {
-        this.options = $.extend({}, this.options, ls.utilities.getDataOptions(this.element, 'dropdown'));
+        this.options = $.extend({}, this.options, ls.utils.getDataOptions(this.element, 'dropdown'));
         
         this._target = $( '#' + this.element.data('dropdown-target') );
 
@@ -70,7 +70,7 @@ $.widget( "livestreet.dropdown", {
         this.options.position.of = this.options.position.of || this.element;
         
         this.options.position.using = this.options.position.using || function ( position, feedback ) {
-            ls.utilities.removeClassByPrefix( this._target, 'position-' );
+            ls.utils.removeClassByPrefix( this._target, 'position-' );
 
             this._target
                     .addClass( 'position-y-' + feedback.vertical + ' ' +  'position-x-' + feedback.horizontal )

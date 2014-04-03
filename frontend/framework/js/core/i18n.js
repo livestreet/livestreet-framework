@@ -2,7 +2,7 @@
  * Модаль для работы с локализацией
  *
  * @module i18n
- * 
+ *
  * @license   GNU General Public License, version 2
  * @copyright 2013 OOO "ЛС-СОФТ" {@link http://livestreetcms.com}
  * @author    Denis Shakhov <denis.shakhov@gmail.com>
@@ -18,7 +18,7 @@ ls.lang = ls.i18n = (function ($) {
 	 *
 	 * @private
 	 */
-	var _msgs = {};
+	var _aMsgs = {};
 
 	/**
 	 * Правило образования слов во множественном числе
@@ -36,27 +36,38 @@ ls.lang = ls.i18n = (function ($) {
 	 * @param {Object} msgs Текстовки
 	 */
 	this.load = function(msgs) {
-		$.extend(true, _msgs, msgs);
+		$.extend(true, _aMsgs, msgs);
 	};
 
 	/**
 	 * Получает текстовку
 	 *
-	 * @param {String} name    Название текстовки
-	 * @param {String} replace Список аргументов для замены
+	 * @param {String} sName    Название текстовки
+	 * @param {String} oReplaceStrings Список аргументов для замены
 	 */
-	this.get = function(name, replace) {
-		if (_msgs[name]) {
-			var value = _msgs[name];
+	this.get = function(sName, oReplaceStrings) {
+		if (_aMsgs[sName]) {
+			var sValue = _aMsgs[sName];
 
-			if (replace) {
-				value = value.tr(replace);
+			if (oReplaceStrings) {
+				sValue = this.replace(sValue, oReplaceStrings);
 			}
 
-			return value;
+			return sValue;
 		}
 
 		return '';
+	};
+
+	/**
+	 * Заменят переменные вида %%var%% в текстовках на заданные значения
+	 */
+	this.replace = function(sString, oParams) {
+		jQuery.each(oParams, function(sIndex, sValue) {
+			sString = sString.replace( new RegExp('%%' + sIndex + '%%', 'g'), sValue );
+		});
+
+		return sString;
 	};
 
 	/**
@@ -66,16 +77,16 @@ ls.lang = ls.i18n = (function ($) {
 	 * @param  {Mixed}  mText     Ключ с текстовкам разделенными символом ';', либо массив
 	 * @param  {String} sLanguage Язык, опциональный параметр, по дефолту берется из настроек
 	 * @return {String}
-	 *
-	 * TODO: Добавить автозамену ## на число
 	 */
 	this.pluralize = function(iNumber, mText, sLanguage) {
-		var aWords    = $.isArray(mText) ? mText : this.get(mText).split(';'),
-			sLanguage = sLanguage || LANGUAGE,
-			n         = Math.abs(iNumber),
-			mIndex    = eval(this.oPluralRules[sLanguage]);
+		var aWords        = $.isArray(mText) ? mText : this.get(mText).split(';'),
+			sLanguage     = sLanguage || LANGUAGE,
+			n             = Math.abs(iNumber),
+			mIndex        = eval(this.oPluralRules[sLanguage]),
+			sWord         = aWords[ typeof mIndex === 'boolean' ? (mIndex ? 1 : 0) : mIndex ],
+			sReplacedWord = this.replace( sWord, { number: iNumber } );
 
-		return iNumber + ' ' + aWords[ typeof mIndex === 'boolean' ? (mIndex ? 1 : 0) : mIndex ];
+		return sWord === sReplacedWord ? iNumber + ' ' + sWord : sReplacedWord;
 	};
 
 	return this;

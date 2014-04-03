@@ -54,8 +54,8 @@
          * @private
          */
         _create: function() {
-            this.options.params = ls.utilities.getDataOptions(this.element, 'param');
-            this.options = $.extend({}, this.options, ls.utilities.getDataOptions(this.element, 'tab'));
+            this.options.params = ls.utils.getDataOptions(this.element, 'param');
+            this.options = $.extend({}, this.options, ls.utils.getDataOptions(this.element, 'tab'));
 
             this.pane = $( '#' + this.options.target );
 

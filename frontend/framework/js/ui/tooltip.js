@@ -102,7 +102,7 @@ $.widget( "livestreet.tooltip", {
         this.options.position.of = this.options.position.of || this.element;
 
         this.options.position.using = this.options.position.using || function ( position, feedback ) {
-            ls.utilities.removeClassByPrefix( this._target, 'position-' );
+            ls.utils.removeClassByPrefix( this._target, 'position-' );
 
             this._target
                     .addClass( 'position-y-' + feedback.vertical + ' ' +  'position-x-' + feedback.horizontal )
@@ -247,7 +247,7 @@ $.widget( "livestreet.tooltip", {
      * Загрузка содержимого тултипа через аякс
      */
     _load: function () {
-        var params = $.extend( {}, this.options.ajax.params, ls.utilities.getDataOptions(this.element, 'param') ) || {};
+        var params = $.extend( {}, this.options.ajax.params, ls.utils.getDataOptions(this.element, 'param') ) || {};
 
         this._targetContent.empty().addClass( ls.options.classes.states.loading );
 

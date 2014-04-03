@@ -102,7 +102,7 @@ ls.hook = (function ($) {
 				}else if($.type(callback) == 'string'){
 					eval('(function(){'+callback+'}).apply(o, params);');
 				}else{
-					ls.debug('cant call hook "'+name+'"['+i+']');
+					ls.dev.debug('cant call hook "'+name+'"['+i+']');
 				}
 			});
 		}

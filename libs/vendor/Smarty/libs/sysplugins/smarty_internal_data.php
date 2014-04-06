@@ -29,6 +29,14 @@ class Smarty_Internal_Data {
      * @var array
      */
     public $tpl_vars = array();
+	// @livestreet
+	/**
+	 * template variables local
+	 *
+	 * @var array
+	 */
+	public $tpl_vars_local = array();
+	// @livestreet_end
     /**
      * parent template (if any)
      *

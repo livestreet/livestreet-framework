@@ -93,6 +93,11 @@ class Smarty_Internal_Compile_Private_Special_Variable extends Smarty_Internal_C
                 $_rdelim = $compiler->smarty->right_delimiter;
                 return "'$_rdelim'";
 
+			// @livestreet
+			case 'local':
+				return "isset(\$_smarty_tpl->tpl_vars_local[{$_index[1]}]) ? \$_smarty_tpl->tpl_vars_local[{$_index[1]}]->value : null";
+			// @livestreet_end
+
             default:
                 $compiler->trigger_template_error('$smarty.' . trim($_index[0], "'") . ' is invalid');
                 break;

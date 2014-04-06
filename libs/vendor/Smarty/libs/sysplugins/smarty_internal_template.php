@@ -281,6 +281,9 @@ class Smarty_Internal_Template extends Smarty_Internal_TemplateBase {
             // set up variable values
             foreach ($data as $_key => $_val) {
                 $tpl->tpl_vars[$_key] = new Smarty_variable($_val);
+				// @livestreet
+				$tpl->tpl_vars_local[$_key] = new Smarty_variable($_val);
+				// @livestreet_end
             }
         }
         return $tpl->fetch(null, null, null, null, false, false, true);
@@ -321,6 +324,9 @@ class Smarty_Internal_Template extends Smarty_Internal_TemplateBase {
             // set up variable values
             foreach ($data as $_key => $_val) {
                 $tpl->tpl_vars[$_key] = new Smarty_variable($_val);
+				// @livestreet
+				$tpl->tpl_vars_local[$_key] = new Smarty_variable($_val);
+				// @livestreet_end
             }
         }
         return $tpl;

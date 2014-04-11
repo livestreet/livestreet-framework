@@ -75,6 +75,10 @@ class DbSimple_Mysqli extends DbSimple_Database
 
     protected function _performEscape($s, $isIdent=false)
     {
+		// fix float type
+		if (is_float($s)) {
+			$s=str_replace(',', '.',$s);
+		}
         if (!$isIdent)
             return "'" . mysqli_real_escape_string($this->link, $s) . "'";
         else

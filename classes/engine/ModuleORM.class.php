@@ -336,11 +336,7 @@ abstract class ModuleORM extends Module {
 	 * @return EntityORM|null
 	 */
 	public function GetByFilter($aFilter=array(),$sEntityFull=null) {
-		if (is_null($sEntityFull)) {
-			$sEntityFull=Engine::GetPluginPrefix($this).'Module'.Engine::GetModuleName($this).'_Entity'.Engine::GetModuleName(get_class($this));
-		} elseif (!substr_count($sEntityFull,'_')) {
-			$sEntityFull=Engine::GetPluginPrefix($this).'Module'.Engine::GetModuleName($this).'_Entity'.$sEntityFull;
-		}
+		$sEntityFull=$this->_NormalizeEntityRootName($sEntityFull);
 		/**
 		 * Хук для возможности изменения фильтра
 		 */

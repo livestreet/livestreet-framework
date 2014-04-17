@@ -510,6 +510,13 @@ abstract class ModuleORM extends Module {
 		 * Если запрашиваем постраничный список, то возвращаем сам список и общее количество записей
 		 */
 		if (isset($aFilter['#page'])) {
+			if (isset($aFilter['#cache'][0])) {
+				/**
+				 * Задан собственный ключ для хранения кеша, поэтому нужно его сменить для передачи в GetCount*
+				 * Добавляем префикс 'count_'
+				 */
+				$aFilter['#cache'][0]='count_'.$aFilter['#cache'][0];
+			}
 			return array('collection'=>$aEntities,'count'=>$this->GetCountItemsByFilter($aFilter,$sEntityFull));
 		}
 		return $aEntities;
@@ -635,9 +642,9 @@ abstract class ModuleORM extends Module {
 			/**
 			 * Переопределяем из параметров
 			 */
-			if (isset($aJoinData['#cache'][0])) $sCacheKey=$aJoinData['#cache'][0];
-			if (isset($aJoinData['#cache'][1])) $aCacheTags=$aJoinData['#cache'][1];
-			if (isset($aJoinData['#cache'][2])) $iCacheTime=$aJoinData['#cache'][2];
+			if (isset($aFilter['#cache'][0])) $sCacheKey=$aFilter['#cache'][0];
+			if (isset($aFilter['#cache'][1])) $aCacheTags=$aFilter['#cache'][1];
+			if (isset($aFilter['#cache'][2])) $iCacheTime=$aFilter['#cache'][2];
 			/**
 			 * Смотрим в кеше
 			 */
@@ -650,6 +657,13 @@ abstract class ModuleORM extends Module {
 		 * Если запрашиваем постраничный список, то возвращаем сам список и общее количество записей
 		 */
 		if (isset($aFilter['#page'])) {
+			if (isset($aFilter['#cache'][0])) {
+				/**
+				 * Задан собственный ключ для хранения кеша, поэтому нужно его сменить для передачи в GetCount*
+				 * Добавляем префикс 'count_'
+				 */
+				$aFilter['#cache'][0]='count_'.$aFilter['#cache'][0];
+			}
 			return array('collection'=>$aEntities,'count'=>$this->GetCountItemsByJoinEntity($sEntityJoin,$sKeyJoin,$sRelationKey,$aRelationValues,$aFilter,$sEntityFull=null));
 		}
 		return $aEntities;
@@ -676,9 +690,9 @@ abstract class ModuleORM extends Module {
 			/**
 			 * Переопределяем из параметров
 			 */
-			if (isset($aJoinData['#cache'][0])) $sCacheKey=$aJoinData['#cache'][0];
-			if (isset($aJoinData['#cache'][1])) $aCacheTags=$aJoinData['#cache'][1];
-			if (isset($aJoinData['#cache'][2])) $iCacheTime=$aJoinData['#cache'][2];
+			if (isset($aFilter['#cache'][0])) $sCacheKey=$aFilter['#cache'][0];
+			if (isset($aFilter['#cache'][1])) $aCacheTags=$aFilter['#cache'][1];
+			if (isset($aFilter['#cache'][2])) $iCacheTime=$aFilter['#cache'][2];
 			/**
 			 * Смотрим в кеше
 			 */

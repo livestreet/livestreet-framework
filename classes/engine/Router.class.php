@@ -316,7 +316,20 @@ class Router extends LsObject {
 		if (isset($this->aConfigRoute['page'][self::$sAction])) {
 
 		} elseif (self::$sAction===null) {
-			self::$sAction=$this->aConfigRoute['config']['action_default'];
+			self::$sAction=$this->aConfigRoute['config']['default']['action'];
+			if (!is_null($sEvent=$this->aConfigRoute['config']['default']['event'])) {
+				self::$sActionEvent=$sEvent;
+			}
+			if (is_array($aParams=$this->aConfigRoute['config']['default']['params'])) {
+				self::$aParams=$aParams;
+			}
+			if (is_array($aRequest=$this->aConfigRoute['config']['default']['request'])) {
+				foreach($aRequest as $k=>$v) {
+					if (!array_key_exists($k,$_REQUEST)) {
+						$_REQUEST[$k]=$v;
+					}
+				}
+			}
 		} else {
 			//Если не находим нужного класса то отправляем на страницу ошибки			
 			self::$sAction=$this->aConfigRoute['config']['action_not_found'];
@@ -491,7 +504,7 @@ class Router extends LsObject {
 		}
 		// Если пользователь запросил action по умолчанию
 		$sPage = ($sAction == 'default')
-			? self::getInstance()->aConfigRoute['config']['action_default']
+			? self::getInstance()->aConfigRoute['config']['default']['action']
 			: $sAction;
 		$aUrl=explode('/',$sPage);
 		$sPage=array_shift($aUrl);

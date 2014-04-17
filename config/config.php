@@ -220,7 +220,10 @@ $config['router']['uri'] = array();
 $config['router']['page']['error']         = 'ActionError';
 $config['router']['page']['index']         = 'ActionIndex';
 // Глобальные настройки роутинга
-$config['router']['config']['action_default']   = 'index';
+$config['router']['config']['default']['action']	= 'index';
+$config['router']['config']['default']['event']		= null;
+$config['router']['config']['default']['params']	= null;
+$config['router']['config']['default']['request']	= null;
 $config['router']['config']['action_not_found'] = 'error';
 
 $config['head']['default']['js'] = array(

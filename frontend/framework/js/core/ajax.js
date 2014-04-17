@@ -90,7 +90,11 @@ ls.ajax = (function ($) {
 			},
 			beforeSerialize: function (form, options) {
 				if (typeof more.validate == 'undefined' || more.validate === true) {
-					return form.parsley('validate');
+					var res=form.parsley('validate');
+					if (!res) {
+						NProgress.done();
+					}
+					return res;
 				}
 
 				return true;

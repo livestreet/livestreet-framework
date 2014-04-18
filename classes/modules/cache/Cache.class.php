@@ -1,33 +1,27 @@
 <?php
-/*-------------------------------------------------------
-*
-*   LiveStreet Engine Social Networking
-*   Copyright © 2008 Mzhelskiy Maxim
-*
-*--------------------------------------------------------
-*
-*   Official site: www.livestreet.ru
-*   Contact e-mail: rus.engine@gmail.com
-*
-*   GNU General Public License, version 2:
-*   http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
-*
----------------------------------------------------------
-*/
+/**
+ * LiveStreet CMS
+ * Copyright © 2013 OOO "ЛС-СОФТ"
+ *
+ * ------------------------------------------------------
+ *
+ * Official site: www.livestreetcms.com
+ * Contact e-mail: office@livestreetcms.com
+ *
+ * GNU General Public License, version 2:
+ * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+ *
+ * ------------------------------------------------------
+ *
+ * @link http://www.livestreetcms.com
+ * @copyright 2013 OOO "ЛС-СОФТ"
+ * @author Maxim Mzhelskiy <rus.engine@gmail.com>
+ *
+ */
 
 require_once(Config::Get('path.framework.libs_vendor.server').'/DklabCache/config.php');
 require_once(LS_DKCACHE_PATH.'Zend/Cache.php');
-require_once(LS_DKCACHE_PATH.'Cache/Backend/MemcachedMultiload.php');
-require_once(LS_DKCACHE_PATH.'Cache/Backend/TagEmuWrapper.php');
 require_once(LS_DKCACHE_PATH.'Cache/Backend/Profiler.php');
-
-/**
- * Типы кеширования: file и memory
- *
- */
-define('SYS_CACHE_TYPE_FILE','file');
-define('SYS_CACHE_TYPE_MEMORY','memory');
-define('SYS_CACHE_TYPE_XCACHE','xcache');
 
 /**
  * Модуль кеширования.
@@ -75,24 +69,31 @@ define('SYS_CACHE_TYPE_XCACHE','xcache');
  * @since 1.0
  */
 class ModuleCache extends Module {
+
 	/**
-	 * Объект бэкенда кеширования
+	 * Список бекендов кеширования
 	 *
-	 * @var Zend_Cache_Backend
+	 * @var array
 	 */
-	protected $oBackendCache=null;
+	protected $aCacheBackends=array();
 	/**
-	 * Используется кеширование или нет
+	 * Дефолтный тип кеширования
+	 *
+	 * @var string|null
+	 */
+	protected $sCacheType=null;
+	/**
+	 * Разрешать или нет кеширование
 	 *
 	 * @var bool
 	 */
-	protected $bUseCache;
+	protected $bAllowUse=false;
 	/**
-	 * Тип кеширования, прописан в глобльном конфиге config.php
+	 * Возможность принудительно использовать кешировоание, даже если оно отключено в конфиге
 	 *
-	 * @var string
+	 * @var bool
 	 */
-	protected $sCacheType;
+	protected $bAllowForce=true;
 	/**
 	 * Статистика кеширования
 	 *
@@ -105,14 +106,6 @@ class ModuleCache extends Module {
 		'count_set' => 0,
 	);
 	/**
-	 * Хранилище для кеша на время сессии
-	 * @see SetLife
-	 * @see GetLife
-	 *
-	 * @var array
-	 */
-	protected $aStoreLife=array();
-	/**
 	 * Префикс для "умного" кеширования
 	 * @see SmartSet
 	 * @see SmartGet
@@ -122,55 +115,26 @@ class ModuleCache extends Module {
 	protected $sPrefixSmartCache='for-smart-cache-';
 
 	/**
-	 * Инициализируем нужный тип кеша
-	 *
+	 * Инициализация
 	 */
 	public function Init() {
-		$this->bUseCache=Config::Get('sys.cache.use');
-		$this->sCacheType=Config::Get('sys.cache.type');
-
-		if (!$this->bUseCache) {
-			return false;
+		$this->InitParams();
+		$this->ClearOldCache();
+	}
+	/**
+	 * Инициализация необходимых параметров модуля
+	 */
+	public function InitParams() {
+		$this->bAllowUse=(bool)Config::Get('sys.cache.use');
+		if (is_bool(Config::Get('sys.cache.force'))) {
+			$this->bAllowForce=Config::Get('sys.cache.force');
 		}
-		/**
-		 * Файловый кеш
-		 */
-		if ($this->sCacheType==SYS_CACHE_TYPE_FILE) {
-			require_once(LS_DKCACHE_PATH.'Zend/Cache/Backend/File.php');
-			$sDirCache=Config::Get('sys.cache.dir').'/system/';
-			if (!is_dir($sDirCache)) @mkdir($sDirCache,0777,true);
-			$oCahe = new Zend_Cache_Backend_File(
-				array(
-					'cache_dir' => $sDirCache,
-					'file_name_prefix'	=> Config::Get('sys.cache.prefix'),
-					'read_control_type' => 'crc32',
-					'hashed_directory_level' => Config::Get('sys.cache.directory_level'),
-					'read_control' => true,
-					'file_locking' => true,
-				)
-			);
-			$this->oBackendCache = new Dklab_Cache_Backend_Profiler($oCahe,array($this,'CalcStats'));
-			/**
-			 * Кеш на основе Memcached
-			 */
-		} elseif ($this->sCacheType==SYS_CACHE_TYPE_MEMORY) {
-			require_once(LS_DKCACHE_PATH.'Zend/Cache/Backend/Memcached.php');
-			$aConfigMem=Config::Get('memcache');
-
-			$oCahe = new Dklab_Cache_Backend_MemcachedMultiload($aConfigMem);
-			$this->oBackendCache = new Dklab_Cache_Backend_TagEmuWrapper(new Dklab_Cache_Backend_Profiler($oCahe,array($this,'CalcStats')));
-			/**
-			 * Кеш на основе XCache
-			 */
-		} elseif ($this->sCacheType==SYS_CACHE_TYPE_XCACHE) {
-			require_once(LS_DKCACHE_PATH.'Zend/Cache/Backend/Xcache.php');
-			$aConfigMem=Config::Get('xcache');
-
-			$oCahe = new Zend_Cache_Backend_Xcache(is_array($aConfigMem) ? $aConfigMem : array());
-			$this->oBackendCache = new Dklab_Cache_Backend_TagEmuWrapper(new Dklab_Cache_Backend_Profiler($oCahe,array($this,'CalcStats')));
-		} else {
-			throw new Exception("Wrong type of caching: ".$this->sCacheType." (file, memory, xcache)");
-		}
+		$this->sCacheType=strtolower(Config::Get('sys.cache.type'));
+	}
+	/**
+	 * Удаляет старый кеш в случайном порядке
+	 */
+	protected function ClearOldCache() {
 		/**
 		 * Дабы не засорять место протухшим кешем, удаляем его в случайном порядке, например 1 из 50 раз
 		 */
@@ -179,46 +143,104 @@ class ModuleCache extends Module {
 		}
 	}
 	/**
+	 * Возвращает объект бекенда кеша
+	 *
+	 * @param string|null $sCacheType	Тип кеша
+	 *
+	 * @return ModuleCache_EntityBackend	Объект бекенда кеша
+	 * @throws Exception
+	 */
+	protected function GetCacheBackend($sCacheType=null) {
+		if ($sCacheType) {
+			$sCacheType=strtolower($sCacheType);
+		} else {
+			$sCacheType=$this->sCacheType;
+		}
+		/**
+		 * Устанавливает алиас memory == memcached
+		 */
+		if ($sCacheType=='memory') {
+			$sCacheType='memcached';
+		}
+		if (isset($this->aCacheBackends[$sCacheType])) {
+			return $this->aCacheBackends[$sCacheType];
+		}
+		$sCacheTypeCam=func_camelize($sCacheType);
+		/**
+		 * Формируем имя класса бекенда
+		 */
+		$sClass="ModuleCache_EntityBackend{$sCacheTypeCam}";
+		$sClass=Engine::GetEntityClass($sClass);
+		if (class_exists($sClass)) {
+			/**
+			 * Создаем объект и проверяем доступность его использования
+			 */
+			$oBackend=new $sClass;
+			if (true===($mResult=$oBackend->IsAvailable())) {
+				$oBackend->Init(array('stats_callback'=>array($this,'CalcStats')));
+				$this->aCacheBackends[$sCacheType]=$oBackend;
+				return $oBackend;
+			} else {
+				throw new Exception("Cache '{$sCacheTypeCam}' not available: {$mResult}");
+			}
+		}
+		throw new Exception("Not found class for cache type: ".$sCacheTypeCam);
+	}
+	/**
+	 * Формирует хеш от имени ключа кеша
+	 *
+	 * @param string $sName Имя ключа кеша
+	 *
+	 * @return string
+	 */
+	protected function HashName($sName) {
+		return md5(Config::Get('sys.cache.prefix').$sName);
+	}
+	/**
 	 * Получить значение из кеша
 	 *
-	 * @param string $sName	Имя ключа
+	 * @param string|array $sName	Имя ключа
+	 * @param string|null $sCacheType	Тип кеша
+	 * @param bool $bForce	Принудительно использовать кеширование, даже если оно отключено в конфиге
+	 *
 	 * @return mixed|bool
 	 */
-	public function Get($sName) {
-		if (!$this->bUseCache) {
+	public function Get($sName,$sCacheType=null,$bForce=false) {
+		if (!$this->bAllowUse and !($this->bAllowForce and $bForce)) {
 			return false;
 		}
 		/**
-		 * Т.к. название кеша может быть любым то предварительно хешируем имя кеша
+		 * Запрос сразу на несколько ключей?
 		 */
-		if (!is_array($sName)) {
-			$sName=md5(Config::Get('sys.cache.prefix').$sName);
-			$data=$this->oBackendCache->load($sName);
-			if ($this->sCacheType==SYS_CACHE_TYPE_FILE and $data!==false) {
-				return unserialize($data);
-			} else {
-				return $data;
-			}
-		} else {
+		if (is_array($sName)) {
 			return $this->multiGet($sName);
 		}
+		/**
+		 * Достаем данные из кеша
+		 */
+		$oCacheBackend=$this->GetCacheBackend($sCacheType);
+		return $oCacheBackend->Get($this->HashName($sName));
 	}
 	/**
 	 * Получения значения из "умного" кеша для борьбы с конкурирующими запросами
 	 * Если кеш "протух", и за ним обращаются много запросов, то только первый запрос вернет FALSE, остальные будут получать чуть устаревшие данные из временного кеша, пока их не обновит первый запрос
+	 * Текущая реализация имеет недостаток - размер кеша увеличивается в два раза
 	 *
-	 * @param $sName	Имя ключа
+	 * @param string $sName	Имя ключа
+	 * @param string|null $sCacheType	Тип кеша
+	 * @param bool $bForce	Принудительно использовать кеширование, даже если оно отключено в конфиге
+	 *
 	 * @return bool|mixed
 	 */
-	public function SmartGet($sName) {
-		if (!$this->bUseCache) {
+	public function SmartGet($sName,$sCacheType=null,$bForce=false) {
+		if (!$this->bAllowUse and !($this->bAllowForce and $bForce)) {
 			return false;
 		}
 		/**
 		 * Если данных в основном кеше нет, то перекладываем их из временного
 		 */
-		if (($data=$this->Get($sName))===false) {
-			$this->Set($this->Get($this->sPrefixSmartCache.$sName),$sName,array(),60); // храним данные из временного в основном не долго
+		if (($data=$this->Get($sName,$sCacheType,$bForce))===false) {
+			$this->Set($this->Get($this->sPrefixSmartCache.$sName,$sCacheType,$bForce),$sName,array(),60,$sCacheType,$bForce); // храним данные из временного в основном не долго
 		}
 		return $data;
 	}
@@ -227,20 +249,23 @@ class ModuleCache extends Module {
 	 * Такие запросы поддерживает только memcached, поэтому для остальных типов делаем эмуляцию
 	 *
 	 * @param  array $aName Имя ключа
+	 * @param  string|null $sCacheType Тип кеша
 	 * @return bool|array
 	 */
-	public function multiGet($aName) {
-		if (count($aName)==0) {
+	protected function MultiGet($aName,$sCacheType=null) {
+		if (!count($aName)) {
 			return false;
 		}
-		if ($this->sCacheType==SYS_CACHE_TYPE_MEMORY) {
+		$oCacheBackend=$this->GetCacheBackend($sCacheType);
+		if ($oCacheBackend->IsAllowMultiGet()) {
 			$aKeys=array();
 			$aKv=array();
 			foreach ($aName as $sName) {
-				$aKeys[]=md5(Config::Get('sys.cache.prefix').$sName);
-				$aKv[md5(Config::Get('sys.cache.prefix').$sName)]=$sName;
+				$sHash=$this->HashName($sName);
+				$aKeys[]=$sHash;
+				$aKv[$sHash]=$sName;
 			}
-			$data=$this->oBackendCache->load($aKeys);
+			$data=$oCacheBackend->Get($aKeys);
 			if ($data and is_array($data)) {
 				$aData=array();
 				foreach ($data as $key => $value) {
@@ -253,8 +278,8 @@ class ModuleCache extends Module {
 			return false;
 		} else {
 			$aData=array();
-			foreach ($aName as $key => $sName) {
-				if ((false !== ($data = $this->Get($sName)))) {
+			foreach ($aName as $sName) {
+				if ((false !== ($data = $oCacheBackend->Get($this->HashName($sName))))) {
 					$aData[$sName]=$data;
 				}
 			}
@@ -267,24 +292,27 @@ class ModuleCache extends Module {
 	/**
 	 * Записать значение в кеш
 	 *
-	 * @param  mixed  $data	Данные для хранения в кеше
+	 * @param  mixed  $mData	Данные для хранения в кеше
 	 * @param  string $sName	Имя ключа
 	 * @param  array  $aTags	Список тегов, для возможности удалять сразу несколько кешей по тегу
-	 * @param  int    $iTimeLife	Время жизни кеша в секундах
+	 * @param  int|bool    $iTimeLife	Время жизни кеша в секундах
+	 * @param string|null $sCacheType	Тип кеша
+	 * @param bool $bForce	Принудительно использовать кеширование, даже если оно отключено в конфиге
+	 *
 	 * @return bool
 	 */
-	public function Set($data,$sName,$aTags=array(),$iTimeLife=false) {
-		if (!$this->bUseCache) {
+	public function Set($mData,$sName,$aTags=array(),$iTimeLife=false,$sCacheType=null,$bForce=false) {
+		if (!$this->bAllowUse and !($this->bAllowForce and $bForce)) {
 			return false;
 		}
-		/**
-		 * Т.к. название кеша может быть любым то предварительно хешируем имя кеша
-		 */
-		$sName=md5(Config::Get('sys.cache.prefix').$sName);
-		if ($this->sCacheType==SYS_CACHE_TYPE_FILE) {
-			$data=serialize($data);
+		if (!is_array($aTags)) {
+			$aTags=array($aTags);
 		}
-		return $this->oBackendCache->save($data,$sName,$aTags,$iTimeLife);
+		/**
+		 * Сохраняем данные в кеш
+		 */
+		$oCacheBackend=$this->GetCacheBackend($sCacheType);
+		return $oCacheBackend->Set($mData,$this->HashName($sName),$aTags,$iTimeLife);
 	}
 	/**
 	 * Устанавливаем значение в "умном" кеша для борьбы с конкурирующими запросами
@@ -293,41 +321,70 @@ class ModuleCache extends Module {
 	 * @param mixed $data	Данные для хранения в кеше
 	 * @param string $sName	Имя ключа
 	 * @param array $aTags	Список тегов, для возможности удалять сразу несколько кешей по тегу
-	 * @param int $iTimeLife	Время жизни кеша в секундах
+	 * @param int|bool $iTimeLife	Время жизни кеша в секундах
+	 * @param string|null $sCacheType	Тип кеша
+	 * @param bool $bForce	Принудительно использовать кеширование, даже если оно отключено в конфиге
+	 *
 	 * @return bool
 	 */
-	public function SmartSet($data,$sName,$aTags=array(),$iTimeLife=false) {
-		$this->Set($data,$this->sPrefixSmartCache.$sName,array(),$iTimeLife!==false ? $iTimeLife+60 : false);
-		return $this->Set($data,$sName,$aTags,$iTimeLife);
+	public function SmartSet($data,$sName,$aTags=array(),$iTimeLife=false,$sCacheType=null,$bForce=false) {
+		$this->Set($data,$this->sPrefixSmartCache.$sName,array(),$iTimeLife!==false ? $iTimeLife+60 : false,$sCacheType,$bForce);
+		return $this->Set($data,$sName,$aTags,$iTimeLife,$sCacheType,$bForce);
 	}
 	/**
 	 * Удаляет значение из кеша по ключу(имени)
 	 *
-	 * @param string $sName	Имя ключа
+	 * @param string $sName
+	 * @param string|null $sCacheType
+	 * @param bool $bForce
+	 *
 	 * @return bool
 	 */
-	public function Delete($sName) {
-		if (!$this->bUseCache) {
+	public function Delete($sName,$sCacheType=null,$bForce=false) {
+		if (!$this->bAllowUse and !($this->bAllowForce and $bForce)) {
 			return false;
 		}
 		/**
-		 * Т.к. название кеша может быть любым то предварительно хешируем имя кеша
+		 * Удаляем данные их кеша
 		 */
-		$sName=md5(Config::Get('sys.cache.prefix').$sName);
-		return $this->oBackendCache->remove($sName);
+		$oCacheBackend=$this->GetCacheBackend($sCacheType);
+		return $oCacheBackend->Delete($this->HashName($sName));
 	}
 	/**
 	 * Чистит кеши
 	 *
-	 * @param int $cMode	Режим очистки кеша
+	 * @param string $cMode	Режим очистки кеша
 	 * @param array $aTags	Список тегов, актуально для режима Zend_Cache::CLEANING_MODE_MATCHING_TAG
+	 * @param string|null $sCacheType	Тип кеша
+	 * @param bool $bForce	Принудительно использовать кеширование, даже если оно отключено в конфиге
+	 *
 	 * @return bool
 	 */
-	public function Clean($cMode = Zend_Cache::CLEANING_MODE_ALL, $aTags = array()) {
-		if (!$this->bUseCache) {
+	public function Clean($cMode=Zend_Cache::CLEANING_MODE_ALL,$aTags=array(),$sCacheType=null,$bForce=false) {
+		if (!$this->bAllowUse and !($this->bAllowForce and $bForce)) {
 			return false;
 		}
-		return $this->oBackendCache->clean($cMode,$aTags);
+
+		$oCacheBackend=$this->GetCacheBackend($sCacheType);
+		return $oCacheBackend->Clean($cMode,$aTags);
+	}
+	/**
+	 * Получает значение из текущего кеша сессии
+	 *
+	 * @param string $sName	Имя ключа
+	 * @return mixed
+	 */
+	public function GetLife($sName) {
+		return $this->Get($sName,'life',true);
+	}
+	/**
+	 * Сохраняет значение в кеше на время исполнения скрипта(сессии), некий аналог Registry
+	 *
+	 * @param mixed $mData	Данные для сохранения в кеше
+	 * @param string $sName	Имя ключа
+	 */
+	public function SetLife($mData,$sName) {
+		$this->Set($mData,$sName,array(),false,'life',true);
 	}
 	/**
 	 * Подсчет статистики использования кеша
@@ -353,27 +410,4 @@ class ModuleCache extends Module {
 	public function GetStats() {
 		return $this->aStats;
 	}
-	/**
-	 * Сохраняет значение в кеше на время исполнения скрипта(сессии), некий аналог Registry
-	 *
-	 * @param mixed $data	Данные для сохранения в кеше
-	 * @param string $sName	Имя ключа
-	 */
-	public function SetLife($data,$sName) {
-		$this->aStoreLife[$sName]=$data;
-	}
-
-	/**
-	 * Получает значение из текущего кеша сессии
-	 *
-	 * @param string $sName	Имя ключа
-	 * @return mixed
-	 */
-	public function GetLife($sName) {
-		if (array_key_exists($sName,$this->aStoreLife)) {
-			return $this->aStoreLife[$sName];
-		}
-		return false;
-	}
 }
-?>

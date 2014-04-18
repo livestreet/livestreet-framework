@@ -50,7 +50,8 @@ class ModuleCache_EntityBackendMemcached extends ModuleCache_EntityBackend {
 	 * @return mixed
 	 */
 	public function Init($aParams=array()) {
-		require_once(LS_DKCACHE_PATH.'Zend/Cache/Backend/Memcached.php');
+		require_once(LS_DKCACHE_PATH.'Cache/Backend/TagEmuWrapper.php');
+		require_once(LS_DKCACHE_PATH.'Cache/Backend/MemcachedMultiload.php');
 		$aConfig=Config::Get('memcache');
 
 		$oCahe = new Dklab_Cache_Backend_MemcachedMultiload(is_array($aConfig) ? $aConfig : array());

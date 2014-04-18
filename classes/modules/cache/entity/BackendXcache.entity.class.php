@@ -50,6 +50,7 @@ class ModuleCache_EntityBackendXcache extends ModuleCache_EntityBackend {
 	 * @return mixed
 	 */
 	public function Init($aParams=array()) {
+		require_once(LS_DKCACHE_PATH.'Cache/Backend/TagEmuWrapper.php');
 		require_once(LS_DKCACHE_PATH.'Zend/Cache/Backend/Xcache.php');
 		$aConfig=Config::Get('xcache');
 

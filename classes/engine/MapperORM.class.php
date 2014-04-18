@@ -470,7 +470,7 @@ class MapperORM extends Mapper {
 	 * @return array
 	 */
 	public function ShowColumnsFromTable($sTableName) {
-		if (false === ($aItems = Engine::getInstance()->Cache_GetLife("columns_table_{$sTableName}"))) {
+		if (false === ($aItems = Engine::getInstance()->Cache_Get("columns_table_{$sTableName}",'file_orm',true))) {
 			$sql = "SHOW COLUMNS FROM ".$sTableName;
 			$aItems = array();
 			if($aRows=$this->oDb->select($sql)) {
@@ -481,7 +481,7 @@ class MapperORM extends Mapper {
 					}
 				}
 			}
-			Engine::getInstance()->Cache_SetLife($aItems, "columns_table_{$sTableName}");
+			Engine::getInstance()->Cache_Set($aItems,"columns_table_{$sTableName}",array(),60*60*4,'file_orm',true);
 		}
 		return $aItems;
 	}
@@ -502,7 +502,7 @@ class MapperORM extends Mapper {
 	 * @return array
 	 */
 	public function ShowPrimaryIndexFromTable($sTableName) {
-		if (false === ($aItems = Engine::getInstance()->Cache_GetLife("index_table_{$sTableName}"))) {
+		if (false === ($aItems = Engine::getInstance()->Cache_Get("index_table_{$sTableName}",'file_orm',true))) {
 			$sql = "SHOW INDEX FROM ".$sTableName;
 			$aItems = array();
 			if($aRows=$this->oDb->select($sql)) {
@@ -512,7 +512,7 @@ class MapperORM extends Mapper {
 					}
 				}
 			}
-			Engine::getInstance()->Cache_SetLife($aItems, "index_table_{$sTableName}");
+			Engine::getInstance()->Cache_Set($aItems, "index_table_{$sTableName}",array(),60*60*4,'file_orm',true);
 		}
 		return $aItems;
 	}

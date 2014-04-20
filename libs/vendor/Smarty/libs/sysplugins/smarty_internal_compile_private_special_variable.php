@@ -95,7 +95,7 @@ class Smarty_Internal_Compile_Private_Special_Variable extends Smarty_Internal_C
 
 			// @livestreet
 			case 'local':
-				return "isset(\$_smarty_tpl->tpl_vars_local[{$_index[1]}]) ? \$_smarty_tpl->tpl_vars_local[{$_index[1]}]->value : null";
+				return "(isset(\$_smarty_tpl->tpl_vars_local[{$_index[1]}]) ? \$_smarty_tpl->tpl_vars_local[{$_index[1]}]->value : null)";
 			// @livestreet_end
 
             default:

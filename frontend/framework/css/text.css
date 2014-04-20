@@ -1,6 +1,6 @@
 /**
  * Typeset
- * 
+ *
  * @license   GNU General Public License, version 2
  * @copyright 2013 OOO "ЛС-СОФТ" {@link http://livestreetcms.com}
  * @author    Denis Shakhov <denis.shakhov@gmail.com>
@@ -37,6 +37,7 @@
 	font: normal 12px/1.5 Menlo, Monaco, Consolas, monospace;
 	overflow: auto;
 	clear: both;
+	direction: ltr !important;
 }
 .text code {
     background: #fcfcfc;
@@ -59,7 +60,7 @@
 
 
 /* Lists */
-.text ul, 
+.text ul,
 .text ol { margin: 0; padding: 0 0 0 40px; }
 .text ul { list-style-type: disc; }
 .text ol { list-style-type: decimal; }

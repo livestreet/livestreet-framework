@@ -470,7 +470,7 @@ class MapperORM extends Mapper {
 	 * @return array
 	 */
 	public function ShowColumnsFromTable($sTableName) {
-		if (false === ($aItems = Engine::getInstance()->Cache_Get("columns_table_{$sTableName}",'file_orm',true))) {
+		if (false === ($aItems = Engine::getInstance()->Cache_Get("columns_table_{$sTableName}",'file_orm',true,true))) {
 			$sql = "SHOW COLUMNS FROM ".$sTableName;
 			$aItems = array();
 			if($aRows=$this->oDb->select($sql)) {
@@ -502,7 +502,7 @@ class MapperORM extends Mapper {
 	 * @return array
 	 */
 	public function ShowPrimaryIndexFromTable($sTableName) {
-		if (false === ($aItems = Engine::getInstance()->Cache_Get("index_table_{$sTableName}",'file_orm',true))) {
+		if (false === ($aItems = Engine::getInstance()->Cache_Get("index_table_{$sTableName}",'file_orm',true,true))) {
 			$sql = "SHOW INDEX FROM ".$sTableName;
 			$aItems = array();
 			if($aRows=$this->oDb->select($sql)) {

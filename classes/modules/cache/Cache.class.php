@@ -202,10 +202,13 @@ class ModuleCache extends Module {
 	 * @param string|array $sName	Имя ключа
 	 * @param string|null $sCacheType	Тип кеша
 	 * @param bool $bForce	Принудительно использовать кеширование, даже если оно отключено в конфиге
+	 * @param bool $bKeepInMemory	Если true, то данные дополнительно будут сохранены в памяти на время выполнения запроса (скрипта).
+	 * 								В результате чего повторные Get() запросы к кешу будут значительно быстрее. Параметр не поддерживает мульти-запросы к кешу.
+	 * 								Данные параметр следует использовать очень осторожно, т.к. кешированные данные нельзя будет обновить/удалить до конца выполнения запроса.
 	 *
 	 * @return mixed|bool
 	 */
-	public function Get($sName,$sCacheType=null,$bForce=false) {
+	public function Get($sName,$sCacheType=null,$bForce=false,$bKeepInMemory=false) {
 		if (!$this->bAllowUse and !($this->bAllowForce and $bForce)) {
 			return false;
 		}
@@ -216,10 +219,24 @@ class ModuleCache extends Module {
 			return $this->MultiGet($sName,$sCacheType);
 		}
 		/**
-		 * Достаем данные из кеша
+		 * При необходимости смотрим в памяти
 		 */
+		if ($bKeepInMemory) {
+			$sKeyMemory='auto_keep_in_memory_'.$sName;
+			if (false !== ($mData = $this->GetLife($sKeyMemory))) {
+				return $mData;
+			}
+		}
+
 		$oCacheBackend=$this->GetCacheBackend($sCacheType);
-		return $oCacheBackend->Get($this->HashName($sName));
+		$mData=$oCacheBackend->Get($this->HashName($sName));
+		/**
+		 * Сохраняем в памяти
+		 */
+		if ($bKeepInMemory and $mData!==false) {
+			$this->SetLife($mData,$sKeyMemory);
+		}
+		return $mData;
 	}
 	/**
 	 * Получения значения из "умного" кеша для борьбы с конкурирующими запросами

@@ -213,7 +213,7 @@ class ModuleCache extends Module {
 		 * Запрос сразу на несколько ключей?
 		 */
 		if (is_array($sName)) {
-			return $this->multiGet($sName);
+			return $this->MultiGet($sName,$sCacheType);
 		}
 		/**
 		 * Достаем данные из кеша

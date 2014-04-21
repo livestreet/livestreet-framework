@@ -311,7 +311,7 @@ class ModuleCache extends Module {
 	 *
 	 * @param  mixed  $mData	Данные для хранения в кеше
 	 * @param  string $sName	Имя ключа
-	 * @param  array  $aTags	Список тегов, для возможности удалять сразу несколько кешей по тегу
+	 * @param  array|string  $aTags	Список тегов, для возможности удалять сразу несколько кешей по тегу
 	 * @param  int|bool    $iTimeLife	Время жизни кеша в секундах
 	 * @param string|null $sCacheType	Тип кеша
 	 * @param bool $bForce	Принудительно использовать кеширование, даже если оно отключено в конфиге
@@ -325,6 +325,10 @@ class ModuleCache extends Module {
 		if (!is_array($aTags)) {
 			$aTags=array($aTags);
 		}
+		/**
+		 * Переводим теги с нижний регистр
+		 */
+		$aTags=array_map('strtolower',$aTags);
 		/**
 		 * Сохраняем данные в кеш
 		 */
@@ -381,7 +385,13 @@ class ModuleCache extends Module {
 		if (!$this->bAllowUse and !($this->bAllowForce and $bForce)) {
 			return false;
 		}
-
+		if (!is_array($aTags)) {
+			$aTags=array($aTags);
+		}
+		/**
+		 * Переводим теги с нижний регистр
+		 */
+		$aTags=array_map('strtolower',$aTags);
 		$oCacheBackend=$this->GetCacheBackend($sCacheType);
 		return $oCacheBackend->Clean($cMode,$aTags);
 	}

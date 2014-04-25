@@ -131,5 +131,30 @@ ls.utils = (function ($) {
 		this.formLockAccessor('unlock').apply(this, arguments);
 	};
 
+	/**
+	 * Возвращает форматированное оставшееся время
+	 */
+	this.timeRemaining = function(seconds) {
+		days = parseInt(seconds / 86400);
+		seconds = seconds % 86400;
+
+		hours = parseInt(seconds / 3600);
+		seconds = seconds % 3600;
+
+		minutes = parseInt(seconds / 60);
+		seconds = parseInt(seconds % 60);
+
+		if (days>0) {
+			return days+', '+hours+':'+minutes+':'+seconds;
+		}
+		if (hours>0) {
+			return hours+':'+minutes+':'+seconds;
+		}
+		if (minutes>0) {
+			return minutes+':'+seconds;
+		}
+		return seconds;
+	};
+
 	return this;
 }).call(ls.utils || {},jQuery);

@@ -246,6 +246,7 @@ $config['head']['default']['js'] = array(
 	"___path.framework.frontend.web___/js/vendor/jquery.charcount.js",
 	"___path.framework.frontend.web___/js/vendor/jquery.imagesloaded.js",
 	"___path.framework.frontend.web___/js/vendor/jquery.fileupload.js",
+	"___path.framework.frontend.web___/js/vendor/jquery.timers.js",
 	"___path.framework.frontend.web___/js/vendor/notifier/jquery.notifier.js",
 	"___path.framework.frontend.web___/js/vendor/prettify/prettify.js",
 	"___path.framework.frontend.web___/js/vendor/prettyphoto/js/jquery.prettyphoto.js",

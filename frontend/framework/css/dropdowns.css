@@ -29,6 +29,7 @@
 .dropdown-toggle {
 	position: relative; 
 	cursor: pointer;
+	padding-right: 25px;
 }
 .dropdown-toggle:after {
 	content: "";
@@ -39,12 +40,11 @@
 	width: 0; 
 	margin-top: -1px;
 	border: 4px solid transparent;
-	border-top-color: #fff;
+	border-top-color: #333;
 }
 .dropdown-toggle.open:after { border-top-color: #fff; }
 .dropdown-toggle.open { background: #08c; color: #fff; }
 
-.dropdown.dropdown-toggle { padding-right: 25px; }
 
 .dropdown .dropdown-toggle {
 	border-left: 1px solid #40BAF7;
@@ -62,45 +62,7 @@
  * Выпадающее меню
  */
 .dropdown-menu {
+	display: none;
 	position: absolute;
 	z-index: 900;
-	display: none;
-	min-width: 150px;
-	padding: 5px 0;
-	background-color: #fff;
-	border: 1px solid #ddd;
-	box-shadow: 0 2px 3px rgba(0,0,0,.1);
 }
-.dropdown-menu > li            { position: relative; }
-.dropdown-menu > li > a        { display: block; padding: 5px 12px; white-space: nowrap; text-decoration: none; }
-.dropdown-menu > li:hover      { background: #0088cc; color: #fff; }
-.dropdown-menu > li:hover > a  { color: #fff; }
-.dropdown-menu > li.active     { background: #c8ecff; color: #48a4d5; }
-.dropdown-menu > li.active > a { color: #48a4d5; }
-
-/**
- * Подменю
- */
-.dropdown-menu > li:hover > .dropdown-menu  { display: block; }
-.dropdown-menu > li .dropdown-menu          { left: 100%; top: -6px; }
-.dropdown-menu > li.dropdown-menu-separator { height: 0; border-top: 1px solid #e1e1e1; margin: 5px 0; }
-
-/**
- * Пункт с подменю
- */
-.dropdown-menu-submenu { padding-right: 20px; }
-.dropdown-menu-submenu:after {
-	content: "";
-	position: absolute;
-	top: 50%; 
-	right: 5px; 
-	height: 0; 
-	width: 0; 
-	margin-top: -4px;
-	border: 4px solid transparent;
-	border-left-color: #3683B3;
-}
-.dropdown-menu-submenu:hover:after {
-	border-left-color: #fff;
-}
-.dropdown-menu-submenu.active:hover:after { border-left-color: #3683B3; }

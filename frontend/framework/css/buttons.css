@@ -113,3 +113,8 @@ a.button-large { padding-top: 8px; }
 	background-repeat: no-repeat;
 	background-position: 50% 50%;
 }
+
+/**
+ * Dropdown support
+ */
+.button.dropdown-toggle { padding-right: 25px; }

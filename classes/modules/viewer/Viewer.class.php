@@ -305,6 +305,10 @@ class ModuleViewer extends Module {
 		}
 		$this->Assign("aTemplateWebPathPlugin",$aTemplateWebPathPlugin);
 		$this->Assign("aTemplatePathPlugin",$aTemplatePathPlugin);
+		/**
+		 * Загружаем security-ключ
+		 */
+		$this->Assign("LIVESTREET_SECURITY_KEY",$this->Security_GetSecurityKey());
 	}
 	/**
 	 * Загружаем содержимое menu-контейнеров

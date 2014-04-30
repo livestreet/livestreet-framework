@@ -39,11 +39,20 @@ class ModuleSecurity extends Module {
 	}
 	/**
 	 * Производит валидацию отправки формы/запроса от пользователя, позволяет избежать атаки CSRF
+	 *
+	 * @param bool $bDie	Определяет завершать работу скрипта или нет
+	 *
+	 * @return bool
 	 */
-	public function ValidateSendForm() {
-		if (!($this->ValidateSessionKey())) {
-			die("Hacking attemp!");
+	public function ValidateSendForm($bDie=true) {
+		if (!$this->ValidateSecurityKey()) {
+			if ($bDie) {
+				die("Hacking attemp!");
+			} else {
+				return false;
+			}
 		}
+		return true;
 	}
 	/**
 	 * Проверка на соотвествие реферала
@@ -53,10 +62,12 @@ class ModuleSecurity extends Module {
 	public function ValidateReferal() {
 		if (isset($_SERVER['HTTP_REFERER'])) {
 			$aUrl=parse_url($_SERVER['HTTP_REFERER']);
-			if (strcasecmp($aUrl['host'],$_SERVER['HTTP_HOST'])==0) {
-				return true;
-			} elseif (preg_match("/\.".quotemeta($_SERVER['HTTP_HOST'])."$/i",$aUrl['host'])) {
-				return true;
+			if (isset($aUrl['host'])) {
+				if (strcasecmp($aUrl['host'],$_SERVER['HTTP_HOST'])==0) {
+					return true;
+				} elseif (preg_match("/\.".quotemeta($_SERVER['HTTP_HOST'])."$/i",$aUrl['host'])) {
+					return true;
+				}
 			}
 		}
 		return false;
@@ -67,34 +78,31 @@ class ModuleSecurity extends Module {
 	 * @param null|string $sCode	Код для проверки, если нет то берется из реквеста
 	 * @return bool
 	 */
-	public function ValidateSessionKey($sCode=null) {
-		if(!$sCode) $sCode=getRequest('security_ls_key');
-		return ($sCode==$this->GenerateSessionKey());
+	public function ValidateSecurityKey($sCode=null) {
+		if(!$sCode) $sCode=getRequestStr('security_ls_key');
+		return ($sCode==$this->GetSecurityKey());
 	}
 	/**
-	 * Устанавливает security-ключ в сессию
+	 * Возвращает текущий security-ключ
+	 */
+	public function GetSecurityKey() {
+		return $this->GenerateSecurityKey();
+	}
+	/**
+	 * Генерирует и возвращает security-ключ
 	 *
 	 * @return string
 	 */
-	public function SetSessionKey() {
-		$sCode = $this->GenerateSessionKey();
-		$this->Viewer_Assign('LIVESTREET_SECURITY_KEY',$sCode);
-
-		return $sCode;
-	}
-	/**
-	 * Генерирует текущий security-ключ
-	 *
-	 * @return string
-	 */
-	protected function GenerateSessionKey() {
-		return md5($this->Session_GetId().Config::Get('module.security.hash'));
-	}
-	/**
-	 * Завершение модуля
-	 */
-	public function Shutdown() {
-		$this->SetSessionKey();
+	protected function GenerateSecurityKey() {
+		/**
+		 * Сначала получаем уникальные данные пользователя по его браузеру и IP
+		 */
+		$sDataForHash=isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '';
+		$sDataForHash.=isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '';
+		/**
+		 * Далее добавляем ID сессии и уникальный ключ из конфига
+		 */
+		$sDataForHash.=$this->Session_GetId().Config::Get('module.security.hash');
+		return md5($sDataForHash);
 	}
 }
-?>

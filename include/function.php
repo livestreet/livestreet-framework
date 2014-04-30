@@ -112,7 +112,11 @@ function getRequest($sName,$default=null,$sType=null) {
  * @return string
  */
 function getRequestStr($sName,$default=null,$sType=null) {
-	return (string)getRequest($sName,$default,$sType);
+	$mData=getRequest($sName,$default,$sType);
+	if (!is_array($mData)) {
+		return (string)$mData;
+	}
+	return '';
 }
 
 /**

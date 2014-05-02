@@ -53,7 +53,12 @@ class ModuleLogger extends Module {
 	);
 
 	public function Init() {
-
+		/**
+		 * Подключаем логирование всех PHP ошибок
+		 */
+		if (Config::Get('sys.logs.php')) {
+			\Monolog\ErrorHandler::register($this->GetInstance('default'));
+		}
 	}
 	/**
 	 * Возвращает инстанс по имени

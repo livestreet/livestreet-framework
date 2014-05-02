@@ -142,6 +142,7 @@ $config['sys']['logs']['sql_query_file'] = 'sql_query.log'; // файл лога
 $config['sys']['logs']['sql_error']      = true;            // логировать или нет ошибки SQl
 $config['sys']['logs']['sql_error_file'] = 'sql_error.log'; // файл лога ошибок SQL
 $config['sys']['logs']['cron']     		 = true;    	    // логировать или нет cron скрипты
+$config['sys']['logs']['php']     		 = true;    	    // логировать или нет PHP ошибки
 $config['sys']['logs']['profiler']       = false;           // логировать или нет профилирование процессов
 $config['sys']['logs']['profiler_file']  = 'profiler.log';  // файл лога профилирования процессов
 $config['sys']['logs']['hacker_console']  = false;  		// позволяет удобно выводить логи дебага через функцию dump(), использя "хакерскую" консоль Дмитрия Котерова
@@ -259,7 +260,7 @@ $config['module']['ls']['use_counter'] = true;	// Использование с�
 
 
 // Какие модули должны быть загружены на старте
-$config['module']['autoLoad'] = array('Hook','Cache','Security','Session','Lang','Message');
+$config['module']['autoLoad'] = array('Hook','Cache','Logger','Security','Session','Lang','Message');
 /**
  * Настройка базы данных
  */

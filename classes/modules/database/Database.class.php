@@ -73,12 +73,12 @@ class ModuleDatabase extends Module {
 			/**
 			 * Устанавливаем хук на перехват ошибок при работе с БД
 			 */
-			$oDbSimple->setErrorHandler('databaseErrorHandler');
+			$oDbSimple->setErrorHandler(array($this,'CallbackError'));
 			/**
 			 * Если нужно логировать все SQL запросы то подключаем логгер
 			 */
 			if (Config::Get('sys.logs.sql_query')) {
-				$oDbSimple->setLogger('databaseLogger');
+				$oDbSimple->setLogger(array($this,'CallbackQuery'));
 			}
 			/**
 			 * Устанавливаем настройки соединения, по хорошему этого здесь не должно быть :)
@@ -232,64 +232,49 @@ class ModuleDatabase extends Module {
 			}
 		}
 	}
-
-}
-
-/**
- * Функция хука для перехвата SQL ошибок
- *
- * @param string $message	Сообщение об ошибке
- * @param array $info	Список информации об ошибке
- */
-function databaseErrorHandler($message, $info) {
 	/**
-	 * Записываем информацию об ошибке в переменную $msg
+	 * Коллбек обработки SQL ошибок
+	 *
+	 * @param string $sMessage	Сообщение об ошибке
+	 * @param array $aInfo	Список информации об ошибке
 	 */
-	$msg="SQL Error: $message<br>\n";
-	$msg.=print_r($info,true);
-	/**
-	 * Если нужно логировать SQL ошибке то пишем их в лог
-	 */
-	if (Config::Get('sys.logs.sql_error')) {
+	public function CallbackError($sMessage,$aInfo) {
 		/**
-		 * Получаем ядро
+		 * Записываем информацию об ошибке в переменную $msg
 		 */
-		$oEngine=Engine::getInstance();
+		$sMessage="SQL Error: $sMessage<br>\n";
+		$sMessage.=print_r($aInfo,true);
 		/**
-		 * Меняем имя файла лога на нужное, записываем в него ошибку и меняем имя обратно :)
+		 * Если нужно логировать SQL ошибке то пишем их в лог
 		 */
-		$sOldName=$oEngine->Logger_GetFileName();
-		$oEngine->Logger_SetFileName(Config::Get('sys.logs.sql_error_file'));
-		$oEngine->Logger_Error($msg);
-		$oEngine->Logger_SetFileName($sOldName);
+		if (Config::Get('sys.logs.sql_error')) {
+			/**
+			 * Логируем
+			 */
+			$this->Logger_Critical($sMessage,array(),'db_error');
+		}
+		/**
+		 * Если стоит вывод ошибок то выводим ошибку на экран(браузер)
+		 */
+		if (error_reporting() && ini_get('display_errors')) {
+			exit($sMessage);
+		}
 	}
 	/**
-	 * Если стоит вывод ошибок то выводим ошибку на экран(браузер)
+	 * Коллбек логгирования SQL запросов
+	 *
+	 * @param object $oDb
+	 * @param array $aSql
 	 */
-	if (error_reporting() && ini_get('display_errors')) {
-		exit($msg);
+	public function CallbackQuery($oDb,$aSql) {
+		/**
+		 * Получаем информацию о запросе и сохраняем её в переменной $msg
+		 */
+		$sMsg=print_r($aSql,true);
+		/**
+		 * Логируем
+		 */
+		$this->Logger_Debug($sMsg,array(),'db_query');
 	}
 }
 
-/**
- * Функция логгирования SQL запросов
- *
- * @param object $db
- * @param array $sql
- */
-function databaseLogger($db, $sql) {
-	/**
-	 * Получаем информацию о запросе и сохраняем её в переменной $msg
-	 */
-	$caller = $db->findLibraryCaller();
-	$msg=print_r($sql,true);
-	/**
-	 * Получаем ядро и сохраняем в логе SQL запрос
-	 */
-	$oEngine=Engine::getInstance();
-	$sOldName=$oEngine->Logger_GetFileName();
-	$oEngine->Logger_SetFileName(Config::Get('sys.logs.sql_query_file'));
-	$oEngine->Logger_Debug($msg);
-	$oEngine->Logger_SetFileName($sOldName);
-}
-?>

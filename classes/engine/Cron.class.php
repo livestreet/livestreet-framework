@@ -63,7 +63,6 @@ class Cron extends LsObject {
 		/**
 		 * Инициализируем лог и делает пометку о старте процесса
 		 */
-		$this->oEngine->Logger_SetFileName(Config::Get('sys.logs.cron_file'));
 		$this->Log('Cron process started');
 	}
 	/**
@@ -74,7 +73,7 @@ class Cron extends LsObject {
 	public function Log($sMsg) {
 		if (Config::Get('sys.logs.cron')) {
 			$sMsg=$this->sProcessName.': '.$sMsg;
-			$this->oEngine->Logger_Notice($sMsg);
+			$this->oEngine->Logger_Notice($sMsg,array(),'cron');
 		}
 	}
 	/**

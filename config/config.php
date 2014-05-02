@@ -142,10 +142,84 @@ $config['sys']['logs']['sql_query_file'] = 'sql_query.log'; // файл лога
 $config['sys']['logs']['sql_error']      = true;            // логировать или нет ошибки SQl
 $config['sys']['logs']['sql_error_file'] = 'sql_error.log'; // файл лога ошибок SQL
 $config['sys']['logs']['cron']     		 = true;    	    // логировать или нет cron скрипты
-$config['sys']['logs']['cron_file']      = 'cron.log';      // файл лога запуска крон-процессов
 $config['sys']['logs']['profiler']       = false;           // логировать или нет профилирование процессов
 $config['sys']['logs']['profiler_file']  = 'profiler.log';  // файл лога профилирования процессов
 $config['sys']['logs']['hacker_console']  = false;  		// позволяет удобно выводить логи дебага через функцию dump(), использя "хакерскую" консоль Дмитрия Котерова
+$config['sys']['logs']['format']="[%datetime%] %channel%.%level_name% %extra.process_id% %extra.uid%: %message% %context%\n"; // Дефолтный формат логов
+/**
+ * Конфигурация инстансов логгера
+ */
+$config['sys']['logs']['instances']=array(
+	/**
+	 * Стандартный поток логов
+	 */
+	'default'=>array(
+		'handlers'=>array(
+			'Stream'=>array(
+				'___path.application.server___/logs/___sys.logs.file___',
+				'debug',
+				'formatter'=>array(
+					'Line','___sys.logs.format___'
+				)
+			),
+		),
+		'processors'=>array(
+			'Uid','ProcessId',
+		)
+	),
+	/**
+	 * Логи запросов к БД
+	 */
+	'db_query'=>array(
+		'handlers'=>array(
+			'Stream'=>array(
+				'___path.application.server___/logs/___sys.logs.sql_query_file___',
+				'debug',
+				'formatter'=>array(
+					'Line','___sys.logs.format___',null,true
+				)
+			),
+		),
+		'processors'=>array(
+			'Uid','ProcessId',
+		)
+	),
+	/**
+	 * Логи ошибок к БД
+	 */
+	'db_error'=>array(
+		'handlers'=>array(
+			'Stream'=>array(
+				'___path.application.server___/logs/___sys.logs.sql_error_file___',
+				'debug',
+				'formatter'=>array(
+					'Line','___sys.logs.format___',null,true
+				)
+			),
+		),
+		'processors'=>array(
+			'Uid','ProcessId',
+		)
+	),
+	/**
+	 * Логи cron скриптов
+	 */
+	'cron'=>array(
+		'handlers'=>array(
+			'Stream'=>array(
+				'___path.application.server___/logs/___sys.logs.file___',
+				'debug',
+				'formatter'=>array(
+					'Line','___sys.logs.format___'
+				)
+			),
+		),
+		'processors'=>array(
+			'Uid','ProcessId',
+		)
+	),
+);
+
 /**
  * Дополнительные настройки отладки
  */

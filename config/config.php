@@ -145,7 +145,7 @@ $config['sys']['logs']['cron']     		 = true;    	    // логировать и
 $config['sys']['logs']['php']     		 = true;    	    // логировать или нет PHP ошибки
 $config['sys']['logs']['profiler']       = false;           // логировать или нет профилирование процессов
 $config['sys']['logs']['profiler_file']  = 'profiler.log';  // файл лога профилирования процессов
-$config['sys']['logs']['hacker_console']  = false;  		// позволяет удобно выводить логи дебага через функцию dump(), использя "хакерскую" консоль Дмитрия Котерова
+$config['sys']['logs']['console']  		 = false;  			// позволяет удобно выводить отладочную информацию через консоль браузера
 $config['sys']['logs']['format']="[%datetime%] %channel%.%level_name% %extra.process_id% %extra.uid%: %message% %context%\n"; // Дефолтный формат логов
 /**
  * Конфигурация инстансов логгера
@@ -218,6 +218,14 @@ $config['sys']['logs']['instances']=array(
 		'processors'=>array(
 			'Uid','ProcessId',
 		)
+	),
+	/**
+	 * Вывод собщений в консоле браузера
+	 */
+	'console'=>array(
+		'handlers'=>array(
+			'BrowserConsole'=>array(),
+		),
 	),
 );
 

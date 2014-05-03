@@ -112,15 +112,17 @@ class ModuleLogger extends Module {
 			/**
 			 * Список пре-обработчиков
 			 */
-			foreach($aConfig['processors'] as $sProcessors=>$aParams) {
-				if (is_int($sProcessors)) {
-					$sProcessors=$aParams;
-					$aParams=array();
+			if (isset($aConfig['processors'])) {
+				foreach($aConfig['processors'] as $sProcessors=>$aParams) {
+					if (is_int($sProcessors)) {
+						$sProcessors=$aParams;
+						$aParams=array();
+					}
+					$sProcessors=ucfirst($sProcessors);
+					$oRefClass=new ReflectionClass("Monolog\\Processor\\{$sProcessors}Processor");
+					$oProcessors=$oRefClass->newInstanceArgs($aParams);
+					$oInstance->pushProcessor($oProcessors);
 				}
-				$sProcessors=ucfirst($sProcessors);
-				$oRefClass=new ReflectionClass("Monolog\\Processor\\{$sProcessors}Processor");
-				$oProcessors=$oRefClass->newInstanceArgs($aParams);
-				$oInstance->pushProcessor($oProcessors);
 			}
 			$this->aInstances[$sInstance]=$oInstance;
 		}
@@ -217,6 +219,26 @@ class ModuleLogger extends Module {
 	 */
 	public function Emergency($sMsg,$aContext=array(),$sInstance='default') {
 		return $this->Write(strtolower(__FUNCTION__),$sMsg,$aContext,$sInstance);
+	}
+	/**
+	 * Выводит данные в консоль браузера
+	 *
+	 * @return bool|void
+	 */
+	public function Console() {
+		if (!Config::Get('sys.logs.console') or isAjaxRequest()) {
+			return false;
+		}
+		$aArgs=func_get_args();
+		if (count($aArgs)) {
+			if (is_string($aArgs[0]) or is_numeric($aArgs[0])) {
+				$sMsg=array_shift($aArgs);
+			} else {
+				$sMsg='';
+			}
+			return $this->Info($sMsg,$aArgs,'console');
+		}
+		return false;
 	}
 	/**
 	 * Конвертирует уровень в сзначине библиотеки Monolog

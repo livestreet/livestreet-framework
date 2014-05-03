@@ -119,8 +119,14 @@ class ModuleLogger extends Module {
 						$aParams=array();
 					}
 					$sProcessors=ucfirst($sProcessors);
-					$oRefClass=new ReflectionClass("Monolog\\Processor\\{$sProcessors}Processor");
-					$oProcessors=$oRefClass->newInstanceArgs($aParams);
+					$sClass="Monolog\\Processor\\{$sProcessors}Processor";
+					if ($aParams) {
+						$oRefClass=new ReflectionClass($sClass);
+						$oProcessors=$oRefClass->newInstanceArgs($aParams);
+					} else {
+						// for bug PHP 5.3.3 https://bugs.php.net/bug.php?id=52854
+						$oProcessors=new $sClass;
+					}
 					$oInstance->pushProcessor($oProcessors);
 				}
 			}

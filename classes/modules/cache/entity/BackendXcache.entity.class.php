@@ -40,7 +40,7 @@ class ModuleCache_EntityBackendXcache extends ModuleCache_EntityBackend {
 	 * @return mixed
 	 */
 	public function IsAllowMultiGet() {
-		return true;
+		return false;
 	}
 	/**
 	 * Инициализация бекенда

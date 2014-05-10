@@ -67,20 +67,20 @@
 
 
 /* Width */
-.width-full { width: 100%; }
-.width-50   { width: 50px; }
-.width-100  { width: 100px; }
-.width-150  { width: 150px; }
-.width-200  { width: 200px; }
-.width-250  { width: 250px; }
-.width-300  { width: 300px; }
-.width-350  { width: 350px; }
-.width-400  { width: 400px; }
-.width-450  { width: 450px; }
-.width-500  { width: 500px; }
-.width-550  { width: 550px; }
-.width-600  { width: 600px; }
-.width-650  { width: 650px; }
+.width-full { width: 100% !important; }
+.width-50   { width: 50px !important; }
+.width-100  { width: 100px !important; }
+.width-150  { width: 150px !important; }
+.width-200  { width: 200px !important; }
+.width-250  { width: 250px !important; }
+.width-300  { width: 300px !important; }
+.width-350  { width: 350px !important; }
+.width-400  { width: 400px !important; }
+.width-450  { width: 450px !important; }
+.width-500  { width: 500px !important; }
+.width-550  { width: 550px !important; }
+.width-600  { width: 600px !important; }
+.width-650  { width: 650px !important; }
 
 
 /* Loader */

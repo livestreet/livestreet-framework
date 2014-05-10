@@ -64,7 +64,6 @@ fieldset legend { color: #000; font-size: 18px; padding-right: 10px; }
 
 
 form p                   { margin-bottom: 20px; }
-form label               { display: block; margin-bottom: 3px; }
 form .icon-question-sign { cursor: help; }
 
 
@@ -73,22 +72,6 @@ form .icon-question-sign { cursor: help; }
 .note.note-header { margin-bottom: 20px; }
 
 .captcha-image { vertical-align: top; }
-
-
-/**
- * Form field
- */
-.form-field { margin-bottom: 15px; }
-.form-field:before,
-.form-field:after { content: ""; display: table; }
-.form-field:after { clear: both; }
-
-.form-field .note { padding-top: 3px; }
-
-.form-field-inline .form-field-label  { float: left; width: 135px; padding-top: 5px; }
-.form-field-inline .form-field-holder { padding-left: 150px; min-width: 200px; }
-
-.form-field-display-inline { display: inline-block; }
 
 
 /* Placeholder */

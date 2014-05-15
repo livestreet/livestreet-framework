@@ -72,35 +72,35 @@ a.button { padding-top: 5px; }
 /**
  * Button Primary
  */
-.button-primary        { border-color: #04c; color: #fff; background: #006DCC; }
-.button-primary:hover  { background: #0044cc; color: #fff; }
-.button-primary.active { background: #006DCC; }
+.button--primary        { border-color: #04c; color: #fff; background: #006DCC; }
+.button--primary:hover  { background: #0044cc; color: #fff; }
+.button--primary.active { background: #006DCC; }
 
 
 /**
  * Button Icon
  */
-.button.button-icon { padding-left: 6px; padding-right: 6px; }
-.button.button-icon [class^="icon-"],
-.button.button-icon [class*=" icon-"] { margin: 0; }
+.button.button--icon { padding-left: 6px; padding-right: 6px; }
+.button.button--icon [class^="icon-"],
+.button.button--icon [class*=" icon-"] { margin: 0; }
 
 
 /**
  * Button Small
  */
-.button-small { height: 24px; font-size: 11px; padding-left: 8px; padding-right: 8px; }
-a.button-small { padding-top: 4px; }
+.button--small { height: 24px; font-size: 11px; padding-left: 8px; padding-right: 8px; }
+a.button--small { padding-top: 4px; }
 
-.button.button-small.button-icon { padding-left: 5px; padding-right: 5px; }
+.button.button--small.button-icon { padding-left: 5px; padding-right: 5px; }
 
 
 /**
  * Button Large
  */
-.button-large { height: 34px; font-size: 14px; }
-a.button-large { padding-top: 8px; }
+.button--large { height: 34px; font-size: 14px; }
+a.button--large { padding-top: 8px; }
 
-.button.button-large.button-icon { padding-left: 9px; padding-right: 9px; }
+.button.button--large.button-icon { padding-left: 9px; padding-right: 9px; }
 
 
 /**

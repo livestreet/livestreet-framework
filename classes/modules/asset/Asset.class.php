@@ -50,6 +50,12 @@ class ModuleAsset extends Module {
 		/**
 		 * Задаем начальную структуру для хранения списка файлов по типам
 		 */
+		$this->InitAssets();
+	}
+	/**
+	 * Задает начальную структуры для хранения списка файлов по типам
+	 */
+	protected function InitAssets() {
 		$this->aAssets=array(
 			self::ASSET_TYPE_CSS => array(
 				/**

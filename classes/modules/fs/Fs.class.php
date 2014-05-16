@@ -126,7 +126,7 @@ class ModuleFs extends Module {
 		/**
 		 * Определяем, принадлежит ли этот адрес основному домену
 		 */
-		if(parse_url($sPath,PHP_URL_HOST)!=parse_url(Config::Get('path.root.web'),PHP_URL_HOST)) {
+		if(parse_url($sPath,PHP_URL_HOST)!=parse_url(Router::GetPathRootWeb(),PHP_URL_HOST)) {
 			return $sPath;
 		}
 		/**
@@ -157,8 +157,11 @@ class ModuleFs extends Module {
 	 * @return string
 	 */
 	public function GetPathRelativeFromWeb($sPath) {
-		$sWebPath = rtrim(Config::Get('path.root.web'),'/');
-		return str_replace($sWebPath,'',$sPath);
+		$sPath=ltrim(parse_url($sPath,PHP_URL_PATH),'/');
+		if($iOffset=Config::Get('path.offset_request_url')){
+			$sPath=preg_replace('#^([^/]+/*){'.$iOffset.'}#msi', '', $sPath);
+		}
+		return '/'.$sPath;
 	}
 	/**
 	 * Возвращает веб путь из серверного
@@ -168,8 +171,8 @@ class ModuleFs extends Module {
 	 * @return string
 	 */
 	public function GetPathWebFromServer($sPath) {
-		$sServerPath = rtrim(str_replace(DIRECTORY_SEPARATOR,'/',Config::Get('path.root.server')),'/');
-		$sWebPath    = rtrim(Config::Get('path.root.web'), '/');
+		$sServerPath=rtrim(str_replace(DIRECTORY_SEPARATOR,'/',Config::Get('path.root.server')),'/');
+		$sWebPath=Router::GetPathRootWeb();
 		return str_replace($sServerPath, $sWebPath, str_replace(DIRECTORY_SEPARATOR,'/',$sPath));
 	}
 	/**
@@ -190,7 +193,7 @@ class ModuleFs extends Module {
 	 * @return string
 	 */
 	public function GetPathWebFromRelative($sPath) {
-		return rtrim(Config::Get('path.root.web'),'/').'/'.ltrim($sPath,'/');
+		return Router::GetPathRootWeb().'/'.ltrim($sPath,'/');
 	}
 	/**
 	 * Проверяет принадлежность пути нужному типу

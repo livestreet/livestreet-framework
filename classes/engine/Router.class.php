@@ -39,6 +39,18 @@ class Router extends LsObject {
 	 */
 	static protected $sPrefixUrl=null;
 	/**
+	 * Порт при http запросе
+	 *
+	 * @var null
+	 */
+	static protected $iHttpPort=null;
+	/**
+	 * Порт при https запросе
+	 *
+	 * @var null
+	 */
+	static protected $iHttpSecurePort=null;
+	/**
 	 * Текущий экшен
 	 *
 	 * @var string|null
@@ -186,7 +198,7 @@ class Router extends LsObject {
 		/**
 		 * Формируем $sPathWebCurrent ДО применения реврайтов
 		 */
-		self::$sPathWebCurrent=Config::Get('path.root.web')."/".join('/',$this->GetRequestArray($sReq));
+		self::$sPathWebCurrent=self::GetPathRootWeb()."/".join('/',$this->GetRequestArray($sReq));
 		return $sReq;
 	}
 	/**
@@ -364,6 +376,76 @@ class Router extends LsObject {
 	static public function GetPathWebCurrent() {
 		return self::$sPathWebCurrent;
 	}
+
+	/**
+	 * Возвращает веб адрес сайта с учетом типа коннекта (http или https) и нестандартных портов
+	 *
+	 * @param bool $bWithScheme	Возвращать в урле схему или нет
+	 *
+	 * @return string
+	 */
+	static public function GetPathRootWeb($bWithScheme=true) {
+		$sResult='';
+		$sPathFull=Config::Get('path.root.web');
+		$aPathFull=parse_url($sPathFull);
+		$sPath=preg_replace('/^(http|https):\/\/[^\/]+/i','',$sPathFull);
+		if (isset($aPathFull['host'])) {
+			$sHost=$aPathFull['host'];
+		} elseif (isset($_SERVER['HTTP_HOST'])) {
+			$sHost=$_SERVER['HTTP_HOST'];
+		} else {
+			$sHost=isset($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : 'localhost';
+		}
+		$bSecure=self::GetIsSecureConnection();
+		if ($bWithScheme) {
+			$sResult=($bSecure ? 'https' : 'http').'://';
+		}
+		$sResult.=$sHost;
+		$iPort=$bSecure ? self::GetSecurePort() : self::GetPort();
+		if (($iPort!==80 && !$bSecure) || ($iPort!==443 && $bSecure)) {
+			$sResult.=':'.$iPort;
+		}
+		$sResult.=rtrim($sPath,'\\/');
+		return $sResult;
+	}
+	/**
+	 * Возвращает порт при https запросе
+	 *
+	 * @return int|null
+	 */
+	static public function GetSecurePort() {
+		if (is_null(self::$iHttpSecurePort)) {
+			self::$iHttpSecurePort=self::GetIsSecureConnection() && isset($_SERVER['SERVER_PORT']) ? (int)$_SERVER['SERVER_PORT'] : 443;
+		}
+		return self::$iHttpSecurePort;
+	}
+	/**
+	 * Устанавливает порт
+	 *
+	 * @param $iPort
+	 */
+	static public function SetSecurePort($iPort) {
+		self::$iHttpSecurePort=$iPort;
+	}
+	/**
+	 * Возвращает порт при http запросе
+	 *
+	 * @return int|null
+	 */
+	static public function GetPort() {
+		if (is_null(self::$iHttpPort)) {
+			self::$iHttpPort=!self::GetIsSecureConnection() && isset($_SERVER['SERVER_PORT']) ? (int) $_SERVER['SERVER_PORT'] : 80;
+		}
+		return self::$iHttpPort;
+	}
+	/**
+	 * Устанавливает порт
+	 *
+	 * @param $iPort
+	 */
+	static public function SetPort($iPort) {
+		self::$iHttpPort=$iPort;
+	}
 	/**
 	 * Возвращает текущий префикс URL
 	 *
@@ -475,6 +557,15 @@ class Router extends LsObject {
 		return isAjaxRequest();
 	}
 	/**
+	 * Проверяет тип коннекта - http или https
+	 *
+	 * @return bool
+	 */
+	static public function GetIsSecureConnection() {
+		return isset($_SERVER['HTTPS']) && (strcasecmp($_SERVER['HTTPS'], 'on') === 0 || $_SERVER['HTTPS'] == 1)
+			|| isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && strcasecmp($_SERVER['HTTP_X_FORWARDED_PROTO'], 'https') === 0;
+	}
+	/**
 	 * Ставим хук на вызов неизвестного метода и считаем что хотели вызвать метод какого либо модуля
 	 * @see Engine::_CallModule
 	 *
@@ -500,7 +591,7 @@ class Router extends LsObject {
 	 */
 	static public function GetPath($sAction) {
 		if (!$sAction or $sAction=='/') {
-			return rtrim(Config::Get('path.root.web'),'/').(self::$sPrefixUrl ? '/'.self::$sPrefixUrl : '').'/';
+			return self::GetPathRootWeb().(self::$sPrefixUrl ? '/'.self::$sPrefixUrl : '').'/';
 		}
 		// Если пользователь запросил action по умолчанию
 		$sPage = ($sAction == 'default')
@@ -517,7 +608,7 @@ class Router extends LsObject {
 		if ($sAdditional and strpos($sAdditional,'?')===false) {
 			$sAdditional.='/';
 		}
-		return rtrim(Config::Get('path.root.web'),'/').(self::$sPrefixUrl ? '/'.self::$sPrefixUrl : '')."/$sPage/".($sAdditional ? "{$sAdditional}" : '');
+		return self::GetPathRootWeb().(self::$sPrefixUrl ? '/'.self::$sPrefixUrl : '')."/$sPage/".($sAdditional ? "{$sAdditional}" : '');
 	}
 	/**
 	 * Try to find rewrite rule for given page.

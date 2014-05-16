@@ -269,7 +269,7 @@ abstract class Plugin extends LsObject {
 			? func_underscore($aMatches[1])
 			: func_underscore($sName);
 
-		return Config::Get('path.root.web').'/application/plugins/'.$sName.'/';
+		return Router::GetPathRootWeb().'/application/plugins/'.$sName.'/';
 	}
 	/**
 	 * Возвращает правильный серверный путь к директории шаблонов с учетом текущего шаблона

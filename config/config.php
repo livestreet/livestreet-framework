@@ -65,6 +65,7 @@ $config['path']['skin']['assets']['web']='___path.skin.web___/assets';
 $config['path']['uploads']['base']='/uploads';
 $config['path']['uploads']['images']='___path.uploads.base___/images';
 $config['path']['tmp']['server']='___path.application.server___/tmp';
+$config['path']['cache_assets']['server']='___path.tmp.server___/templates/cache';
 $config['path']['offset_request_url']       = 0;                                                       // иногда помогает если сервер использует внутренние реврайты
 /**
  * Для совместимости с прошлыми версиями

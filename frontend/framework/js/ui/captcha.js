@@ -34,6 +34,8 @@
                     e.preventDefault();
                 }
             });
+
+            this.update();
         },
 
 		/**

@@ -50,7 +50,7 @@ class ModuleValidate_EntityValidatorEnum extends ModuleValidate_EntityValidator 
 		 * Проверка типа значения
 		 */
 		if (!is_scalar($sValue)) {
-			return $this->getMessage($this->Lang_Get('validate_enum_invalid',null,false),'msg');
+			return $this->getMessage($this->Lang_Get('validate.enum.invalid',null,false),'msg');
 		}
 		/**
 		 * Разрешение на пустое значение
@@ -62,7 +62,7 @@ class ModuleValidate_EntityValidatorEnum extends ModuleValidate_EntityValidator 
 		 * Проверка на вхождение в перечисление
 		 */
 		if (!in_array($sValue,$this->enum)) {
-			return $this->getMessage($this->Lang_Get('validate_enum_not_allowed',null,false),'msg',array('value'=>htmlspecialchars($sValue)));
+			return $this->getMessage($this->Lang_Get('validate.enum.not_allowed',null,false),'msg',array('value'=>htmlspecialchars($sValue)));
 		}
 		/**
 		 * Значение корректно

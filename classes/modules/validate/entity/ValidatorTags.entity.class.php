@@ -62,7 +62,7 @@ class ModuleValidate_EntityValidatorTags extends ModuleValidate_EntityValidator 
 	 */
 	public function validate($sValue) {
 		if (is_array($sValue)) {
-			return $this->getMessage($this->Lang_Get('validate_tags_empty',null,false),'msg',array('min'=>$this->min,'max'=>$this->max));
+			return $this->getMessage($this->Lang_Get('validate.tags.empty',null,false),'msg',array('min'=>$this->min,'max'=>$this->max));
 		}
 		if($this->allowEmpty && $this->isEmpty($sValue)) {
 			return true;
@@ -81,9 +81,9 @@ class ModuleValidate_EntityValidatorTags extends ModuleValidate_EntityValidator 
 		}
 		$iCount=count($aTagsNew);
 		if ($iCount>$this->count) {
-			return $this->getMessage($this->Lang_Get('validate_tags_count_more',null,false),'msg',array('count'=>$this->count));
+			return $this->getMessage($this->Lang_Get('validate.tags.count_more',null,false),'msg',array('count'=>$this->count));
 		} elseif (!$iCount) {
-			return $this->getMessage($this->Lang_Get('validate_tags_empty',null,false),'msg',array('min'=>$this->min,'max'=>$this->max));
+			return $this->getMessage($this->Lang_Get('validate.tags.empty',null,false),'msg',array('min'=>$this->min,'max'=>$this->max));
 		}
 		/**
 		 * Если проверка от сущности, то возвращаем обновленное значение

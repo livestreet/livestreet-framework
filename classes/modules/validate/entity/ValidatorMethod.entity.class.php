@@ -48,7 +48,7 @@ class ModuleValidate_EntityValidatorMethod extends ModuleValidate_EntityValidato
 		 * Проверка типа значения
 		 */
 		if (!$this->method) {
-			return $this->getMessage($this->Lang_Get('validate_method_invalid',null,false),'msg');
+			return $this->getMessage($this->Lang_Get('validate.method.invalid',null,false),'msg');
 		}
 		/**
 		 * Разрешение на пустое значение
@@ -60,7 +60,7 @@ class ModuleValidate_EntityValidatorMethod extends ModuleValidate_EntityValidato
 		 * Проверяем значение внешнего метода
 		 */
 		if (!call_user_func(array($this,$this->method),$sValue)) {
-			return $this->getMessage($this->Lang_Get('validate_method_error',null,false),'msg');
+			return $this->getMessage($this->Lang_Get('validate.method.error',null,false),'msg');
 		}
 		return true;
 	}

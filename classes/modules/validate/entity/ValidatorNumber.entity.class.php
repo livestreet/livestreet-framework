@@ -88,28 +88,28 @@ class ModuleValidate_EntityValidatorNumber extends ModuleValidate_EntityValidato
 	 */
 	public function validate($sValue) {
 		if (is_array($sValue)) {
-			return $this->getMessage($this->Lang_Get('validate_number_must_number',null,false),'msg');
+			return $this->getMessage($this->Lang_Get('validate.number.must_number',null,false),'msg');
 		}
 		if($this->allowEmpty && $this->isEmpty($sValue)) {
 			return true;
 		}
 		if($this->integerOnly) {
 			if(!preg_match($this->integerPattern,$sValue)) {
-				return $this->getMessage($this->Lang_Get('validate_number_must_integer',null,false),'msg');
+				return $this->getMessage($this->Lang_Get('validate.number.must_integer',null,false),'msg');
 			}
 		} else {
 			if(!preg_match($this->numberPattern,$sValue)) {
-				return $this->getMessage($this->Lang_Get('validate_number_must_number',null,false),'msg');
+				return $this->getMessage($this->Lang_Get('validate.number.must_number',null,false),'msg');
 			}
 		}
 		if($this->min!==null && $sValue<$this->min) {
-			return $this->getMessage($this->Lang_Get('validate_number_too_small',null,false),'msgTooSmall',array('min'=>$this->min));
+			return $this->getMessage($this->Lang_Get('validate.number.too_small',null,false),'msgTooSmall',array('min'=>$this->min));
 		}
 		if($this->max!==null && $sValue>$this->max) {
-			return $this->getMessage($this->Lang_Get('validate_number_too_big',null,false),'msgTooBig',array('max'=>$this->max));
+			return $this->getMessage($this->Lang_Get('validate.number.too_big',null,false),'msgTooBig',array('max'=>$this->max));
 		}
 		if (!$this->allowEmpty && $this->isEmpty($sValue)) {
-			return $this->getMessage($this->Lang_Get('validate_empty_error',null,false),'msg');
+			return $this->getMessage($this->Lang_Get('validate.empty_error',null,false),'msg');
 		}
 		return true;
 	}

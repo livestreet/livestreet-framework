@@ -44,7 +44,7 @@ class ModuleValidate_EntityValidatorCaptcha extends ModuleValidate_EntityValidat
 	 */
 	public function validate($sValue) {
 		if (is_array($sValue)) {
-			return $this->getMessage($this->Lang_Get('validate_captcha_not_valid',null,false),'msg');
+			return $this->getMessage($this->Lang_Get('validate.captcha.not_valid',null,false),'msg');
 		}
 		if($this->allowEmpty && $this->isEmpty($sValue)) {
 			return true;
@@ -52,7 +52,7 @@ class ModuleValidate_EntityValidatorCaptcha extends ModuleValidate_EntityValidat
 
 		$sSessionName='captcha_keystring'.($this->name ? '_'.$this->name : '');
 		if (!isset($_SESSION[$sSessionName]) or $_SESSION[$sSessionName]!=strtolower($sValue)) {
-			return $this->getMessage($this->Lang_Get('validate_captcha_not_valid',null,false),'msg');
+			return $this->getMessage($this->Lang_Get('validate.captcha.not_valid',null,false),'msg');
 		}
 		return true;
 	}

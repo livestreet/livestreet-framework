@@ -72,7 +72,7 @@ class ModuleValidate_EntityValidatorDate extends ModuleValidate_EntityValidator 
 		}
 
 		if(!$bValid) {
-			return $this->getMessage($this->Lang_Get('validate_date_format_invalid',null,false),'msg');
+			return $this->getMessage($this->Lang_Get('validate.date.format_invalid',null,false),'msg');
 		}
 		return true;
 	}

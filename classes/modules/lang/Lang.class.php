@@ -134,6 +134,16 @@ class ModuleLang extends Module {
 	 * @param $sLangName	Язык для загрузки
 	 */
 	protected function LoadLangFiles($sLangName) {
+		/**
+		 * Загружаем текстовки фреймворка
+		 */
+		$sLangFilePath = Config::Get('path.framework.server').'/frontend/i18n/'.$sLangName.'.php';
+		if(file_exists($sLangFilePath)) {
+			$this->AddMessages(include($sLangFilePath));
+		}
+		/**
+		 * Загружаем текстовки приложения
+		 */
 		$sLangFilePath = $this->sLangPath.'/'.$sLangName.'.php';
 		if(file_exists($sLangFilePath)) {
 			$this->AddMessages(include($sLangFilePath));

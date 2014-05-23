@@ -94,11 +94,11 @@ class ModuleValidate_EntityValidatorNumber extends ModuleValidate_EntityValidato
 			return true;
 		}
 		if($this->integerOnly) {
-			if(!preg_match($this->integerPattern,"$sValue")) {
+			if(!preg_match($this->integerPattern,$sValue)) {
 				return $this->getMessage($this->Lang_Get('validate_number_must_integer',null,false),'msg');
 			}
 		} else {
-			if(!preg_match($this->numberPattern,"$sValue")) {
+			if(!preg_match($this->numberPattern,$sValue)) {
 				return $this->getMessage($this->Lang_Get('validate_number_must_number',null,false),'msg');
 			}
 		}

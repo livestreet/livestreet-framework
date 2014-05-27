@@ -260,6 +260,9 @@ class Smarty_Internal_Template extends Smarty_Internal_TemplateBase {
             $tpl->parent = $this;
             $tpl->caching = $caching;
             $tpl->cache_lifetime = $cache_lifetime;
+			// @livestreet
+			$tpl->tpl_vars_local=array();
+			// @livestreet_end
         } else {
             $tpl = new $this->smarty->template_class($template, $this->smarty, $this, $cache_id, $compile_id, $caching, $cache_lifetime);
         }

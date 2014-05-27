@@ -63,10 +63,13 @@ class ModuleSecurity extends Module {
 		if (isset($_SERVER['HTTP_REFERER'])) {
 			$aUrl=parse_url($_SERVER['HTTP_REFERER']);
 			if (isset($aUrl['host'])) {
-				if (strcasecmp($aUrl['host'],$_SERVER['HTTP_HOST'])==0) {
-					return true;
-				} elseif (preg_match("/\.".quotemeta($_SERVER['HTTP_HOST'])."$/i",$aUrl['host'])) {
-					return true;
+				$aRoot=parse_url(Config::Get ('path.root.web'));
+				if (isset($aRoot['host'])) {
+					if (strcasecmp($aUrl['host'],$aRoot['host'])==0) {
+						return true;
+					} elseif (preg_match("/\.".quotemeta($aRoot['host'])."$/i",$aUrl['host'])) {
+						return true;
+					}
 				}
 			}
 		}

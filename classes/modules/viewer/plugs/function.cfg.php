@@ -31,10 +31,20 @@ function smarty_function_cfg($aParams,&$oSmarty) {
 	if(!isset($aParams['instance'])) {
 		$aParams['instance'] = Config::DEFAULT_CONFIG_INSTANCE;
 	}
-	
+
+	$mReturn=Config::Get($aParams['name'],$aParams['instance']);
+	/**
+	 * Небольшой хак для замены http на https
+	 */
+	$aHttpsKeys=array(
+		'path.skin.web','path.framework.frontend.web','path.framework.libs_vendor.web',
+		'path.root.web','path.skin.assets.web','path.framework.web'
+	);
+	if (in_array($aParams['name'],$aHttpsKeys) and is_string($mReturn) and Router::GetIsSecureConnection()) {
+		$mReturn=preg_replace('#^http://#i','https://',$mReturn);
+	}
 	/**
 	 * Возвращаем значение из конфигурации
 	 */
-	return Config::Get($aParams['name'],$aParams['instance']);
+	return $mReturn;
 }
-?>

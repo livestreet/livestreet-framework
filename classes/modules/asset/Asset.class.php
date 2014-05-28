@@ -169,18 +169,21 @@ class ModuleAsset extends Module {
 		$aResult['browser']=(isset($aParams['browser']) and $aParams['browser']) ? $aParams['browser'] : null;
 		$aResult['name']=(isset($aParams['name']) and $aParams['name']) ? strtolower($aParams['name']) : null;
 		if (isset($aParams['file'])) {
-			$aResult['file']=$this->NormalizeFilePath($aParams['file']);
+			$aResult['file']=$this->NormalizeFilePath($aParams['file'],$aParams);
+		} else {
+			$aResult['file']=null;
 		}
 		return $aResult;
 	}
 	/**
 	 * Приводит путь до файла к единому виду
 	 *
-	 * @param $sFile
+	 * @param       $sFile
+	 * @param array $aParams
 	 *
-	 * @return mixed
+	 * @return string
 	 */
-	protected function NormalizeFilePath($sFile) {
+	protected function NormalizeFilePath($sFile,$aParams=array()) {
 		/**
 		 * По дефолту считаем, что это локальный абсолютный путь до файла: /var/www/site.com  или c:\server\root\site.com
 		 */
@@ -194,6 +197,12 @@ class ModuleAsset extends Module {
 			$sProtocol=$aMatch[1];
 			$sPath=$aMatch[2];
 			$sSeparate='/';
+			/**
+			 * Если необходимо, то меняем протокол на https
+			 */
+			if (Router::GetIsSecureConnection() and strtolower($sProtocol)=='http://' and Config::Get('module.asset.force_https')) {
+				$sProtocol='https://';
+			}
 			/**
 			 * Проверяем на //site.com
 			 */
@@ -295,7 +304,7 @@ class ModuleAsset extends Module {
 			 * Если необходимо сливать файлы, то выделяем исключения
 			 */
 			$aFilesNoMerge=array();
-			if (Config::Get("compress.{$sType}.merge")) {
+			if (Config::Get("module.asset.{$sType}.merge")) {
 				$aFilesNoMerge = array_filter(
 					$aFilesMain[$sType],
 					function($aParams) {
@@ -310,8 +319,8 @@ class ModuleAsset extends Module {
 			/**
 			 * Обрабатываем основной список
 			 */
-			if (Config::Get("compress.{$sType}.merge")) {
-				$sFilePath=$this->Merge($aFilesMain[$sType],$sType,(bool)Config::Get("compress.{$sType}.use"));
+			if (Config::Get("module.asset.{$sType}.merge")) {
+				$sFilePath=$this->Merge($aFilesMain[$sType],$sType,(bool)Config::Get("module.asset.{$sType}.compress"));
 				$aResult[$sType][$sFilePath]=array('file'=>$sFilePath);
 			} else {
 				$aResult[$sType]=array_merge($aResult[$sType],$aFilesMain[$sType]);

@@ -260,7 +260,15 @@ $config['module']['image']['params']['default']['size_max_height']=7000;
 $config['module']['image']['params']['default']['format_auto']=true;
 $config['module']['image']['params']['default']['format']='jpg';
 $config['module']['image']['params']['default']['quality']=95;
-
+/**
+ * Модуль Asset
+ * Параметры обработки css/js-файлов
+ */
+$config['module']['asset']['force_https'] = true; // При использовании https принудительно заменять http на https у путях до css/js
+$config['module']['asset']['css']['merge'] = true; // указывает на необходимость слияния css файлов
+$config['module']['asset']['css']['compress'] = false; // указывает на необходимость компрессии файлов. Компрессия используется только в активированном режиме слияния файлов.
+$config['module']['asset']['js']['merge'] = true; // указывает на необходимость слияния js файлов
+$config['module']['asset']['js']['compress'] = false; // указывает на необходимость компрессии файлов. Компрессия используется только в активированном режиме слияния файлов.
 // Модуль Security
 $config['module']['security']['hash']  = "livestreet_security_key"; // "примесь" к строке, хешируемой в качестве security-кода
 // Модуль Ls
@@ -380,23 +388,6 @@ $config['head']['default']['css'] = array(
 	"___path.framework.frontend.web___/css/typography.css",
 	"___path.framework.frontend.web___/css/grid.css"
 );
-
-/**
- * Параметры компрессии css-файлов
- */
-$config['compress']['css']['merge'] = true;       // указывает на необходимость слияния файлов по указанным блокам.
-$config['compress']['css']['use']   = false;       // указывает на необходимость компрессии файлов. Компрессия используется только в активированном режиме слияния файлов.
-$config['compress']['css']['case_properties']     = 1;
-$config['compress']['css']['merge_selectors']     = 0;
-$config['compress']['css']['optimise_shorthands'] = 1;
-$config['compress']['css']['remove_last_;']       = true;
-$config['compress']['css']['css_level']           = 'CSS2.1';
-$config['compress']['css']['template']            = "highest_compression";
-/**
- * Параметры компрессии js-файлов
- */
-$config['compress']['js']['merge']  = true;    // указывает на необходимость слияния файлов по указанным блокам.
-$config['compress']['js']['use']    = true;    // указывает на необходимость компрессии файлов. Компрессия используется только в активированном режиме слияния файлов.
 
 /**
  * Установка локали

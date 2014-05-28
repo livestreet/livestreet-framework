@@ -82,4 +82,3 @@ function smarty_modifier_declension($count, $forms, $language='')
 		return smarty_modifier_declension_en($forms, $count);
 	}
 }
-?>

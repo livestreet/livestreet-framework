@@ -37,5 +37,3 @@ class Smarty_Internal_Compile_Ldelim extends Smarty_Internal_CompileBase {
     }
 
 }
-
-?>

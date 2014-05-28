@@ -24,4 +24,3 @@
 abstract class LsObject {
 
 }
-?>

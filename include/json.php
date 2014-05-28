@@ -47,5 +47,3 @@ if (!function_exists('json_encode'))
     }
   }
 }
-
-?>

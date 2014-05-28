@@ -73,4 +73,3 @@ class ModuleValidate_EntityValidatorRegexp extends ModuleValidate_EntityValidato
 		return true;
 	}
 }
-?>

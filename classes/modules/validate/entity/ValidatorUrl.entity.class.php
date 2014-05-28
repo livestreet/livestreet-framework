@@ -107,4 +107,3 @@ class ModuleValidate_EntityValidatorUrl extends ModuleValidate_EntityValidator {
 		return false;
 	}
 }
-?>

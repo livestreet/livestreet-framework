@@ -198,4 +198,3 @@ class ModuleValidate extends Module {
 		$this->aErrors=array();
 	}
 }
-?>

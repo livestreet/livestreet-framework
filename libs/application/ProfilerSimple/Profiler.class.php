@@ -177,4 +177,3 @@ class ProfilerSimple {
 		return ($iStopSeconds-$iStartSeconds)+($iStopGeneral-$iStartGeneral);
 	}
 }
-?>

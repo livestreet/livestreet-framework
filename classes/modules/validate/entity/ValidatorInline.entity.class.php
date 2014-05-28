@@ -53,4 +53,3 @@ class ModuleValidate_EntityValidatorInline extends ModuleValidate_EntityValidato
 		return $this->object->$sMethod($sValue,$this->params);
 	}
 }
-?>

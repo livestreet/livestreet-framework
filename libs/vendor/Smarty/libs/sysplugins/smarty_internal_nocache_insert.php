@@ -49,5 +49,3 @@ class Smarty_Internal_Nocache_Insert {
     }
 
 }
-
-?>

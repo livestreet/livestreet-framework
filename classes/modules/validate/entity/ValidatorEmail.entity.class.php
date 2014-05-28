@@ -111,4 +111,3 @@ class ModuleValidate_EntityValidatorEmail extends ModuleValidate_EntityValidator
 		return $bValid;
 	}
 }
-?>

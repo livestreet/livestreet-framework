@@ -71,4 +71,3 @@ abstract class Hook extends LsObject {
 		return Engine::getInstance()->_CallModule($sName,$aArgs);
 	}
 }
-?>

@@ -183,4 +183,3 @@ class ModuleMessage extends Module {
 		return $this->aMsgErrorSession;
 	}
 }
-?>

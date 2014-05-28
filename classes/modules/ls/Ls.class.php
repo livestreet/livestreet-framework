@@ -317,4 +317,3 @@ class ModuleLs extends Module {
 		return $sGetParams;
 	}
 }
-?>

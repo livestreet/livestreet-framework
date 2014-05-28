@@ -77,4 +77,3 @@ class ModuleValidate_EntityValidatorDate extends ModuleValidate_EntityValidator 
 		return true;
 	}
 }
-?>

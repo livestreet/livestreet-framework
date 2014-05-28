@@ -152,4 +152,3 @@ class Cron extends LsObject {
 		return $this->oEngine->_CallModule($sName,$aArgs);
 	}
 }
-?>

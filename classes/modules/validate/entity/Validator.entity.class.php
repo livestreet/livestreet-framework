@@ -218,4 +218,3 @@ abstract class ModuleValidate_EntityValidator extends Entity {
 		return func_underscore(str_ireplace('ModuleValidate_EntityValidator','',get_class($this)));
 	}
 }
-?>

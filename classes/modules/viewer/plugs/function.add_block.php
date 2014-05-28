@@ -46,5 +46,3 @@ function smarty_function_add_block($params, &$smarty)
 	Engine::getInstance()->Viewer_AddBlock($params['group'],$params['name'],$aBlockParams,$iPriority);
 	return '';
 }
-
-?>

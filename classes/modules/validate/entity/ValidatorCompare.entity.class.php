@@ -128,4 +128,3 @@ class ModuleValidate_EntityValidatorCompare extends ModuleValidate_EntityValidat
 		return true;
 	}
 }
-?>

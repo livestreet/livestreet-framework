@@ -47,4 +47,3 @@ function smarty_function_router($aParams,&$oSmarty) {
 		return $sReturn;
 	}
 }
-?>

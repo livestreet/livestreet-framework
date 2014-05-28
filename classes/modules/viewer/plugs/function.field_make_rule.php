@@ -90,5 +90,3 @@ function smarty_function_field_make_rule($params, &$smarty) {
 		return $aResult;
 	}
 }
-
-?>

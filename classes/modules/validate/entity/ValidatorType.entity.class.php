@@ -99,4 +99,3 @@ class ModuleValidate_EntityValidatorType extends ModuleValidate_EntityValidator 
 		return true;
 	}
 }
-?>

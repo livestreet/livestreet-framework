@@ -498,4 +498,3 @@ abstract class Action extends LsObject {
 	abstract protected function RegisterEvent();
 
 }
-?>

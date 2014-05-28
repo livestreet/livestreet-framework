@@ -40,4 +40,3 @@ abstract class Mapper extends LsObject {
 	}
 
 }
-?>

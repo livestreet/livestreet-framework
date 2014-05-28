@@ -336,4 +336,3 @@ abstract class Plugin extends LsObject {
 		self::$aTemplateWebPath[$sName]=$sTemplatePath;
 	}
 }
-?>

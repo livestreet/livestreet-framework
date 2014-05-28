@@ -94,4 +94,3 @@ class ModuleValidate_EntityValidatorTags extends ModuleValidate_EntityValidator 
 		return true;
 	}
 }
-?>

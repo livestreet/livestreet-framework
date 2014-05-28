@@ -298,4 +298,3 @@ class ModuleHook extends Module {
 		return $result;
 	}
 }
-?>

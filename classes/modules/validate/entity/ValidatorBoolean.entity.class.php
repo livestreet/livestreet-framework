@@ -72,4 +72,3 @@ class ModuleValidate_EntityValidatorBoolean extends ModuleValidate_EntityValidat
 		return true;
 	}
 }
-?>

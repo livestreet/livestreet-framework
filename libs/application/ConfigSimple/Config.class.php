@@ -361,4 +361,3 @@ class Config {
 		return $aRes;
 	}
 }
-?>

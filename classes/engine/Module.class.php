@@ -91,4 +91,3 @@ abstract class Module extends LsObject {
 		$this->bIsInit=true;
 	}
 }
-?>

@@ -44,4 +44,3 @@ function smarty_function_hook($aParams,&$oSmarty) {
 		return $sReturn;
 	}
 }
-?>

@@ -234,5 +234,3 @@ class KCAPTCHA{
 		return $this->keystring;
 	}
 }
-
-?>

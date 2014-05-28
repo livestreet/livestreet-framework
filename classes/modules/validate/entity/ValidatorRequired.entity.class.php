@@ -61,4 +61,3 @@ class ModuleValidate_EntityValidatorRequired extends ModuleValidate_EntityValida
 		return true;
 	}
 }
-?>

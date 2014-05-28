@@ -233,4 +233,3 @@ class ModuleSession extends Module {
 		}
 	}
 }
-?>

@@ -272,4 +272,3 @@ class ModuleMail extends Module {
 		return $this->sError;
 	}
 }
-?>

@@ -43,4 +43,3 @@ function smarty_block_hookb($aParams,$sContent,&$oSmarty,&$bRepeat) {
 		echo $sContent;
 	}
 }
-?>

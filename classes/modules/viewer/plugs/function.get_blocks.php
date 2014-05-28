@@ -32,5 +32,3 @@ function smarty_function_get_blocks($params, &$smarty)
 	$smarty->assign($params['assign'], Engine::getInstance()->Viewer_GetBlocks(true));
 	return '';
 }
-
-?>

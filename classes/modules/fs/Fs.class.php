@@ -312,4 +312,37 @@ class ModuleFs extends Module {
 	public function IsExistsFileLocal($sFile) {
 		return file_exists($sFile);
 	}
+	/**
+	 * Проверяет наличие блокировки
+	 *
+	 * @param resource $hDescriptor	Дексриптор открытого файла для блокировки
+	 *
+	 * @return bool
+	 */
+	public function IsLock($hDescriptor) {
+		if (!$hDescriptor) {
+			return false;
+		}
+		return !$this->CreateLock($hDescriptor);
+	}
+	/**
+	 * Создает блокировку
+	 *
+	 * @param resource $hDescriptor Дексриптор открытого файла для блокировки
+	 *
+	 * @return bool
+	 */
+	public function CreateLock($hDescriptor) {
+		return flock($hDescriptor,LOCK_EX|LOCK_NB);
+	}
+	/**
+	 * Удаляет блокировку
+	 *
+	 * @param resource $hDescriptor Дексриптор открытого файла для блокировки
+	 *
+	 * @return bool
+	 */
+	public function RemoveLock($hDescriptor) {
+		return ($hDescriptor && @flock($hDescriptor,LOCK_UN));
+	}
 }

@@ -36,6 +36,12 @@ class ModuleAsset extends Module {
 	 */
 	const ASSET_TYPE_JS='js';
 	/**
+	 * Дескриптор файла для проверки блокировки
+	 *
+	 * @var null|resource
+	 */
+	protected $hDescriptorMergeLock=null;
+	/**
 	 * Список файлов по типам
 	 * @see Init
 	 *
@@ -337,6 +343,26 @@ class ModuleAsset extends Module {
 		return $aResult;
 	}
 	/**
+	 * Проверяет на блокировку
+	 * Если нет блокировки, то создает ее
+	 *
+	 * @return bool
+	 */
+	protected function IsLockMerge() {
+		$sFile=Config::Get('path.tmp.server').'/asset.merge.lock';
+		$this->hDescriptorMergeLock=@fopen($sFile,'a');
+		return $this->Fs_IsLock($this->hDescriptorMergeLock);
+	}
+	/**
+	 * Удаляет блокировку
+	 */
+	protected function RemoveLockMerge() {
+		if ($this->hDescriptorMergeLock) {
+			$this->Fs_RemoveLock($this->hDescriptorMergeLock);
+			$this->hDescriptorMergeLock=null;
+		}
+	}
+	/**
 	 * Производит объединение и сжатие файлов
 	 *
 	 * @param      $aAssetItems
@@ -350,8 +376,9 @@ class ModuleAsset extends Module {
 		$sCacheFile=$sCacheDir."/".md5(serialize(array_keys($aAssetItems)).'_head').'.'.$sType;
 		/**
 		 * Если файла еще нет, то создаем его
+		 * Но только в том случае, если еще другой процесс не начал его создавать - проверка на блокировку
 		 */
-		if(!file_exists($sCacheFile)) {
+		if(!file_exists($sCacheFile) and !$this->IsLockMerge()) {
 			/**
 			 * Создаем директорию для кеша текущего скина,
 			 * если таковая отсутствует
@@ -395,6 +422,10 @@ class ModuleAsset extends Module {
 			 */
 			@file_put_contents($sCacheFile,$sContent);
 			@chmod($sCacheFile,0766);
+			/**
+			 * Удаляем блокировку
+			 */
+			$this->RemoveLockMerge();
 		}
 		return $this->Fs_GetPathWebFromServer($sCacheFile);
 	}
@@ -434,5 +465,12 @@ class ModuleAsset extends Module {
 		} else {
 			return realpath($sPath);
 		}
+	}
+
+	public function Shutdown() {
+		/**
+		 * Удаляем блокировку
+		 */
+		$this->RemoveLockMerge();
 	}
 }

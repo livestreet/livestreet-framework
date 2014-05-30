@@ -156,5 +156,20 @@ ls.utils = (function ($) {
 		return seconds;
 	};
 
+	/**
+	 * Экранирует HTML символы в тексте
+	 *
+	 * @param text
+	 * @return {String}
+	 */
+	this.escapeHtml = function(text) {
+		return text
+			.replace(/&/g, "&amp;")
+			.replace(/</g, "&lt;")
+			.replace(/>/g, "&gt;")
+			.replace(/"/g, "&quot;")
+			.replace(/'/g, "&#039;");
+	};
+
 	return this;
 }).call(ls.utils || {},jQuery);

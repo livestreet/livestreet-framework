@@ -36,7 +36,7 @@ class ModuleValidate_EntityValidatorDate extends ModuleValidate_EntityValidator 
 	 *
 	 * @var string|array
 	 */
-	public $format='dd-MM-yyyy';
+	public $format='yyyy-MM-dd';
 	/**
 	 * Допускать или нет пустое значение
 	 *

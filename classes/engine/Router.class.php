@@ -377,18 +377,10 @@ class Router extends LsObject {
 		return self::$sPathWebCurrent;
 	}
 
-	/**
-	 * Возвращает веб адрес сайта с учетом типа коннекта (http или https) и нестандартных портов
-	 *
-	 * @param bool $bWithScheme	Возвращать в урле схему или нет
-	 *
-	 * @return string
-	 */
-	static public function GetPathRootWeb($bWithScheme=true) {
+	static public function GetFixPathWeb($sUrl,$bWithScheme=true) {
 		$sResult='';
-		$sPathFull=Config::Get('path.root.web');
-		$aPathFull=parse_url($sPathFull);
-		$sPath=preg_replace('/^(http|https):\/\/[^\/]+/i','',$sPathFull);
+		$aPathFull=parse_url($sUrl);
+		$sPath=preg_replace('/^(http|https):\/\/[^\/]+/i','',$sUrl);
 		if (isset($aPathFull['host'])) {
 			$sHost=$aPathFull['host'];
 		} elseif (isset($_SERVER['HTTP_HOST'])) {
@@ -407,6 +399,16 @@ class Router extends LsObject {
 		}
 		$sResult.=rtrim($sPath,'\\/');
 		return $sResult;
+	}
+	/**
+	 * Возвращает веб адрес сайта с учетом типа коннекта (http или https) и нестандартных портов
+	 *
+	 * @param bool $bWithScheme	Возвращать в урле схему или нет
+	 *
+	 * @return string
+	 */
+	static public function GetPathRootWeb($bWithScheme=true) {
+		return self::GetFixPathWeb(Config::Get('path.root.web'));
 	}
 	/**
 	 * Возвращает порт при https запросе

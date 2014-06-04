@@ -310,7 +310,7 @@ abstract class Plugin extends LsObject {
 				? Config::Get('view.skin')
 				: 'default';
 
-			self::$aTemplateWebPath[$sName]=Config::Get('path.application.plugins.web')."/{$sName}/templates/skin/{$sTemplateName}/";
+			self::$aTemplateWebPath[$sName]=Router::GetFixPathWeb(Config::Get('path.application.plugins.web'))."/{$sName}/templates/skin/{$sTemplateName}/";
 		}
 		return self::$aTemplateWebPath[$sName];
 	}

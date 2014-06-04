@@ -182,6 +182,17 @@ class ModuleAsset extends Module {
 		return $aResult;
 	}
 	/**
+	 * Возвращает корректный WEB путь до файла
+	 *
+	 * @param string $sFile	Исходный путь до файла, обычно он задается в конфиге при подключении css/js, либо через методы Asset_Add*
+	 * @param array $aParams
+	 *
+	 * @return string
+	 */
+	public function GetFileWeb($sFile,$aParams=array()) {
+		return $this->NormalizeFilePath($sFile,$aParams);
+	}
+	/**
 	 * Приводит путь до файла к единому виду
 	 *
 	 * @param       $sFile
@@ -216,6 +227,23 @@ class ModuleAsset extends Module {
 			$sProtocol='//';
 			$sPath=substr($sFile,2);
 			$sSeparate='/';
+			/**
+			 * Проверяем на относительный путь без протокола и без первого слеша
+			 */
+		} elseif (preg_match('#^[a-z0-9\_]#i',$sFile)) {
+			/**
+			 * Считаем, что указывался путь относительно корня текущего шаблона
+			 */
+			$sSeparate='/';
+			if (isset($aParams['plugin'])) {
+				/**
+				 * Относительно шаблона плагина
+				 */
+				$sPath=Plugin::GetTemplateWebPath($aParams['plugin']).$sFile;
+			} else {
+				$sPath=Router::GetFixPathWeb(Config::Get('path.skin.web')).$sSeparate.$sFile;
+			}
+			return $sPath;
 		}
 		/**
 		 * Могут встречаться двойные слеши, поэтому делаем замену

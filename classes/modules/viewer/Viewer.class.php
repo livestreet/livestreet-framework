@@ -868,6 +868,11 @@ class ModuleViewer extends Module {
 		 */
 		if ($aPaging['iCurrentPage']==1) {
 			$this->SetHtmlCanonical($aPaging['sBaseUrl'].'/'.$aPaging['sGetParams']);
+		} else {
+			/**
+			 * Избавляемся от дублирования title страниц - добавляем "Страница N"
+			 */
+			$this->AddHtmlTitle($this->Lang_Get('pagination.page_with_number',array('number'=>$aPaging['iCurrentPage'])));
 		}
 		return $aPaging;
 	}

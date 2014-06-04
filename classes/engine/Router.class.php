@@ -408,7 +408,7 @@ class Router extends LsObject {
 	 * @return string
 	 */
 	static public function GetPathRootWeb($bWithScheme=true) {
-		return self::GetFixPathWeb(Config::Get('path.root.web'));
+		return self::GetFixPathWeb(Config::Get('path.root.web'),$bWithScheme);
 	}
 	/**
 	 * Возвращает порт при https запросе

@@ -33,14 +33,31 @@ function smarty_function_hook($aParams,&$oSmarty) {
 	unset($aParams['run']);
 	$aResultHook=Engine::getInstance()->Hook_Run($sHookName,$aParams);
 
-	$sReturn='';
-	if (array_key_exists('template_result',$aResultHook)) {
-		$sReturn=join('',$aResultHook['template_result']);
+	if (isset($aParams['array']) and $aParams['array']) {
+		/**
+		 * Если хуку необходимо вернуть результат в виде массива
+		 */
+		$mReturn=array();
+		if (array_key_exists('template_result',$aResultHook)) {
+			foreach($aResultHook['template_result'] as $aResultItem) {
+				if (is_array($aResultItem) and $aResultItem) {
+					$mReturn=array_merge($mReturn,$aResultItem);
+				}
+			}
+		}
+	} else {
+		/**
+		 * Стандартное поведение хука - результат в виде строки
+		 */
+		$mReturn='';
+		if (array_key_exists('template_result',$aResultHook)) {
+			$mReturn=join('',$aResultHook['template_result']);
+		}
 	}
 
 	if (!empty($aParams['assign'])) {
-		$oSmarty->assign($aParams['assign'], $sReturn);
+		$oSmarty->assign($aParams['assign'], $mReturn);
 	} else {
-		return $sReturn;
+		return $mReturn;
 	}
 }

@@ -49,6 +49,13 @@ abstract class Smarty_Internal_TemplateBase extends Smarty_Internal_Data {
         if ($this instanceof Smarty) {
             $_template->caching = $this->caching;
         }
+        //@livestreet
+        $save_tpl_vars_local=array();
+        if ($parent instanceof Smarty) {
+            $save_tpl_vars_local = $_template->tpl_vars_local;
+            $_template->tpl_vars_local=array_merge($_template->tpl_vars_local,$parent->tpl_vars_local);
+        }
+        //@livestreet_end
         // merge all variable scopes into template
         if ($merge_tpl_vars) {
             // save local variables
@@ -348,6 +355,11 @@ abstract class Smarty_Internal_TemplateBase extends Smarty_Internal_Data {
                 $_template->tpl_vars = $save_tpl_vars;
                 $_template->config_vars =  $save_config_vars;
             }
+            //@livestreet
+            if ($save_tpl_vars_local) {
+                $_template->tpl_vars_local=$save_tpl_vars_local;
+            }
+            //@livestreet_end
             return;
         } else {
             if ($merge_tpl_vars) {
@@ -355,6 +367,11 @@ abstract class Smarty_Internal_TemplateBase extends Smarty_Internal_Data {
                 $_template->tpl_vars = $save_tpl_vars;
                 $_template->config_vars =  $save_config_vars;
             }
+            //@livestreet
+            if ($save_tpl_vars_local) {
+                $_template->tpl_vars_local=$save_tpl_vars_local;
+            }
+            //@livestreet_end
             // return fetched content
             return $_output;
         }

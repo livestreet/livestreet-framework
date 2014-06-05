@@ -157,7 +157,7 @@ class ModuleAsset extends Module {
 	 *
 	 * @return bool
 	 */
-	protected function CheckAssetType($sType) {
+	public function CheckAssetType($sType) {
 		return in_array($sType,array(self::ASSET_TYPE_CSS,self::ASSET_TYPE_JS));
 	}
 	/**
@@ -167,12 +167,13 @@ class ModuleAsset extends Module {
 	 *
 	 * @return array
 	 */
-	protected function PrepareParams($aParams) {
+	public function PrepareParams($aParams) {
 		$aResult=array();
 
 		$aResult['merge']=(isset($aParams['merge']) and !$aParams['merge']) ? false : true;
 		$aResult['compress']=(isset($aParams['compress']) and !$aParams['compress']) ? false : true;
 		$aResult['browser']=(isset($aParams['browser']) and $aParams['browser']) ? $aParams['browser'] : null;
+		$aResult['plugin']=(isset($aParams['plugin']) and $aParams['plugin']) ? $aParams['plugin'] : null;
 		$aResult['name']=(isset($aParams['name']) and $aParams['name']) ? strtolower($aParams['name']) : null;
 		if (isset($aParams['file'])) {
 			$aResult['file']=$this->GetFileWeb($aParams['file'],$aParams);
@@ -235,7 +236,7 @@ class ModuleAsset extends Module {
 			 * Считаем, что указывался путь относительно корня текущего шаблона
 			 */
 			$sSeparate='/';
-			if (isset($aParams['plugin'])) {
+			if (isset($aParams['plugin']) and $aParams['plugin']) {
 				/**
 				 * Относительно шаблона плагина
 				 */
@@ -464,7 +465,7 @@ class ModuleAsset extends Module {
 	 *
 	 * @return bool|ModuleAsset_EntityType
 	 */
-	protected function CreateObjectType($sType) {
+	public function CreateObjectType($sType) {
 		/**
 		 * Формируем имя класса для типа
 		 */

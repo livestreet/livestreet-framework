@@ -175,7 +175,7 @@ class ModuleAsset extends Module {
 		$aResult['browser']=(isset($aParams['browser']) and $aParams['browser']) ? $aParams['browser'] : null;
 		$aResult['name']=(isset($aParams['name']) and $aParams['name']) ? strtolower($aParams['name']) : null;
 		if (isset($aParams['file'])) {
-			$aResult['file']=$this->NormalizeFilePath($aParams['file'],$aParams);
+			$aResult['file']=$this->GetFileWeb($aParams['file'],$aParams);
 		} else {
 			$aResult['file']=null;
 		}
@@ -268,8 +268,8 @@ class ModuleAsset extends Module {
 		$aHeader=array_combine(array_keys($this->aAssets),array('',''));
 		foreach($aAssets as $sType=>$aFile) {
 			if ($oType=$this->CreateObjectType($sType)) {
-				foreach($aFile as $sFile=>$aParams) {
-					$aHeader[$sType].=$oType->getHeadHtml($sFile,$aParams).PHP_EOL;
+				foreach($aFile as $aParams) {
+					$aHeader[$sType].=$oType->getHeadHtml($aParams['file'],$aParams).PHP_EOL;
 				}
 			}
 		}
@@ -278,11 +278,11 @@ class ModuleAsset extends Module {
 	/**
 	 * Производит обработку файлов
 	 *
-	 * @return array	Возвращает список результирующих файлов вида array( 'css'=>array( 'file_path'=>$aParams, ... ), ... )
+	 * @return array	Возвращает список результирующих файлов вида array( 'css'=>array( 'name'=>$aParams, ... ), ... )
 	 */
 	public function Processing() {
 		$aTypes=array_keys($this->aAssets);
-		$aFilesMain=$aResult=array_combine($aTypes,array(array(),array()));
+		$aFilesMain=$aResult=array_combine($aTypes,array_pad(array(),count($aTypes),array()));
 		/**
 		 * Сначала добавляем файлы из конфига
 		 */

@@ -369,9 +369,10 @@ class ModuleViewer extends Module {
 	 *
 	 * @param string|array $mName	Имя переменной в шаблоне или ассоциативный массив со списком параметров
 	 * @param mixed $mValue	Значение переменной
+	 * @param bool $bLocal	Загружает переменную в локальную область видимости шаблонизатора (доступна только для конкретного шаблона)
 	 */
-	public function Assign($mName,$mValue=null) {
-		$this->oSmarty->assign($mName, $mValue);
+	public function Assign($mName,$mValue=null,$bLocal=false) {
+		$this->oSmarty->assign($mName, $mValue,false,$bLocal);
 	}
 	/**
 	 * Загружаем переменную в ajax ответ

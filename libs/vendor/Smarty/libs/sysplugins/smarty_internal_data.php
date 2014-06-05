@@ -59,17 +59,29 @@ class Smarty_Internal_Data {
      * @param boolean $scope the scope the variable will have  (local,parent or root)
      * @return Smarty_Internal_Data current Smarty_Internal_Data (or Smarty or Smarty_Internal_Template) instance for chaining
      */
-    public function assign($tpl_var, $value = null, $nocache = false)
+    public function assign($tpl_var, $value = null, $nocache = false, $local=false)
     {
         if (is_array($tpl_var)) {
             foreach ($tpl_var as $_key => $_val) {
                 if ($_key != '') {
-                    $this->tpl_vars[$_key] = new Smarty_variable($_val, $nocache);
+                    //@livestreet
+                    if ($local) {
+                        $this->tpl_vars_local[$_key] = new Smarty_variable($_val, $nocache);
+                    } else {
+                        $this->tpl_vars[$_key] = new Smarty_variable($_val, $nocache);
+                    }
+                    //@livestreet_end
                 }
             }
         } else {
             if ($tpl_var != '') {
-                $this->tpl_vars[$tpl_var] = new Smarty_variable($value, $nocache);
+                //@livestreet
+                if ($local) {
+                    $this->tpl_vars_local[$tpl_var] = new Smarty_variable($value, $nocache);
+                } else {
+                    $this->tpl_vars[$tpl_var] = new Smarty_variable($value, $nocache);
+                }
+                //@livestreet_end
             }
         }
 

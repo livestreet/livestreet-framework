@@ -31,7 +31,9 @@ Config::LoadFromFile(dirname(__FILE__).'/config.php');
  * Загружаем основной конфиг приложения
  */
 Config::LoadFromFile(Config::Get('path.application.server').'/config/config.php',false);
-
+/**
+ * Вспомогательная функция
+ */
 $fGetConfig = create_function('$sPath', '$config=array(); return include $sPath;');
 
 /**
@@ -152,7 +154,7 @@ if($aPluginsList=@file($sPluginsListFile)) {
 			}
 		}
 		/**
-		 * Смотрим конфиг плагина в /application/config/plugins/config.php
+		 * Смотрим конфиг плагина в /application/config/plugins/[plugin_name]/config.php
 		 */
 		$sFileUserConfig=Config::get('path.application.server')."/config/plugins/{$sPlugin}/config.php";
 		if (file_exists($sFileUserConfig)) {

@@ -16,7 +16,6 @@
 */
 
 set_include_path(get_include_path().PATH_SEPARATOR.dirname(__FILE__));
-require_once(Config::Get('path.framework.libs_application.server').'/ProfilerSimple/Profiler.class.php');
 
 require_once("LsObject.class.php");
 require_once("Plugin.class.php");
@@ -278,15 +277,7 @@ class Engine extends LsObject {
 	protected function InitModules() {
 		foreach ($this->aModules as $oModule) {
 			if(!$oModule->isInit()) {
-				/**
-				 * Замеряем время инициализации модуля
-				 */
-				$oProfiler=ProfilerSimple::getInstance();
-				$iTimeId=$oProfiler->Start('InitModule',get_class($oModule));
-
-				$this->InitModule($oModule);
-
-				$oProfiler->Stop($iTimeId);
+                $this->InitModule($oModule);
 			}
 		}
 	}
@@ -353,15 +344,7 @@ class Engine extends LsObject {
 	 */
 	protected function ShutdownModules() {
 		foreach ($this->aModules as $sKey => $oModule) {
-			/**
-			 * Замеряем время shutdown`a модуля
-			 */
-			$oProfiler=ProfilerSimple::getInstance();
-			$iTimeId=$oProfiler->Start('ShutdownModule',get_class($oModule));
-
-			$oModule->Shutdown();
-
-			$oProfiler->Stop($iTimeId);
+            $oModule->Shutdown();
 		}
 	}
 
@@ -540,11 +523,6 @@ class Engine extends LsObject {
 			// comment for ORM testing
 			//throw new Exception("The module has no required method: ".$sModuleName.'->'.$sMethod.'()');
 		}
-		/**
-		 * Замеряем время выполнения метода
-		 */
-		$oProfiler=ProfilerSimple::getInstance();
-		$iTimeId=$oProfiler->Start('callModule',$sModuleName.'->'.$sMethod.'()');
 
 		$sModuleName=strtolower($sModuleName);
 		$aResultHook=array();
@@ -568,7 +546,6 @@ class Engine extends LsObject {
 			$this->Hook_Run('module_'.$sModuleName.'_'.strtolower($sMethod).'_after',array('result'=>&$result,'params'=>$aArgs));
 		}
 
-		$oProfiler->Stop($iTimeId);
 		return $result;
 	}
 

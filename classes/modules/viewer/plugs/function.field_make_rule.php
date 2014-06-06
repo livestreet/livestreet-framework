@@ -78,8 +78,8 @@ function smarty_function_field_make_rule($params, &$smarty) {
 				$aResult['type']='email';
 			}
 
-			if (!$oValidator->allowEmpty) {
-				$aResult['required']=true;
+			if ($sType!='inline' and !$oValidator->allowEmpty) {
+				$aResult['required']=1;
 			}
 		}
 	}

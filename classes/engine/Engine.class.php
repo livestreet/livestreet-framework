@@ -22,6 +22,7 @@ require_once("Plugin.class.php");
 require_once("Block.class.php");
 require_once("Hook.class.php");
 require_once("Module.class.php");
+require_once("Cron.class.php");
 require_once("Router.class.php");
 
 require_once("Entity.class.php");
@@ -156,6 +157,12 @@ class Engine extends LsObject {
 	 * @var Engine
 	 */
 	static protected $oInstance=null;
+    /**
+     * Текущее окружение
+     *
+     * @var string
+     */
+    static protected $sEnvironment='local';
 	/**
 	 * Список загруженных модулей
 	 *
@@ -204,6 +211,7 @@ class Engine extends LsObject {
 	 */
 	protected function __construct() {
 		$this->iTimeInit=microtime(true);
+        $this->AutoloadRegister();
 		if (get_magic_quotes_gpc()) {
 			func_stripslashes($_REQUEST);
 			func_stripslashes($_GET);
@@ -1172,13 +1180,94 @@ class Engine extends LsObject {
 		}
 		return false;
 	}
+    /**
+     * Регистрация автозагрузки классов
+     */
+    protected function AutoloadRegister() {
+        spl_autoload_register(array('Engine','autoload'));
+    }
+    /**
+     * Возвращает текущее окружение
+     *
+     * @return string
+     */
+    static public function GetEnvironment() {
+        return self::$sEnvironment;
+    }
+    /**
+     * Устанавливает текущее окружение
+     *
+     * @param string $sEnvironment
+     */
+    static public function SetEnvironment($sEnvironment) {
+        self::$sEnvironment=$sEnvironment;
+    }
+    /**
+     * Запускает определение текущего окружения на основе параметров
+     *
+     * @param array|Closure $aEnvironments
+     *
+     * @return int|mixed|null|string
+     */
+    static public function DetectEnvironment($aEnvironments) {
+        $aConsoleArgs = isset($_SERVER['argv']) ? $_SERVER['argv'] : null;
+        /**
+         * Если запуск из консоли и переданы параметры
+         */
+        if ($aConsoleArgs) {
+            $sEnv=self::DetectEnvironmentConsole($aEnvironments,$aConsoleArgs);
+        } else {
+            $sEnv=self::DetectEnvironmentWeb($aEnvironments);
+        }
 
+        if ($sEnv) {
+            self::$sEnvironment=$sEnv;
+        }
+        return self::$sEnvironment;
+    }
+    /**
+     * Определяет окружение на основе WEB-запроса к странице
+     *
+     * @param array|Closure $aEnvironments
+     *
+     * @return int|mixed|null|string
+     */
+    static protected function DetectEnvironmentWeb($aEnvironments) {
+        if ($aEnvironments instanceof Closure) {
+            return call_user_func($aEnvironments);
+        }
+
+        foreach($aEnvironments as $sEnvironment=>$aHosts) {
+            foreach ((array)$aHosts as $sHost) {
+                if ($sHost==gethostname()) {
+                    return $sEnvironment;
+                }
+            }
+        }
+        return null;
+    }
+    /**
+     * Определяет окружение на основе запуска через cli
+     * Окружение передается как параметр --env=production
+     *
+     * @param array|Closure $aEnvironments
+     * @param array $aConsoleArgs
+     *
+     * @return int|mixed|null|string
+     */
+    static protected function DetectEnvironmentConsole($aEnvironments,$aConsoleArgs) {
+        $aArgs=array_filter($aConsoleArgs,function($sItem){
+            return strpos($sItem,'--env')===0;
+        });
+
+        if ($sArg=reset($aArgs)) {
+            return reset(array_slice(explode('=',$sArg),1));
+        } else {
+            return self::DetectEnvironmentWeb($aEnvironments);
+        }
+    }
 }
 
-/**
- * Регистрация автозагрузки классов
- */
-spl_autoload_register(array('Engine','autoload'));
 
 /**
  * Короткий алиас для вызова основных методов движка

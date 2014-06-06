@@ -35,7 +35,10 @@ Config::LoadFromFile(Config::Get('path.application.server').'/config/config.php'
  * Вспомогательная функция
  */
 $fGetConfig = create_function('$sPath', '$config=array(); return include $sPath;');
-
+/**
+ * Получаем текущее окружение
+ */
+$sEnvironmentCurrent=Engine::GetEnvironment();
 /**
  * Загружает конфиги модулей вида /config/modules/[module_name]/config.php
  */
@@ -101,27 +104,11 @@ if (is_dir($sDirInclude) and $hDirInclude = opendir($sDirInclude)) {
 	closedir($hDirInclude);
 }
 
-if(isset($_SERVER['HTTP_APP_ENV']) && $_SERVER['HTTP_APP_ENV']=='test') {
-    /**
-     * Подгружаем файл тестового конфига
-     */
-    if(file_exists(Config::Get('path.application.server').'/config/config.test.php')) {
-        Config::LoadFromFile(Config::Get('path.application.server').'/config/config.test.php',false);
-    } else {
-        throw new Exception("Config for test envirenment is not found.
-            Rename /config/config.test.php.dist to /config/config.test.php and rewrite DB settings.
-            After that check base_url in /test/behat/behat.yml it option must be correct site url.");
-    }
-} else {
-    /**
-     * Подгружаем файлы локального и продакшн-конфига
-     */
-    if(file_exists(Config::Get('path.application.server').'/config/config.local.php')) {
-        Config::LoadFromFile(Config::Get('path.application.server').'/config/config.local.php',false);
-    }
-    if(file_exists(Config::Get('path.application.server').'/config/config.stable.php')) {
-        Config::LoadFromFile(Config::Get('path.application.server').'/config/config.stable.php',false);
-    }
+/**
+ * Подгружаем конфиг окружения
+ */
+if(file_exists(Config::Get('path.application.server')."/config/config.{$sEnvironmentCurrent}.php")) {
+    Config::LoadFromFile(Config::Get('path.application.server')."/config/config.{$sEnvironmentCurrent}.php",false);
 }
 
 /**
@@ -172,6 +159,25 @@ if($aPluginsList=@file($sPluginsListFile)) {
 				);
 			}
 		}
+        /**
+         * Смотрим конфиг плагина текущего окружения в /application/config/plugins/[plugin_name]/config.[environment].php
+         */
+        $sFileUserConfig=Config::get('path.application.server')."/config/plugins/{$sPlugin}/config.{$sEnvironmentCurrent}.php";
+        if (file_exists($sFileUserConfig)) {
+            $aConfig = $fGetConfig($sFileUserConfig);
+            // Если конфиг этого плагина пуст, то загружаем массив целиком
+            $sKey = "plugin.$sPlugin";
+            if(!Config::isExist($sKey)) {
+                Config::Set($sKey,$aConfig);
+            } else {
+                // Если уже существую привязанные к плагину ключи,
+                // то сливаем старые и новое значения ассоциативно
+                Config::Set(
+                    $sKey,
+                    func_array_merge_assoc(Config::Get($sKey), $aConfig)
+                );
+            }
+        }
 		/**
 		 * Подключаем include-файлы
 		 */

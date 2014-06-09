@@ -56,7 +56,7 @@ ls.lang = ls.i18n = (function ($) {
 			return sValue;
 		}
 
-		return '';
+		return sName;
 	};
 
 	/**
@@ -81,11 +81,21 @@ ls.lang = ls.i18n = (function ($) {
 	this.pluralize = function(iNumber, mText, sLanguage) {
 		var aWords        = $.isArray(mText) ? mText : this.get(mText).split(';'),
 			sLanguage     = sLanguage || LANGUAGE,
-			n             = Math.abs(iNumber),
-			mIndex        = eval(this.oPluralRules[sLanguage]),
-			sWord         = aWords[ typeof mIndex === 'boolean' ? (mIndex ? 1 : 0) : mIndex ],
-			sReplacedWord = this.replace( sWord, { number: iNumber } );
+			n             = Math.abs(iNumber);
 
+		if (!this.oPluralRules[sLanguage]) {
+			var mIndex=0;
+		} else {
+			var mIndex=eval(this.oPluralRules[sLanguage]);
+		}
+		// fix type
+		mIndex=(typeof mIndex === 'boolean') ? (mIndex ? 1 : 0) : mIndex;
+		if (aWords[mIndex]) {
+			var sWord=aWords[mIndex];
+		} else {
+			var sWord=aWords[0] ? aWords[0] : '';
+		}
+		var sReplacedWord = this.replace( sWord, { count: iNumber } );
 		return sWord === sReplacedWord ? iNumber + ' ' + sWord : sReplacedWord;
 	};
 

@@ -306,6 +306,188 @@ class ModuleLang extends Module {
 		$this->aLangMsg[$sKey] = $sMessage;
 	}
 	/**
+	 * Возвращает нужную форму слова во множественном числе
+	 *
+	 * @param int $iNumber
+	 * @param string|array $mText
+	 * @param string|null $sLang
+	 *
+	 * @return string|mixed
+	 */
+	public function Pluralize($iNumber,$mText,$sLang=null) {
+		if (is_null($sLang)) {
+			$sLang=$this->GetLang();
+		}
+		if ('pt_BR'===$sLang) {
+			// temporary set a locale for brazilian
+			$sLang='xbr';
+		}
+
+		if (strlen($sLang)>3) {
+			$sLang=substr($sLang,0,-strlen(strrchr($sLang,'_')));
+		}
+		$iNumber=abs($iNumber);
+		$iForm=0;
+		/*
+		 * The plural rules are derived from code of the Zend Framework (2010-09-25),
+		 * which is subject to the new BSD license (http://framework.zend.com/license/new-bsd).
+		 * Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
+		 */
+		switch ($sLang) {
+			case 'bo':
+			case 'dz':
+			case 'id':
+			case 'ja':
+			case 'jv':
+			case 'ka':
+			case 'km':
+			case 'kn':
+			case 'ko':
+			case 'ms':
+			case 'th':
+			case 'tr':
+			case 'vi':
+			case 'zh':
+				$iForm=0;
+				break;
+
+			case 'af':
+			case 'az':
+			case 'bn':
+			case 'bg':
+			case 'ca':
+			case 'da':
+			case 'de':
+			case 'el':
+			case 'en':
+			case 'eo':
+			case 'es':
+			case 'et':
+			case 'eu':
+			case 'fa':
+			case 'fi':
+			case 'fo':
+			case 'fur':
+			case 'fy':
+			case 'gl':
+			case 'gu':
+			case 'ha':
+			case 'he':
+			case 'hu':
+			case 'is':
+			case 'it':
+			case 'ku':
+			case 'lb':
+			case 'ml':
+			case 'mn':
+			case 'mr':
+			case 'nah':
+			case 'nb':
+			case 'ne':
+			case 'nl':
+			case 'nn':
+			case 'no':
+			case 'om':
+			case 'or':
+			case 'pa':
+			case 'pap':
+			case 'ps':
+			case 'pt':
+			case 'so':
+			case 'sq':
+			case 'sv':
+			case 'sw':
+			case 'ta':
+			case 'te':
+			case 'tk':
+			case 'ur':
+			case 'zu':
+				$iForm=($iNumber==1) ? 0 : 1;
+				break;
+
+			case 'am':
+			case 'bh':
+			case 'fil':
+			case 'fr':
+			case 'gun':
+			case 'hi':
+			case 'ln':
+			case 'mg':
+			case 'nso':
+			case 'xbr':
+			case 'ti':
+			case 'wa':
+				$iForm=(($iNumber==0) || ($iNumber==1)) ? 0 : 1;
+				break;
+
+			case 'be':
+			case 'bs':
+			case 'hr':
+			case 'ru':
+			case 'sr':
+			case 'uk':
+				$iForm=(($iNumber%10==1) && ($iNumber%100!=11)) ? 0 : ((($iNumber%10>=2) && ($iNumber%10<=4) && (($iNumber%100<10) || ($iNumber%100>=20))) ? 1 : 2);
+				break;
+
+			case 'cs':
+			case 'sk':
+				$iForm=($iNumber==1) ? 0 : ((($iNumber>=2) && ($iNumber<=4)) ? 1 : 2);
+				break;
+
+			case 'ga':
+				$iForm=($iNumber==1) ? 0 : (($iNumber==2) ? 1 : 2);
+				break;
+
+			case 'lt':
+				$iForm=(($iNumber%10==1) && ($iNumber%100!=11)) ? 0 : ((($iNumber%10>=2) && (($iNumber%100<10) || ($iNumber%100>=20))) ? 1 : 2);
+				break;
+
+			case 'sl':
+				$iForm=($iNumber%100==1) ? 0 : (($iNumber%100==2) ? 1 : ((($iNumber%100==3) || ($iNumber%100==4)) ? 2 : 3));
+				break;
+
+			case 'mk':
+				$iForm=($iNumber%10==1) ? 0 : 1;
+				break;
+
+			case 'mt':
+				$iForm=($iNumber==1) ? 0 : ((($iNumber==0) || (($iNumber%100>1) && ($iNumber%100<11))) ? 1 : ((($iNumber%100>10) && ($iNumber%100<20)) ? 2 : 3));
+				break;
+
+			case 'lv':
+				$iForm=($iNumber==0) ? 0 : ((($iNumber%10==1) && ($iNumber%100!=11)) ? 1 : 2);
+				break;
+
+			case 'pl':
+				$iForm=($iNumber==1) ? 0 : ((($iNumber%10>=2) && ($iNumber%10<=4) && (($iNumber%100<12) || ($iNumber%100>14))) ? 1 : 2);
+				break;
+
+			case 'cy':
+				$iForm=($iNumber==1) ? 0 : (($iNumber==2) ? 1 : ((($iNumber==8) || ($iNumber==11)) ? 2 : 3));
+				break;
+
+			case 'ro':
+				$iForm=($iNumber==1) ? 0 : ((($iNumber==0) || (($iNumber%100>0) && ($iNumber%100<20))) ? 1 : 2);
+				break;
+
+			case 'ar':
+				$iForm=($iNumber==0) ? 0 : (($iNumber==1) ? 1 : (($iNumber==2) ? 2 : ((($iNumber%100>=3) && ($iNumber%100<=10)) ? 3 : ((($iNumber%100>=11) && ($iNumber%100<=99)) ? 4 : 5))));
+				break;
+
+			default:
+				$iForm=0;
+		}
+		if (is_array($mText)) {
+			$aText=$mText;
+		} else {
+			$aText=explode(';',$mText);
+		}
+		/**
+		 * Возвращаем нужную форму слова, либо исходный текст
+		 */
+		return array_key_exists($iForm,$aText) ? $aText[$iForm] : $mText;
+	}
+	/**
 	 * Завершаем работу модуля
 	 *
 	 */

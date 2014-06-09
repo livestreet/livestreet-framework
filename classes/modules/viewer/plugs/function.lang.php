@@ -30,12 +30,16 @@ function smarty_function_lang($aParams,&$oSmarty) {
 	}
 
     $sName=$aParams['name'];
+    $bPlural=(isset($aParams['plural']) && $aParams['plural']) ? true : false;
     /**
      * Получаем параметры для передачи в текстовку
      */
     $aReplace=array();
     if (isset($aParams['params']) and is_array($aParams['params'])) {
         $aReplace=$aParams['params'];
+		if ($bPlural and isset($aParams['count'])) {
+			$aReplace['count']=$aParams['count'];
+		}
     } else {
         unset($aParams['name']);
         $aReplace=$aParams;
@@ -44,6 +48,12 @@ function smarty_function_lang($aParams,&$oSmarty) {
      * Получаем текстовку
      */
     $sReturn=Engine::getInstance()->Lang_Get($sName,$aReplace);
+	/**
+	 * Если необходимо получить правильную форму множественного числа
+	 */
+	if ($bPlural and isset($aParams['count'])) {
+		$sReturn=Engine::getInstance()->Lang_Pluralize((int)$aParams['count'],$sReturn);
+	}
     /**
      * Возвращаем результат
      */

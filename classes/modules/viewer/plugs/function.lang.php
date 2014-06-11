@@ -52,7 +52,11 @@ function smarty_function_lang($aParams,&$oSmarty) {
 	 * Если необходимо получить правильную форму множественного числа
 	 */
 	if ($bPlural and isset($aParams['count'])) {
-		$sReturn=Engine::getInstance()->Lang_Pluralize((int)$aParams['count'],$sReturn);
+		if ($aParams['count']==0 and isset($aParams['empty'])) {
+			$sReturn=Engine::getInstance()->Lang_Get($aParams['empty']);
+		} else {
+			$sReturn=Engine::getInstance()->Lang_Pluralize((int)$aParams['count'],$sReturn);
+		}
 	}
     /**
      * Возвращаем результат

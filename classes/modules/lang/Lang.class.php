@@ -247,14 +247,14 @@ class ModuleLang extends Module {
 				if (isset($sLang[$k])) {
 					$sLang = $sLang[$k];
 				} else {
-					return  'NOT_FOUND_LANG_TEXT';
+					return $sName;
 				}
 			}
 		} else {
 			if (isset($this->aLangMsg[$sName])) {
 				$sLang=$this->aLangMsg[$sName];
 			} else {
-				return 'NOT_FOUND_LANG_TEXT';
+				return $sName;
 			}
 		}
 

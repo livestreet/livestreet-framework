@@ -16,7 +16,8 @@
          * Дефолтные опции
          */
         options: {
-            name: ''
+            name: '',
+			url: aRouter.ajax + 'captcha/'
         },
 
         /**
@@ -42,7 +43,7 @@
 		 * Получает url каптчи
 		 */
 		getUrl: function () {
-			return PATH_FRAMEWORK_LIBS_VENDOR + '/kcaptcha/index.php?' + SESSION_NAME + '=' + SESSION_ID + '&n=' + Math.random() + '&name=' + this.options.name;
+			return this.options.url + '?security_ls_key=' + LIVESTREET_SECURITY_KEY + '&n=' + Math.random() + '&name=' + this.options.name;
 		},
 
 		/**

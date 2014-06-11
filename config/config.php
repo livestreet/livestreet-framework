@@ -138,6 +138,7 @@ $config['sys']['cache']['solid']  = true;               // Настройка и
  * Настройки логирования
  */
 $config['sys']['logs']['file']           = 'log.log';       // файл общего лога
+$config['sys']['logs']['cron_file']    	 = 'cron.log';      // файл лога крон-процессов
 $config['sys']['logs']['sql_query']      = false;           // логировать или нет SQL запросы
 $config['sys']['logs']['sql_query_file'] = 'sql_query.log'; // файл лога SQL запросов
 $config['sys']['logs']['sql_error']      = true;            // логировать или нет ошибки SQl
@@ -207,7 +208,7 @@ $config['sys']['logs']['instances']=array(
 	'cron'=>array(
 		'handlers'=>array(
 			'Stream'=>array(
-				'___path.application.server___/logs/___sys.logs.file___',
+				'___path.application.server___/logs/___sys.logs.cron_file___',
 				'debug',
 				'formatter'=>array(
 					'Line','___sys.logs.format___'

@@ -15,8 +15,6 @@
 ---------------------------------------------------------
 */
 
-require_once("Engine.class.php");
-
 /**
  * Абстрактный класс для работы с крон-процессами.
  * Например, его использует отложенная рассылка почтовых уведомлений для пользователей.
@@ -25,7 +23,7 @@ require_once("Engine.class.php");
  * @package engine
  * @since 1.0
  */
-class Cron extends LsObject {
+abstract class Cron extends LsObject {
 	/**
 	 * Объект ядра
 	 *
@@ -103,7 +101,8 @@ class Cron extends LsObject {
 		 * Если выполнение процесса заблокирован, завершаемся
 		 */
 		if($this->isLock()) {
-			throw new Exception('Try to exec already run process');
+            $this->Log('Try to exec already run process');
+            return;
 		}
 		/**
 		 * Здесь мы реализуем дополнительную логику:
@@ -137,9 +136,7 @@ class Cron extends LsObject {
 	 * Клиентская функция будет переопределятся в наследниках класса
 	 * для обеспечивания выполнения основного функционала.
 	 */
-	public function Client(){
-		throw new Exception('Call undefined client function');
-	}
+    abstract public function Client();
 	/**
 	 * Ставим хук на вызов неизвестного метода и считаем что хотели вызвать метод какого либо модуля
 	 * @see Engine::_CallModule

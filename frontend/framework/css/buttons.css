@@ -10,8 +10,7 @@
 
 .button {
 	display: inline-block;
-	height: 28px;
-	padding: 0 10px;
+	padding: 7px 13px;
 	margin: 0;
 	border: 1px solid #ddd;
 	text-align: center;
@@ -20,9 +19,10 @@
 	font-size: 13px;
 	line-height: normal;
 	color: #333;
-	background: #eee;
+	background: #fff;
 	font-family: Arial, sans-serif;
 	cursor: pointer;
+	position: relative;
 	-webkit-border-radius: 3px;
 	   -moz-border-radius: 3px;
 	        border-radius: 3px;
@@ -30,15 +30,12 @@
 	   -moz-box-sizing: border-box;
 	        box-sizing: border-box;
 }
-.button:hover  { text-decoration: none; background: #eaeaea; color: #333; }
-.button:active,
+.button:hover  { text-decoration: none; background: #fafafa; color: #333; }
+.button:active {  }
+.button:focus { outline: none; }
 .button.active {
 	background: #eaeaea;
-	-webkit-box-shadow: 0 0 5px rgba(0, 0, 0, .2) inset;
-	   -moz-box-shadow: 0 0 5px rgba(0, 0, 0, .2) inset;
-	        box-shadow: 0 0 5px rgba(0, 0, 0, .2) inset;
 }
-a.button { padding-top: 5px; }
 
 /* Icon */
 .button [class^="icon-"],

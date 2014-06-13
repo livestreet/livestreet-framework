@@ -19,7 +19,7 @@ ls.autocomplete = (function ($) {
 		params = params || {};
 		if (multiple) {
 			obj.bind("keydown", function(event) {
-				if ( event.keyCode === $.ui.keyCode.TAB && $( this ).data( "autocomplete" ).menu.active ) {
+				if ( event.keyCode === $.ui.keyCode.TAB && $( this ).data( "ui-autocomplete" ).menu.activeMenu.is(':visible') ) {
 					event.preventDefault();
 				}
 			})

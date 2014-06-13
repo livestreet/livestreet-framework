@@ -39,4 +39,7 @@ abstract class Mapper extends LsObject {
 		$this->oDb = $oDb;
 	}
 
+	protected function IsSuccessful($mRes) {
+		return $mRes===false or is_null($mRes) ? false : true;
+	}
 }

@@ -93,6 +93,12 @@ class ModuleHook extends Module {
 	 * @var array
 	 */
 	protected $aHooksObject=array();
+	/**
+	 * Список хуков для поведений - в них есть привязка к конкретному объекту
+	 *
+	 * @var array
+	 */
+	protected $aHooksBehavior=array();
 
 	/**
 	 * Инициализация модуля
@@ -100,6 +106,83 @@ class ModuleHook extends Module {
 	 */
 	public function Init() {
 
+	}
+	/**
+	 * Добавление хука для поведения
+	 *
+	 * @param string $sName	Имя хука
+	 * @param LsObject $oObject	Объект которому принадлежит хук
+	 * @param array $aCallback	Коллбек
+	 * @param int $iPriority	Приоритет
+	 */
+	public function AddHookBehavior($sName,$oObject,$aCallback,$iPriority=1) {
+		$sName=strtolower($sName);
+		$sObjectHash=spl_object_hash($oObject);
+		$this->aHooksBehavior[$sName][$sObjectHash][]=array('callback'=>$aCallback,'priority'=>(int)$iPriority);
+	}
+	/**
+	 * Удаляет хук поведения
+	 *
+	 * @param string $sName	Имя хука
+	 * @param LsObject $oObject	Объект которому принадлежит хук
+	 * @param array|null $aCallback	Коллбек, если не задан, то будут удалены все коллбеки
+	 *
+	 * @return bool
+	 */
+	public function RemoveHookBehavior($sName,$oObject,$aCallback=null) {
+		$sName=strtolower($sName);
+		$sObjectHash=spl_object_hash($oObject);
+		if (!isset($this->aHooksBehavior[$sName][$sObjectHash])) {
+			return false;
+		}
+		if (is_null($aCallback)) {
+			unset($this->aHooksBehavior[$sName][$sObjectHash]);
+			return true;
+		}
+		$bRemoved=false;
+		foreach($this->aHooksBehavior[$sName][$sObjectHash] as $i=>$aHook) {
+			if ($aHook['callback']===$aCallback) {
+				unset($this->aHooksBehavior[$sName][$sObjectHash][$i]);
+				$bRemoved=true;
+			}
+		}
+		if ($bRemoved) {
+			$this->aHooksBehavior[$sName][$sObjectHash]=array_values($this->aHooksBehavior[$sName][$sObjectHash]);
+		}
+		return $bRemoved;
+	}
+	/**
+	 * @param string $sName	Имя хука
+	 * @param LsObject $oObject	Объект которому принадлежит хук
+	 * @param array $aVars	Параметры хука. Конкретные параметры можно передавать по ссылке, например, array('bResult'=>&$bResult)
+	 * @param bool $bWithGlobal	Запускать дополнительно одноименный глобальный (стандартный) хук
+	 *
+	 * @return array
+	 */
+	public function RunHookBehavior($sName,$oObject,$aVars=array(),$bWithGlobal=false) {
+		$result=array();
+		$sName=strtolower($sName);
+		$sObjectHash=spl_object_hash($oObject);
+		if (isset($this->aHooksBehavior[$sName][$sObjectHash])) {
+			$aHooks=array();
+			for ($i=0;$i<count($this->aHooksBehavior[$sName][$sObjectHash]);$i++) {
+				$aHooks[$i]=$this->aHooksBehavior[$sName][$sObjectHash][$i]['priority'];
+			}
+			arsort($aHooks,SORT_NUMERIC);
+			/**
+			 * Сначала запускаем на выполнение
+			 */
+
+			foreach ($aHooks as $iKey => $iPr) {
+				$aHook=$this->aHooksBehavior[$sName][$sObjectHash][$iKey];
+				$aHook['type']='callback';
+				$this->RunType($aHook,$aVars);
+			}
+		}
+		if ($bWithGlobal) {
+			$this->Run($sName,$aVars);
+		}
+		return $result;
 	}
 	/**
 	 * Добавление обработчика на хук
@@ -274,6 +357,9 @@ class ModuleHook extends Module {
 	protected function RunType($aHook,&$aVars) {
 		$result=null;
 		switch ($aHook['type']) {
+			case 'callback':
+				$result=call_user_func_array($aHook['callback'],array(&$aVars));
+				break;
 			case 'module':
 				$result=call_user_func_array(array($this,$aHook['callback']),array(&$aVars));
 				break;

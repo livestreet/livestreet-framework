@@ -49,6 +49,7 @@ class ORMRelationManyToMany extends LsObject {
 	 * @param $aCollection	Список объектов связи
 	 */
 	public function __construct($aCollection) {
+		parent::__construct();
 		if (!$aCollection) {
 			$aCollection=array();
 		}

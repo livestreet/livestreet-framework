@@ -235,17 +235,6 @@ abstract class Plugin extends LsObject {
 		return null;
 	}
 	/**
-	 * Ставим хук на вызов неизвестного метода и считаем что хотели вызвать метод какого либо модуля
-	 * @see Engine::_CallModule
-	 *
-	 * @param string $sName Имя метода
-	 * @param array $aArgs Аргументы
-	 * @return mixed
-	 */
-	public function __call($sName,$aArgs) {
-		return Engine::getInstance()->_CallModule($sName,$aArgs);
-	}
-	/**
 	 * Возвращает полный серверный путь до плагина
 	 *
 	 * @param string $sName

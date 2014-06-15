@@ -36,6 +36,7 @@ abstract class Mapper extends LsObject {
 	 * @param DbSimple_Database $oDb
 	 */
 	public function __construct(DbSimple_Database $oDb) {
+		parent::__construct();
 		$this->oDb = $oDb;
 	}
 

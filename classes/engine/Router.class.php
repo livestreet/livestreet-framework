@@ -129,7 +129,8 @@ class Router extends LsObject {
 	/**
 	 * Загрузка конфига роутинга при создании объекта
 	 */
-	protected function __construct() {
+	public function __construct() {
+		parent::__construct();
 		$this->LoadConfig();
 	}
 	/**
@@ -288,7 +289,7 @@ class Router extends LsObject {
 		}
 
 		$sClassName=$sActionClass;
-		$this->oAction=new $sClassName($this->oEngine,self::$sAction);
+		$this->oAction=new $sClassName(self::$sAction);
 		/**
 		 * Инициализируем экшен
 		 */
@@ -560,22 +561,11 @@ class Router extends LsObject {
 			|| isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && strcasecmp($_SERVER['HTTP_X_FORWARDED_PROTO'], 'https') === 0;
 	}
 	/**
-	 * Ставим хук на вызов неизвестного метода и считаем что хотели вызвать метод какого либо модуля
-	 * @see Engine::_CallModule
-	 *
-	 * @param string $sName Имя метода
-	 * @param array $aArgs Аргументы
-	 * @return mixed
-	 */
-	public function __call($sName,$aArgs) {
-		return $this->oEngine->_CallModule($sName,$aArgs);
-	}
-	/**
 	 * Блокируем копирование/клонирование объекта роутинга
 	 *
 	 */
-	protected function __clone() {
-
+	public function __clone() {
+		throw new Exception('Not allow clone Router');
 	}
 	/**
 	 * Возвращает правильную адресацию по переданому названию страницы(экшену)

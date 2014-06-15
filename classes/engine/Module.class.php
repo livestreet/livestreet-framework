@@ -24,12 +24,6 @@
  */
 abstract class Module extends LsObject {
 	/**
-	 * Объект ядра
-	 *
-	 * @var Engine
-	 */
-	protected $oEngine=null;
-	/**
 	 * Указывает на то, была ли проведенна инициализация модуля
 	 *
 	 * @var bool
@@ -37,30 +31,11 @@ abstract class Module extends LsObject {
 	protected $bIsInit=false;
 
 	/**
-	 * При создании модуля передаем объект ядра
-	 *
-	 * @param Engine $oEngine
-	 */
-	final public function __construct(Engine $oEngine) {
-		$this->oEngine=$oEngine;
-	}
-	/**
-	 * Ставим хук на вызов неизвестного метода и считаем что хотели вызвать метод какого либо модуля
-	 * @see Engine::_CallModule
-	 *
-	 * @param string $sName Имя метода
-	 * @param array $aArgs Аргументы
-	 * @return mixed
-	 */
-	public function __call($sName,$aArgs) {
-		return $this->oEngine->_CallModule($sName,$aArgs);
-	}
-	/**
 	 * Блокируем копирование/клонирование объекта
 	 *
 	 */
-	protected function __clone() {
-
+	public function __clone() {
+		throw new Exception('Not allow clone module');
 	}
 	/**
 	 * Абстрактный метод инициализации модуля, должен быть переопределен в модуле

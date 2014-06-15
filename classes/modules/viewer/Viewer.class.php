@@ -231,7 +231,7 @@ class ModuleViewer extends Module {
 		/**
 		 * Загружаем список активных плагинов
 		 */
-		$aPlugins=$this->oEngine->GetPlugins();
+		$aPlugins=Engine::getInstance()->GetPlugins();
 		$this->Assign("aPluginActive",array_fill_keys(array_keys($aPlugins),true));
 		/**
 		 * Загружаем пути до шаблонов плагинов

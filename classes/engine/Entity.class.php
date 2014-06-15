@@ -75,6 +75,7 @@ abstract class Entity extends LsObject {
 	 * @param array|false $aParam	Ассоциативный массив данных сущности
 	 */
 	public function __construct($aParam = false) {
+		parent::__construct();
 		$this->_setData($aParam);
 		$this->Init();
 	}
@@ -196,7 +197,7 @@ abstract class Entity extends LsObject {
 				return $this;
 			}
 		} else {
-			return Engine::getInstance()->_CallModule($sName,$aArgs);
+			return parent::__call($sName,$aArgs);
 		}
 	}
 	/**
@@ -249,7 +250,9 @@ abstract class Entity extends LsObject {
 		foreach($this->_getValidators() as $validator) {
 			$validator->validateEntity($this,$aFields);
 		}
-		return !$this->_hasValidateErrors();
+		$bResult=!$this->_hasValidateErrors();
+		$this->RunBehaviorHook('validate_after',array('bResult'=>&$bResult,'aFields'=>$aFields,'bClearErrors'=>$bClearErrors));
+		return $bResult;
 	}
 	/**
 	 * Возвращает список валидаторов с учетом текущего сценария

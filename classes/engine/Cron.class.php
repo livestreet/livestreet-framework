@@ -25,12 +25,6 @@
  */
 abstract class Cron extends LsObject {
 	/**
-	 * Объект ядра
-	 *
-	 * @var Engine
-	 */
-	protected $oEngine=null;
-	/**
 	 * Дескриптор блокирующего файла
 	 * Если этот файл существует, то крон не запустится повторно.
 	 *
@@ -48,12 +42,13 @@ abstract class Cron extends LsObject {
 	 * @param string|null $sLockFile Полный путь до лок файла, например <pre>Config::Get('sys.cache.dir').'notify.lock'</pre>
 	 */
 	public function __construct($sLockFile=null) {
+		parent::__construct();
 		$this->sProcessName=get_class($this);
-		$this->oEngine=Engine::getInstance();
+		$oEngine=Engine::getInstance();
 		/**
 		 * Инициализируем ядро
 		 */
-		$this->oEngine->Init();
+		$oEngine->Init();
 
 		if(!empty($sLockFile)) {
 			$this->oLockFile=fopen($sLockFile,'a');
@@ -71,7 +66,7 @@ abstract class Cron extends LsObject {
 	public function Log($sMsg) {
 		if (Config::Get('sys.logs.cron')) {
 			$sMsg=$this->sProcessName.': '.$sMsg;
-			$this->oEngine->Logger_Notice($sMsg,array(),'cron');
+			$this->Logger_Notice($sMsg,array(),'cron');
 		}
 	}
 	/**
@@ -137,15 +132,4 @@ abstract class Cron extends LsObject {
 	 * для обеспечивания выполнения основного функционала.
 	 */
     abstract public function Client();
-	/**
-	 * Ставим хук на вызов неизвестного метода и считаем что хотели вызвать метод какого либо модуля
-	 * @see Engine::_CallModule
-	 *
-	 * @param string $sName Имя метода
-	 * @param array $aArgs Аргументы
-	 * @return mixed
-	 */
-	public function __call($sName,$aArgs) {
-		return $this->oEngine->_CallModule($sName,$aArgs);
-	}
 }

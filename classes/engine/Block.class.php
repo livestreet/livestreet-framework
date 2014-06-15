@@ -24,12 +24,6 @@
  */
 abstract class Block extends LsObject {
 	/**
-	 * Ядро движка
-	 *
-	 * @var Engine|null
-	 */
-	protected $oEngine=null;
-	/**
 	 * Список параметров блока
 	 *
 	 * @var array
@@ -48,8 +42,8 @@ abstract class Block extends LsObject {
 	 * @param array $aParams Список параметров блока
 	 */
 	public function __construct($aParams) {
+		parent::__construct();
 		$this->aParams=$aParams;
-		$this->oEngine=Engine::getInstance();
 	}
 	/**
 	 * Возвращает параметр по имени
@@ -80,17 +74,6 @@ abstract class Block extends LsObject {
 	 */
 	public function SetTemplate($sTemplate) {
 		$this->sTemplate=$sTemplate;
-	}
-	/**
-	 * Ставим хук на вызов неизвестного метода и считаем что хотели вызвать метод какого либо модуля
-	 * @see Engine::_CallModule
-	 *
-	 * @param string $sName Имя метода
-	 * @param array $aArgs Аргументы
-	 * @return mixed
-	 */
-	public function __call($sName,$aArgs) {
-		return $this->oEngine->_CallModule($sName,$aArgs);
 	}
 	/**
 	 * Метод запуска обработки блока.

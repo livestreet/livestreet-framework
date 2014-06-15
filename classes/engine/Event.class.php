@@ -38,10 +38,6 @@ abstract class Event extends LsObject {
 	 */
 	protected $oActionReflection=null;
 
-	public function __construct() {
-
-	}
-
 	/**
 	 * Устанавливает объект экшена
 	 *
@@ -70,6 +66,7 @@ abstract class Event extends LsObject {
 		if ($this->oActionReflection->hasProperty($sName)) {
 			return call_user_func_array(array($this->oAction,'ActionGet'),array($sName));
 		}
+		return parent::__get($sName);
 	}
 
 	public function __set($sName,$mValue) {
@@ -87,6 +84,6 @@ abstract class Event extends LsObject {
 			return call_user_func_array(array($this->oAction,'ActionCall'),$aArgs);
 		}
 
-		return Engine::getInstance()->_CallModule($sName,$aArgs);
+		return parent::__call($sName,$aArgs);
 	}
 }

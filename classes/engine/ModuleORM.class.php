@@ -46,7 +46,7 @@ abstract class ModuleORM extends Module {
 	 *
 	 */
 	protected function _LoadMapperORM() {
-		$this->oMapperORM=new MapperORM($this->oEngine->Database_GetConnect());
+		$this->oMapperORM=new MapperORM($this->Database_GetConnect());
 	}
 	/**
 	 * Добавление сущности в БД
@@ -340,12 +340,12 @@ abstract class ModuleORM extends Module {
 		/**
 		 * Хук для возможности изменения фильтра
 		 */
-		$this->Hook_Run('module_orm_GetByFilter_before', array('aFilter'=>&$aFilter,'sEntityFull'=>$sEntityFull));
+		$this->RunBehaviorHook('module_orm_GetByFilter_before', array('aFilter'=>&$aFilter,'sEntityFull'=>$sEntityFull),true);
 		$aEntities=$this->oMapperORM->GetByFilter($aFilter,$sEntityFull);
 		/**
 		 * Хук для возможности кастомной обработки результата
 		 */
-		$this->Hook_Run('module_orm_GetByFilter_after', array('aEntities'=>$aEntities,'aFilter'=>$aFilter,'sEntityFull'=>$sEntityFull));
+		$this->RunBehaviorHook('module_orm_GetByFilter_after', array('aEntities'=>$aEntities,'aFilter'=>$aFilter,'sEntityFull'=>$sEntityFull),true);
 		return $aEntities;
 	}
 	/**
@@ -364,7 +364,7 @@ abstract class ModuleORM extends Module {
 		/**
 		 * Хук для возможности изменения фильтра
 		 */
-		$this->Hook_Run('module_orm_GetItemsByFilter_before', array('aFilter'=>&$aFilter,'sEntityFull'=>$sEntityFull));
+		$this->RunBehaviorHook('module_orm_GetItemsByFilter_before', array('aFilter'=>&$aFilter,'sEntityFull'=>$sEntityFull),true);
 
 		// Если параметр #cache указан и пуст, значит игнорируем кэширование для запроса
 		if (array_key_exists('#cache', $aFilter) && !$aFilter['#cache']) {
@@ -505,7 +505,7 @@ abstract class ModuleORM extends Module {
 		/**
 		 * Хук для возможности кастомной обработки результата
 		 */
-		$this->Hook_Run('module_orm_GetItemsByFilter_after', array('aEntities'=>$aEntities,'aFilter'=>$aFilter,'sEntityFull'=>$sEntityFull));
+		$this->RunBehaviorHook('module_orm_GetItemsByFilter_after', array('aEntities'=>$aEntities,'aFilter'=>$aFilter,'sEntityFull'=>$sEntityFull),true);
 		/**
 		 * Если запрашиваем постраничный список, то возвращаем сам список и общее количество записей
 		 */
@@ -857,7 +857,7 @@ abstract class ModuleORM extends Module {
 			return $this->GetItemsByFilter($aFilter,$sEntityName);
 		}
 
-		return $this->oEngine->_CallModule($sName,$aArgs);
+		return parent::__call($sName,$aArgs);
 	}
 	/**
 	 * Построение дерева

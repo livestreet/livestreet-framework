@@ -52,12 +52,6 @@ abstract class Action extends LsObject {
 	 */
 	protected $aParamsEventMatch=array('event'=>array(),'params'=>array());
 	/**
-	 * Объект ядра
-	 *
-	 * @var Engine|null
-	 */
-	protected $oEngine=null;
-	/**
 	 * Шаблон экшена
 	 * @see SetTemplate
 	 * @see SetTemplateAction
@@ -95,11 +89,10 @@ abstract class Action extends LsObject {
 	/**
 	 * Конструктор
 	 *
-	 * @param Engine $oEngine Объект ядра
 	 * @param string $sAction Название экшена
 	 */
-	public function __construct(Engine $oEngine, $sAction) {
-		$this->oEngine=$oEngine;
+	public function __construct($sAction) {
+		parent::__construct();
 		$this->RegisterEvent();
 		$this->sCurrentAction=$sAction;
 		$this->aParams=Router::GetParams();
@@ -472,18 +465,6 @@ abstract class Action extends LsObject {
 			}
 		}
 	}
-	/**
-	 * Ставим хук на вызов неизвестного метода и считаем что хотели вызвать метод какого либо модуля
-	 * @see Engine::_CallModule
-	 *
-	 * @param string $sName Имя метода
-	 * @param array $aArgs Аргументы
-	 * @return mixed
-	 */
-	public function __call($sName,$aArgs) {
-		return $this->oEngine->_CallModule($sName,$aArgs);
-	}
-
 	/**
 	 * Абстрактный метод инициализации экшена
 	 *

@@ -218,14 +218,16 @@ abstract class EntityORM extends Entity {
 	 * @return bool
 	 */
 	protected function beforeSave() {
-		return true;
+		$bResult=true;
+		$this->RunBehaviorHook('before_save',array('bResult'=>&$bResult));
+		return $bResult;
 	}
 	/**
 	 * Хук, срабатывает после сохранением сущности
 	 *
 	 */
 	protected function afterSave() {
-
+		$this->RunBehaviorHook('after_save');
 	}
 	/**
 	 * Хук, срабатывает перед удалением сущности
@@ -233,14 +235,16 @@ abstract class EntityORM extends Entity {
 	 * @return bool
 	 */
 	protected function beforeDelete() {
-		return true;
+		$bResult=true;
+		$this->RunBehaviorHook('before_delete',array('bResult'=>&$bResult));
+		return $bResult;
 	}
 	/**
 	 * Хук, срабатывает после удаления сущности
 	 *
 	 */
 	protected function afterDelete() {
-
+		$this->RunBehaviorHook('after_delete');
 	}
 	/**
 	 * Для сущности со связью RELATION_TYPE_TREE возвращает список прямых потомков
@@ -618,7 +622,7 @@ abstract class EntityORM extends Entity {
 				}
 			}
 		} else {
-			return Engine::getInstance()->_CallModule($sName,$aArgs);
+			return parent::__call($sName,$aArgs);
 		}
 	}
 	/**
@@ -641,7 +645,7 @@ abstract class EntityORM extends Entity {
 			}
 			// В противном случае возвращаем то, что просили у объекта
 		} else {
-			return $this->$sName;
+			return parent::__get($sName);
 		}
 	}
 	/**

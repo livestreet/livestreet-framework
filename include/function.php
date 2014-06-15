@@ -480,3 +480,28 @@ function func_convert_entity_to_array(Entity $oEntity, $aMethods = null, $sPrefi
 	}
 	return $aEntity;
 }
+
+function func_method_exists($mObject,$sMethod,$sType=null) {
+	$oRef = new ReflectionClass($mObject);
+	if ($oRef->hasMethod($sMethod)) {
+		if (is_null($sType)) {
+			return true;
+		}
+		$oMethod=$oRef->getMethod($sMethod);
+		switch($sType) {
+			case "static":
+				return $oMethod->isStatic();
+				break;
+			case "public":
+				return $oMethod->isPublic();
+				break;
+			case "protected":
+				return $oMethod->isProtected();
+				break;
+			case "private":
+				return $oMethod->isPrivate();
+				break;
+		}
+	}
+	return false;
+}

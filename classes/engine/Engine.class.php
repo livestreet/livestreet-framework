@@ -26,6 +26,7 @@ require_once("Cron.class.php");
 require_once("Router.class.php");
 
 require_once("Entity.class.php");
+require_once("Behavior.class.php");
 require_once("Mapper.class.php");
 
 require_once("ModuleORM.class.php");
@@ -50,7 +51,7 @@ require_once("ORMRelationManyToMany.class.php");
  * @package engine
  * @since 1.0
  */
-class Engine extends LsObject {
+class Engine {
 
 	/**
 	 * Имя плагина
@@ -113,6 +114,12 @@ class Engine extends LsObject {
 	const CI_EVENT = 512;
 
 	/**
+	 * Имя поведения
+	 * @var int
+	 */
+	const CI_BEHAVIOR = 1024;
+
+	/**
 	 * Префикс плагина
 	 * @var int
 	 */
@@ -145,10 +152,10 @@ class Engine extends LsObject {
 
 	/**
 	 * Объекты
-	 * CI_ACTION | CI_MAPPER | CI_HOOK | CI_PLUGIN | CI_EVENT | CI_MODULE | CI_ENTITY | CI_BLOCK
+	 * CI_ACTION | CI_MAPPER | CI_HOOK | CI_PLUGIN | CI_EVENT | CI_MODULE | CI_ENTITY | CI_BLOCK | CI_BEHAVIOR
 	 * @var int
 	 */
-	const CI_OBJECT = 863 ;
+	const CI_OBJECT = 1887;
 
 	/**
 	 * Текущий экземпляр движка, используется для синглтона.
@@ -376,7 +383,7 @@ class Engine extends LsObject {
 		/**
 		 * Создаем объект модуля
 		 */
-		$oModule=new $sModuleClass($this);
+		$oModule=new $sModuleClass();
 		$this->aModules[$sModuleClass]=$oModule;
 		if ($bInit or $sModuleClass=='ModuleCache') {
 			$this->InitModule($oModule);
@@ -803,6 +810,111 @@ class Engine extends LsObject {
 		return $sClass;
 	}
 	/**
+	 * Возвращает класс поведения, контролируя варианты кастомизации
+	 *
+	 * @param $sName
+	 *
+	 * @return mixed
+	 * @throws Exception
+	 */
+	public static function GetBehaviorClass($sName) {
+		/**
+		 * Поведения, имеющие такое же название как модуль,
+		 * можно вызывать сокращенно. Например, вместо User_User -> User
+		 */
+		switch (substr_count($sName,'_')) {
+			case 0:
+				$sEntity = $sModule = $sName;
+				break;
+
+			case 1:
+				/**
+				 * Поддержка полного синтаксиса при вызове сущности
+				 */
+				$aInfo = self::GetClassInfo(
+					$sName,
+					self::CI_BEHAVIOR
+					|self::CI_MODULE
+					|self::CI_PLUGIN
+				);
+				if ($aInfo[self::CI_MODULE]
+					&& $aInfo[self::CI_BEHAVIOR]) {
+					$sName=$aInfo[self::CI_MODULE].'_'.$aInfo[self::CI_BEHAVIOR];
+				}
+
+				list($sModule,$sEntity) = explode('_',$sName,2);
+				/**
+				 * Обслуживание короткой записи сущностей плагинов
+				 * PluginTest_Test -> PluginTest_ModuleTest_EntityTest
+				 */
+				if($aInfo[self::CI_PLUGIN]) {
+					$sPlugin = $aInfo[self::CI_PLUGIN];
+					$sModule = $sEntity;
+				}
+				break;
+
+			case 2:
+				/**
+				 * Поддержка полного синтаксиса при вызове сущности плагина
+				 */
+				$aInfo = self::GetClassInfo(
+					$sName,
+					self::CI_BEHAVIOR
+					|self::CI_MODULE
+					|self::CI_PLUGIN
+				);
+				if ($aInfo[self::CI_PLUGIN]
+					&& $aInfo[self::CI_MODULE]
+					&& $aInfo[self::CI_BEHAVIOR]) {
+					$sName='Plugin'.$aInfo[self::CI_PLUGIN]
+						.'_'.$aInfo[self::CI_MODULE]
+						.'_'.$aInfo[self::CI_BEHAVIOR]
+					;
+				}
+				/**
+				 * Entity плагина
+				 */
+				if($aInfo[self::CI_PLUGIN]) {
+					list(,$sModule,$sEntity)=explode('_',$sName);
+					$sPlugin = $aInfo[self::CI_PLUGIN];
+				} else {
+					throw new Exception("Unknown behavior '{$sName}' given.");
+				}
+				break;
+
+			default:
+				throw new Exception("Unknown behavior '{$sName}' given.");
+		}
+
+		$sClass=isset($sPlugin)
+			? 'Plugin'.$sPlugin.'_Module'.$sModule.'_Behavior'.$sEntity
+			: 'Module'.$sModule.'_Behavior'.$sEntity;
+
+		/**
+		 * If Plugin Entity doesn't exist, search among it's Module delegates
+		 */
+		if(isset($sPlugin) && !self::GetClassPath($sClass)) {
+			$aModulesChain = Engine::GetInstance()->Plugin_GetDelegationChain('module','Plugin'.$sPlugin.'_Module'.$sModule);
+			foreach($aModulesChain as $sModuleName) {
+				$sClassTest=$sModuleName.'_Behavior'.$sEntity;
+				if(self::GetClassPath($sClassTest)) {
+					$sClass=$sClassTest;
+					break;
+				}
+			}
+			if(!self::GetClassPath($sClass)) {
+				$sClass='Module'.$sModule.'_Behavior'.$sEntity;
+			}
+		}
+
+		/**
+		 * Определяем наличие делегата сущности
+		 * Делегирование указывается только в полной форме!
+		 */
+		$sClass=self::getInstance()->Plugin_GetDelegate('behavior',$sClass);
+		return $sClass;
+	}
+	/**
 	 * Создает объект сущности
 	 *
 	 * @param  string $sName	Имя сущности, возможны сокращенные варианты.
@@ -814,6 +926,18 @@ class Engine extends LsObject {
 		$sClass=self::GetEntityClass($sName);
 		$oEntity=new $sClass($aParams);
 		return $oEntity;
+	}
+	/**
+	 * Создает объект поведения
+	 *
+	 * @param  string $sName	Имя поведения, возможны сокращенные варианты.
+	 * Например <pre>ModuleUser_BehaviorUser</pre> эквивалентно <pre>User_User</pre> и эквивалентно <pre>User</pre> т.к. имя поведения совпадает с именем модуля
+	 * @param  array  $aParams
+	 * @return Behavior
+	 */
+	public static function GetBehavior($sName,$aParams=array()) {
+		$sClass=self::GetBehaviorClass($sName);
+		return new $sClass($aParams);
 	}
 	/**
 	 * Создает набор сущностей
@@ -880,7 +1004,16 @@ class Engine extends LsObject {
 	public static function GetEntityName($oEntity) {
 		return self::GetClassInfo($oEntity, self::CI_ENTITY, true);
 	}
-
+	/**
+	 * Возвращает имя поведения
+	 *
+	 * @static
+	 * @param Behavior $oBehavior Объект сущности
+	 * @return string|null
+	 */
+	public static function GetBehaviorName($oBehavior) {
+		return self::GetClassInfo($oBehavior, self::CI_BEHAVIOR, true);
+	}
 	/**
 	 * Возвращает имя экшена
 	 *
@@ -928,6 +1061,12 @@ class Engine extends LsObject {
 		}
 		if($iFlag & self::CI_ENTITY){
 			$aResult[self::CI_ENTITY] = preg_match('/_Entity(?:ORM|)([^_]+)/',$sClassName,$aMatches)
+				? $aMatches[1]
+				: null
+			;
+		}
+		if($iFlag & self::CI_BEHAVIOR){
+			$aResult[self::CI_BEHAVIOR] = preg_match('/_Behavior([^_]+)/',$sClassName,$aMatches)
 				? $aMatches[1]
 				: null
 			;
@@ -1032,6 +1171,24 @@ class Engine extends LsObject {
 				// Сущность модуля ядра
 				$sFile='classes/modules/'.strtolower($aInfo[self::CI_MODULE])
 					.'/entity/'.$aInfo[self::CI_ENTITY].'.entity.class.php'
+				;
+				$sPath.=$sFile;
+				if(!is_file($sPath)){
+					$sPath = $sPathFramework.$sFile;
+				}
+			}
+		}elseif($aInfo[self::CI_BEHAVIOR]){
+			// Поведение
+			if($aInfo[self::CI_PLUGIN]){
+				// Поведение модуля плагина
+				$sPath .= 'plugins/'.func_underscore($aInfo[self::CI_PLUGIN])
+					.'/classes/modules/'.strtolower($aInfo[self::CI_MODULE])
+					.'/behavior/'.$aInfo[self::CI_BEHAVIOR].'.behavior.class.php'
+				;
+			}else{
+				// Поведение модуля ядра
+				$sFile='classes/modules/'.strtolower($aInfo[self::CI_MODULE])
+					.'/behavior/'.$aInfo[self::CI_BEHAVIOR].'.behavior.class.php'
 				;
 				$sPath.=$sFile;
 				if(!is_file($sPath)){

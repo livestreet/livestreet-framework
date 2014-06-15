@@ -28,7 +28,7 @@ abstract class LsObject {
 	 * <pre>
 	 * array(
 	 * 	'property'=>array(
-			'class'=>'ModuleProperty_BehaviorProperty',
+	 *		'class'=>'ModuleProperty_BehaviorProperty',
 	 * 		'param1'=>12345,
 	 * 		'param2'=>'two'
 	 * 	),

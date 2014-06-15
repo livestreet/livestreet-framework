@@ -41,7 +41,7 @@ class ModulePlugin extends Module {
 	 */
 	protected $aPluginsList=array();
 	/**
-	 * Список engine-rewrite`ов (модули, мапперы, экшены, сущности, шаблоны, блоки, евенты)
+	 * Список engine-rewrite`ов (модули, мапперы, экшены, сущности, шаблоны, блоки, евенты, поведения)
 	 * Определяет типы объектов, которые может переопределить/унаследовать плагин
 	 *
 	 * @var array
@@ -54,6 +54,7 @@ class ModulePlugin extends Module {
 		'template' => array(),
 		'block' => array(),
 		'event' => array(),
+		'behavior' => array(),
 	);
 	/**
 	 * Стек наследований

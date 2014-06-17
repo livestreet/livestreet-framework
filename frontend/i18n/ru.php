@@ -76,5 +76,9 @@ return array(
 		'first'=>'следующая',
 		'page_list'=>'Страницы',
 		'page_with_number'=>'Страница %%number%%',
+		'notices' => array(
+			'first' => 'Вы на первой странице!',
+			'last'  => 'Вы на последней странице!'
+		)
 	),
 );

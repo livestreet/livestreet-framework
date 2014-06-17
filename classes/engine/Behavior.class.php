@@ -38,6 +38,7 @@ abstract class Behavior extends LsObject {
 	protected $oObject;
 	/**
 	 * Параметры, которые указали при добавлении поведения
+	 * Здесь можно определить дефолтные параметры, которые затем смержатся
 	 *
 	 * @var array
 	 */
@@ -65,7 +66,7 @@ abstract class Behavior extends LsObject {
 	public function __construct($aParams=array()) {
 		parent::__construct();
 		if ($aParams) {
-			$this->aParams=$aParams;
+			$this->aParams=array_merge($this->aParams,$aParams);
 		}
 	}
 	/**
@@ -125,5 +126,15 @@ abstract class Behavior extends LsObject {
 			}
 		}
 		return array($aCallback,$iPriority);
+	}
+	/**
+	 * Возвращает параметр по его имени
+	 *
+	 * @param string $sName
+	 *
+	 * @return mixed
+	 */
+	protected function getParam($sName) {
+		return isset($this->aParams[$sName]) ? $this->aParams[$sName] : null;
 	}
 }

@@ -1,18 +1,23 @@
 /**
  * Bind
  */
-Function.prototype.bind = function(context) {
-	var fn = this;
+if ( ! Function.prototype.bind ) {
+	Function.prototype.bind = function ( obj ) {
+	    if ( typeof this !== "function" ) {
+	        throw new TypeError("Function.prototype.bind - what is trying to be bound is not callable");
+	    }
 
-	if (jQuery.type(fn) != 'function') {
-		throw new TypeError('Function.prototype.bind: call on non-function');
-	};
+	    var slice = [].slice,
+	        args = slice.call(arguments, 1),
+	        self = this,
+	        nop = function () {},
+	        bound = function () {
+	            return self.apply( this instanceof nop ? this : ( obj || {} ), args.concat( slice.call( arguments ) ) );
+	        };
 
-	if (jQuery.type(context) == 'null') {
-		throw new TypeError('Function.prototype.bind: cant be bound to null');
-	};
+	    nop.prototype = this.prototype;
+	    bound.prototype = new nop();
 
-	return function() {
-		return fn.apply(context, arguments);
+	    return bound;
 	};
-};
+}

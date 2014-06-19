@@ -72,8 +72,8 @@ return array(
 		'next'=>'следующая',
 		'previos'=>'предыдущая',
 		'last'=>'последняя',
-		'next'=>'первая',
-		'first'=>'следующая',
+		'next'=>'следующая',
+		'first'=>'первая',
 		'page_list'=>'Страницы',
 		'page_with_number'=>'Страница %%number%%',
 		'notices' => array(

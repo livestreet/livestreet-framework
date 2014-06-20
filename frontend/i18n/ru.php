@@ -70,9 +70,8 @@ return array(
 	 */
 	'pagination'=>array(
 		'next'=>'следующая',
-		'previos'=>'предыдущая',
+		'previous'=>'предыдущая',
 		'last'=>'последняя',
-		'next'=>'следующая',
 		'first'=>'первая',
 		'page_list'=>'Страницы',
 		'page_with_number'=>'Страница %%number%%',

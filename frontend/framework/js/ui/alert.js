@@ -27,15 +27,9 @@ $.widget( "livestreet.alert", {
      * @private
      */
     _create: function() {
-        this.target = $(this.options.target);
         this.closeButton = this.element.find('[data-type=alert-close]');
 
-        this._on(true, this.closeButton, {
-            click: function (e) {
-                this.hide();
-                e.preventDefault();
-            }
-        });
+        this._on( this.closeButton, { 'click': this.hide } );
     },
 
     /**

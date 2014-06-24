@@ -2,7 +2,7 @@
  * Всплывающие подсказки
  *
  * @module tooltip
- * 
+ *
  * @license   GNU General Public License, version 2
  * @copyright 2013 OOO "ЛС-СОФТ" {@link http://livestreetcms.com}
  * @author    Denis Shakhov <denis.shakhov@gmail.com>
@@ -112,7 +112,7 @@ $.widget( "livestreet.tooltip", {
 
         // События
         // ----------
-        
+
         // Клик по переключателю
         this._on( this.options.trigger == 'click' ? {
             click : function (event) {
@@ -125,13 +125,13 @@ $.widget( "livestreet.tooltip", {
         });
 
         // Скролл/ресайз
-        $(window).on('resize scroll', function () {
+        this.window.on('resize scroll', function () {
             this._reposition( false );
         }.bind(this));
-        
+
         // При клике вне тултипа скрываем его
         if (this.options.trigger == 'click') {
-            $(document).on('click', function (event) {
+            this.document.on('click' + this.eventNamespace, function (event) {
                 if ( ! this._target.is(event.target) && this._target.has(event.target).length === 0 && ! this.element.is(event.target) && this.element.has(event.target).length === 0 ) this.hide();
             }.bind(this));
         }
@@ -175,7 +175,7 @@ $.widget( "livestreet.tooltip", {
      */
     hide: function () {
         if ( this.state == this._state.HIDDEN || this.state == this._state.HIDING ) return false;
-        
+
         if ( this.state == this._state.OPENING ) {
             this._target.stop();
 

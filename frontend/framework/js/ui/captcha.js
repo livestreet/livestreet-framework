@@ -29,12 +29,7 @@
         _create: function() {
 			this.options = $.extend({}, this.options, ls.utils.getDataOptions(this.element, 'captcha'));
 
-            this._on({
-                click: function (e) {
-                    this.update();
-                    e.preventDefault();
-                }
-            });
+            this._on({ click: this.update });
 
             this.update();
         },

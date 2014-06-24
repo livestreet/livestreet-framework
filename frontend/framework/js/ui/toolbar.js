@@ -35,7 +35,7 @@ $.widget( "livestreet.toolbar", {
     _create: function() {
         this.target = $(this.options.target);
 
-        $(window).on('ready resize scroll', this.reposition.bind(this));
+        this.window.on('ready resize scroll', this.reposition.bind(this));
     },
 
     /**
@@ -44,11 +44,11 @@ $.widget( "livestreet.toolbar", {
     reposition: function () {
         this.targetPos = this.target.offset();
 
-        this._trigger("reposition", null, this);
+        this._trigger('reposition', null, this);
 
         this.element.css({
             'top': this.targetPos.top + this.options.offsetY,
-            'left': (this.options.align == 'right' ? this.targetPos.left + this.target.outerWidth() + this.options.offsetX : this.targetPos.left - this.element.outerWidth() - this.options.offsetX) - $(document).scrollLeft()
+            'left': (this.options.align == 'right' ? this.targetPos.left + this.target.outerWidth() + this.options.offsetX : this.targetPos.left - this.element.outerWidth() - this.options.offsetX) - this.document.scrollLeft()
         });
     }
 });

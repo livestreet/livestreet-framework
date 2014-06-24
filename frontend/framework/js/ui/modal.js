@@ -189,7 +189,7 @@ var ls = ls || {};
 			if ( this.options.url ) {
 				_overlay.element.append(this.element);
 			} else {
-				$(document).on('ready', function (e) {
+				this.document.on('ready' + this.eventNamespace, function (e) {
 					_overlay.element.append(this.element);
 				}.bind(this));
 			}
@@ -198,7 +198,7 @@ var ls = ls || {};
 			// ----------
 
 			// Триггер при клике по которому появляется модальное окно
-			this._on(true, this._toggle, {
+			this._on( this._toggle, {
 				click: function (e) {
 					this.toggle();
 					e.preventDefault();
@@ -206,12 +206,7 @@ var ls = ls || {};
 			});
 
 			// Кнопки закрытия модального окна
-			this._on(true, this.closeButton, {
-				click: function (e) {
-					this.hide();
-					e.preventDefault();
-				}
-			});
+			this._on( this.closeButton, { click: this.hide });
 
 			this._trigger("create", null, this);
 		},

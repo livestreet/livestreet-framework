@@ -2,7 +2,7 @@
  * Выпадающее меню
  *
  * @module dropdown
- * 
+ *
  * @license   GNU General Public License, version 2
  * @copyright 2013 OOO "ЛС-СОФТ" {@link http://livestreetcms.com}
  * @author    Denis Shakhov <denis.shakhov@gmail.com>
@@ -51,7 +51,7 @@ $.widget( "livestreet.dropdown", {
      */
     _create: function() {
         this.options = $.extend({}, this.options, ls.utils.getDataOptions(this.element, 'dropdown'));
-        
+
         this._target = $( '#' + this.element.data('dropdown-target') );
 
         // Вынос меню в тег body
@@ -59,7 +59,7 @@ $.widget( "livestreet.dropdown", {
 
         // Пункты меню
         var items = this._target.find('li:not(.dropdown-separator)');
-        
+
         // Присваиваем текст активного пункта меню переключателю
         if ( this.options.selectable ) {
             var text = items.filter('.active').eq(0).find('a').text();
@@ -68,7 +68,7 @@ $.widget( "livestreet.dropdown", {
 
         // Объект относительно которого позиционируется меню
         this.options.position.of = this.options.position.of || this.element;
-        
+
         this.options.position.using = this.options.position.using || function ( position, feedback ) {
             ls.utils.removeClassByPrefix( this._target, 'position-' );
 
@@ -80,7 +80,7 @@ $.widget( "livestreet.dropdown", {
 
         // События
         // ----------
-        
+
         // Клик по переключателю
         this._on({
             click : function (event) {
@@ -90,7 +90,7 @@ $.widget( "livestreet.dropdown", {
         });
 
         // Обработка кликов по пунктам меню
-        this._on(true, items.find('a'), {
+        this._on( items.find('a'), {
             click: function (event) {
                 if ( this.options.selectable ) {
                     var itemLink = $(event.currentTarget);
@@ -105,10 +105,10 @@ $.widget( "livestreet.dropdown", {
         });
 
         // Reposition menu on window scroll or resize
-        $(window).on('resize scroll', this._reposition.bind(this));
-        
+        this.window.on('resize'  + this.eventNamespace + 'scroll' + this.eventNamespace, this._reposition.bind(this));
+
         // Hide when click anywhere but menu or toggle
-        $(document).on('click', function (event) {
+        this.document.on('click' + this.eventNamespace, function (event) {
             if ( ! this._target.is(event.target) && this._target.has(event.target).length === 0 && ! this.element.is(event.target) && this.element.has(event.target).length === 0 ) this.hide();
         }.bind(this));
     },

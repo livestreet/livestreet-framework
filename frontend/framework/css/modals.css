@@ -32,8 +32,9 @@
 .modal .modal-close,
 .modal .close {
 	position: absolute;
-	top: 16px;
-	right: 14px;
+	top: 50%;
+	right: 15px;
+	margin-top: -13px;
 	font-size: 26px;
 	line-height: 1em;
 	color: #000;
@@ -52,7 +53,7 @@
 	position: relative;
 	min-height: 10px;
 }
-.modal-title { font-size: 17px; margin-right: 20px; color: #000; }
+.modal-title { font-size: 17px; margin: 0 30px 0 0; color: #000; }
 
 
 /* Nav */

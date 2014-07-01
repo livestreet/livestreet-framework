@@ -196,7 +196,7 @@ abstract class ModuleORM extends Module {
 				$aChildren=array();
 				if($sPrimaryKey=$oEntity->_getPrimaryKey()) {
 					if($sPrimaryKeyValue=$oEntity->_getDataOne($sPrimaryKey)) {
-						$aChildren=$this->GetItemsByFilter(array('parent_id'=>$sPrimaryKeyValue),Engine::GetEntityName($oEntity));
+						$aChildren=$this->GetItemsByFilter(array($oEntity->_getTreeParentKey()=>$sPrimaryKeyValue),Engine::GetEntityName($oEntity));
 					}
 				}
 			}
@@ -219,17 +219,15 @@ abstract class ModuleORM extends Module {
 			if(array_key_exists('parent',$aRelationsData)) {
 				$oParent=$aRelationsData['parent'];
 			} else {
-				$oParent='%%NULL_PARENT%%';
+				$oParent=null;
 				if($sPrimaryKey=$oEntity->_getPrimaryKey()) {
-					if($sParentId=$oEntity->getParentId()) {
+					if($sParentId=$oEntity->_getTreeParentKeyValue()) {
 						$oParent=$this->GetByFilter(array($sPrimaryKey=>$sParentId),Engine::GetEntityName($oEntity));
 					}
 				}
 			}
-			if(!is_null($oParent)) {
-				$oEntity->setParent($oParent);
-				return $oParent;
-			}
+			$oEntity->setParent($oParent);
+			return $oParent;
 		}
 		return false;
 	}
@@ -308,20 +306,25 @@ abstract class ModuleORM extends Module {
 						foreach($aItems as $oEntity) {
 							$oEntity->setChildren(array());
 							$aItemsById[$oEntity->_getDataOne($sPrimaryKey)] = $oEntity;
-							if(empty($aItemsByParentId[$oEntity->getParentId()])) {
-								$aItemsByParentId[$oEntity->getParentId()] = array();
+							$sParentKeyValue=$oEntity->_getTreeParentKeyValue() ? $oEntity->_getTreeParentKeyValue() : 'root';
+							if(empty($aItemsByParentId[$sParentKeyValue])) {
+								$aItemsByParentId[$sParentKeyValue] = array();
 							}
-							$aItemsByParentId[$oEntity->getParentId()][] = $oEntity;
+							$aItemsByParentId[$sParentKeyValue][] = $oEntity;
 						}
 						foreach($aItemsByParentId as $iParentId=>$aItems) {
-							if($iParentId > 0) {
+							if($iParentId!='root') {
 								$aItemsById[$iParentId]->setChildren($aItems);
 								foreach($aItems as $oEntity) {
 									$oEntity->setParent($aItemsById[$iParentId]);
 								}
+							} else {
+								foreach($aItems as $oEntity) {
+									$oEntity->setParent(null);
+								}
 							}
 						}
-						return $aItemsByParentId[0];
+						return isset($aItemsByParentId['root']) ? $aItemsByParentId['root'] : array();
 					}
 				}
 			}
@@ -769,7 +772,7 @@ abstract class ModuleORM extends Module {
 
 		if (preg_match("@^loadtreeof([a-z]+)$@i",$sName,$aMatch)) {
 			$sEntityFull = array_key_exists(1,$aMatch) ? $aMatch[1] : null;
-			return $this->LoadTree($aArgs[0], $sEntityFull);
+			return $this->LoadTree(isset($aArgs[0]) ? $aArgs[0] : array(), $sEntityFull);
 		}
 
 		$sNameUnderscore=func_underscore($sName);
@@ -868,13 +871,16 @@ abstract class ModuleORM extends Module {
 	 * @return array
 	 */
 	static function buildTree($aItems,$aList=array(),$iLevel=0) {
+		if (!$aItems) {
+			return array();
+		}
 		foreach($aItems as $oEntity) {
 			$aChildren=$oEntity->getChildren();
 			$bHasChildren = !empty($aChildren);
 			$sEntityId = $oEntity->_getDataOne($oEntity->_getPrimaryKey());
 			$aList[$sEntityId] = array(
 				'entity'		 => $oEntity,
-				'parent_id'		 => $oEntity->getParentId(),
+				'parent_id'		 => $oEntity->_getTreeParentKeyValue(),
 				'children_count' => $bHasChildren ? count($aChildren) : 0,
 				'level'			 => $iLevel,
 			);

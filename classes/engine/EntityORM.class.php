@@ -120,6 +120,22 @@ abstract class EntityORM extends Entity {
 		return $this->_getDataOne($this->_getPrimaryKey());
 	}
 	/**
+	 * Получение имени родительского поля. Используется в связи RELATION_TYPE_TREE
+	 *
+	 * @return string
+	 */
+	public function _getTreeParentKey() {
+		return 'parent_id';
+	}
+	/**
+	 * Получение значения родителя. Используется в связи RELATION_TYPE_TREE
+	 *
+	 * @return string
+	 */
+	public function _getTreeParentKeyValue() {
+		return $this->_getDataOne($this->_getTreeParentKey());
+	}
+	/**
 	 * Новая или нет сущность
 	 * Новая - еще не сохранялась в БД
 	 *

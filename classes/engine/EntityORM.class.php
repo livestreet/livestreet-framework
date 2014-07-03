@@ -521,6 +521,15 @@ abstract class EntityORM extends Entity {
 		}
 	}
 	/**
+	 * Возвращает сущность связи при many to many
+	 * Актуально только в том случае, если текущая сущность была получена через обращение к связи many to many
+	 *
+	 * @return mixed|null
+	 */
+	public function _getManyToManyRelationEntity() {
+		return $this->_getDataOne('_relation_entity');
+	}
+	/**
 	 * Ставим хук на вызов неизвестного метода и считаем что хотели вызвать метод какого либо модуля
 	 * Также производит обработку методов set* и get*
 	 * Учитывает связи и может возвращать связанные данные

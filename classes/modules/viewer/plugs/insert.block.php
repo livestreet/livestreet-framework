@@ -60,16 +60,23 @@ function smarty_insert_block($aParams,&$oSmarty) {
 	/**
 	 * Запускаем обработчик
 	 */
-	$oBlock->Exec();
-	/**
-	 * Получаем шаблон, возможно его переопределили в обработчике блока
-	 */
-	$sBlockTemplate = Engine::getInstance()->Plugin_GetDelegate('template',$oBlock->GetTemplate());
-	if (!$oSmarty->templateExists($sBlockTemplate)) {
-		return "<b>Not found template for block: <i>{$sBlockTemplate} ({$sBlock})</i></b>";
+	$mResult=$oBlock->Exec();
+	if (is_string($mResult)) {
+		/**
+		 * Если методо возвращает строку - выводим ее вместо рендеринга шаблона
+		 */
+		return $mResult;
+	} else {
+		/**
+		 * Получаем шаблон, возможно его переопределили в обработчике блока
+		 */
+		$sBlockTemplate = Engine::getInstance()->Plugin_GetDelegate('template',$oBlock->GetTemplate());
+		if (!Engine::getInstance()->Viewer_TemplateExists($sBlockTemplate)) {
+			return "<b>Not found template for block: <i>{$sBlockTemplate} ({$sBlock})</i></b>";
+		}
 	}
 	/**
 	 * Возвращаем результат в виде обработанного шаблона блока
 	 */
-	return $oSmarty->fetch($sBlockTemplate);
+	return Engine::getInstance()->Viewer_Fetch($sBlockTemplate);
 }

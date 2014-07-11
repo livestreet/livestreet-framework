@@ -59,7 +59,7 @@ class ModuleCache_EntityBackendLife extends ModuleCache_EntityBackend {
 	 */
 	public function Get($sName) {
 		if (array_key_exists($sName,$this->aStoreLife)) {
-			return $this->aStoreLife[$sName];
+			return is_object($this->aStoreLife[$sName]) ? clone $this->aStoreLife[$sName] : $this->aStoreLife[$sName];
 		}
 		return false;
 	}

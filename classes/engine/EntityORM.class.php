@@ -559,13 +559,6 @@ abstract class EntityORM extends Entity {
 					$sEntityRel=$this->aRelations[$sKey][1];
 					$sRelationType=$this->aRelations[$sKey][0];
 					$sRelationKey=$this->aRelations[$sKey][2];
-					/**
-					 * Если связь уже загруженна, то возвращаем сразу результат
-					 */
-					if (array_key_exists($sKey,$this->aRelationsData)) {
-						return $this->aRelationsData[$sKey];
-					}
-
 
 					$sRelModuleName=Engine::GetModuleName($sEntityRel);
 					$sRelEntityName=Engine::GetEntityName($sEntityRel);
@@ -617,6 +610,12 @@ abstract class EntityORM extends Entity {
 							break;
 						default:
 							break;
+					}
+					/**
+					 * Если связь уже загруженна, то возвращаем результат
+					 */
+					if (!$bUseFilter and array_key_exists($sKey,$this->aRelationsData)) {
+						return $this->aRelationsData[$sKey];
 					}
 					// Нужно ли учитывать дополнительный фильтр
 					$res=Engine::GetInstance()->_CallModule($sCmd,$mCmdArgs);

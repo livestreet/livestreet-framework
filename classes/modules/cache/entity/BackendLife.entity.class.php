@@ -59,7 +59,7 @@ class ModuleCache_EntityBackendLife extends ModuleCache_EntityBackend {
 	 */
 	public function Get($sName) {
 		if (array_key_exists($sName,$this->aStoreLife)) {
-			return $this->aStoreLife[$sName];
+			return @unserialize($this->aStoreLife[$sName]);
 		}
 		return false;
 	}
@@ -73,7 +73,7 @@ class ModuleCache_EntityBackendLife extends ModuleCache_EntityBackend {
 	 * @return bool
 	 */
 	public function Set($mData,$sName,$aTags=array(),$iTimeLife=false) {
-		$this->aStoreLife[$sName]=$mData;
+		$this->aStoreLife[$sName]=serialize($mData);
 	}
 	/**
 	 * Удаляет значение из кеша по ключу(имени)

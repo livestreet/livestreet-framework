@@ -28,6 +28,8 @@
 $config['view']['skin']          = 'developer';              // шаблон(скин)
 $config['view']['theme']         = 'default';                // тема оформления шаблона (шаблон должен поддерживать темы)
 $config['view']['name']          = 'Your Site';              // название сайта
+$config['view']['title_separator'] = ' / ';            		 // Разделитель HTML заголовков страниц
+$config['view']['title_sort_reverse'] = true;            	 // Сортировать части HTML заголовка страницы в обратном порядке
 $config['view']['description']   = 'Description your site';  // seo description
 $config['view']['keywords']      = 'site, google, internet'; // seo keywords
 $config['view']['wysiwyg']       = false;                    // использовать или нет визуальный редактор TinyMCE

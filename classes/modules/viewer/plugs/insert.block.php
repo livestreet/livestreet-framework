@@ -63,7 +63,7 @@ function smarty_insert_block($aParams,&$oSmarty) {
 	$mResult=$oBlock->Exec();
 	if (is_string($mResult)) {
 		/**
-		 * Если методо возвращает строку - выводим ее вместо рендеринга шаблона
+		 * Если метод возвращает строку - выводим ее вместо рендеринга шаблона
 		 */
 		return $mResult;
 	} else {

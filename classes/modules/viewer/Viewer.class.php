@@ -44,12 +44,6 @@ class ModuleViewer extends Module {
 	 */
 	protected $aBlockRules = array();
 	/**
-	 * Заголовок HTML страницы
-	 *
-	 * @var string
-	 */
-	protected $sHtmlTitle;
-	/**
 	 * SEO ключевые слова страницы
 	 *
 	 * @var string
@@ -67,6 +61,12 @@ class ModuleViewer extends Module {
 	 * @var string
 	 */
 	protected $sHtmlTitleSeparation=' / ';
+	/**
+	 * Список элементов/частей из которых строится заголовок страницы
+	 *
+	 * @var array
+	 */
+	protected $aHtmlTitleParts=array();
 	/**
 	 * Альтернативный адрес страницы по RSS
 	 *
@@ -134,9 +134,13 @@ class ModuleViewer extends Module {
 			}
 		}
 		/**
+		 * Разделитель заголовков страниц
+		 */
+		$this->SetHtmlTitleSeparation(Config::Get('view.title_separator'));
+		/**
 		 * Заголовок HTML страницы
 		 */
-		$this->sHtmlTitle=Config::Get('view.name');
+		$this->AddHtmlTitle(Config::Get('view.name'));
 		/**
 		 * SEO ключевые слова страницы
 		 */
@@ -222,7 +226,7 @@ class ModuleViewer extends Module {
 		/**
 		 * Загружаем HTML заголовки
 		 */
-		$this->Assign("sHtmlTitle",htmlspecialchars($this->sHtmlTitle));
+		$this->Assign("sHtmlTitle",htmlspecialchars($this->GetHtmlTitle(Config::Get('view.title_sort_reverse'))));
 		$this->Assign("sHtmlKeywords",htmlspecialchars($this->sHtmlKeywords));
 		$this->Assign("sHtmlDescription",htmlspecialchars($this->sHtmlDescription));
 		$this->Assign("aHtmlHeadFiles",$this->aHtmlHeadFiles);
@@ -752,10 +756,10 @@ class ModuleViewer extends Module {
 	/**
 	 * Устанавливаем заголовок страницы(тег title)
 	 *
-	 * @param string $sText	Заголовок
+	 * @param string|array $mText	Заголовок
 	 */
-	public function SetHtmlTitle($sText) {
-		$this->sHtmlTitle=$sText;
+	public function SetHtmlTitle($mText) {
+		$this->aHtmlTitleParts=is_array($mText) ? $mText : array($mText);
 	}
 	/**
 	 * Добавляет часть заголовка страницы через разделитель
@@ -763,15 +767,37 @@ class ModuleViewer extends Module {
 	 * @param string $sText	Заголовок
 	 */
 	public function AddHtmlTitle($sText) {
-		$this->sHtmlTitle=$sText.$this->sHtmlTitleSeparation.$this->sHtmlTitle;
+		$this->aHtmlTitleParts[]=$sText;
 	}
 	/**
 	 * Возвращает текущий заголовок страницы
 	 *
+	 * @param bool $bSortReverse	Направаление сортировки частей заголовка
+	 *
 	 * @return string
 	 */
-	public function GetHtmlTitle() {
-		return $this->sHtmlTitle;
+	public function GetHtmlTitle($bSortReverse=true) {
+		$aParts=$this->aHtmlTitleParts;
+		if ($bSortReverse) {
+			$aParts=array_reverse($aParts);
+		}
+		return join($this->sHtmlTitleSeparation,$aParts);
+	}
+	/**
+	 * Возвращает разделитель заголовков страниц
+	 *
+	 * @return string
+	 */
+	public function GetHtmlTitleSeparation() {
+		return $this->sHtmlTitleSeparation;
+	}
+	/**
+	 * Устанавливает разделитель заголовков страниц
+	 *
+	 * @param $sSep
+	 */
+	public function SetHtmlTitleSeparation($sSep) {
+		$this->sHtmlTitleSeparation=$sSep;
 	}
 	/**
 	 * Устанавливает ключевые слова keywords

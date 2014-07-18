@@ -123,6 +123,42 @@ class MapperORM extends Mapper {
 		return null;
 	}
 	/**
+	 * Получение сущности по фильтру
+	 *
+	 * @param string $sAggregateFunction	Агрегирующая функция ('max','min','sum','avg')
+	 * @param string $sField	Поля к оторому применяем агрегирующую функцию
+	 * @param array $aFilter	Фильтр
+	 * @param string $sEntityFull	Название класса сущности
+	 * @return EntityORM|null
+	 */
+	public function GetAggregateFunctionByFilter($sAggregateFunction,$sField,$aFilter,$sEntityFull) {
+		$oEntitySample=Engine::GetEntity($sEntityFull);
+		$sTableName = self::GetTableName($sEntityFull);
+
+		list($aFilterFields,$sFilterFields,$sJoinTables)=$this->BuildFilter($aFilter,$oEntitySample);
+		list($sOrder,$sLimit,$sGroup,$sSelect)=$this->BuildFilterMore($aFilter,$oEntitySample);
+
+		$sAggregateFunction=strtolower($sAggregateFunction);
+		if (!in_array($sAggregateFunction,array('max','min','sum','avg'))) {
+			$sAggregateFunction='max';
+		}
+
+		/**
+		 * Проверяем на отсутствие префикса таблицы у поля
+		 */
+		if (!strpos($sField,'.')) {
+			$sField='t.'.$this->oDb->escape($sField,true);
+		}
+
+		$sql = "SELECT {$sAggregateFunction}({$sField}) as value FROM ".$sTableName." t {$sJoinTables} WHERE 1=1 {$sFilterFields} {$sGroup} ";
+		$aQueryParams=array_merge(array($sql),array_values($aFilterFields));
+
+		if($aRow=call_user_func_array(array($this->oDb,'selectRow'),$aQueryParams)) {
+			return $aRow['value'];
+		}
+		return null;
+	}
+	/**
 	 * Получение списка сущностей по фильтру
 	 *
 	 * @param array $aFilter	Фильтр

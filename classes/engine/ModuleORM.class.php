@@ -579,6 +579,37 @@ abstract class ModuleORM extends Module {
 		return $aIndexedEntities;
 	}
 	/**
+	 * Получить значение агрегирующей функции
+	 *
+	 * @param       $sAggregateFunction
+	 * @param       $sField
+	 * @param array $aFilter
+	 * @param null  $sEntityFull
+	 *
+	 * @return EntityORM|null
+	 */
+	public function GetAggregateFunctionByFilter($sAggregateFunction,$sField,$aFilter=array(),$sEntityFull=null) {
+		$sEntityFull=$this->_NormalizeEntityRootName($sEntityFull);
+		// Если параметр #cache указан и пуст, значит игнорируем кэширование для запроса
+		if (array_key_exists('#cache', $aFilter) && !$aFilter['#cache']) {
+			$iValue=$this->oMapperORM->GetAggregateFunctionByFilter($sAggregateFunction,$sField,$aFilter,$sEntityFull);
+		} else {
+			$sCacheKey=$sEntityFull."_aggregate_function_by_filter_{$sAggregateFunction}_{$sField}".serialize($aFilter);
+			$aCacheTags=array($sEntityFull.'_save',$sEntityFull.'_delete');
+			$iCacheTime=60*60*24; // скорее лучше хранить в свойстве сущности, для возможности выборочного переопределения
+			// переопределяем из параметров
+			if (isset($aFilter['#cache'][0])) $sCacheKey=$aFilter['#cache'][0];
+			if (isset($aFilter['#cache'][1])) $aCacheTags=$aFilter['#cache'][1];
+			if (isset($aFilter['#cache'][2])) $iCacheTime=$aFilter['#cache'][2];
+
+			if (false === ($iValue = $this->Cache_Get($sCacheKey))) {
+				$iValue=$this->oMapperORM->GetAggregateFunctionByFilter($sAggregateFunction,$sField,$aFilter,$sEntityFull);
+				$this->Cache_Set($iValue,$sCacheKey, $aCacheTags, $iCacheTime);
+			}
+		}
+		return $iValue;
+	}
+	/**
 	 * Получить количество сущностей по фильтру
 	 *
 	 * @param array $aFilter	Фильтр
@@ -795,6 +826,32 @@ abstract class ModuleORM extends Module {
 		$sNameUnderscore=substr_replace($sNameUnderscore,str_replace('_','',$sEntityName),4,$iEntityPosEnd-4);
 
 		$sEntityName=func_camelize($sEntityName);
+		/**
+		 * getMaxRatingFromUserByFilter() get_max_rating_from_user_by_filter
+		 */
+		if (preg_match("@^get_(max|min|avg|sum)_([a-z][a-z0-9]*)_from_([a-z][a-z0-9]*)_by_filter$@i",func_underscore($sName),$aMatch)) {
+			return $this->GetAggregateFunctionByFilter($aMatch[1],$aMatch[2],isset($aArgs[0]) ? $aArgs[0] : array(),func_camelize($aMatch[3]));
+		}
+
+		/**
+		 * getMaxRatingFromUserByStatusAndActive() get_max_rating_from_user_by_status_and_active
+		 */
+		if (preg_match("@^get_(max|min|avg|sum)_([a-z][a-z0-9]*)_from_([a-z][a-z0-9]*)_by_([_a-z]+)$@i",func_underscore($sName),$aMatch)) {
+			$aSearchParams=explode('_and_',$aMatch[4]);
+			$aSplit=array_chunk($aArgs,count($aSearchParams));
+			$aFilter=array_combine($aSearchParams,$aSplit[0]);
+			if (isset($aSplit[1][0])) {
+				$aFilter=array_merge($aFilter,$aSplit[1][0]);
+			}
+			return $this->GetAggregateFunctionByFilter($aMatch[1],$aMatch[2],$aFilter,func_camelize($aMatch[3]));
+		}
+
+		/**
+		 * getCountFromUserByFilter() get_count_from_user_by_filter
+		 */
+		if (preg_match("@^get_count_from_([a-z][a-z0-9]*)_by_filter$@i",func_underscore($sName),$aMatch)) {
+			return $this->GetCountItemsByFilter(isset($aArgs[0]) ? $aArgs[0] : array(),func_camelize($aMatch[1]));
+		}
 
 		/**
 		 * getUserItemsByFilter() get_user_items_by_filter

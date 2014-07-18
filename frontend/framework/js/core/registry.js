@@ -24,7 +24,13 @@ ls.registry = (function ($) {
 	 * Сохранение
 	 */
 	this.set = function(sName, data){
-		_aData[sName] = data;
+		if (typeof(sName)=='object') {
+			$.each(sName,function(k,v) {
+				_aData[k]=v;
+			});
+		} else {
+			_aData[sName] = data;
+		}
 	};
 
 	/**

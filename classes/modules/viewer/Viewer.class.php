@@ -95,6 +95,12 @@ class ModuleViewer extends Module {
 	 */
 	protected $aVarsAjax=array();
 	/**
+	 * Переменные для загрузки в JS (используется ls.registry)
+	 *
+	 * @var array
+	 */
+	protected $aVarsJs=array();
+	/**
 	 * Определяет тип ответа при ajax запросе
 	 *
 	 * @var string
@@ -223,6 +229,10 @@ class ModuleViewer extends Module {
 		 * Загружаем в шаблон блоки
 		 */
 		$this->Assign("aBlocks",$this->aBlocks);
+		/**
+		 * Загружаем в шаблон JS переменные
+		 */
+		$this->Assign("aVarsJs",$this->aVarsJs);
 		/**
 		 * Загружаем HTML заголовки
 		 */
@@ -391,6 +401,21 @@ class ModuleViewer extends Module {
 			}
 		} else {
 			$this->aVarsAjax[$sName]=$value;
+		}
+	}
+	/**
+	 * Загружаем переменную в JS
+	 *
+	 * @param      $sName
+	 * @param null $value
+	 */
+	public function AssignJs($sName,$value=null) {
+		if (is_array($sName)) {
+			foreach($sName as $sKey=>$mVal) {
+				$this->aVarsJs[$sKey]=$mVal;
+			}
+		} else {
+			$this->aVarsJs[$sName]=$value;
 		}
 	}
 	/**

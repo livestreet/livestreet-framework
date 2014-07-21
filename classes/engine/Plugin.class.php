@@ -241,9 +241,7 @@ abstract class Plugin extends LsObject {
 	 * @return string
 	 */
 	static public function GetPath($sName) {
-		$sName = preg_match('/^Plugin([\w]+)(_[\w]+)?$/Ui',$sName,$aMatches)
-			? func_underscore($aMatches[1])
-			: func_underscore($sName);
+		$sName=self::GetPluginCode($sName);
 
 		return Config::Get('path.application.plugins.server').'/'.$sName.'/';
 	}
@@ -254,9 +252,7 @@ abstract class Plugin extends LsObject {
 	 * @return string
 	 */
 	static public function GetWebPath($sName) {
-		$sName = preg_match('/^Plugin([\w]+)(_[\w]+)?$/Ui',$sName,$aMatches)
-			? func_underscore($aMatches[1])
-			: func_underscore($sName);
+		$sName=self::GetPluginCode($sName);
 
 		return Router::GetPathRootWeb().'/application/plugins/'.$sName.'/';
 	}
@@ -268,9 +264,7 @@ abstract class Plugin extends LsObject {
 	 * @return string|null
 	 */
 	static public function GetTemplatePath($sName) {
-		$sName = preg_match('/^Plugin([\w]+)(_[\w]+)?$/Ui',$sName,$aMatches)
-			? func_underscore($aMatches[1])
-			: func_underscore($sName);
+		$sName=self::GetPluginCode($sName);
 		if(!isset(self::$aTemplatePath[$sName])) {
 			$aPaths=glob(Config::Get('path.application.plugins.server').'/'.$sName.'/templates/skin/*',GLOB_ONLYDIR);
 			$sTemplateName=($aPaths and in_array(Config::Get('view.skin'),array_map('basename',$aPaths)))
@@ -290,9 +284,7 @@ abstract class Plugin extends LsObject {
 	 * @return string
 	 */
 	static public function GetTemplateWebPath($sName) {
-		$sName = preg_match('/^Plugin([\w]+)(_[\w]+)?$/Ui',$sName,$aMatches)
-			? func_underscore($aMatches[1])
-			: func_underscore($sName);
+		$sName=self::GetPluginCode($sName);
 		if(!isset(self::$aTemplateWebPath[$sName])) {
 			$aPaths=glob(Config::Get('path.application.plugins.server').'/'.$sName.'/templates/skin/*',GLOB_ONLYDIR);
 			$sTemplateName=($aPaths and in_array(Config::Get('view.skin'),array_map('basename',$aPaths)))
@@ -323,5 +315,20 @@ abstract class Plugin extends LsObject {
 	 */
 	static public function SetTemplateWebPath($sName,$sTemplatePath) {
 		self::$aTemplateWebPath[$sName]=$sTemplatePath;
+	}
+	/**
+	 * Возвращает код плагина
+	 *
+	 * @param string|object $mPlugin Объект любого класса плагина или название плагина
+	 *
+	 * @return string
+	 */
+	static public function GetPluginCode($mPlugin) {
+		if (is_object($mPlugin)) {
+			$mPlugin=get_class($mPlugin);
+		}
+		return preg_match('/^Plugin([\w]+)(_[\w]+)?$/Ui',$mPlugin,$aMatches)
+			? func_underscore($aMatches[1])
+			: func_underscore($mPlugin);
 	}
 }

@@ -469,7 +469,7 @@ class ModuleViewer extends Module {
 		/**
 		 * Если смогли определить тип блока то добавляем его
 		 */
-		$sType=$this->DefineTypeBlock($sName,isset($aParams['dir'])?$aParams['dir']:null);
+		$sType=$this->DefineTypeBlock($sName,isset($aParams['plugin'])?$aParams['plugin']:null);
 		if ($sType=='undefined') {
 			return false;
 		}
@@ -550,14 +550,16 @@ class ModuleViewer extends Module {
 	 * Определяет тип блока
 	 *
 	 * @param string $sName	Название блока
-	 * @param string|null $sDir	Путь до блока, обычно определяется автоматички для плагинов, если передать параметр 'plugin'=>'myplugin'
+	 * @param string|null $sPlugin	код плагина, если блок принадлежит плагину
 	 * @return string ('block','template','undefined')
 	 */
-	protected function DefineTypeBlock($sName,$sDir=null) {
-		if ($this->TemplateExists(is_null($sDir)?'blocks/block.'.$sName.'.tpl':rtrim($sDir,'/').'/blocks/block.'.$sName.'.tpl')) {
-			/**
-			 * Если найден шаблон вида block.name.tpl то считаем что тип 'block'
-			 */
+	protected function DefineTypeBlock($sName,$sPlugin=null) {
+		$sDir = $sPlugin ? Plugin::GetTemplatePath($sPlugin) : null;
+		/**
+		 * Если ли обработчик блока?
+		 */
+		$sClassBlock=($sPlugin ? 'Plugin'.func_camelize($sPlugin).'_' : '').'Block'.func_camelize($sName);
+		if (class_exists($sClassBlock)) {
 			return 'block';
 		} elseif ($this->TemplateExists(is_null($sDir) ? $sName : rtrim($sDir,'/').'/'.ltrim($sName,'/'))) {
 			/**

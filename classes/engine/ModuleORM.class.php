@@ -314,9 +314,11 @@ abstract class ModuleORM extends Module {
 						}
 						foreach($aItemsByParentId as $iParentId=>$aItems) {
 							if($iParentId!='root') {
-								$aItemsById[$iParentId]->setChildren($aItems);
-								foreach($aItems as $oEntity) {
-									$oEntity->setParent($aItemsById[$iParentId]);
+								if (isset($aItemsById[$iParentId])) {
+									$aItemsById[$iParentId]->setChildren($aItems);
+									foreach($aItems as $oEntity) {
+										$oEntity->setParent($aItemsById[$iParentId]);
+									}
 								}
 							} else {
 								foreach($aItems as $oEntity) {

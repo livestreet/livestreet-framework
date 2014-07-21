@@ -101,8 +101,9 @@ abstract class Entity extends LsObject {
 	 * Устанавливает данные, но только те, которые есть в $this->aValidateRules
 	 *
 	 * @param array $aData Ассоциативный массив данных сущности
+	 * @param array $aSetEmpty Список полей, которые устанавливаются в значение null, если их нет в первом параметре $aData
 	 */
-	public function _setDataSafe($aData) {
+	public function _setDataSafe($aData,$aSetEmpty=array()) {
 		/**
 		 * Составляем список доступных полей
 		 */
@@ -118,6 +119,11 @@ abstract class Entity extends LsObject {
 			foreach ($aData as $sKey => $val)    {
 				if (in_array($sKey,$aFields)) {
 					$this->_aData[$sKey] = $val;
+				}
+			}
+			foreach($aSetEmpty as $sFieldEmpty) {
+				if (!array_key_exists($sFieldEmpty,$aData)) {
+					$this->_aData[$sFieldEmpty] = null;
 				}
 			}
 		}

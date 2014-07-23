@@ -64,6 +64,8 @@ class ModuleCron extends ModuleORM {
 	 * Запускает задачу на выполнение
 	 *
 	 * @param $oTask
+	 *
+	 * @return array
 	 */
 	public function RunTask($oTask) {
 		$aLog=array(
@@ -89,6 +91,7 @@ class ModuleCron extends ModuleORM {
 		 * Записываем в лог
 		 */
 		$this->WriteLog('Run cron task "'.$oTask->getTitleWithLang().'"',$aLog);
+		return $aLog;
 	}
 	/**
 	 * Записывает сообщение в лог крона

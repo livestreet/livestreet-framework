@@ -11,3 +11,22 @@ CREATE TABLE IF NOT EXISTS `prefix_storage` (
   UNIQUE KEY `key_instance` (`key`,`instance`),
   KEY `instance` (`instance`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `prefix_cron_task` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `title` varchar(500) NOT NULL,
+  `method` varchar(500) NOT NULL,
+  `plugin` varchar(50) NOT NULL,
+  `state` tinyint(1) NOT NULL DEFAULT '1',
+  `count_run` int(11) NOT NULL DEFAULT '0',
+  `period_run` int(11) NOT NULL,
+  `date_create` datetime NOT NULL,
+  `date_run_last` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `count_run` (`count_run`),
+  KEY `state` (`state`),
+  KEY `plugin` (`plugin`),
+  KEY `method` (`method`(255)),
+  KEY `period_run` (`period_run`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8;

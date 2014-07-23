@@ -25,6 +25,12 @@
  */
 abstract class Cron extends LsObject {
 	/**
+	 * Производить логирование или нет
+	 *
+	 * @var bool
+	 */
+	protected $bLogEnable=true;
+	/**
 	 * Дескриптор блокирующего файла
 	 * Если этот файл существует, то крон не запустится повторно.
 	 *
@@ -64,7 +70,7 @@ abstract class Cron extends LsObject {
 	 * @param  string $sMsg	Сообщение для записи в лог
 	 */
 	public function Log($sMsg) {
-		if (Config::Get('sys.logs.cron')) {
+		if ($this->bLogEnable and Config::Get('sys.logs.cron')) {
 			$sMsg=$this->sProcessName.': '.$sMsg;
 			$this->Logger_Notice($sMsg,array(),'cron');
 		}

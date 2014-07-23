@@ -26,60 +26,65 @@ class DbSimple_Mypdo extends DbSimple_Database
 
 	public function DbSimple_Mypdo($dsn)
 	{
-		$base = preg_replace('{^/}s', '', $dsn['path']);
 		if (!class_exists('PDO'))
 			return $this->_setLastError("-1", "PDO extension is not loaded", "PDO");
 
+		$this->dsn=$dsn;
+		$this->_connect($dsn);
+	}
+
+	protected function _connect($dsn) {
+		$base = preg_replace('{^/}s', '', $dsn['path']);
 		try {
-            $options = array(
-                PDO::ATTR_ERRMODE => PDO::ERRMODE_SILENT,
-                PDO::ATTR_PERSISTENT => isset($dsn['persist']) && $dsn['persist'],
-                PDO::ATTR_TIMEOUT => isset($dsn['timeout']) && $dsn['timeout'] ? $dsn['timeout'] : 0
-            );
+			$options = array(
+				PDO::ATTR_ERRMODE => PDO::ERRMODE_SILENT,
+				PDO::ATTR_PERSISTENT => isset($dsn['persist']) && $dsn['persist'],
+				PDO::ATTR_TIMEOUT => isset($dsn['timeout']) && $dsn['timeout'] ? $dsn['timeout'] : 0
+			);
 
-            if (version_compare(PHP_VERSION, '5.3.6') < 0) {
-                $phpNew = false;
-                $options[PDO::MYSQL_ATTR_INIT_COMMAND] = 'SET NAMES ' . (!empty($dsn['enc']) ? $dsn['enc'] : 'utf8');
-            } else {
-                $phpNew = true;
-            }
+			if (version_compare(PHP_VERSION, '5.3.6') < 0) {
+				$phpNew = false;
+				$options[PDO::MYSQL_ATTR_INIT_COMMAND] = 'SET NAMES ' . (!empty($dsn['enc']) ? $dsn['enc'] : 'utf8');
+			} else {
+				$phpNew = true;
+			}
 
-            if ( !empty($dsn['socket']) ) {
-                // Socket connection
+			if ( !empty($dsn['socket']) ) {
+				// Socket connection
 
-                $dsnPdo = 'mysql:unix_socket=' . $dsn['socket']
-                        . ';dbname=' . $base;
+				$dsnPdo = 'mysql:unix_socket=' . $dsn['socket']
+					. ';dbname=' . $base;
 
-                if ($phpNew) {
-                    $dsnPdo .= ';charset=' . (!empty($dsn['enc']) ? $dsn['enc'] : 'utf8');
-                }
+				if ($phpNew) {
+					$dsnPdo .= ';charset=' . (!empty($dsn['enc']) ? $dsn['enc'] : 'utf8');
+				}
 
-                $this->link = new PDO(
-                    $dsnPdo,
-                    isset($dsn['user']) ? $dsn['user'] : 'root',
-                    isset($dsn['pass']) ? $dsn['pass'] : '',
-                    $options
-                );
-            } else if ( !empty($dsn['host']) ) {
-                // Host connection
+				$this->link = new PDO(
+					$dsnPdo,
+					isset($dsn['user']) ? $dsn['user'] : 'root',
+					isset($dsn['pass']) ? $dsn['pass'] : '',
+					$options
+				);
+			} else if ( !empty($dsn['host']) ) {
+				// Host connection
 
-                $dsnPdo = 'mysql:host=' . $dsn['host']
-                        . (empty($dsn['port']) ? '' : ';port='.$dsn['port'])
-                        . ';dbname=' . $base;
+				$dsnPdo = 'mysql:host=' . $dsn['host']
+					. (empty($dsn['port']) ? '' : ';port='.$dsn['port'])
+					. ';dbname=' . $base;
 
-                if ($phpNew) {
-                    $dsnPdo .= ';charset=' . (!empty($dsn['enc']) ? $dsn['enc'] : 'utf8');
-                }
+				if ($phpNew) {
+					$dsnPdo .= ';charset=' . (!empty($dsn['enc']) ? $dsn['enc'] : 'utf8');
+				}
 
-                $this->link = new PDO(
-                    $dsnPdo,
-                    $dsn['user'],
-                    isset($dsn['pass']) ? $dsn['pass'] : '',
-                    $options
-                );
-            } else {
-                throw new Exception("Could not find hostname nor socket in DSN string");
-            }
+				$this->link = new PDO(
+					$dsnPdo,
+					$dsn['user'],
+					isset($dsn['pass']) ? $dsn['pass'] : '',
+					$options
+				);
+			} else {
+				throw new Exception("Could not find hostname nor socket in DSN string");
+			}
 		} catch (PDOException $e) {
 			return $this->_setLastError($e->getCode() , $e->getMessage(), 'new PDO');
 		}

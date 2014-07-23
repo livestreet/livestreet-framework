@@ -46,16 +46,14 @@ class ModuleDatabase extends Module {
 	 * Получает объект БД
 	 *
 	 * @param array|null $aConfig - конфиг подключения к БД(хост, логин, пароль, тип бд, имя бд), если null, то используются параметры из конфига Config::Get('db.params')
+	 * @param bool $bForce Создавать принудительно новый коннект, даже если он уже существует
 	 * @return DbSimple_Generic_Database DbSimple
 	 */
-	public function GetConnect($aConfig=null) {
+	public function GetConnect($aConfig=null,$bForce=false) {
 		/**
-		 * Если конфиг не передан то используем главный конфиг БД из config.php
+		 * Получаем DSN
 		 */
-		if (is_null($aConfig)) {
-			$aConfig = Config::Get('db.params');
-		}
-		$sDSN=$aConfig['type'].'://'.$aConfig['user'].':'.$aConfig['pass'].'@'.$aConfig['host'].':'.$aConfig['port'].'/'.$aConfig['dbname'];
+		$sDSN=$this->GetDSNByConfig($aConfig);
 		/**
 		 * Создаём хеш подключения, уникальный для каждого конфига
 		 */
@@ -63,7 +61,7 @@ class ModuleDatabase extends Module {
 		/**
 		 * Проверяем создавали ли уже коннект с такими параметрами подключения(DSN)
 		 */
-		if (isset($this->aInstance[$sDSNKey])) {
+		if (isset($this->aInstance[$sDSNKey]) and !$bForce) {
 			return $this->aInstance[$sDSNKey];
 		} else {
 			/**
@@ -94,6 +92,52 @@ class ModuleDatabase extends Module {
 			 */
 			return $oDbSimple;
 		}
+	}
+	/**
+	 * Производит переподключение к БД
+	 * @param null $aConfig
+	 *
+	 * @return bool
+	 */
+	public function ReConnect($aConfig=null) {
+		/**
+		 * Получаем DSN
+		 */
+		$sDSN=$this->GetDSNByConfig($aConfig);
+		/**
+		 * Создаём хеш подключения, уникальный для каждого конфига
+		 */
+		$sDSNKey=md5($sDSN);
+		if (isset($this->aInstance[$sDSNKey])) {
+			if ($this->aInstance[$sDSNKey]->reconnect()!==false) {
+				return true;
+			}
+		}
+		return false;
+	}
+	/**
+	 * Производит переподключение ко всем БД
+	 */
+	public function ReConnectAll() {
+		foreach($this->aInstance as $oDb) {
+			$oDb->reconnect();
+		}
+	}
+	/**
+	 * Возвращает DSN строку из конфига
+	 *
+	 * @param null $aConfig
+	 *
+	 * @return string
+	 */
+	protected function GetDSNByConfig($aConfig=null) {
+		/**
+		 * Если конфиг не передан то используем главный конфиг БД из config.php
+		 */
+		if (is_null($aConfig)) {
+			$aConfig = Config::Get('db.params');
+		}
+		return $aConfig['type'].'://'.$aConfig['user'].':'.$aConfig['pass'].'@'.$aConfig['host'].':'.$aConfig['port'].'/'.$aConfig['dbname'];
 	}
 	/**
 	 * Возвращает статистику использования БД - время и количество запросов

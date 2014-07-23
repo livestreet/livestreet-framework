@@ -35,34 +35,39 @@ class DbSimple_Postgresql extends DbSimple_Database
      */
     function DbSimple_Postgresql($dsn)
     {
-        $p = DbSimple_Database::parseDSN($dsn);
+		$dsn = DbSimple_Database::parseDSN($dsn);
         if (!is_callable('pg_connect')) {
             return $this->_setLastError("-1", "PostgreSQL extension is not loaded", "pg_connect");
         }
 
         // Prepare+execute works only in PHP 5.1+.
         $this->DbSimple_Postgresql_USE_NATIVE_PHOLDERS = function_exists('pg_prepare');
-        
-        $dsnWithoutPass = 
-        	(!empty($p['host']) ? 'host='.$p['host'].' ' : '') .
-            (!empty($p['port']) ? 'port=' . $p['port'] . ' ' : '') .
-            'dbname=' . preg_replace('{^/}s', '', $p['path']) .' '.
-            (!empty($p['user']) ? 'user='. $p['user'] : '');
 
-        $ok = $this->link = @pg_connect(
-            $dsnWithoutPass . " " . (!empty($p['pass']) ? 'password=' . $p['pass'] . ' ' : ''),
-			PGSQL_CONNECT_FORCE_NEW
-        );
-        // We use PGSQL_CONNECT_FORCE_NEW, because in PHP 5.3 & PHPUnit
-        // $this->prepareCache may be cleaned, but $this->link is still
-        // not closed. So the next creation of DbSimple_Postgresql()
-        // would use exactly the same connection as the previous, but with
-        // empty $this->prepareCache, and it will generate "prepared statement 
-        // xxx already exists" error each time we execute the same statement
-        // as in the previous calls.
-        $this->_resetLastError();
-        if (!$ok) return $this->_setDbError('pg_connect("' . $dsnWithoutPass . '") error');
+		$this->dsn=$dsn;
+		$this->_connect($dsn);
     }
+
+	protected function _connect($dsn) {
+		$dsnWithoutPass =
+			(!empty($dsn['host']) ? 'host='.$dsn['host'].' ' : '') .
+			(!empty($dsn['port']) ? 'port=' . $dsn['port'] . ' ' : '') .
+			'dbname=' . preg_replace('{^/}s', '', $dsn['path']) .' '.
+			(!empty($dsn['user']) ? 'user='. $dsn['user'] : '');
+
+		$ok = $this->link = @pg_connect(
+			$dsnWithoutPass . " " . (!empty($dsn['pass']) ? 'password=' . $dsn['pass'] . ' ' : ''),
+			PGSQL_CONNECT_FORCE_NEW
+		);
+		// We use PGSQL_CONNECT_FORCE_NEW, because in PHP 5.3 & PHPUnit
+		// $this->prepareCache may be cleaned, but $this->link is still
+		// not closed. So the next creation of DbSimple_Postgresql()
+		// would use exactly the same connection as the previous, but with
+		// empty $this->prepareCache, and it will generate "prepared statement
+		// xxx already exists" error each time we execute the same statement
+		// as in the previous calls.
+		$this->_resetLastError();
+		if (!$ok) return $this->_setDbError('pg_connect("' . $dsnWithoutPass . '") error');
+	}
 
 
     function _performEscape($s, $isIdent=false)

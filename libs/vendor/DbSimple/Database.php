@@ -98,7 +98,12 @@ abstract class DbSimple_Database extends DbSimple_LastError
      * Public methods.
      */
 
-    /**
+	/**
+	 * Protected methods
+	 */
+	protected $dsn;
+
+	/**
      * object blob($blob_id)
      * Create new blob
      */
@@ -340,6 +345,9 @@ abstract class DbSimple_Database extends DbSimple_LastError
         return $this->_statistics;
     }
 
+	public function reconnect() {
+		$this->_connect($this->dsn);
+	}
 
     /**
      * string _performEscape(mixed $s, bool $isIdent=false)
@@ -406,6 +414,12 @@ abstract class DbSimple_Database extends DbSimple_LastError
      * Rollback the transaction.
      */
     abstract protected function _performRollback();
+
+	/**
+	 * connect to DB
+	 * @return mixed
+	 */
+	abstract protected function _connect($dsn);
 
     /**
      * string _performGetPlaceholderIgnoreRe()
@@ -970,7 +984,7 @@ abstract class DbSimple_Database extends DbSimple_LastError
      * Convert SQL field-list to COUNT(...) clause
      * (e.g. 'DISTINCT a AS aa, b AS bb' -> 'COUNT(DISTINCT a, b)').
      */
-    private function _fieldList2Count($fields)
+    protected function _fieldList2Count($fields)
     {
         $m = null;
         if (preg_match('/^\s* DISTINCT \s* (.*)/sx', $fields, $m)) {

@@ -181,11 +181,16 @@ class ModuleText extends Module {
 		/**
 		 * rutube.ru
 		 */
-		$sText = preg_replace('/<video>http:\/\/(?:www\.|)rutube\.ru\/tracks\/(\d+)\.html.*<\/video>/Ui', '<OBJECT width="470" height="353"><PARAM name="movie" value="http://video.rutube.ru/$1"></PARAM><PARAM name="wmode" value="window"></PARAM><PARAM name="allowFullScreen" value="true"></PARAM><EMBED src="http://video.rutube.ru/$1" type="application/x-shockwave-flash" wmode="window" width="470" height="353" allowFullScreen="true" ></EMBED></OBJECT>', $sText);
+		$sText = preg_replace('/<video>http:\/\/(?:www\.|)rutube\.ru\/tracks\/(\d+)\.html.*<\/video>/Ui', '<iframe width="720" height="405" src="//rutube.ru/play/embed/$1" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowfullscreen></iframe>', $sText);
+		$sText = preg_replace('/<video>http:\/\/(?:www\.|)rutube\.ru\/video\/([a-zA-Z0-9_\-]+)\/?<\/video>/Ui', '<iframe width="720" height="405" src="//rutube.ru/play/embed/$1" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowfullscreen></iframe>', $sText);
 		/**
 		 * video.yandex.ru
 		 */
 		$sText = preg_replace('/<video>http:\/\/video\.yandex\.ru\/users\/([a-zA-Z0-9_\-]+)\/view\/(\d+).*<\/video>/i', '<object width="467" height="345"><param name="video" value="http://video.yandex.ru/users/$1/view/$2/get-object-by-url/redirect"></param><param name="allowFullScreen" value="true"></param><param name="scale" value="noscale"></param><embed src="http://video.yandex.ru/users/$1/view/$2/get-object-by-url/redirect" type="application/x-shockwave-flash" width="467" height="345" allowFullScreen="true" scale="noscale" ></embed></object>', $sText);
+		/**
+		 * vk.com
+		 */
+		$sText = preg_replace('/<video>(http:\/\/(?:www\.|)vk\.com\/video_ext\.php.*)<\/video>/i', '<iframe src="$1" width="607" height="360" frameborder="0"></iframe>', $sText);
 		return $sText;
 	}
 	/**

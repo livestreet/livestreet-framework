@@ -257,6 +257,10 @@ class ModuleLang extends Module {
 				return $sName;
 			}
 		}
+		/**
+		 * Заменяем вхождение других ключей вида ___lang_key___
+		 */
+		$sLang=$this->ReplaceKey($sLang);
 
 		if(is_array($aReplace)&&count($aReplace)&&is_string($sLang)) {
 			foreach ($aReplace as $sFrom => $sTo) {
@@ -269,6 +273,32 @@ class ModuleLang extends Module {
 			$sLang=preg_replace("/\%\%[\S]+\%\%/U",'',$sLang);
 		}
 		return $sLang;
+	}
+	/**
+	 * Заменяет плейсхолдеры ключей в значениях текстовки
+	 *
+	 * @param string|array $msg	Значение текстовки
+	 * @return array|mixed
+	 */
+	protected function ReplaceKey($msg) {
+		if(is_array($msg)) {
+			foreach($msg as $k=>$v) {
+				$k_replaced = $this->ReplaceKey($k);
+				if($k==$k_replaced) {
+					$msg[$k] = $this->ReplaceKey($v);
+				} else {
+					$msg[$k_replaced] = $this->ReplaceKey($v);
+					unset($msg[$k]);
+				}
+			}
+		} else {
+			if(preg_match_all('~___([\S|\.]+)___~Ui',$msg,$aMatch,PREG_SET_ORDER)) {
+				foreach($aMatch as $aItem) {
+					$msg=str_replace('___'.$aItem[1].'___',$this->Get($aItem[1]),$msg);
+				}
+			}
+		}
+		return $msg;
 	}
 	/**
 	 * Добавить к текстовкам массив сообщений

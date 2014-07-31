@@ -334,6 +334,19 @@ abstract class ModuleORM extends Module {
 		return false;
 	}
 	/**
+	 * Удаляет сущности по фильтру
+	 * Удаление происходит отдельно для каждой сущности через вызов метода Delete()
+	 *
+	 * @param array $aFilter
+	 * @param null  $sEntityFull
+	 */
+	public function DeleteItemsByFilter($aFilter=array(),$sEntityFull=null) {
+		$aItems=$this->GetItemsByFilter($aFilter,$sEntityFull);
+		foreach($aItems as $oItem) {
+			$oItem->Delete();
+		}
+	}
+	/**
 	 * Получить сущность по фильтру
 	 *
 	 * @param array $aFilter	Фильтр
@@ -759,6 +772,8 @@ abstract class ModuleORM extends Module {
 	 * @return mixed
 	 */
 	public function __call($sName,$aArgs) {
+		$sNameUnderscore=func_underscore($sName);
+
 		if (preg_match("@^add([a-z]+)$@i",$sName,$aMatch)) {
 			return $this->_AddEntity($aArgs[0]);
 		}
@@ -771,7 +786,7 @@ abstract class ModuleORM extends Module {
 			return $this->_SaveEntity($aArgs[0]);
 		}
 
-		if (preg_match("@^delete([a-z]+)$@i",$sName,$aMatch)) {
+		if (preg_match("@^delete([a-z]+)$@i",$sName,$aMatch) and !strpos($sNameUnderscore,'items_by_filter')) {
 			return $this->_DeleteEntity($aArgs[0]);
 		}
 
@@ -808,7 +823,6 @@ abstract class ModuleORM extends Module {
 			return $this->LoadTree(isset($aArgs[0]) ? $aArgs[0] : array(), $sEntityFull);
 		}
 
-		$sNameUnderscore=func_underscore($sName);
 		$iEntityPosEnd=0;
 		if(strpos($sNameUnderscore,'_items')>=3) {
 			$iEntityPosEnd=strpos($sNameUnderscore,'_items');
@@ -864,6 +878,13 @@ abstract class ModuleORM extends Module {
 			} else {
 				return $this->GetByFilter($aArgs[0],$sEntityName);
 			}
+		}
+
+		/**
+		 * deleteUserItemsByFilter() delete_user_items_by_filter
+		 */
+		if (preg_match("@^delete_([a-z\_]+)_items_by_filter$@i",func_underscore($sName),$aMatch)) {
+			return $this->DeleteItemsByFilter(isset($aArgs[0]) ? $aArgs[0] : array(),func_camelize($aMatch[1]));
 		}
 
 		/**

@@ -256,9 +256,10 @@ class ModuleImage_EntityImage extends Entity {
 			return false;
 		}
 		try {
+			$sFormat=($this->getParam('format_auto') && $this->getFormat()) ? $this->getFormat() : $this->getParam('format');
 			$sFileTmp=Config::Get('path.tmp.server').DIRECTORY_SEPARATOR.func_generator(20);
 			$oImage->save($sFileTmp,array(
-				'format'=>$this->getParam('format'),
+				'format'=>$sFormat,
 				'quality'=>$this->getParam('quality'),
 			));
 
@@ -286,9 +287,10 @@ class ModuleImage_EntityImage extends Entity {
 			if (!is_dir($sDirTmp)) {
 				@mkdir($sDirTmp,0777,true);
 			}
+			$sFormat=($this->getParam('format_auto') && $this->getFormat()) ? $this->getFormat() : $this->getParam('format');
 			$sFileTmp=$sDirTmp.DIRECTORY_SEPARATOR.func_generator(20);
 			$oImage->save($sFileTmp,array(
-				'format'=>$this->getParam('format'),
+				'format'=>$sFormat,
 				'quality'=>$this->getParam('quality'),
 			));
 

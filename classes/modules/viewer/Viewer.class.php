@@ -389,6 +389,17 @@ class ModuleViewer extends Module {
 		$this->oSmarty->assign($mName, $mValue,false,$bLocal);
 	}
 	/**
+	 * Добавляет переменную к уже существующим в шаблоне
+	 * Значение переменной преобразуется к типу array
+	 *
+	 * @param      $mName	Имя переменной в шаблоне или ассоциативный массив со списком переменных
+	 * @param null $mValue	Значение переменной
+	 * @param bool $bMerge	Необходимость мержа (слияния) переменных
+	 */
+	public function Append($mName,$mValue=null,$bMerge=false) {
+		$this->oSmarty->append($mName,$mValue,$bMerge);
+	}
+	/**
 	 * Загружаем переменную в ajax ответ
 	 *
 	 * @param string|array $sName	Имя переменной в шаблоне или ассоциативный массив со списком параметров

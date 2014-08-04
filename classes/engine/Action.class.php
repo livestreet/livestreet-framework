@@ -388,13 +388,13 @@ abstract class Action extends LsObject {
 
 	/**
 	 * Получить шаблон
-	 * Если шаблон не определен то возвращаем дефолтный шаблон евента: action/{Action}.{event}.tpl
+	 * Если шаблон не определен то возвращаем дефолтный шаблон евента: actions/Action{Action}/{event}.tpl
 	 *
 	 * @return string
 	 */
 	public function GetTemplate() {
 		if (is_null($this->sActionTemplate)) {
-			$this->SetTemplateAction($this->sCurrentEvent);
+			$this->SetTemplateAction(strtolower($this->sCurrentEvent));
 		}
 		return $this->sActionTemplate;
 	}

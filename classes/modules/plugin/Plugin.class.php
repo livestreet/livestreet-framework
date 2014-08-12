@@ -190,7 +190,7 @@ class ModulePlugin extends Module {
 								if(!in_array($sReqPlugin,$aActivePlugins)) {
 									$iConflict++;
 									$this->Message_AddError(
-										$this->Lang_Get('plugins_activation_requires_error',
+										$this->Lang_Get('admin.plugins.notices.activation_requires_error',
 														array(
 															'plugin'=>func_camelize($sReqPlugin)
 														)
@@ -218,7 +218,7 @@ class ModulePlugin extends Module {
 								$iConflict+=$iCount;
 								foreach ($aOverlap as $sResource=>$aConflict) {
 									$this->Message_AddError(
-										$this->Lang_Get('plugins_activation_overlap', array(
+										$this->Lang_Get('admin.plugins.notices.activation_overlap', array(
 											'resource'=>$sResource,
 											'delegate'=>$aConflict['delegate'],
 											'plugin'  =>$aConflict['sign']
@@ -233,7 +233,7 @@ class ModulePlugin extends Module {
 								$iConflict+=$iCount;
 								foreach ($aOverlap as $sResource=>$aConflict) {
 									$this->Message_AddError(
-										$this->Lang_Get('plugins_activation_overlap', array(
+										$this->Lang_Get('admin.plugins.notices.activation_overlap', array(
 											'resource'=>$sResource,
 											'delegate'=>$aConflict['delegate'],
 											'plugin'  =>$aConflict['sign']
@@ -254,7 +254,7 @@ class ModulePlugin extends Module {
 									$iConflict+=count($this->aInherits[$sResource]['items']);
 									foreach ($this->aInherits[$sResource]['items'] as $aItem) {
 										$this->Message_AddError(
-											$this->Lang_Get('plugins_activation_overlap_inherit', array(
+											$this->Lang_Get('admin.plugins.notices.activation_overlap_inherit', array(
 												'resource'=>$sResource,
 												'plugin'  =>$aItem['sign']
 											)),
@@ -272,7 +272,7 @@ class ModulePlugin extends Module {
 					/**
 					 * Исполняемый файл плагина не найден
 					 */
-					$this->Message_AddError($this->Lang_Get('plugins_activation_file_not_found'),$this->Lang_Get('error'),true);
+					$this->Message_AddError($this->Lang_Get('admin.plugins.notices.activation_file_not_found'),$this->Lang_Get('error'),true);
 					return;
 				}
 
@@ -300,7 +300,7 @@ class ModulePlugin extends Module {
 					 */
 					$this->Cache_Clean();
 					if (!$this->SetActivePlugins($aActivePlugins)) {
-						$this->Message_AddError($this->Lang_Get('plugins_activation_file_write_error'),$this->Lang_Get('error'),true);
+						$this->Message_AddError($this->Lang_Get('admin.plugins.notices.activation_file_write_error'),$this->Lang_Get('error'),true);
 						return;
 					}
 					/**

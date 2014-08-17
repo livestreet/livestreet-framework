@@ -119,7 +119,6 @@ class ModuleCache extends Module {
 	 */
 	public function Init() {
 		$this->InitParams();
-		$this->ClearOldCache();
 	}
 	/**
 	 * Инициализация необходимых параметров модуля
@@ -133,14 +132,10 @@ class ModuleCache extends Module {
 	}
 	/**
 	 * Удаляет старый кеш в случайном порядке
+	 * Рекомендуется запускать раз в пару дней из под крона
 	 */
-	protected function ClearOldCache() {
-		/**
-		 * Дабы не засорять место протухшим кешем, удаляем его в случайном порядке, например 1 из 50 раз
-		 */
-		if (rand(1,50)==33) {
-			$this->Clean(Zend_Cache::CLEANING_MODE_OLD);
-		}
+	public function ClearOldCache() {
+		$this->Clean(Zend_Cache::CLEANING_MODE_OLD);
 	}
 	/**
 	 * Возвращает объект бекенда кеша

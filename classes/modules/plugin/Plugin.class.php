@@ -134,7 +134,13 @@ class ModulePlugin extends Module {
 		$sProperty=trim($sProperty);
 
 		if (!count($data=$oXml->xpath("{$sProperty}/lang[@name='{$sLang}']"))) {
-			$data=$oXml->xpath("{$sProperty}/lang[@name='default']");
+			/**
+			 * Пробуем получить язык в старом полном формате (ru -> russian)
+			 */
+			$sLangOld=Config::Get('module.lang.i18n_mapping.'.$sLang);
+			if (!$sLangOld or !count($data=$oXml->xpath("{$sProperty}/lang[@name='{$sLangOld}']"))) {
+				$data=$oXml->xpath("{$sProperty}/lang[@name='default']");
+			}
 		}
 		$oXml->$sProperty->data=$this->Text_Parser(trim((string)array_shift($data)));
 	}

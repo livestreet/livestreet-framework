@@ -248,6 +248,16 @@ $config['lang']['load_to_js']  = array();                                       
  */
 // Модуль Lang
 $config['module']['lang']['delete_undefined'] = true;   // Если установлена true, то модуль будет автоматически удалять из языковых конструкций переменные вида %%var%%, по которым не была произведена замена
+// Для совместимости со старыми версиями
+$config['module']['lang']['i18n_mapping'] = array(
+	/*
+	 * новый формат записи => старый
+	 */
+	'ru' => 'russian',
+	'ua' => 'ukrainian',
+	'en' => 'english',
+	'de' => 'deutsch',
+);
 // Модуль Notify
 $config['module']['notify']['delayed']       = false;    // Указывает на необходимость использовать режим отложенной рассылки сообщений на email
 $config['module']['notify']['insert_single'] = false;    // Если опция установлена в true, систему будет собирать записи заданий удаленной публикации, для вставки их в базу единым INSERT

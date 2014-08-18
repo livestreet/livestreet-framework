@@ -271,6 +271,30 @@ class ModulePlugin extends Module {
 							}
 						}
 						if($iConflict){ return; }
+
+					} elseif ($sAction=='Deactivate') {
+						/**
+						 * Проверяем на зависимость других плагинов через опцию requires
+						 */
+						$aActivePlugins=$this->GetActivePlugins();
+						$iConflict=0;
+						foreach ($aActivePlugins as $sPlugnCheck) {
+							foreach ($aPlugins[$sPlugnCheck]['property']->requires->plugins->children() as $sReqPlugin) {
+								if ($sReqPlugin==$sPlugin) {
+									$iConflict++;
+									$this->Message_AddError(
+										$this->Lang_Get('admin.plugins.notices.deactivation_requires_error',
+														array(
+															'plugin'=>func_camelize($sPlugnCheck)
+														)
+										),
+										$this->Lang_Get('error'),
+										true
+									);
+								}
+							}
+						}
+						if($iConflict) { return; }
 					}
 
 					$bResult=$oPlugin->$sAction();

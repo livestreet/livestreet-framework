@@ -367,11 +367,22 @@ class ModulePlugin extends Module {
 			 * Если плагин активен, деактивируем его
 			 */
 			if(in_array($sPluginCode,$aActivePlugins)) $this->Toggle($sPluginCode,'deactivate');
-
 			/**
-			 * Удаляем директорию с плагином
+			 * Выполняем кастомный метод удаление плагина
 			 */
-			func_rmdir($this->sPluginsDir.$sPluginCode);
+			$sPluginName=func_camelize($sPluginCode);
+			$sFile="{$this->sPluginsDir}{$sPluginCode}/Plugin{$sPluginName}.class.php";
+			if(is_file($sFile)) {
+				require_once($sFile);
+				$sClassName="Plugin{$sPluginName}";
+				$oPlugin=new $sClassName;
+				if ($oPlugin->Delete()) {
+					/**
+					 * Удаляем директорию с плагином
+					 */
+					func_rmdir($this->sPluginsDir.$sPluginCode);
+				}
+			}
 		}
 	}
 	/**

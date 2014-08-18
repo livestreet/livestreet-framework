@@ -166,6 +166,14 @@ abstract class Plugin extends LsObject {
 		return true;
 	}
 	/**
+	 * Метод удаления плагина
+	 *
+	 * @return bool
+	 */
+	public function Delete() {
+		return true;
+	}
+	/**
 	 * Транслирует на базу данных запросы из указанного файла
 	 * @see ModuleDatabase::ExportSQL
 	 *

@@ -18,8 +18,8 @@
     text-decoration: none;
 	font-size: 13px;
 	line-height: normal;
-	color: #333;
-	background: #fff;
+	color: #444;
+	background: transparent;
 	font-family: Arial, sans-serif;
 	cursor: pointer;
 	position: relative;
@@ -29,9 +29,15 @@
 	-webkit-box-sizing: border-box;
 	   -moz-box-sizing: border-box;
 	        box-sizing: border-box;
+	-webkit-transition: background .2s, color .2s;
+	   -moz-transition: background .2s, color .2s;
+	        transition: background .2s, color .2s;
 }
 .button:hover  { text-decoration: none; background: #fafafa; color: #333; }
-.button:active {  }
+.button:active {
+	position: relative;
+	top: 1px;
+}
 .button:focus { outline: none; }
 .button.active {
 	background: #eaeaea;
@@ -69,8 +75,8 @@
 /**
  * Button Primary
  */
-.button--primary        { border-color: #04c; color: #fff; background: #006DCC; }
-.button--primary:hover  { background: #0044cc; color: #fff; }
+.button--primary        { border-color: #74A2FF; color: #777DFF; }
+.button--primary:hover  { background: #91B6FF; color: #fff; }
 .button--primary.active { background: #006DCC; }
 
 

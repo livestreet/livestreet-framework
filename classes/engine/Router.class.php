@@ -351,7 +351,7 @@ class Router extends LsObject {
 	 * @param string $sAction	Экшен
 	 * @param string $sEvent	Евент
 	 * @param array $aParams	Список параметров
-	 * @return 'next'
+	 * @return string 'next'
 	 */
 	static public function Action($sAction,$sEvent=null,$aParams=null) {
 		self::$sAction=self::getInstance()->Rewrite($sAction);
@@ -360,6 +360,18 @@ class Router extends LsObject {
 			self::$aParams=$aParams;
 		}
 		return 'next';
+	}
+	/**
+	 * Алиас короткого вызова перенаправления на экшен error с необходимым текстом ошибки
+	 *
+	 * @param string $sMsg Текст ошибки
+	 * @param string|null $sTitle	Заголовок ошибки
+	 *
+	 * @return string
+	 */
+	static public function ActionError($sMsg,$sTitle=null) {
+		self::getInstance()->Message_AddErrorSingle($sMsg,$sTitle);
+		return self::Action('error');
 	}
 	/**
 	 * Возвращает текущий ЧПУ url

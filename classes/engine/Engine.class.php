@@ -284,6 +284,10 @@ class Engine {
 	 */
 	public function Shutdown() {
 		$this->ShutdownModules();
+		/**
+		 * Запускаем хуки для события завершения работы Engine
+		 */
+		$this->Hook_Run('engine_shutdown_complete');
 	}
 	/**
 	 * Производит инициализацию всех модулей

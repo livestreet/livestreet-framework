@@ -137,8 +137,14 @@ class Router extends LsObject {
 	 * Запускает весь процесс :)
 	 *
 	 */
-	public function Exec() {
+	public function Exec($aParams=array()) {
 		$this->ParseUrl();
+		if (isset($aParams['callback_after_parse_url'])) {
+			/**
+			 * Для возможности изменять результат парсинга URL, например, для учета поддоменов
+			 */
+			call_user_func($aParams['callback_after_parse_url']);
+		}
 		$this->DefineActionClass(); // Для возможности ДО инициализации модулей определить какой action/event запрошен
 		$this->oEngine=Engine::getInstance();
 		$this->oEngine->Init();
@@ -478,6 +484,14 @@ class Router extends LsObject {
 		return self::getInstance()->Standart(self::$sAction);
 	}
 	/**
+	 * Устанавливает новый текущий экшен
+	 *
+	 * @param string $sAction	Экшен
+	 */
+	static public function SetAction($sAction) {
+		self::$sAction=$sAction;
+	}
+	/**
 	 * Возвращает текущий евент
 	 *
 	 * @return string
@@ -537,6 +551,14 @@ class Router extends LsObject {
 	 */
 	static public function SetParam($iOffset,$value) {
 		self::$aParams[$iOffset]=$value;
+	}
+	/**
+	 * Устанавливает новые текущие параметры
+	 *
+	 * @param string $aParams	Параметры
+	 */
+	static public function SetParams($aParams) {
+		self::$aParams=$aParams;
 	}
 	/**
 	 * Показывать или нет статистику выполение скрипта

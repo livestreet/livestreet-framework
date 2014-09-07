@@ -312,17 +312,17 @@ class ModuleLang extends Module {
 				$sMsgs=$aMessages;
 				if (isset($aParams['category'])) {
 					if (isset($this->aLangMsg[$aParams['category']][$aParams['name']])) {
-						$sMsgs=array_merge($this->aLangMsg[$aParams['category']][$aParams['name']],$sMsgs);
+						$sMsgs=func_array_merge_assoc($this->aLangMsg[$aParams['category']][$aParams['name']],$sMsgs);
 					}
 					$this->aLangMsg[$aParams['category']][$aParams['name']]=$sMsgs;
 				} else {
 					if (isset($this->aLangMsg[$aParams['name']])) {
-						$sMsgs=array_merge($this->aLangMsg[$aParams['name']],$sMsgs);
+						$sMsgs=func_array_merge_assoc($this->aLangMsg[$aParams['name']],$sMsgs);
 					}
 					$this->aLangMsg[$aParams['name']]=$sMsgs;
 				}
 			} else {
-				$this->aLangMsg = array_merge($this->aLangMsg, $aMessages);
+				$this->aLangMsg = func_array_merge_assoc($this->aLangMsg, $aMessages);
 			}
 		}
 	}

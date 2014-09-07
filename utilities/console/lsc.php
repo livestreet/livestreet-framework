@@ -14,13 +14,14 @@ abstract class LSC {
             return ;
         }
 
-        $sCommandClassName = ucwords($aArgs[1]);
-        $sCommandClassPath = dirname(__FILE__).'/commands/'.$sCommandClassName.'.class.php';
+        $sCommandName = ucwords($aArgs[1]);
+        $sCommandClassPath = dirname(__FILE__).'/commands/'.$sCommandName.'.class.php';
 
         // Существует ли такой класс, а следовательно и команда
         if(file_exists($sCommandClassPath)) {
             // Подключаем класс команды
             require_once $sCommandClassPath;
+			$sCommandClassName='Command'.$sCommandName;
             $oCommand = new $sCommandClassName();
             $oCommand->run($aArgs);
         } else {

@@ -1,6 +1,6 @@
 <?php
 
-class Plugin extends LSC {
+class CommandPlugin extends LSC {
     protected $_name;
 
     /*

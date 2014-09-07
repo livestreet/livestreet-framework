@@ -382,11 +382,16 @@ class ModuleViewer extends Module {
 	 * Загружает переменную в шаблон
 	 *
 	 * @param string|array $mName	Имя переменной в шаблоне или ассоциативный массив со списком параметров
-	 * @param mixed $mValue	Значение переменной
+	 * @param mixed $mValue	Значение переменной. $bByRef = true, то значение должно быть в виде массива array(&$mValue) для корректной работы передачи по ссылке
 	 * @param bool $bLocal	Загружает переменную в локальную область видимости шаблонизатора (доступна только для конкретного шаблона)
+	 * @param bool $bByRef	Загружает переменную по ссылке
 	 */
-	public function Assign($mName,$mValue=null,$bLocal=false) {
-		$this->oSmarty->assign($mName, $mValue,false,$bLocal);
+	public function Assign($mName,$mValue=null,$bLocal=false,$bByRef=false) {
+		if ($bByRef and isset($mValue[0])) {
+			$this->oSmarty->assignByRef($mName, $mValue[0]);
+		} else {
+			$this->oSmarty->assign($mName, $mValue,false,$bLocal);
+		}
 	}
 	/**
 	 * Добавляет переменную к уже существующим в шаблоне

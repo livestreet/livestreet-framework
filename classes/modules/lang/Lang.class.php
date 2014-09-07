@@ -94,7 +94,7 @@ class ModuleLang extends Module {
 		/**
 		 * Загружаем в шаблон
 		 */
-		$this->Viewer_Assign('aLang',$this->aLangMsg);
+		$this->Viewer_Assign('aLang',array(&$this->aLangMsg),false,true);
 	}
 	/**
 	 * Загружает из конфига текстовки для JS

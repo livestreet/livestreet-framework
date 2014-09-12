@@ -1168,12 +1168,12 @@ class Engine {
 			if($aInfo[self::CI_PLUGIN]){
 				// Сущность модуля плагина
 				$sPath .= 'plugins/'.func_underscore($aInfo[self::CI_PLUGIN])
-					.'/classes/modules/'.strtolower($aInfo[self::CI_MODULE])
+					.'/classes/modules/'.func_underscore($aInfo[self::CI_MODULE])
 					.'/entity/'.$aInfo[self::CI_ENTITY].'.entity.class.php'
 				;
 			}else{
 				// Сущность модуля ядра
-				$sFile='classes/modules/'.strtolower($aInfo[self::CI_MODULE])
+				$sFile='classes/modules/'.func_underscore($aInfo[self::CI_MODULE])
 					.'/entity/'.$aInfo[self::CI_ENTITY].'.entity.class.php'
 				;
 				$sPath.=$sFile;
@@ -1186,12 +1186,12 @@ class Engine {
 			if($aInfo[self::CI_PLUGIN]){
 				// Поведение модуля плагина
 				$sPath .= 'plugins/'.func_underscore($aInfo[self::CI_PLUGIN])
-					.'/classes/modules/'.strtolower($aInfo[self::CI_MODULE])
+					.'/classes/modules/'.func_underscore($aInfo[self::CI_MODULE])
 					.'/behavior/'.$aInfo[self::CI_BEHAVIOR].'.behavior.class.php'
 				;
 			}else{
 				// Поведение модуля ядра
-				$sFile='classes/modules/'.strtolower($aInfo[self::CI_MODULE])
+				$sFile='classes/modules/'.func_underscore($aInfo[self::CI_MODULE])
 					.'/behavior/'.$aInfo[self::CI_BEHAVIOR].'.behavior.class.php'
 				;
 				$sPath.=$sFile;
@@ -1204,12 +1204,12 @@ class Engine {
 			if($aInfo[self::CI_PLUGIN]){
 				// Маппер модуля плагина
 				$sPath .= 'plugins/'.func_underscore($aInfo[self::CI_PLUGIN])
-					.'/classes/modules/'.strtolower($aInfo[self::CI_MODULE])
+					.'/classes/modules/'.func_underscore($aInfo[self::CI_MODULE])
 					.'/mapper/'.$aInfo[self::CI_MAPPER].'.mapper.class.php'
 				;
 			}else{
 				// Маппер модуля ядра
-				$sFile='classes/modules/'.strtolower($aInfo[self::CI_MODULE])
+				$sFile='classes/modules/'.func_underscore($aInfo[self::CI_MODULE])
 					.'/mapper/'.$aInfo[self::CI_MAPPER].'.mapper.class.php'
 				;
 				$sPath.=$sFile;
@@ -1248,12 +1248,12 @@ class Engine {
 			if($aInfo[self::CI_PLUGIN]){
 				// Модуль плагина
 				$sPath .= 'plugins/'.func_underscore($aInfo[self::CI_PLUGIN])
-					.'/classes/modules/'.strtolower($aInfo[self::CI_MODULE])
+					.'/classes/modules/'.func_underscore($aInfo[self::CI_MODULE])
 					.'/'.$aInfo[self::CI_MODULE].'.class.php';
 				;
 			}else{
 				// Модуль ядра
-				$sFile='classes/modules/'.strtolower($aInfo[self::CI_MODULE])
+				$sFile='classes/modules/'.func_underscore($aInfo[self::CI_MODULE])
 					.'/'.$aInfo[self::CI_MODULE].'.class.php'
 				;
 				$sPath.=$sFile;

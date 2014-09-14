@@ -227,7 +227,7 @@ class ModuleLs extends Module {
 		/**
 		 * Список плагинов с версиями
 		 */
-		$aPlugins=$this->Plugin_GetList();
+		$aPlugins=$this->PluginManager_GetPluginsItems();
 		foreach($aPlugins as $aPlugin) {
 			$aData['plugins']['code'][]=$aPlugin['code'];
 			$aData['plugins']['ia'][]=$aPlugin['is_active'];

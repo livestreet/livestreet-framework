@@ -469,26 +469,18 @@ abstract class EntityORM extends Entity {
 	}
 	/**
 	 * Возвращает список связей
-	 * TODO: странная логика
 	 *
 	 * @return array
 	 */
 	public function _getRelations() {
-		$sParent=get_parent_class($this);
-		if(substr_count($sParent,'_Inherits_') || substr_count($sParent,'_Inherit_')) {
-			$sParent = get_parent_class($sParent);
-		}
-		$aParentRelations=array();
-		if(!in_array($sParent,array('Entity','EntityORM'))) {
-			$oEntityParent=new $sParent();
-			$aParentRelations=$oEntityParent->_getRelations();
-		}
-		return array_merge($aParentRelations,$this->aRelations);
+		return $this->aRelations;
 	}
 	/**
 	 * Возвращает список данный связей
 	 *
-	 * @return array
+	 * @param string|null $sKey
+	 *
+	 * @return array|null
 	 */
 	public function _getRelationsData($sKey=null) {
 		if ($sKey) {

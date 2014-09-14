@@ -305,6 +305,8 @@ $config['db']['params']['dbname'] = 'social';
  */
 $config['db']['table']['prefix'] = 'prefix_';
 $config['db']['table']['notify_task']		= '___db.table.prefix___notify_task';
+$config['db']['table']['plugin_manager_migration']		= '___db.table.prefix___plugin_migration';
+$config['db']['table']['plugin_manager_version']		= '___db.table.prefix___plugin_version';
 $config['db']['table']['storage']			= '___db.table.prefix___storage';
 $config['db']['tables']['engine'] = 'InnoDB';  // InnoDB или MyISAM
 /**

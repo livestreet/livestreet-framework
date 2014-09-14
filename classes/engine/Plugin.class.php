@@ -170,7 +170,7 @@ abstract class Plugin extends LsObject {
 	 *
 	 * @return bool
 	 */
-	public function Delete() {
+	public function Remove() {
 		return true;
 	}
 	/**
@@ -235,9 +235,7 @@ abstract class Plugin extends LsObject {
 	 * @return string|null
 	 */
 	public function GetVersion() {
-		preg_match('/^Plugin([\w]+)$/i',get_class($this),$aMatches);
-		$sPluginXML = Config::Get('path.application.plugins.server').'/'.func_underscore($aMatches[1]).'/'.ModulePlugin::PLUGIN_XML_FILE;
-		if($oXml = @simplexml_load_file($sPluginXML)) {
+		if ($oXml=$this->PluginManager_GetPluginXmlInfo(self::GetPluginCode($this))) {
 			return (string)$oXml->version;
 		}
 		return null;

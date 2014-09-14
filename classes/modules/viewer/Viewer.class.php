@@ -309,6 +309,12 @@ class ModuleViewer extends Module {
 		return new SmartyLS();
 	}
 	/**
+	 * Очищает кеш компиленных шаблонов
+	 */
+	public function ClearCompiledTemplates() {
+		$this->oSmarty->clearCompiledTemplate();
+	}
+	/**
 	 * Ответ на ajax запрос
 	 *
 	 * @param string $sType Варианты: json, jsonIframe, jsonp

@@ -291,15 +291,31 @@ class ModulePluginManager extends ModuleORM {
 		$aPluginItemsReturn=array();
 		$aPluginCodes=func_list_plugins(true);
 		$aPluginItemsActive=$this->GetPluginsActive();
+
+		/**
+		 * Получаем версии из БД для всех плагинов
+		 */
+		if ($aPluginCodes) {
+			$aVersionItems=$this->GetVersionItemsByFilter(array('code in'=>$aPluginCodes,'#index-from'=>'code'));
+		} else {
+			$aVersionItems=array();
+		}
+
 		foreach($aPluginCodes as $sPluginCode) {
 			/**
 			 * Получаем из XML файла описания
 			 */
 			if($oXml=$this->GetPluginXmlInfo($sPluginCode)) {
+				if (isset($aVersionItems[$sPluginCode])) {
+					$sVersionDb=$aVersionItems[$sPluginCode]->getVersion();
+				} else {
+					$sVersionDb=null;
+				}
 				$aInfo=array(
 					'code'      => $sPluginCode,
 					'is_active' => in_array($sPluginCode,$aPluginItemsActive),
-					'property' 	=> $oXml
+					'property' 	=> $oXml,
+					'apply_update' => (is_null($sVersionDb) or version_compare($sVersionDb,(string)$oXml->version,'<')) ? true : false,
 				);
 				$aPluginItemsReturn[$sPluginCode]=$aInfo;
 			}
@@ -442,7 +458,7 @@ class ModulePluginManager extends ModuleORM {
 	 *
 	 * @param $sPlugin
 	 */
-	protected function ApplyPluginUpdate($sPlugin) {
+	public function ApplyPluginUpdate($sPlugin) {
 		$sPlugin=strtolower($sPlugin);
 		/**
 		 * Получаем текущую версию плагина из XML описания
@@ -493,8 +509,11 @@ class ModulePluginManager extends ModuleORM {
 					}
 				}
 			}
-			$oVersion->setVersion($sVersion);
 		}
+		/**
+		 * Проставляем версию из описания плагина
+		 */
+		$oVersion->setVersion($sVersionByFile);
 		$oVersion->Save();
 	}
 	/**

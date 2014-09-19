@@ -23,7 +23,10 @@
  * @param   Smarty $oSmarty
  * @return  string
  */
-function smarty_function_cfg($aParams,&$oSmarty) {	
+function smarty_function_cfg($aParams,&$oSmarty) {
+	if (isset($aParams['_default_short'])) {
+		$aParams['name']=$aParams['_default_short'];
+	}
 	if(empty($aParams['name'])) {
 		trigger_error("Config: missing 'name' parametr",E_USER_WARNING);
 		return ;

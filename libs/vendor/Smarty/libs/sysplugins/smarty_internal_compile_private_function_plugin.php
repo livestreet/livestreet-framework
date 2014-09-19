@@ -24,6 +24,14 @@ class Smarty_Internal_Compile_Private_Function_Plugin extends Smarty_Internal_Co
      * @see Smarty_Internal_CompileBase
      */
     public $required_attributes = array();
+	// @livestreet
+	/**
+	 * Shorttag attribute order defined by its names
+	 *
+	 * @var array
+	 */
+	public $shorttag_order = array('_default_short');
+	// @livestreet_end
     /**
      * Attribute definition: Overwrites base class.
      *

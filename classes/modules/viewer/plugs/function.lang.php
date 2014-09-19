@@ -24,6 +24,9 @@
  * @return  string
  */
 function smarty_function_lang($aParams,&$oSmarty) {
+	if (isset($aParams['_default_short'])) {
+		$aParams['name']=$aParams['_default_short'];
+	}
 	if(empty($aParams['name'])) {
 		trigger_error("Lang: missing 'name' parametr",E_USER_WARNING);
 		return ;

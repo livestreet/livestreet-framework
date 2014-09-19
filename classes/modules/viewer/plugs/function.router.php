@@ -23,7 +23,10 @@
  * @param   Smarty $oSmarty
  * @return  string
  */
-function smarty_function_router($aParams,&$oSmarty) {	
+function smarty_function_router($aParams,&$oSmarty) {
+	if (isset($aParams['_default_short'])) {
+		$aParams['page']=$aParams['_default_short'];
+	}
 	if(empty($aParams['page'])) {
 		trigger_error("Router: missing 'page' parametr",E_USER_WARNING);
 		return ;

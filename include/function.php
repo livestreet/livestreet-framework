@@ -267,18 +267,13 @@ function func_mkdir($sBasePath,$sNewDir) {
  */
 function func_rmdir($sPath) {
 	if(!is_dir($sPath)) return true;
-	$sPath = rtrim($sPath,'/').'/';
-	
-	if ($aFiles = glob($sPath.'*', GLOB_MARK)) {
-		foreach($aFiles as $sFile ) {
-			if (is_dir($sFile)) {
-				func_rmdir($sFile);
-			} else {
-				@unlink($sFile);
-			}
-		}
+	$sPath=rtrim ($sPath,'/');
+
+	$aFiles=array_diff(scandir($sPath),array('.','..'));
+	foreach($aFiles as $sFile) {
+		(is_dir("$sPath/$sFile")) ? func_rmdir("$sPath/$sFile") : @unlink("$sPath/$sFile");
 	}
-    if(is_dir($sPath)) @rmdir($sPath); 	
+	return @rmdir($sPath);
 }
 
 /**

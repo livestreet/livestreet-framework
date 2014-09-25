@@ -134,8 +134,17 @@ abstract class Behavior extends LsObject {
 	 *
 	 * @return mixed
 	 */
-	protected function getParam($sName) {
+	public function getParam($sName) {
 		return isset($this->aParams[$sName]) ? $this->aParams[$sName] : null;
+	}
+	/**
+	 * Устанавливает значение параметра
+	 *
+	 * @param string $sName
+	 * @param mixed $mValue
+	 */
+	public function setParam($sName,$mValue) {
+		$this->aParams[$sName]=$mValue;
 	}
 	/**
 	 * Возвращает все параметры

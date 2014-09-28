@@ -545,8 +545,14 @@ class Engine {
 
 		$sModuleName=strtolower($sModuleName);
 		$aResultHook=array();
+		
+		$aArgsRef=array();
+		foreach (array_keys($aArgs) as $key) {
+			$aArgsRef[]=&$aArgs[$key];
+		}
+		
 		if (!in_array($sModuleName,array('plugin','hook'))) {
-			$aResultHook=$this->_CallModule('Hook_Run',array('module_'.$sModuleName.'_'.strtolower($sMethod).'_before',&$aArgs));
+			$aResultHook=$this->_CallModule('Hook_Run',array('module_'.$sModuleName.'_'.strtolower($sMethod).'_before',$aArgsRef));
 		}
 		/**
 		 * Хук может делегировать результат выполнения метода модуля, сам метод при этом не выполняется, происходит только подмена результата
@@ -554,15 +560,11 @@ class Engine {
 		if (array_key_exists('delegate_result',$aResultHook)) {
 			$result=$aResultHook['delegate_result'];
 		} else {
-			$aArgsRef=array();
-			foreach ($aArgs as $key=>$v) {
-				$aArgsRef[]=&$aArgs[$key];
-			}
 			$result=call_user_func_array(array($oModule,$sMethod),$aArgsRef);
 		}
 
 		if (!in_array($sModuleName,array('plugin','hook'))) {
-			$this->Hook_Run('module_'.$sModuleName.'_'.strtolower($sMethod).'_after',array('result'=>&$result,'params'=>$aArgs));
+			$this->Hook_Run('module_'.$sModuleName.'_'.strtolower($sMethod).'_after',array('result'=>&$result,'params'=>$aArgsRef));
 		}
 
 		return $result;

@@ -387,6 +387,14 @@ class Router extends LsObject {
 	static public function GetPathWebCurrent() {
 		return self::$sPathWebCurrent;
 	}
+	/**
+	 * Устанавливает текущий url
+	 *
+	 * @param string $sUrl
+	 */
+	static public function SetPathWebCurrent($sUrl) {
+		self::$sPathWebCurrent=$sUrl;
+	}
 
 	static public function GetFixPathWeb($sUrl,$bWithScheme=true) {
 		$sResult='';

@@ -77,7 +77,7 @@ function smarty_function_date_format($aParams,&$oSmarty) {
 		$oEngine->Lang_SetLang($aParams['lang']);
 	}
 
-	$aMonth = $oEngine->Lang_Get('month_array');
+	$aMonth = $oEngine->Lang_Get('date.month_array');
 	$iDate= (preg_match("/^\d+$/",$sDate)) ?  $sDate : strtotime($sDate);
 	$iDate+=$iDiff;
 
@@ -85,7 +85,7 @@ function smarty_function_date_format($aParams,&$oSmarty) {
 	 * Если указана необходимость выполнять проверку на NOW
 	 */
 	if(isset($aParams['now'])) {
-		if($iDate+$aParams['now']>$iNow) return $oEngine->Lang_Get('date_now');
+		if($iDate+$aParams['now']>$iNow) return $oEngine->Lang_Get('date.now');
 	}
 
 	/**
@@ -99,10 +99,10 @@ function smarty_function_date_format($aParams,&$oSmarty) {
 			return ($iTimeDelta!=0)
 				? smarty_modifier_declension(
 					$iTimeDelta,
-					$oEngine->Lang_Get('date_minutes_back',array('minutes'=>$iTimeDelta)),
+					$oEngine->Lang_Get('date.minutes_back',array('minutes'=>$iTimeDelta)),
 					$oEngine->Lang_GetLang()
 				)
-				: $oEngine->Lang_Get('date_minutes_back_less');
+				: $oEngine->Lang_Get('date.minutes_back_less');
 		}
 	}
 
@@ -117,10 +117,10 @@ function smarty_function_date_format($aParams,&$oSmarty) {
 			return ($iTimeDelta!=0)
 				? smarty_modifier_declension(
 					$iTimeDelta,
-					$oEngine->Lang_Get('date_hours_back',array('hours'=>$iTimeDelta)),
+					$oEngine->Lang_Get('date.hours_back',array('hours'=>$iTimeDelta)),
 					$oEngine->Lang_GetLang()
 				)
-				: $oEngine->Lang_Get('date_hours_back_less');
+				: $oEngine->Lang_Get('date.hours_back_less');
 		}
 	}
 
@@ -133,19 +133,19 @@ function smarty_function_date_format($aParams,&$oSmarty) {
 			 * Если дата совпадает с сегодняшней
 			 */
 			case date('Y-m-d'):
-				$sDay=$oEngine->Lang_Get('date_today');
+				$sDay=$oEngine->Lang_Get('date.today_at');
 				break;
 			/**
 			 * Если дата совпадает со вчерашней
 			 */
 			case date('Y-m-d', mktime(0, 0, 0, date("m")  , date("d")-1, date("Y")) ):
-				$sDay=$oEngine->Lang_Get('date_yesterday');
+				$sDay=$oEngine->Lang_Get('date.yesterday_at');
 				break;
 			/**
 			 * Если дата совпадает с завтрашней
 			 */
 			case date('Y-m-d', mktime(0, 0, 0, date("m")  , date("d")+1, date("Y")) ):
-				$sDay=$oEngine->Lang_Get('date_tomorrow');
+				$sDay=$oEngine->Lang_Get('date.tomorrow_at');
 				break;
 
 			default:

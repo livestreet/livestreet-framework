@@ -33,47 +33,49 @@
  * @package framework.modules.validate
  * @since 1.0
  */
-class ModuleValidate_EntityValidatorRegexp extends ModuleValidate_EntityValidator {
-	/**
-	 * Проверяющее регулярное выражение
-	 *
-	 * @var string
-	 */
-	public $pattern;
-	/**
-	 * Инвертировать логику проверки на регулярное выражение
-	 *
-	 * @var bool
-	 **/
-	public $not=false;
-	/**
-	 * Допускать или нет пустое значение
-	 *
-	 * @var bool
-	 */
-	public $allowEmpty=true;
+class ModuleValidate_EntityValidatorRegexp extends ModuleValidate_EntityValidator
+{
+    /**
+     * Проверяющее регулярное выражение
+     *
+     * @var string
+     */
+    public $pattern;
+    /**
+     * Инвертировать логику проверки на регулярное выражение
+     *
+     * @var bool
+     **/
+    public $not = false;
+    /**
+     * Допускать или нет пустое значение
+     *
+     * @var bool
+     */
+    public $allowEmpty = true;
 
-	/**
-	 * Запуск валидации
-	 *
-	 * @param mixed $sValue	Данные для валидации
-	 *
-	 * @return bool|string
-	 */
-	public function validate($sValue) {
-		if (is_array($sValue)) {
-			return $this->getMessage($this->Lang_Get('validate.regexp.invalid_pattern',null,false),'msg');
-		}
-		if($this->allowEmpty && $this->isEmpty($sValue)) {
-			return true;
-		}
+    /**
+     * Запуск валидации
+     *
+     * @param mixed $sValue Данные для валидации
+     *
+     * @return bool|string
+     */
+    public function validate($sValue)
+    {
+        if (is_array($sValue)) {
+            return $this->getMessage($this->Lang_Get('validate.regexp.invalid_pattern', null, false), 'msg');
+        }
+        if ($this->allowEmpty && $this->isEmpty($sValue)) {
+            return true;
+        }
 
-		if($this->pattern===null) {
-			return $this->getMessage($this->Lang_Get('validate.regexp.invalid_pattern',null,false),'msg');
-		}
-		if((!$this->not && !preg_match($this->pattern,$sValue)) || ($this->not && preg_match($this->pattern,$sValue))) {
-			return $this->getMessage($this->Lang_Get('validate.regexp.not_valid',null,false),'msg');
-		}
-		return true;
-	}
+        if ($this->pattern === null) {
+            return $this->getMessage($this->Lang_Get('validate.regexp.invalid_pattern', null, false), 'msg');
+        }
+        if ((!$this->not && !preg_match($this->pattern, $sValue)) || ($this->not && preg_match($this->pattern, $sValue))) {
+            return $this->getMessage($this->Lang_Get('validate.regexp.not_valid', null, false), 'msg');
+        }
+        return true;
+    }
 }

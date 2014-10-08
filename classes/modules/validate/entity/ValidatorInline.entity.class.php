@@ -26,34 +26,36 @@
  * @package framework.modules.validate
  * @since 1.0
  */
-class ModuleValidate_EntityValidatorInline extends ModuleValidate_EntityValidator {
-	/**
-	 * Метод объекта для валидации, в него передаются параметры: $sValue и $aParam
-	 *
-	 * @var string
-	 */
-	public $method;
-	/**
-	 * Объект у которого будет вызван метод валидации, дляя сущности - это сам объект сущности
-	 *
-	 * @var LsObject object
-	 */
-	public $object;
-	/**
-	 * Список параметров для передачи в метод валидации
-	 *
-	 * @var array
-	 */
-	public $params;
+class ModuleValidate_EntityValidatorInline extends ModuleValidate_EntityValidator
+{
+    /**
+     * Метод объекта для валидации, в него передаются параметры: $sValue и $aParam
+     *
+     * @var string
+     */
+    public $method;
+    /**
+     * Объект у которого будет вызван метод валидации, дляя сущности - это сам объект сущности
+     *
+     * @var LsObject object
+     */
+    public $object;
+    /**
+     * Список параметров для передачи в метод валидации
+     *
+     * @var array
+     */
+    public $params;
 
-	/**
-	 * Запуск валидации
-	 *
-	 * @param mixed $sValue	Данные для валидации
-	 * @return bool|string
-	 */
-	public function validate($sValue) {
-		$sMethod=$this->method;
-		return $this->object->$sMethod($sValue,$this->params);
-	}
+    /**
+     * Запуск валидации
+     *
+     * @param mixed $sValue Данные для валидации
+     * @return bool|string
+     */
+    public function validate($sValue)
+    {
+        $sMethod = $this->method;
+        return $this->object->$sMethod($sValue, $this->params);
+    }
 }

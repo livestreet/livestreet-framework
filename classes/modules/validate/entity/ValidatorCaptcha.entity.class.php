@@ -25,39 +25,41 @@
  * @package framework.modules.validate
  * @since 1.0
  */
-class ModuleValidate_EntityValidatorCaptcha extends ModuleValidate_EntityValidator {
-	/**
-	 * Допускать или нет пустое значение
-	 *
-	 * @var bool
-	 */
-	public $allowEmpty=false;
-	/**
-	 * Название каптчи для возможности создавать несколько независимых каптч на странице
-	 *
-	 * @var string
-	 */
-	public $name='';
+class ModuleValidate_EntityValidatorCaptcha extends ModuleValidate_EntityValidator
+{
+    /**
+     * Допускать или нет пустое значение
+     *
+     * @var bool
+     */
+    public $allowEmpty = false;
+    /**
+     * Название каптчи для возможности создавать несколько независимых каптч на странице
+     *
+     * @var string
+     */
+    public $name = '';
 
-	/**
-	 * Запуск валидации
-	 *
-	 * @param mixed $sValue	Данные для валидации
-	 *
-	 * @return bool|string
-	 */
-	public function validate($sValue) {
-		if (is_array($sValue)) {
-			return $this->getMessage($this->Lang_Get('validate.captcha.not_valid',null,false),'msg');
-		}
-		if($this->allowEmpty && $this->isEmpty($sValue)) {
-			return true;
-		}
+    /**
+     * Запуск валидации
+     *
+     * @param mixed $sValue Данные для валидации
+     *
+     * @return bool|string
+     */
+    public function validate($sValue)
+    {
+        if (is_array($sValue)) {
+            return $this->getMessage($this->Lang_Get('validate.captcha.not_valid', null, false), 'msg');
+        }
+        if ($this->allowEmpty && $this->isEmpty($sValue)) {
+            return true;
+        }
 
-		$sSessionName='captcha_keystring'.($this->name ? '_'.$this->name : '');
-		if (!isset($_SESSION[$sSessionName]) or $_SESSION[$sSessionName]!=strtolower($sValue)) {
-			return $this->getMessage($this->Lang_Get('validate.captcha.not_valid',null,false),'msg');
-		}
-		return true;
-	}
+        $sSessionName = 'captcha_keystring' . ($this->name ? '_' . $this->name : '');
+        if (!isset($_SESSION[$sSessionName]) or $_SESSION[$sSessionName] != strtolower($sValue)) {
+            return $this->getMessage($this->Lang_Get('validate.captcha.not_valid', null, false), 'msg');
+        }
+        return true;
+    }
 }

@@ -25,83 +25,97 @@
  * @package framework.modules
  * @since 2.0
  */
-class ModuleCache_EntityBackendMemcached extends ModuleCache_EntityBackend {
-	/**
-	 * Проверяет доступность использования текущего бекенда
-	 *
-	 * @return mixed
-	 */
-	public function IsAvailable() {
-		if (extension_loaded('memcache')) {
-			return true;
-		}
-		return 'The memcache extension must be loaded for using this backend!';
-	}
-	/**
-	 * Проверяет доступность использование мульти-get запросов к кешу (указывать сразу несколько ключей)
-	 *
-	 * @return mixed
-	 */
-	public function IsAllowMultiGet() {
-		return true;
-	}
-	/**
-	 * Инициализация бекенда
-	 *
-	 * @param array $aParams
-	 *
-	 * @return mixed
-	 */
-	public function Init($aParams=array()) {
-		require_once(LS_DKCACHE_PATH.'Cache/Backend/TagEmuWrapper.php');
-		require_once(LS_DKCACHE_PATH.'Cache/Backend/MemcachedMultiload.php');
-		$aConfig=Config::Get('memcache');
+class ModuleCache_EntityBackendMemcached extends ModuleCache_EntityBackend
+{
+    /**
+     * Проверяет доступность использования текущего бекенда
+     *
+     * @return mixed
+     */
+    public function IsAvailable()
+    {
+        if (extension_loaded('memcache')) {
+            return true;
+        }
+        return 'The memcache extension must be loaded for using this backend!';
+    }
 
-		$oCahe = new Dklab_Cache_Backend_MemcachedMultiload(is_array($aConfig) ? $aConfig : array());
-		if (isset($aParams['stats_callback'])) {
-			$this->oCacheBackend=new Dklab_Cache_Backend_TagEmuWrapper(new Dklab_Cache_Backend_Profiler($oCahe,$aParams['stats_callback']));
-		} else {
-			$this->oCacheBackend=new Dklab_Cache_Backend_TagEmuWrapper($oCahe);
-		}
-	}
-	/**
-	 * Получить значение из кеша
-	 *
-	 * @param string $sName	Имя ключа
-	 * @return mixed|bool
-	 */
-	public function Get($sName) {
-		return $this->oCacheBackend->load($sName);
-	}
-	/**
-	 * Записать значение в кеш
-	 *
-	 * @param  mixed  $mData	Данные для хранения в кеше
-	 * @param  string $sName	Имя ключа
-	 * @param  array  $aTags	Список тегов, для возможности удалять сразу несколько кешей по тегу
-	 * @param  int|bool    $iTimeLife	Время жизни кеша в секундах
-	 * @return bool
-	 */
-	public function Set($mData,$sName,$aTags=array(),$iTimeLife=false) {
-		return $this->oCacheBackend->save($mData,$sName,$aTags,$iTimeLife);
-	}
-	/**
-	 * Удаляет значение из кеша по ключу(имени)
-	 *
-	 * @param string $sName	Имя ключа
-	 * @return bool
-	 */
-	public function Delete($sName) {
-		return $this->oCacheBackend->remove($sName);
-	}
-	/**
-	 * Чистит кеши
-	 *
-	 * @param string $cMode	Режим очистки кеша
-	 * @param array $aTags	Список тегов, актуально для режима Zend_Cache::CLEANING_MODE_MATCHING_TAG
-	 * @return bool
-	 */
-	public function Clean($cMode=Zend_Cache::CLEANING_MODE_ALL,$aTags=array()) {
-		return $this->oCacheBackend->clean($cMode,$aTags);
-	}
+    /**
+     * Проверяет доступность использование мульти-get запросов к кешу (указывать сразу несколько ключей)
+     *
+     * @return mixed
+     */
+    public function IsAllowMultiGet()
+    {
+        return true;
+    }
+
+    /**
+     * Инициализация бекенда
+     *
+     * @param array $aParams
+     *
+     * @return mixed
+     */
+    public function Init($aParams = array())
+    {
+        require_once(LS_DKCACHE_PATH . 'Cache/Backend/TagEmuWrapper.php');
+        require_once(LS_DKCACHE_PATH . 'Cache/Backend/MemcachedMultiload.php');
+        $aConfig = Config::Get('memcache');
+
+        $oCahe = new Dklab_Cache_Backend_MemcachedMultiload(is_array($aConfig) ? $aConfig : array());
+        if (isset($aParams['stats_callback'])) {
+            $this->oCacheBackend = new Dklab_Cache_Backend_TagEmuWrapper(new Dklab_Cache_Backend_Profiler($oCahe, $aParams['stats_callback']));
+        } else {
+            $this->oCacheBackend = new Dklab_Cache_Backend_TagEmuWrapper($oCahe);
+        }
+    }
+
+    /**
+     * Получить значение из кеша
+     *
+     * @param string $sName Имя ключа
+     * @return mixed|bool
+     */
+    public function Get($sName)
+    {
+        return $this->oCacheBackend->load($sName);
+    }
+
+    /**
+     * Записать значение в кеш
+     *
+     * @param  mixed $mData Данные для хранения в кеше
+     * @param  string $sName Имя ключа
+     * @param  array $aTags Список тегов, для возможности удалять сразу несколько кешей по тегу
+     * @param  int|bool $iTimeLife Время жизни кеша в секундах
+     * @return bool
+     */
+    public function Set($mData, $sName, $aTags = array(), $iTimeLife = false)
+    {
+        return $this->oCacheBackend->save($mData, $sName, $aTags, $iTimeLife);
+    }
+
+    /**
+     * Удаляет значение из кеша по ключу(имени)
+     *
+     * @param string $sName Имя ключа
+     * @return bool
+     */
+    public function Delete($sName)
+    {
+        return $this->oCacheBackend->remove($sName);
+    }
+
+    /**
+     * Чистит кеши
+     *
+     * @param string $cMode Режим очистки кеша
+     * @param array $aTags Список тегов, актуально для режима Zend_Cache::CLEANING_MODE_MATCHING_TAG
+     * @return bool
+     */
+    public function Clean($cMode = Zend_Cache::CLEANING_MODE_ALL, $aTags = array())
+    {
+        return $this->oCacheBackend->clean($cMode, $aTags);
+    }
 }

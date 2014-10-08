@@ -28,25 +28,25 @@
  */
 function smarty_function_add_block($params, &$smarty)
 {
-	if (!array_key_exists('group', $params)) {
-		trigger_error("add_block: missing 'group' parameter",E_USER_WARNING);
+    if (!array_key_exists('group', $params)) {
+        trigger_error("add_block: missing 'group' parameter", E_USER_WARNING);
         return;
     }
 
-	if (!array_key_exists('name', $params)) {
-		trigger_error("add_block: missing 'name' parameter",E_USER_WARNING);
-		return;
-	}
+    if (!array_key_exists('name', $params)) {
+        trigger_error("add_block: missing 'name' parameter", E_USER_WARNING);
+        return;
+    }
 
-	$aBlockParams=(isset($params['params']) && is_array($params['params'])) ? $params['params'] : array();
-	$iPriority=isset($params['priority']) ? $params['priority'] : 5;
+    $aBlockParams = (isset($params['params']) && is_array($params['params'])) ? $params['params'] : array();
+    $iPriority = isset($params['priority']) ? $params['priority'] : 5;
 
-	foreach($params as $k=>$v) {
-		if (!in_array($k,array('group','name','params','priority'))) {
-			$aBlockParams[$k]=$v;
-		}
-	}
+    foreach ($params as $k => $v) {
+        if (!in_array($k, array('group', 'name', 'params', 'priority'))) {
+            $aBlockParams[$k] = $v;
+        }
+    }
 
-	Engine::getInstance()->Viewer_AddBlock($params['group'],$params['name'],$aBlockParams,$iPriority);
-	return '';
+    Engine::getInstance()->Viewer_AddBlock($params['group'], $params['name'], $aBlockParams, $iPriority);
+    return '';
 }

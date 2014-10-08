@@ -25,34 +25,40 @@
  * @package framework.modules
  * @since 2.0
  */
-class ModuleAsset_EntityTypeJs extends ModuleAsset_EntityType {
-	/**
-	 * Производит предварительную обработку содержимого
-	 *
-	 */
-	public function prepare() {
-		$this->setContent(
-			rtrim($this->getContent(),";").";".PHP_EOL
-		);
-	}
-	/**
-	 * Выполняет сжатие
-	 *
-	 * @return mixed|void
-	 */
-	public function compress() {
+class ModuleAsset_EntityTypeJs extends ModuleAsset_EntityType
+{
+    /**
+     * Производит предварительную обработку содержимого
+     *
+     */
+    public function prepare()
+    {
+        $this->setContent(
+            rtrim($this->getContent(), ";") . ";" . PHP_EOL
+        );
+    }
 
-	}
-	/**
-	 * Возвращает HTML обертку для файла
-	 *
-	 * @param $sFile
-	 * @param $aParams
-	 *
-	 * @return string
-	 */
-	public function getHeadHtml($sFile,$aParams) {
-		$sHtml='<script type="text/javascript" src="'.$sFile.'"></script>';
-		return $this->wrapForBrowser($sHtml,$aParams);
-	}
+    /**
+     * Выполняет сжатие
+     *
+     * @return mixed|void
+     */
+    public function compress()
+    {
+
+    }
+
+    /**
+     * Возвращает HTML обертку для файла
+     *
+     * @param $sFile
+     * @param $aParams
+     *
+     * @return string
+     */
+    public function getHeadHtml($sFile, $aParams)
+    {
+        $sHtml = '<script type="text/javascript" src="' . $sFile . '"></script>';
+        return $this->wrapForBrowser($sHtml, $aParams);
+    }
 }

@@ -25,18 +25,20 @@
  * @package framework.modules
  * @since 2.0
  */
-class ModuleStorage_MapperStorage extends Mapper {
+class ModuleStorage_MapperStorage extends Mapper
+{
 
-	/**
-	 * Получить данные из хранилища по фильтру
-	 * 
-	 * @param null	$sWhere			фильтр
-	 * @param int	$iPage			страница
-	 * @param int	$iPerPage		результатов на страницу
-	 * @return array
-	 */
-	public function GetData($sWhere = null, $iPage = 1, $iPerPage = PHP_INT_MAX) {
-		$sSql = 'SELECT *
+    /**
+     * Получить данные из хранилища по фильтру
+     *
+     * @param null $sWhere фильтр
+     * @param int $iPage страница
+     * @param int $iPerPage результатов на страницу
+     * @return array
+     */
+    public function GetData($sWhere = null, $iPage = 1, $iPerPage = PHP_INT_MAX)
+    {
+        $sSql = 'SELECT *
 			FROM
 				?#
 			WHERE
@@ -46,40 +48,42 @@ class ModuleStorage_MapperStorage extends Mapper {
 				`id` ASC
 			LIMIT ?d, ?d
 		';
-		$iTotalCount = 0;
-		$aCollection = array();
+        $iTotalCount = 0;
+        $aCollection = array();
 
-		if ($aData = $this->oDb->selectPage(
-			$iTotalCount,
-			$sSql,
+        if ($aData = $this->oDb->selectPage(
+            $iTotalCount,
+            $sSql,
 
-			Config::Get('db.table.storage'),
+            Config::Get('db.table.storage'),
 
-			($iPage - 1) * $iPerPage,
-			$iPerPage
-		)) {
-			/*
-			 * Если нужен только один элемент
-			 */
-			$aCollection = $iPerPage == 1 ? array_shift($aData) : $aData;
-		}
-		return array(
-			'collection' => $aCollection,
-			'count' => $iTotalCount
-		);
-	}
+            ($iPage - 1) * $iPerPage,
+            $iPerPage
+        )
+        ) {
+            /*
+             * Если нужен только один элемент
+             */
+            $aCollection = $iPerPage == 1 ? array_shift($aData) : $aData;
+        }
+        return array(
+            'collection' => $aCollection,
+            'count' => $iTotalCount
+        );
+    }
 
 
-	/**
-	 * Записать данные
-	 * 
-	 * @param 	$sKey				ключ
-	 * @param 	$sValue				значение
-	 * @param 	$sInstance			инстанция хранилища
-	 * @return array|null
-	 */
-	public function SetData($sKey, $sValue, $sInstance) {
-		$sSql = 'INSERT INTO
+    /**
+     * Записать данные
+     *
+     * @param    $sKey                ключ
+     * @param    $sValue                значение
+     * @param    $sInstance            инстанция хранилища
+     * @return array|null
+     */
+    public function SetData($sKey, $sValue, $sInstance)
+    {
+        $sSql = 'INSERT INTO
 				?#
 			(
 				`key`,
@@ -96,29 +100,30 @@ class ModuleStorage_MapperStorage extends Mapper {
 				`value` = ?
 		';
 
-		return $this->oDb->query(
-			$sSql,
+        return $this->oDb->query(
+            $sSql,
 
-			Config::Get('db.table.storage'),
+            Config::Get('db.table.storage'),
 
-			$sKey,
-			$sValue,
-			$sInstance,
-			
-			$sValue
-		);
-	}
+            $sKey,
+            $sValue,
+            $sInstance,
+
+            $sValue
+        );
+    }
 
 
-	/**
-	 * Удалить данные из хранилища
-	 * 
-	 * @param null	$sWhere			фильтр
-	 * @param int	$iLimit			лимит запроса
-	 * @return array|null
-	 */
-	public function DeleteData($sWhere = null, $iLimit = 1) {
-		$sSql = 'DELETE
+    /**
+     * Удалить данные из хранилища
+     *
+     * @param null $sWhere фильтр
+     * @param int $iLimit лимит запроса
+     * @return array|null
+     */
+    public function DeleteData($sWhere = null, $iLimit = 1)
+    {
+        $sSql = 'DELETE
 			FROM
 				?#
 			WHERE
@@ -127,32 +132,33 @@ class ModuleStorage_MapperStorage extends Mapper {
 			LIMIT ?d
 		';
 
-		return $this->oDb->query(
-			$sSql,
+        return $this->oDb->query(
+            $sSql,
 
-			Config::Get('db.table.storage'),
+            Config::Get('db.table.storage'),
 
-			$iLimit
-		);
-	}
+            $iLimit
+        );
+    }
 
 
-	/**
-	 * Построить строку части WHERE условия из набора параметров фильтра
-	 * 
-	 * @param array $aFilter		фильтр
-	 * @return string				часть WHERE условия sql запроса
-	 */
-	public function BuildFilter($aFilter = array()) {
-		$sWhere = '';
-		/*
-		 * для всех значение добавить условие "ключ = значение"
-		 */
-		foreach($aFilter as $sKey => $mValue) {
-			$sWhere .= '
+    /**
+     * Построить строку части WHERE условия из набора параметров фильтра
+     *
+     * @param array $aFilter фильтр
+     * @return string                часть WHERE условия sql запроса
+     */
+    public function BuildFilter($aFilter = array())
+    {
+        $sWhere = '';
+        /*
+         * для всех значение добавить условие "ключ = значение"
+         */
+        foreach ($aFilter as $sKey => $mValue) {
+            $sWhere .= '
 				AND ' . $this->oDb->escape($sKey, true) . ' = ' . $this->oDb->escape($mValue);
-		}
-		return $sWhere;
-	}
-	
+        }
+        return $sWhere;
+    }
+
 }

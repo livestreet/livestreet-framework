@@ -28,6 +28,7 @@
  *
  * @return mixed
  */
-function smarty_modifier_declension($iCount,$mForms,$sLang=null) {
-	return Engine::getInstance()->Lang_Pluralize($iCount,$mForms,$sLang);
+function smarty_modifier_declension($iCount, $mForms, $sLang = null)
+{
+    return Engine::getInstance()->Lang_Pluralize($iCount, $mForms, $sLang);
 }

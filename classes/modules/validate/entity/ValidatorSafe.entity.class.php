@@ -25,15 +25,17 @@
  * @package framework.modules.validate
  * @since 2.0
  */
-class ModuleValidate_EntityValidatorSafe extends ModuleValidate_EntityValidator {
-	/**
-	 * Запуск валидации
-	 *
-	 * @param mixed $sValue	Данные для валидации
-	 *
-	 * @return bool|string
-	 */
-	public function validate($sValue) {
-		return true;
-	}
+class ModuleValidate_EntityValidatorSafe extends ModuleValidate_EntityValidator
+{
+    /**
+     * Запуск валидации
+     *
+     * @param mixed $sValue Данные для валидации
+     *
+     * @return bool|string
+     */
+    public function validate($sValue)
+    {
+        return true;
+    }
 }

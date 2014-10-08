@@ -26,25 +26,28 @@
  * @package framework.engine
  * @since 1.0
  */
-abstract class Mapper extends LsObject {
-	/**
-	 * Объект подключения к базе данных
-	 *
-	 * @var DbSimple_Database
-	 */
-	protected $oDb;
+abstract class Mapper extends LsObject
+{
+    /**
+     * Объект подключения к базе данных
+     *
+     * @var DbSimple_Database
+     */
+    protected $oDb;
 
-	/**
-	 * Передаем коннект к БД
-	 *
-	 * @param DbSimple_Database $oDb
-	 */
-	public function __construct(DbSimple_Database $oDb) {
-		parent::__construct();
-		$this->oDb = $oDb;
-	}
+    /**
+     * Передаем коннект к БД
+     *
+     * @param DbSimple_Database $oDb
+     */
+    public function __construct(DbSimple_Database $oDb)
+    {
+        parent::__construct();
+        $this->oDb = $oDb;
+    }
 
-	protected function IsSuccessful($mRes) {
-		return $mRes===false or is_null($mRes) ? false : true;
-	}
+    protected function IsSuccessful($mRes)
+    {
+        return $mRes === false or is_null($mRes) ? false : true;
+    }
 }

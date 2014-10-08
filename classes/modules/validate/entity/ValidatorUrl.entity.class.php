@@ -33,81 +33,85 @@
  * @package framework.modules.validate
  * @since 1.0
  */
-class ModuleValidate_EntityValidatorUrl extends ModuleValidate_EntityValidator {
-	/**
-	 * Патерн проверки URL с учетом схемы
-	 *
-	 * @var string
-	 */
-	public $pattern='/^{schemes}:\/\/(([A-Z0-9][A-Z0-9_-]*)(\.[A-Z0-9][A-Z0-9_-]*)+)/i';
-	/**
-	 * Список допустимых схем
-	 *
-	 * @var array
-	 **/
-	public $validSchemes=array('http','https');
-	/**
-	 * Дефолтная схема, которая добавляется к URL при ее отсутствии.
-	 * Если null, то URL должен уже содержать схему
-	 *
-	 * @var null|string
-	 **/
-	public $defaultScheme;
-	/**
-	 * Допускать или нет пустое значение
-	 *
-	 * @var bool
-	 */
-	public $allowEmpty=true;
+class ModuleValidate_EntityValidatorUrl extends ModuleValidate_EntityValidator
+{
+    /**
+     * Патерн проверки URL с учетом схемы
+     *
+     * @var string
+     */
+    public $pattern = '/^{schemes}:\/\/(([A-Z0-9][A-Z0-9_-]*)(\.[A-Z0-9][A-Z0-9_-]*)+)/i';
+    /**
+     * Список допустимых схем
+     *
+     * @var array
+     **/
+    public $validSchemes = array('http', 'https');
+    /**
+     * Дефолтная схема, которая добавляется к URL при ее отсутствии.
+     * Если null, то URL должен уже содержать схему
+     *
+     * @var null|string
+     **/
+    public $defaultScheme;
+    /**
+     * Допускать или нет пустое значение
+     *
+     * @var bool
+     */
+    public $allowEmpty = true;
 
-	/**
-	 * Запуск валидации
-	 *
-	 * @param mixed $sValue	Данные для валидации
-	 *
-	 * @return bool|string
-	 */
-	public function validate($sValue) {
-		if (is_array($sValue)) {
-			return $this->getMessage($this->Lang_Get('validate.url.not_valid',null,false),'msg');
-		}
-		if($this->allowEmpty && $this->isEmpty($sValue)) {
-			return true;
-		}
+    /**
+     * Запуск валидации
+     *
+     * @param mixed $sValue Данные для валидации
+     *
+     * @return bool|string
+     */
+    public function validate($sValue)
+    {
+        if (is_array($sValue)) {
+            return $this->getMessage($this->Lang_Get('validate.url.not_valid', null, false), 'msg');
+        }
+        if ($this->allowEmpty && $this->isEmpty($sValue)) {
+            return true;
+        }
 
-		if(($sValue=$this->validateValue($sValue))!==false) {
-			/**
-			 * Если проверка от сущности, то возвращаем обновленное значение
-			 */
-			if ($this->oEntityCurrent) {
-				$this->setValueOfCurrentEntity($this->sFieldCurrent,$sValue);
-			}
-		} else {
-			return $this->getMessage($this->Lang_Get('validate.url.not_valid',null,false),'msg');
-		}
-		return true;
-	}
-	/**
-	 * Проверка URL на корректность
-	 *
-	 * @param string $sValue Данные для валидации
-	 *
-	 * @return bool
-	 */
-	public function validateValue($sValue) {
-		if(is_string($sValue) && strlen($sValue)<2000) {
-			if($this->defaultScheme!==null && strpos($sValue,'://')===false) {
-				$sValue=$this->defaultScheme.'://'.$sValue;
-			}
-			if(strpos($this->pattern,'{schemes}')!==false) {
-				$sPattern=str_replace('{schemes}','('.implode('|',$this->validSchemes).')',$this->pattern);
-			} else {
-				$sPattern=$this->pattern;
-			}
-			if(preg_match($sPattern,$sValue)) {
-				return $sValue;
-			}
-		}
-		return false;
-	}
+        if (($sValue = $this->validateValue($sValue)) !== false) {
+            /**
+             * Если проверка от сущности, то возвращаем обновленное значение
+             */
+            if ($this->oEntityCurrent) {
+                $this->setValueOfCurrentEntity($this->sFieldCurrent, $sValue);
+            }
+        } else {
+            return $this->getMessage($this->Lang_Get('validate.url.not_valid', null, false), 'msg');
+        }
+        return true;
+    }
+
+    /**
+     * Проверка URL на корректность
+     *
+     * @param string $sValue Данные для валидации
+     *
+     * @return bool
+     */
+    public function validateValue($sValue)
+    {
+        if (is_string($sValue) && strlen($sValue) < 2000) {
+            if ($this->defaultScheme !== null && strpos($sValue, '://') === false) {
+                $sValue = $this->defaultScheme . '://' . $sValue;
+            }
+            if (strpos($this->pattern, '{schemes}') !== false) {
+                $sPattern = str_replace('{schemes}', '(' . implode('|', $this->validSchemes) . ')', $this->pattern);
+            } else {
+                $sPattern = $this->pattern;
+            }
+            if (preg_match($sPattern, $sValue)) {
+                return $sValue;
+            }
+        }
+        return false;
+    }
 }

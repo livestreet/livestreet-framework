@@ -27,30 +27,31 @@
  * @param   Smarty $oSmarty
  * @return  string
  */
-function smarty_function_router($aParams,&$oSmarty) {
-	if (isset($aParams['_default_short'])) {
-		$aParams['page']=$aParams['_default_short'];
-	}
-	if(empty($aParams['page'])) {
-		trigger_error("Router: missing 'page' parametr",E_USER_WARNING);
-		return ;
-	}
-	require_once(Config::Get('path.framework.server').'/classes/engine/Router.class.php');
-	
-	if(!$sPath = Router::GetPath($aParams['page'])) {
-		trigger_error("Router: unknown 'page' given",E_USER_WARNING);
-		return ;
-	}
-	/**
-	 * Возвращаем полный адрес к указаному Action
-	 */
-	$sReturn=(isset($aParams['extend']))
-		? $sPath . $aParams['extend'] ."/"
-		: $sPath;
+function smarty_function_router($aParams, &$oSmarty)
+{
+    if (isset($aParams['_default_short'])) {
+        $aParams['page'] = $aParams['_default_short'];
+    }
+    if (empty($aParams['page'])) {
+        trigger_error("Router: missing 'page' parametr", E_USER_WARNING);
+        return;
+    }
+    require_once(Config::Get('path.framework.server') . '/classes/engine/Router.class.php');
 
-	if (!empty($aParams['assign'])) {
-		$oSmarty->assign($aParams['assign'], $sReturn);
-	} else {
-		return $sReturn;
-	}
+    if (!$sPath = Router::GetPath($aParams['page'])) {
+        trigger_error("Router: unknown 'page' given", E_USER_WARNING);
+        return;
+    }
+    /**
+     * Возвращаем полный адрес к указаному Action
+     */
+    $sReturn = (isset($aParams['extend']))
+        ? $sPath . $aParams['extend'] . "/"
+        : $sPath;
+
+    if (!empty($aParams['assign'])) {
+        $oSmarty->assign($aParams['assign'], $sReturn);
+    } else {
+        return $sReturn;
+    }
 }

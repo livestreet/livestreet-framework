@@ -26,13 +26,15 @@
  * @package framework.modules
  * @since 2.0
  */
-class ModuleCache_EntityBackendFileOrm extends ModuleCache_EntityBackendFile {
-	/**
-	 * Возвращает каталог для кеша
-	 *
-	 * @return string
-	 */
-	protected function GetCacheDir() {
-		return Config::Get('sys.cache.dir').'/database/';
-	}
+class ModuleCache_EntityBackendFileOrm extends ModuleCache_EntityBackendFile
+{
+    /**
+     * Возвращает каталог для кеша
+     *
+     * @return string
+     */
+    protected function GetCacheDir()
+    {
+        return Config::Get('sys.cache.dir') . '/database/';
+    }
 }

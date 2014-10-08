@@ -33,35 +33,37 @@
  * @package framework.modules.validate
  * @since 1.0
  */
-class ModuleValidate_EntityValidatorRequired extends ModuleValidate_EntityValidator {
-	/**
-	 * Требуемое значение для точного совпадения
-	 *
-	 * @var mixed
-	 */
-	public $requiredValue;
-	/**
-	 * Строгое сравнение с учетом типов, актуально при использовании requiredValue
-	 *
-	 * @var bool
-	 */
-	public $strict=false;
+class ModuleValidate_EntityValidatorRequired extends ModuleValidate_EntityValidator
+{
+    /**
+     * Требуемое значение для точного совпадения
+     *
+     * @var mixed
+     */
+    public $requiredValue;
+    /**
+     * Строгое сравнение с учетом типов, актуально при использовании requiredValue
+     *
+     * @var bool
+     */
+    public $strict = false;
 
-	/**
-	 * Запуск валидации
-	 *
-	 * @param mixed $sValue	Данные для валидации
-	 *
-	 * @return bool|string
-	 */
-	public function validate($sValue) {
-		if($this->requiredValue!==null) {
-			if(!$this->strict && $sValue!=$this->requiredValue || $this->strict && $sValue!==$this->requiredValue) {
-				return $this->getMessage($this->Lang_Get('validate.required.must_be',null,false),'msg',array('value'=>$this->requiredValue));
-			}
-		} else if($this->isEmpty($sValue,true)) {
-			return $this->getMessage($this->Lang_Get('validate.required.cannot_blank',null,false),'msg');
-		}
-		return true;
-	}
+    /**
+     * Запуск валидации
+     *
+     * @param mixed $sValue Данные для валидации
+     *
+     * @return bool|string
+     */
+    public function validate($sValue)
+    {
+        if ($this->requiredValue !== null) {
+            if (!$this->strict && $sValue != $this->requiredValue || $this->strict && $sValue !== $this->requiredValue) {
+                return $this->getMessage($this->Lang_Get('validate.required.must_be', null, false), 'msg', array('value' => $this->requiredValue));
+            }
+        } else if ($this->isEmpty($sValue, true)) {
+            return $this->getMessage($this->Lang_Get('validate.required.cannot_blank', null, false), 'msg');
+        }
+        return true;
+    }
 }

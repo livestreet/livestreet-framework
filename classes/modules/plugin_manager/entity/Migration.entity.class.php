@@ -25,14 +25,16 @@
  * @package framework.modules
  * @since 2.0
  */
-class ModulePluginManager_EntityMigration extends EntityORM {
+class ModulePluginManager_EntityMigration extends EntityORM
+{
 
-	protected function beforeSave() {
-		if ($bResult=parent::beforeSave()) {
-			if ($this->_isNew()) {
-				$this->setDateCreate(date("Y-m-d H:i:s"));
-			}
-		}
-		return $bResult;
-	}
+    protected function beforeSave()
+    {
+        if ($bResult = parent::beforeSave()) {
+            if ($this->_isNew()) {
+                $this->setDateCreate(date("Y-m-d H:i:s"));
+            }
+        }
+        return $bResult;
+    }
 }

@@ -25,13 +25,15 @@
  * @package framework.modules
  * @since 2.0
  */
-class ModulePluginManager_EntityVersion extends EntityORM {
+class ModulePluginManager_EntityVersion extends EntityORM
+{
 
-	protected function beforeSave() {
-		if ($bResult=parent::beforeSave()) {
-			$this->setDateUpdate(date("Y-m-d H:i:s"));
-		}
-		return $bResult;
-	}
+    protected function beforeSave()
+    {
+        if ($bResult = parent::beforeSave()) {
+            $this->setDateUpdate(date("Y-m-d H:i:s"));
+        }
+        return $bResult;
+    }
 
 }

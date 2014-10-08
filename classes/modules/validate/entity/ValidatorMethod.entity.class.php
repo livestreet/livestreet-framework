@@ -27,45 +27,47 @@
  * @package framework.modules.validate
  * @since 1.0
  */
-class ModuleValidate_EntityValidatorMethod extends ModuleValidate_EntityValidator {
-	/**
-	 * Допускать или нет пустое значение
-	 *
-	 * @var bool
-	 */
-	public $allowEmpty=true;
-	/**
-	 * Полное название метода для проверки, метод будет вызваться через объект $this
-	 *
-	 * @var string
-	 */
-	public $method=null;
+class ModuleValidate_EntityValidatorMethod extends ModuleValidate_EntityValidator
+{
+    /**
+     * Допускать или нет пустое значение
+     *
+     * @var bool
+     */
+    public $allowEmpty = true;
+    /**
+     * Полное название метода для проверки, метод будет вызваться через объект $this
+     *
+     * @var string
+     */
+    public $method = null;
 
-	/**
-	 * Запуск валидации
-	 *
-	 * @param mixed $sValue    			Данные для валидации
-	 * @return bool|string
-	 */
-	public function validate($sValue) {
-		/**
-		 * Проверка типа значения
-		 */
-		if (!$this->method) {
-			return $this->getMessage($this->Lang_Get('validate.method.invalid',null,false),'msg');
-		}
-		/**
-		 * Разрешение на пустое значение
-		 */
-		if ($this->allowEmpty and $this->isEmpty($sValue)) {
-			return true;
-		}
-		/**
-		 * Проверяем значение внешнего метода
-		 */
-		if (!call_user_func(array($this,$this->method),$sValue)) {
-			return $this->getMessage($this->Lang_Get('validate.method.error',null,false),'msg');
-		}
-		return true;
-	}
+    /**
+     * Запуск валидации
+     *
+     * @param mixed $sValue Данные для валидации
+     * @return bool|string
+     */
+    public function validate($sValue)
+    {
+        /**
+         * Проверка типа значения
+         */
+        if (!$this->method) {
+            return $this->getMessage($this->Lang_Get('validate.method.invalid', null, false), 'msg');
+        }
+        /**
+         * Разрешение на пустое значение
+         */
+        if ($this->allowEmpty and $this->isEmpty($sValue)) {
+            return true;
+        }
+        /**
+         * Проверяем значение внешнего метода
+         */
+        if (!call_user_func(array($this, $this->method), $sValue)) {
+            return $this->getMessage($this->Lang_Get('validate.method.error', null, false), 'msg');
+        }
+        return true;
+    }
 }

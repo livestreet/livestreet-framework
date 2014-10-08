@@ -33,92 +33,104 @@
  * @package framework.engine.orm
  * @since 2.0
  */
-class ORMRelationManyToMany extends LsObject {
-	/**
-	 * Список объектов связи
-	 *
-	 * @var array
-	 */
-	protected $aCollection = array();
-	/**
-	 * Флаг обновления списка объектов связи
-	 *
-	 * @var bool
-	 */
-	protected $bUpdated = false;
+class ORMRelationManyToMany extends LsObject
+{
+    /**
+     * Список объектов связи
+     *
+     * @var array
+     */
+    protected $aCollection = array();
+    /**
+     * Флаг обновления списка объектов связи
+     *
+     * @var bool
+     */
+    protected $bUpdated = false;
 
-	/**
-	 * Устанавливает список объектов
-	 *
-	 * @param $aCollection	Список объектов связи
-	 */
-	public function __construct($aCollection) {
-		parent::__construct();
-		if (!$aCollection) {
-			$aCollection=array();
-		}
-		if (!is_array($aCollection)) {
-			$aCollection=array($aCollection);
-		}
-		foreach($aCollection as $oEntity) {
-			$this->aCollection[$oEntity->_getPrimaryKeyValue()]=$oEntity;
-		}
-	}
-	/**
-	 * Добавление объекта в список
-	 *
-	 * @param Entity $oEntity
-	 */
-	public function add($oEntity) {
-		$this->bUpdated = true;
-		$this->aCollection[$oEntity->_getPrimaryKeyValue()] = $oEntity;
-	}
-	/**
-	 * Удаление объекта из списка по его id или массиву id
-	 *
-	 * @param int|array $iId
-	 */
-	public function delete($iId) {
-		$this->bUpdated = true;
-		if (is_array($iId)) {
-			foreach ($iId as $id) {
-				if (is_object($id)) {
-					$id=$id->_getPrimaryKeyValue();
-				}
-				if (isset($this->aCollection[$id])) {
-					unset($this->aCollection[$id]);
-				}
-			}
-		} else {
-			if (is_object($iId)) {
-				$iId=$iId->_getPrimaryKeyValue();
-			}
-			if (isset($this->aCollection[$iId])) {
-				unset($this->aCollection[$iId]);
-			}
-		}
-	}
-	/**
-	 * Удаляет все объекты
-	 */
-	public function clear() {
-		$this->bUpdated = true;
-		$this->aCollection=array();
-	}
-	/**
-	 * Возвращает список объектов связи
-	 *
-	 * @return array
-	 */
-	public function getCollection() {
-		return $this->aCollection;
-	}
-	/**
-	 * Проверка списка на обновление
-	 *
-	 * @return bool
-	 */
-	public function isUpdated() {
-		return $this->bUpdated;
-	}
+    /**
+     * Устанавливает список объектов
+     *
+     * @param $aCollection    Список объектов связи
+     */
+    public function __construct($aCollection)
+    {
+        parent::__construct();
+        if (!$aCollection) {
+            $aCollection = array();
+        }
+        if (!is_array($aCollection)) {
+            $aCollection = array($aCollection);
+        }
+        foreach ($aCollection as $oEntity) {
+            $this->aCollection[$oEntity->_getPrimaryKeyValue()] = $oEntity;
+        }
+    }
+
+    /**
+     * Добавление объекта в список
+     *
+     * @param Entity $oEntity
+     */
+    public function add($oEntity)
+    {
+        $this->bUpdated = true;
+        $this->aCollection[$oEntity->_getPrimaryKeyValue()] = $oEntity;
+    }
+
+    /**
+     * Удаление объекта из списка по его id или массиву id
+     *
+     * @param int|array $iId
+     */
+    public function delete($iId)
+    {
+        $this->bUpdated = true;
+        if (is_array($iId)) {
+            foreach ($iId as $id) {
+                if (is_object($id)) {
+                    $id = $id->_getPrimaryKeyValue();
+                }
+                if (isset($this->aCollection[$id])) {
+                    unset($this->aCollection[$id]);
+                }
+            }
+        } else {
+            if (is_object($iId)) {
+                $iId = $iId->_getPrimaryKeyValue();
+            }
+            if (isset($this->aCollection[$iId])) {
+                unset($this->aCollection[$iId]);
+            }
+        }
+    }
+
+    /**
+     * Удаляет все объекты
+     */
+    public function clear()
+    {
+        $this->bUpdated = true;
+        $this->aCollection = array();
+    }
+
+    /**
+     * Возвращает список объектов связи
+     *
+     * @return array
+     */
+    public function getCollection()
+    {
+        return $this->aCollection;
+    }
+
+    /**
+     * Проверка списка на обновление
+     *
+     * @return bool
+     */
+    public function isUpdated()
+    {
+        return $this->bUpdated;
+    }
 }

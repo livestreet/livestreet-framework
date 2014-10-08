@@ -26,33 +26,35 @@
  * @package framework.modules.validate
  * @since 1.0
  */
-class ModuleValidate_EntityValidatorDefault extends ModuleValidate_EntityValidator {
-	/**
-	 * Допускать или нет пустое значение
-	 *
-	 * @var bool
-	 */
-	public $allowEmpty=true;
-	/**
-	 * Дефолтное значение
-	 *
-	 * @var mixed
-	 */
-	public $value=null;
+class ModuleValidate_EntityValidatorDefault extends ModuleValidate_EntityValidator
+{
+    /**
+     * Допускать или нет пустое значение
+     *
+     * @var bool
+     */
+    public $allowEmpty = true;
+    /**
+     * Дефолтное значение
+     *
+     * @var mixed
+     */
+    public $value = null;
 
-	/**
-	 * Запуск валидации
-	 *
-	 * @param mixed $sValue    			Данные для валидации
-	 * @return bool|string
-	 */
-	public function validate($sValue) {
-		/**
-		 * Выставляем дефолтное значение
-		 */
-		if ($this->isEmpty($sValue) and $this->oEntityCurrent) {
-			$this->setValueOfCurrentEntity($this->sFieldCurrent,$this->value);
-		}
-		return true;
-	}
+    /**
+     * Запуск валидации
+     *
+     * @param mixed $sValue Данные для валидации
+     * @return bool|string
+     */
+    public function validate($sValue)
+    {
+        /**
+         * Выставляем дефолтное значение
+         */
+        if ($this->isEmpty($sValue) and $this->oEntityCurrent) {
+            $this->setValueOfCurrentEntity($this->sFieldCurrent, $this->value);
+        }
+        return true;
+    }
 }

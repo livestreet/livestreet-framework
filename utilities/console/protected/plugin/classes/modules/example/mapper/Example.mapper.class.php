@@ -1,5 +1,6 @@
 <?php
 
-class PluginExample_ModuleExample_MapperExample extends Mapper {
+class PluginExample_ModuleExample_MapperExample extends Mapper
+{
 
 }

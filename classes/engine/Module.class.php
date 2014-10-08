@@ -26,47 +26,56 @@
  * @package framework.engine
  * @since 1.0
  */
-abstract class Module extends LsObject {
-	/**
-	 * Указывает на то, была ли проведенна инициализация модуля
-	 *
-	 * @var bool
-	 */
-	protected $bIsInit=false;
+abstract class Module extends LsObject
+{
+    /**
+     * Указывает на то, была ли проведенна инициализация модуля
+     *
+     * @var bool
+     */
+    protected $bIsInit = false;
 
-	/**
-	 * Блокируем копирование/клонирование объекта
-	 *
-	 */
-	public function __clone() {
-		throw new Exception('Not allow clone module');
-	}
-	/**
-	 * Абстрактный метод инициализации модуля, должен быть переопределен в модуле
-	 *
-	 */
-	abstract public function Init();
-	/**
-	 * Метод срабатывает при завершении работы ядра
-	 *
-	 */
-	public function Shutdown() {
+    /**
+     * Блокируем копирование/клонирование объекта
+     *
+     */
+    public function __clone()
+    {
+        throw new Exception('Not allow clone module');
+    }
 
-	}
-	/**
-	 * Возвращает значение флага инициализации модуля
-	 *
-	 * @return bool
-	 */
-	public function isInit() {
-		return $this->bIsInit;
-	}
-	/**
-	 * Помечает модуль как инициализированный
-	 *
-	 * @return null
-	 */
-	public function SetInit() {
-		$this->bIsInit=true;
-	}
+    /**
+     * Абстрактный метод инициализации модуля, должен быть переопределен в модуле
+     *
+     */
+    abstract public function Init();
+
+    /**
+     * Метод срабатывает при завершении работы ядра
+     *
+     */
+    public function Shutdown()
+    {
+
+    }
+
+    /**
+     * Возвращает значение флага инициализации модуля
+     *
+     * @return bool
+     */
+    public function isInit()
+    {
+        return $this->bIsInit;
+    }
+
+    /**
+     * Помечает модуль как инициализированный
+     *
+     * @return null
+     */
+    public function SetInit()
+    {
+        $this->bIsInit = true;
+    }
 }

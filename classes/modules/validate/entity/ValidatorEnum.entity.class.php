@@ -25,48 +25,50 @@
  * @package framework.modules.validate
  * @since 1.0
  */
-class ModuleValidate_EntityValidatorEnum extends ModuleValidate_EntityValidator {
-	/**
-	 * Допускать или нет пустое значение
-	 *
-	 * @var bool
-	 */
-	public $allowEmpty=true;
-	/**
-	 * Массив разрешенных элементов
-	 *
-	 * @var array
-	 */
-	public $enum=array();
+class ModuleValidate_EntityValidatorEnum extends ModuleValidate_EntityValidator
+{
+    /**
+     * Допускать или нет пустое значение
+     *
+     * @var bool
+     */
+    public $allowEmpty = true;
+    /**
+     * Массив разрешенных элементов
+     *
+     * @var array
+     */
+    public $enum = array();
 
-	/**
-	 * Запуск валидации
-	 *
-	 * @param mixed $sValue    			Данные для валидации
-	 * @return bool|string
-	 */
-	public function validate($sValue) {
-		/**
-		 * Проверка типа значения
-		 */
-		if (!is_scalar($sValue)) {
-			return $this->getMessage($this->Lang_Get('validate.enum.invalid',null,false),'msg');
-		}
-		/**
-		 * Разрешение на пустое значение
-		 */
-		if ($this->allowEmpty and $this->isEmpty($sValue)) {
-			return true;
-		}
-		/**
-		 * Проверка на вхождение в перечисление
-		 */
-		if (!in_array($sValue,$this->enum)) {
-			return $this->getMessage($this->Lang_Get('validate.enum.not_allowed',null,false),'msg',array('value'=>htmlspecialchars($sValue)));
-		}
-		/**
-		 * Значение корректно
-		 */
-		return true;
-	}
+    /**
+     * Запуск валидации
+     *
+     * @param mixed $sValue Данные для валидации
+     * @return bool|string
+     */
+    public function validate($sValue)
+    {
+        /**
+         * Проверка типа значения
+         */
+        if (!is_scalar($sValue)) {
+            return $this->getMessage($this->Lang_Get('validate.enum.invalid', null, false), 'msg');
+        }
+        /**
+         * Разрешение на пустое значение
+         */
+        if ($this->allowEmpty and $this->isEmpty($sValue)) {
+            return true;
+        }
+        /**
+         * Проверка на вхождение в перечисление
+         */
+        if (!in_array($sValue, $this->enum)) {
+            return $this->getMessage($this->Lang_Get('validate.enum.not_allowed', null, false), 'msg', array('value' => htmlspecialchars($sValue)));
+        }
+        /**
+         * Значение корректно
+         */
+        return true;
+    }
 }

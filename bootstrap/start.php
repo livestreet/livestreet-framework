@@ -23,5 +23,5 @@
  * Проверяем на необходимость выставить тестовое окружение
  */
 if (isset($bUseEnvironmentTesting)) {
-    Engine::SetEnvironment($sEnv='testing');
+    Engine::SetEnvironment($sEnv = 'testing');
 }

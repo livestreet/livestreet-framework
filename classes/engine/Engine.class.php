@@ -1437,7 +1437,7 @@ class Engine {
 /**
  * Короткий алиас для вызова основных методов движка
  *
- * @package engine
+ * @package framework.engine
  * @since 1.0
  */
 class LS extends LsObject {

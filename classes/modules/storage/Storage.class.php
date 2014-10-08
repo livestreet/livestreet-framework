@@ -1,25 +1,25 @@
 <?php
-/**
+/*
  * LiveStreet CMS
  * Copyright © 2013 OOO "ЛС-СОФТ"
- * 
+ *
  * ------------------------------------------------------
- * 
+ *
  * Official site: www.livestreetcms.com
  * Contact e-mail: office@livestreetcms.com
- * 
+ *
  * GNU General Public License, version 2:
  * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
- * 
+ *
  * ------------------------------------------------------
- * 
+ *
  * @link http://www.livestreetcms.com
  * @copyright 2013 OOO "ЛС-СОФТ"
  * @author Serge Pustovit (PSNet) <light.feel@gmail.com>
- * 
+ *
  */
 
-/*
+/**
  * Хранилище "ключ => значение"
  *
  * Позволяет легко и быстро работать с небольшими объемами данных, CRUD операции с которыми теперь занимают всего одну строку кода.
@@ -28,8 +28,9 @@
  * 		$this->Storage_Set('keyname', 'some_mixed_value', $this);	// сохранить 'some_mixed_value' под имененем 'keyname' для вашего плагина
  * 		$this->Storage_Get('keyname', $this);						// получить данные по ключу 'keyname' для вашего плагина
  *
+ * @package framework.modules
+ * @since 2.0
  */
-
 class ModuleStorage extends Module {
 	
 	protected $oMapperStorage = null;

@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * LiveStreet CMS
  * Copyright © 2013 OOO "ЛС-СОФТ"
  *
@@ -21,6 +21,9 @@
 
 /**
  * Абстрактный класс типа assets, от него должны наследоваться все конечные типы
+ *
+ * @package framework.modules
+ * @since 2.0
  */
 abstract class ModuleAsset_EntityType extends Entity {
 	/**

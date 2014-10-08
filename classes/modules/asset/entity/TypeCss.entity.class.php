@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * LiveStreet CMS
  * Copyright © 2013 OOO "ЛС-СОФТ"
  *
@@ -21,6 +21,9 @@
 
 /**
  * Тип CSS стилей
+ *
+ * @package framework.modules
+ * @since 2.0
  */
 class ModuleAsset_EntityTypeCss extends ModuleAsset_EntityType {
 	/**

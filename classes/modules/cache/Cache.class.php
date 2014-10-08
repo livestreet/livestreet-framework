@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * LiveStreet CMS
  * Copyright © 2013 OOO "ЛС-СОФТ"
  *
@@ -65,7 +65,7 @@ require_once(LS_DKCACHE_PATH.'Cache/Backend/Profiler.php');
  *	}
  * </pre>
  *
- * @package engine.modules
+ * @package framework.modules
  * @since 1.0
  */
 class ModuleCache extends Module {

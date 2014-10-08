@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * LiveStreet CMS
  * Copyright © 2013 OOO "ЛС-СОФТ"
  *
@@ -13,16 +13,16 @@
  *
  * ------------------------------------------------------
  *
- * @link      http://www.livestreetcms.com
+ * @link http://www.livestreetcms.com
  * @copyright 2013 OOO "ЛС-СОФТ"
- * @author    Serge Pustovit (PSNet) <light.feel@gmail.com>
+ * @author Maxim Mzhelskiy <rus.engine@gmail.com>
  *
  */
 
 /**
  * Валидатор перечислений
  *
- * @package engine.modules.validate
+ * @package framework.modules.validate
  * @since 1.0
  */
 class ModuleValidate_EntityValidatorEnum extends ModuleValidate_EntityValidator {

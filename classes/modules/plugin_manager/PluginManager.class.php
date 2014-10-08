@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * LiveStreet CMS
  * Copyright © 2013 OOO "ЛС-СОФТ"
  *
@@ -14,13 +14,16 @@
  * ------------------------------------------------------
  *
  * @link http://www.livestreetcms.com
- * @copyright 2014 OOO "ЛС-СОФТ"
+ * @copyright 2013 OOO "ЛС-СОФТ"
  * @author Maxim Mzhelskiy <rus.engine@gmail.com>
  *
  */
 
 /**
  * Модуль управления плагинами - установка, обновление, удаление
+ *
+ * @package framework.modules
+ * @since 2.0
  */
 class ModulePluginManager extends ModuleORM {
 	/**

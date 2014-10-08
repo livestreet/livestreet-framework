@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * LiveStreet CMS
  * Copyright © 2013 OOO "ЛС-СОФТ"
  *
@@ -21,6 +21,9 @@
 
 /**
  * Абстрактный объект бекенда кеша, от него должны наследоваться все конечные бекенды
+ *
+ * @package framework.modules
+ * @since 2.0
  */
 abstract class ModuleCache_EntityBackend {
 	/**

@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * LiveStreet CMS
  * Copyright © 2013 OOO "ЛС-СОФТ"
  *
@@ -26,7 +26,7 @@
  * $this->Logger_Debug('Debug message');
  * </pre>
  *
- * @package engine.modules
+ * @package framework.modules
  * @since 1.0
  */
 class ModuleLogger extends Module {

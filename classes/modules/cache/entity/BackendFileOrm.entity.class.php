@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * LiveStreet CMS
  * Copyright © 2013 OOO "ЛС-СОФТ"
  *
@@ -22,6 +22,9 @@
 /**
  * Бекенд служебного файлового кеша для ORM
  * Используется для хранения схемы БД
+ *
+ * @package framework.modules
+ * @since 2.0
  */
 class ModuleCache_EntityBackendFileOrm extends ModuleCache_EntityBackendFile {
 	/**

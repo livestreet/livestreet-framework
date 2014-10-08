@@ -253,12 +253,14 @@ abstract class Action extends LsObject
                         throw new Exception("External processing for event not found: " . $aEvent['external']);
                     }
                 }
-                $this->Hook_Run("action_event_" . strtolower($this->sCurrentAction) . "_before", array('event' => $this->sCurrentEvent, 'params' => $this->GetParams()));
+                $this->Hook_Run("action_event_" . strtolower($this->sCurrentAction) . "_before",
+                    array('event' => $this->sCurrentEvent, 'params' => $this->GetParams()));
                 /**
                  * Проверяем на наличие внешнего обработчика евента
                  */
                 if ($aEvent['external']) {
-                    $sEventClass = $this->Plugin_GetDelegate('event', $this->aRegisterEventExternal[$aEvent['external']]);
+                    $sEventClass = $this->Plugin_GetDelegate('event',
+                        $this->aRegisterEventExternal[$aEvent['external']]);
                     $oEvent = new $sEventClass;
                     $oEvent->SetActionObject($this);
                     $oEvent->Init();
@@ -270,7 +272,8 @@ abstract class Action extends LsObject
                 } else {
                     $result = call_user_func_array(array($this, $aEvent['method']), array());
                 }
-                $this->Hook_Run("action_event_" . strtolower($this->sCurrentAction) . "_after", array('event' => $this->sCurrentEvent, 'params' => $this->GetParams()));
+                $this->Hook_Run("action_event_" . strtolower($this->sCurrentAction) . "_after",
+                    array('event' => $this->sCurrentEvent, 'params' => $this->GetParams()));
                 return $result;
             }
         }
@@ -397,7 +400,8 @@ abstract class Action extends LsObject
         $sActionTemplatePath = $sTemplate . '.tpl';
         foreach ($aDelegates as $sAction) {
             if (preg_match('/^(Plugin([\w]+)_)?Action([\w]+)$/i', $sAction, $aMatches)) {
-                $sTemplatePath = $this->Plugin_GetDelegate('template', 'actions/Action' . ucfirst($aMatches[3]) . '/' . $sTemplate . '.tpl');
+                $sTemplatePath = $this->Plugin_GetDelegate('template',
+                    'actions/Action' . ucfirst($aMatches[3]) . '/' . $sTemplate . '.tpl');
                 if (empty($aMatches[1])) {
                     $sActionTemplatePath = $sTemplatePath;
                 } else {

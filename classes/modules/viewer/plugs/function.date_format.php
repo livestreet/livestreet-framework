@@ -90,7 +90,9 @@ function smarty_function_date_format($aParams, &$oSmarty)
      * Если указана необходимость выполнять проверку на NOW
      */
     if (isset($aParams['now'])) {
-        if ($iDate + $aParams['now'] > $iNow) return $oEngine->Lang_Get('date.now');
+        if ($iDate + $aParams['now'] > $iNow) {
+            return $oEngine->Lang_Get('date.now');
+        }
     }
 
     /**

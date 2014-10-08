@@ -65,7 +65,8 @@ class ModuleCache_EntityBackendXcache extends ModuleCache_EntityBackend
 
         $oCahe = new Zend_Cache_Backend_Xcache(is_array($aConfig) ? $aConfig : array());
         if (isset($aParams['stats_callback'])) {
-            $this->oCacheBackend = new Dklab_Cache_Backend_TagEmuWrapper(new Dklab_Cache_Backend_Profiler($oCahe, $aParams['stats_callback']));
+            $this->oCacheBackend = new Dklab_Cache_Backend_TagEmuWrapper(new Dklab_Cache_Backend_Profiler($oCahe,
+                $aParams['stats_callback']));
         } else {
             $this->oCacheBackend = new Dklab_Cache_Backend_TagEmuWrapper($oCahe);
         }

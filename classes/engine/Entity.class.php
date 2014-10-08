@@ -149,7 +149,9 @@ abstract class Entity extends LsObject
      */
     public function _getData($aKeys = array())
     {
-        if (!is_array($aKeys) or !count($aKeys)) return $this->_aData;
+        if (!is_array($aKeys) or !count($aKeys)) {
+            return $this->_aData;
+        }
 
         $aReturn = array();
         foreach ($aKeys as $key) {
@@ -285,7 +287,8 @@ abstract class Entity extends LsObject
             $validator->validateEntity($this, $aFields);
         }
         $bResult = !$this->_hasValidateErrors();
-        $this->RunBehaviorHook('validate_after', array('bResult' => &$bResult, 'aFields' => $aFields, 'bClearErrors' => $bClearErrors));
+        $this->RunBehaviorHook('validate_after',
+            array('bResult' => &$bResult, 'aFields' => $aFields, 'bClearErrors' => $bClearErrors));
         return $bResult;
     }
 

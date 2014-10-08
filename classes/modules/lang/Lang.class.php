@@ -93,12 +93,17 @@ class ModuleLang extends Module
             if (false === ($this->aLangMsg = $this->Cache_Get("lang_{$this->sCurrentLang}_" . Config::Get('view.skin')))) {
                 $this->aLangMsg = array();
                 $this->LoadLangFiles($this->sDefaultLang);
-                if ($this->sCurrentLang != $this->sDefaultLang) $this->LoadLangFiles($this->sCurrentLang);
-                $this->Cache_Set($this->aLangMsg, "lang_{$this->sCurrentLang}_" . Config::Get('view.skin'), array(), 60 * 60);
+                if ($this->sCurrentLang != $this->sDefaultLang) {
+                    $this->LoadLangFiles($this->sCurrentLang);
+                }
+                $this->Cache_Set($this->aLangMsg, "lang_{$this->sCurrentLang}_" . Config::Get('view.skin'), array(),
+                    60 * 60);
             }
         } else {
             $this->LoadLangFiles($this->sDefaultLang);
-            if ($this->sCurrentLang != $this->sDefaultLang) $this->LoadLangFiles($this->sCurrentLang);
+            if ($this->sCurrentLang != $this->sDefaultLang) {
+                $this->LoadLangFiles($this->sCurrentLang);
+            }
         }
 
         $this->LoadLangJs();
@@ -347,7 +352,8 @@ class ModuleLang extends Module
                 $sMsgs = $aMessages;
                 if (isset($aParams['category'])) {
                     if (isset($this->aLangMsg[$aParams['category']][$aParams['name']])) {
-                        $sMsgs = func_array_merge_assoc($this->aLangMsg[$aParams['category']][$aParams['name']], $sMsgs);
+                        $sMsgs = func_array_merge_assoc($this->aLangMsg[$aParams['category']][$aParams['name']],
+                            $sMsgs);
                     }
                     $this->aLangMsg[$aParams['category']][$aParams['name']] = $sMsgs;
                 } else {

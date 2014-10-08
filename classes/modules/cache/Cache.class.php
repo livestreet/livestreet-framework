@@ -101,8 +101,8 @@ class ModuleCache extends Module
      * @var array
      */
     protected $aStats = array(
-        'time' => 0,
-        'count' => 0,
+        'time'      => 0,
+        'count'     => 0,
         'count_get' => 0,
         'count_set' => 0,
     );
@@ -266,7 +266,8 @@ class ModuleCache extends Module
          * Если данных в основном кеше нет, то перекладываем их из временного
          */
         if (($data = $this->Get($sName, $sCacheType, $bForce)) === false) {
-            $this->Set($this->Get($this->sPrefixSmartCache . $sName, $sCacheType, $bForce), $sName, array(), 60, $sCacheType, $bForce); // храним данные из временного в основном не долго
+            $this->Set($this->Get($this->sPrefixSmartCache . $sName, $sCacheType, $bForce), $sName, array(), 60,
+                $sCacheType, $bForce); // храним данные из временного в основном не долго
         }
         return $data;
     }
@@ -364,7 +365,8 @@ class ModuleCache extends Module
      */
     public function SmartSet($data, $sName, $aTags = array(), $iTimeLife = false, $sCacheType = null, $bForce = false)
     {
-        $this->Set($data, $this->sPrefixSmartCache . $sName, array(), $iTimeLife !== false ? $iTimeLife + 60 : false, $sCacheType, $bForce);
+        $this->Set($data, $this->sPrefixSmartCache . $sName, array(), $iTimeLife !== false ? $iTimeLife + 60 : false,
+            $sCacheType, $bForce);
         return $this->Set($data, $sName, $aTags, $iTimeLife, $sCacheType, $bForce);
     }
 

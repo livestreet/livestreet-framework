@@ -90,7 +90,7 @@ class ModuleViewer extends Module
      * @var array
      */
     protected $aHtmlHeadFiles = array(
-        'js' => '',
+        'js'  => '',
         'css' => ''
     );
     /**
@@ -167,17 +167,22 @@ class ModuleViewer extends Module
          */
         $this->oSmarty = $this->CreateSmartyObject();
         $this->oSmarty->error_reporting = error_reporting() & ~E_NOTICE; // подавляем NOTICE ошибки - в этом вся прелесть смарти )
-        $this->oSmarty->setTemplateDir(array_merge((array)Config::Get('path.smarty.template'), array(Config::Get('path.application.plugins.server') . '/')));
+        $this->oSmarty->setTemplateDir(array_merge((array)Config::Get('path.smarty.template'),
+            array(Config::Get('path.application.plugins.server') . '/')));
         $this->oSmarty->compile_check = Config::Get('smarty.compile_check');
         $this->oSmarty->force_compile = Config::Get('smarty.force_compile');
         /**
          * Для каждого скина устанавливаем свою директорию компиляции шаблонов
          */
         $sCompilePath = Config::Get('path.smarty.compiled') . '/' . Config::Get('view.skin');
-        if (!is_dir($sCompilePath)) @mkdir($sCompilePath, 0777, true);
+        if (!is_dir($sCompilePath)) {
+            @mkdir($sCompilePath, 0777, true);
+        }
         $this->oSmarty->setCompileDir($sCompilePath);
         $sCachePath = Config::Get('path.smarty.cache');
-        if (!is_dir($sCachePath)) @mkdir($sCachePath, 0777, true);
+        if (!is_dir($sCachePath)) {
+            @mkdir($sCachePath, 0777, true);
+        }
         $this->oSmarty->setCacheDir($sCachePath);
         $this->oSmarty->addPluginsDir(array(Config::Get('path.smarty.plug'), 'plugins'));
         $this->oSmarty->default_template_handler_func = array($this, 'SmartyDefaultTemplateHandler');
@@ -230,7 +235,9 @@ class ModuleViewer extends Module
         $aRouter = array();
         $aPages = Config::Get('router.page');
 
-        if (!$aPages or !is_array($aPages)) throw new Exception('Router rules is underfined.');
+        if (!$aPages or !is_array($aPages)) {
+            throw new Exception('Router rules is underfined.');
+        }
         foreach ($aPages as $sPage => $aAction) {
             $aRouter[$sPage] = Router::GetPath($sPage);
         }
@@ -544,9 +551,9 @@ class ModuleViewer extends Module
             $sName = rtrim($aParams['dir'], '/') . '/' . ltrim($sName, '/');
         }
         $this->aBlocks[$sGroup][] = array(
-            'type' => $sType,
-            'name' => $sName,
-            'params' => $aParams,
+            'type'     => $sType,
+            'name'     => $sName,
+            'params'   => $aParams,
             'priority' => $iPriority,
         );
         return true;
@@ -663,15 +670,21 @@ class ModuleViewer extends Module
             /**
              * Если в правиле не указан список блоков, нам такое не нужно
              */
-            if (!array_key_exists('blocks', $aRule)) continue;
+            if (!array_key_exists('blocks', $aRule)) {
+                continue;
+            }
             /**
              * Если не задан action для исполнения и нет ни одного шаблона path,
              * или текущий не входит в перечисленные в правиле
              * то выбираем следующее правило
              */
-            if (!array_key_exists('action', $aRule) && !array_key_exists('path', $aRule)) continue;
+            if (!array_key_exists('action', $aRule) && !array_key_exists('path', $aRule)) {
+                continue;
+            }
             if (isset($aRule['action'])) {
-                if (in_array($sAction, (array)$aRule['action'])) $bUse = true;
+                if (in_array($sAction, (array)$aRule['action'])) {
+                    $bUse = true;
+                }
                 if (array_key_exists($sAction, (array)$aRule['action'])) {
                     /**
                      * Если задан список event`ов и текущий в него не входит,
@@ -991,8 +1004,14 @@ class ModuleViewer extends Module
      * @param array $aGetParamsList Список GET параметров, которые необходимо передавать при постраничном переходе
      * @return array
      */
-    public function MakePaging($iCount, $iCurrentPage, $iCountPerPage, $iCountPageLine, $sBaseUrl, $aGetParamsList = array())
-    {
+    public function MakePaging(
+        $iCount,
+        $iCurrentPage,
+        $iCountPerPage,
+        $iCountPageLine,
+        $sBaseUrl,
+        $aGetParamsList = array()
+    ) {
         if ($iCount == 0) {
             return false;
         }
@@ -1022,18 +1041,19 @@ class ModuleViewer extends Module
 
         $sGetParams = '';
         if (is_string($aGetParamsList) or count($aGetParamsList)) {
-            $sGetParams = '?' . (is_array($aGetParamsList) ? http_build_query($aGetParamsList, '', '&') : $aGetParamsList);
+            $sGetParams = '?' . (is_array($aGetParamsList) ? http_build_query($aGetParamsList, '',
+                    '&') : $aGetParamsList);
         }
         $aPaging = array(
-            'aPagesLeft' => $aPagesLeft,
-            'aPagesRight' => $aPagesRight,
-            'iCount' => $iCount,
-            'iCountPage' => $iCountPage,
+            'aPagesLeft'   => $aPagesLeft,
+            'aPagesRight'  => $aPagesRight,
+            'iCount'       => $iCount,
+            'iCountPage'   => $iCountPage,
             'iCurrentPage' => $iCurrentPage,
-            'iNextPage' => $iNextPage,
-            'iPrevPage' => $iPrevPage,
-            'sBaseUrl' => rtrim(func_urlspecialchars($sBaseUrl), '/'),
-            'sGetParams' => $sGetParams,
+            'iNextPage'    => $iNextPage,
+            'iPrevPage'    => $iPrevPage,
+            'sBaseUrl'     => rtrim(func_urlspecialchars($sBaseUrl), '/'),
+            'sGetParams'   => $sGetParams,
         );
         /**
          * Избавляемся от дублирования страниц с page=1
@@ -1044,7 +1064,8 @@ class ModuleViewer extends Module
             /**
              * Избавляемся от дублирования title страниц - добавляем "Страница N"
              */
-            $this->AddHtmlTitle($this->Lang_Get('pagination.page_with_number', array('number' => $aPaging['iCurrentPage'])));
+            $this->AddHtmlTitle($this->Lang_Get('pagination.page_with_number',
+                array('number' => $aPaging['iCurrentPage'])));
         }
         return $aPaging;
     }
@@ -1092,15 +1113,20 @@ class ModuleViewer extends Module
          */
         if (Config::Get('view.skin') != 'default') {
             // /root/plugins/[plugin name]/templates/skin/[skin name]/dir/test.tpl
-            if (preg_match('@^' . preg_quote(Config::Get('path.application.plugins.server')) . '/([\w\-_]+)/templates/skin/' . preg_quote(Config::Get('view.skin')) . '/@i', $sName, $aMatch)) {
-                $sFile = str_replace($aMatch[0], Config::Get('path.application.plugins.server') . '/' . $aMatch[1] . '/templates/skin/default/', $sName);
+            if (preg_match('@^' . preg_quote(Config::Get('path.application.plugins.server')) . '/([\w\-_]+)/templates/skin/' . preg_quote(Config::Get('view.skin')) . '/@i',
+                $sName, $aMatch)) {
+                $sFile = str_replace($aMatch[0],
+                    Config::Get('path.application.plugins.server') . '/' . $aMatch[1] . '/templates/skin/default/',
+                    $sName);
                 if ($this->TemplateExists($sFile)) {
                     return $sFile;
                 }
             }
             // [plugin name]/templates/skin/[skin name]/dir/test.tpl
-            if (preg_match('@^([\w\-_]+)/templates/skin/' . preg_quote(Config::Get('view.skin')) . '/@i', $sName, $aMatch)) {
-                $sFile = Config::Get('path.application.plugins.server') . '/' . str_replace($aMatch[0], $aMatch[1] . '/templates/skin/default/', $sName);
+            if (preg_match('@^([\w\-_]+)/templates/skin/' . preg_quote(Config::Get('view.skin')) . '/@i', $sName,
+                $aMatch)) {
+                $sFile = Config::Get('path.application.plugins.server') . '/' . str_replace($aMatch[0],
+                        $aMatch[1] . '/templates/skin/default/', $sName);
                 if ($this->TemplateExists($sFile)) {
                     return $sFile;
                 }

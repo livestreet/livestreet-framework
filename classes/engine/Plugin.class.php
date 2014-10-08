@@ -309,7 +309,8 @@ abstract class Plugin extends LsObject
     {
         $sName = self::GetPluginCode($sName);
         if (!isset(self::$aTemplatePath[$sName])) {
-            $aPaths = glob(Config::Get('path.application.plugins.server') . '/' . $sName . '/templates/skin/*', GLOB_ONLYDIR);
+            $aPaths = glob(Config::Get('path.application.plugins.server') . '/' . $sName . '/templates/skin/*',
+                GLOB_ONLYDIR);
             $sTemplateName = ($aPaths and in_array(Config::Get('view.skin'), array_map('basename', $aPaths)))
                 ? Config::Get('view.skin')
                 : 'default';
@@ -331,7 +332,8 @@ abstract class Plugin extends LsObject
     {
         $sName = self::GetPluginCode($sName);
         if (!isset(self::$aTemplateWebPath[$sName])) {
-            $aPaths = glob(Config::Get('path.application.plugins.server') . '/' . $sName . '/templates/skin/*', GLOB_ONLYDIR);
+            $aPaths = glob(Config::Get('path.application.plugins.server') . '/' . $sName . '/templates/skin/*',
+                GLOB_ONLYDIR);
             $sTemplateName = ($aPaths and in_array(Config::Get('view.skin'), array_map('basename', $aPaths)))
                 ? Config::Get('view.skin')
                 : 'default';
@@ -350,7 +352,9 @@ abstract class Plugin extends LsObject
      */
     static public function SetTemplatePath($sName, $sTemplatePath)
     {
-        if (!is_dir($sTemplatePath)) return false;
+        if (!is_dir($sTemplatePath)) {
+            return false;
+        }
         self::$aTemplatePath[$sName] = $sTemplatePath;
         return true;
     }

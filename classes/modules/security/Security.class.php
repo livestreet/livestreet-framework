@@ -94,7 +94,9 @@ class ModuleSecurity extends Module
      */
     public function ValidateSecurityKey($sCode = null)
     {
-        if (!$sCode) $sCode = getRequestStr('security_ls_key');
+        if (!$sCode) {
+            $sCode = getRequestStr('security_ls_key');
+        }
         return ($sCode == $this->GetSecurityKey());
     }
 

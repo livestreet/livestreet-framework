@@ -232,7 +232,12 @@ class ModuleImage_EntityImage extends Entity
                 and isset($aSelectedSize['x2']) and is_numeric($aSelectedSize['x2'])
                 and isset($aSelectedSize['y2']) and is_numeric($aSelectedSize['y2'])
             ) {
-                $aSelectedSize = array('x1' => round($fRation * $aSelectedSize['x']), 'y1' => round($fRation * $aSelectedSize['y']), 'x2' => round($fRation * $aSelectedSize['x2']), 'y2' => round($fRation * $aSelectedSize['y2']));
+                $aSelectedSize = array(
+                    'x1' => round($fRation * $aSelectedSize['x']),
+                    'y1' => round($fRation * $aSelectedSize['y']),
+                    'x2' => round($fRation * $aSelectedSize['x2']),
+                    'y2' => round($fRation * $aSelectedSize['y2'])
+                );
             } else {
                 $this->setLastError('Incorrect image selected size');
                 return $this;
@@ -301,7 +306,7 @@ class ModuleImage_EntityImage extends Entity
             $sFormat = ($this->getParam('format_auto') && $this->getFormat()) ? $this->getFormat() : $this->getParam('format');
             $sFileTmp = Config::Get('path.tmp.server') . DIRECTORY_SEPARATOR . func_generator(20);
             $oImage->save($sFileTmp, array(
-                'format' => $sFormat,
+                'format'  => $sFormat,
                 'quality' => $this->getParam('quality'),
             ));
 
@@ -334,7 +339,7 @@ class ModuleImage_EntityImage extends Entity
             $sFormat = ($this->getParam('format_auto') && $this->getFormat()) ? $this->getFormat() : $this->getParam('format');
             $sFileTmp = $sDirTmp . DIRECTORY_SEPARATOR . func_generator(20);
             $oImage->save($sFileTmp, array(
-                'format' => $sFormat,
+                'format'  => $sFormat,
                 'quality' => $this->getParam('quality'),
             ));
 
@@ -366,7 +371,7 @@ class ModuleImage_EntityImage extends Entity
             $sFormat = ($this->getParam('format_auto') && $this->getFormat()) ? $this->getFormat() : $this->getParam('format');
             $sFileTmp = Config::Get('path.tmp.server') . DIRECTORY_SEPARATOR . func_generator(20);
             $oImage->save($sFileTmp, array(
-                'format' => $sFormat,
+                'format'  => $sFormat,
                 'quality' => $this->getParam('quality'),
             ));
 

@@ -76,7 +76,7 @@ class ModuleCron extends ModuleORM
     public function RunTask($oTask)
     {
         $aLog = array(
-            'state' => 'successful',
+            'state'  => 'successful',
             'return' => null,
         );
         /**

@@ -58,7 +58,8 @@ class MapperORM extends Mapper
             }
             $sWhere = ' 1 = 1 ';
             foreach ($aPrimaryKey as $sField) {
-                $sWhere .= ' and ' . $this->oDb->escape($sField, true) . " = " . $this->oDb->escape($oEntity->_getDataOne($sField));
+                $sWhere .= ' and ' . $this->oDb->escape($sField,
+                        true) . " = " . $this->oDb->escape($oEntity->_getDataOne($sField));
             }
             $sql = "UPDATE " . $sTableName . " SET ?a WHERE {$sWhere}";
             return $this->oDb->query($sql, $oEntity->_getDataFields());
@@ -67,7 +68,8 @@ class MapperORM extends Mapper
             $sWhere = implode(' AND ', array_map(create_function(
                 '$k,$v,$oDb',
                 'return "{$oDb->escape($k,true)} = {$oDb->escape($v)}";'
-            ), array_keys($aOriginalData), array_values($aOriginalData), array_fill(0, count($aOriginalData), $this->oDb)));
+            ), array_keys($aOriginalData), array_values($aOriginalData),
+            array_fill(0, count($aOriginalData), $this->oDb)));
             $sql = "UPDATE " . $sTableName . " SET ?a WHERE 1=1 AND " . $sWhere;
             return $this->oDb->query($sql, $oEntity->_getDataFields());
         }
@@ -90,7 +92,8 @@ class MapperORM extends Mapper
             }
             $sWhere = ' 1 = 1 ';
             foreach ($aPrimaryKey as $sField) {
-                $sWhere .= ' and ' . $this->oDb->escape($sField, true) . " = " . $this->oDb->escape($oEntity->_getDataOne($sField));
+                $sWhere .= ' and ' . $this->oDb->escape($sField,
+                        true) . " = " . $this->oDb->escape($oEntity->_getDataOne($sField));
             }
             $sql = "DELETE FROM " . $sTableName . " WHERE {$sWhere}";
             return $this->oDb->query($sql);
@@ -99,7 +102,8 @@ class MapperORM extends Mapper
             $sWhere = implode(' AND ', array_map(create_function(
                 '$k,$v,$oDb',
                 'return "{$oDb->escape($k,true)} = {$oDb->escape($v)}";'
-            ), array_keys($aOriginalData), array_values($aOriginalData), array_fill(0, count($aOriginalData), $this->oDb)));
+            ), array_keys($aOriginalData), array_values($aOriginalData),
+            array_fill(0, count($aOriginalData), $this->oDb)));
             $sql = "DELETE FROM " . $sTableName . " WHERE 1=1 AND " . $sWhere;
             return $this->oDb->query($sql);
         }
@@ -238,8 +242,14 @@ class MapperORM extends Mapper
         return 0;
     }
 
-    public function GetItemsByJoinEntity($sEntityJoin, $sKeyJoin, $sRelationKey, $aRelationValues, $aFilter, $sEntityFull)
-    {
+    public function GetItemsByJoinEntity(
+        $sEntityJoin,
+        $sKeyJoin,
+        $sRelationKey,
+        $aRelationValues,
+        $aFilter,
+        $sEntityFull
+    ) {
         $oEntitySample = Engine::GetEntity($sEntityFull);
         $oEntityJoinSample = Engine::GetEntity($sEntityJoin);
         $sTableName = self::GetTableName($sEntityFull);
@@ -271,7 +281,15 @@ class MapperORM extends Mapper
          * SQL и параметры
          */
         $sql = "SELECT {$sFieldsJoinReturn}, b.* FROM ?# t LEFT JOIN ?# b ON b.?# = t.?# WHERE t.?# in ( ?a ) {$sFilterFields} {$sOrder} {$sLimit}";
-        $aQueryParams = array_merge(array($sql, $sTableJoinName, $sTableName, $oEntitySample->_getPrimaryKey(), $sRelationKey, $sKeyJoin, $aRelationValues), array_values($aFilterFields));
+        $aQueryParams = array_merge(array(
+                $sql,
+                $sTableJoinName,
+                $sTableName,
+                $oEntitySample->_getPrimaryKey(),
+                $sRelationKey,
+                $sKeyJoin,
+                $aRelationValues
+            ), array_values($aFilterFields));
         $aItems = array();
         /**
          * Выполняем запрос
@@ -296,8 +314,14 @@ class MapperORM extends Mapper
         return $aItems;
     }
 
-    public function GetCountItemsByJoinEntity($sEntityJoin, $sKeyJoin, $sRelationKey, $aRelationValues, $aFilter, $sEntityFull)
-    {
+    public function GetCountItemsByJoinEntity(
+        $sEntityJoin,
+        $sKeyJoin,
+        $sRelationKey,
+        $aRelationValues,
+        $aFilter,
+        $sEntityFull
+    ) {
         $oEntitySample = Engine::GetEntity($sEntityFull);
         $oEntityJoinSample = Engine::GetEntity($sEntityJoin);
         $sTableName = self::GetTableName($sEntityFull);
@@ -315,7 +339,15 @@ class MapperORM extends Mapper
          * SQL и параметры
          */
         $sql = "SELECT count(*) as c FROM ?# t LEFT JOIN ?# b ON b.?# = t.?# WHERE t.?# in ( ?a ) {$sFilterFields} ";
-        $aQueryParams = array_merge(array($sql, $sTableJoinName, $sTableName, $oEntitySample->_getPrimaryKey(), $sRelationKey, $sKeyJoin, $aRelationValues), array_values($aFilterFields));
+        $aQueryParams = array_merge(array(
+                $sql,
+                $sTableJoinName,
+                $sTableName,
+                $oEntitySample->_getPrimaryKey(),
+                $sRelationKey,
+                $sKeyJoin,
+                $aRelationValues
+            ), array_values($aFilterFields));
         if ($aRow = call_user_func_array(array($this->oDb, 'selectRow'), $aQueryParams)) {
             return $aRow['c'];
         }
@@ -429,7 +461,8 @@ class MapperORM extends Mapper
                     $aKeys = explode(':', $key);
                     if (count($aKeys) == 2) {
                         if (strtolower($aKeys[0]) == 'field' and is_array($aFilter['#order'][$key]) and count($aFilter['#order'][$key])) {
-                            $key = 'FIELD(t.' . $this->oDb->escape($oEntitySample->_getField(trim($aKeys[1])), true) . ',' . join(',', $aFilter['#order'][$key]) . ')';
+                            $key = 'FIELD(t.' . $this->oDb->escape($oEntitySample->_getField(trim($aKeys[1])),
+                                    true) . ',' . join(',', $aFilter['#order'][$key]) . ')';
                             $value = '';
                         } else {
                             /**
@@ -534,7 +567,9 @@ class MapperORM extends Mapper
      */
     public function ShowColumnsFromTable($sTableName)
     {
-        if (false === ($aItems = Engine::getInstance()->Cache_Get("columns_table_{$sTableName}", 'file_orm', true, true))) {
+        if (false === ($aItems = Engine::getInstance()->Cache_Get("columns_table_{$sTableName}", 'file_orm', true,
+                true))
+        ) {
             $sql = "SHOW COLUMNS FROM " . $sTableName;
             $aItems = array();
             if ($aRows = $this->oDb->select($sql)) {
@@ -545,7 +580,8 @@ class MapperORM extends Mapper
                     }
                 }
             }
-            Engine::getInstance()->Cache_Set($aItems, "columns_table_{$sTableName}", array(), 60 * 60 * 4, 'file_orm', true);
+            Engine::getInstance()->Cache_Set($aItems, "columns_table_{$sTableName}", array(), 60 * 60 * 4, 'file_orm',
+                true);
         }
         return $aItems;
     }
@@ -570,7 +606,8 @@ class MapperORM extends Mapper
      */
     public function ShowPrimaryIndexFromTable($sTableName)
     {
-        if (false === ($aItems = Engine::getInstance()->Cache_Get("index_table_{$sTableName}", 'file_orm', true, true))) {
+        if (false === ($aItems = Engine::getInstance()->Cache_Get("index_table_{$sTableName}", 'file_orm', true, true))
+        ) {
             $sql = "SHOW INDEX FROM " . $sTableName;
             $aItems = array();
             if ($aRows = $this->oDb->select($sql)) {
@@ -580,7 +617,8 @@ class MapperORM extends Mapper
                     }
                 }
             }
-            Engine::getInstance()->Cache_Set($aItems, "index_table_{$sTableName}", array(), 60 * 60 * 4, 'file_orm', true);
+            Engine::getInstance()->Cache_Set($aItems, "index_table_{$sTableName}", array(), 60 * 60 * 4, 'file_orm',
+                true);
         }
         return $aItems;
     }
@@ -601,7 +639,8 @@ class MapperORM extends Mapper
          *    prefix_pluginname_user
          *    prefix_pluginname_user_invite
          */
-        $sClass = Engine::getInstance()->Plugin_GetDelegater('entity', is_object($oEntity) ? get_class($oEntity) : $oEntity);
+        $sClass = Engine::getInstance()->Plugin_GetDelegater('entity',
+            is_object($oEntity) ? get_class($oEntity) : $oEntity);
         $sPluginName = func_underscore(Engine::GetPluginName($sClass));
         $sModuleName = func_underscore(Engine::GetModuleName($sClass));
         $sEntityName = func_underscore(Engine::GetEntityName($sClass));

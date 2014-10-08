@@ -421,7 +421,9 @@ class Engine
         $this->LoadConfig();
         foreach ($this->aModuleAutoload as $sModuleName) {
             $sModuleClass = 'Module' . $sModuleName;
-            if (!in_array($sModuleName, array('Plugin', 'Hook'))) $sModuleClass = $this->Plugin_GetDelegate('module', $sModuleClass);
+            if (!in_array($sModuleName, array('Plugin', 'Hook'))) {
+                $sModuleClass = $this->Plugin_GetDelegate('module', $sModuleClass);
+            }
 
             if (!isset($this->aModules[$sModuleClass])) {
                 $this->LoadModule($sModuleClass);
@@ -573,7 +575,8 @@ class Engine
         $sModuleName = strtolower($sModuleName);
         $aResultHook = array();
         if (!in_array($sModuleName, array('plugin', 'hook'))) {
-            $aResultHook = $this->_CallModule('Hook_Run', array('module_' . $sModuleName . '_' . strtolower($sMethod) . '_before', &$aArgs));
+            $aResultHook = $this->_CallModule('Hook_Run',
+                array('module_' . $sModuleName . '_' . strtolower($sMethod) . '_before', &$aArgs));
         }
         /**
          * Хук может делегировать результат выполнения метода модуля, сам метод при этом не выполняется, происходит только подмена результата
@@ -589,7 +592,8 @@ class Engine
         }
 
         if (!in_array($sModuleName, array('plugin', 'hook'))) {
-            $this->Hook_Run('module_' . $sModuleName . '_' . strtolower($sMethod) . '_after', array('result' => &$result, 'params' => $aArgs));
+            $this->Hook_Run('module_' . $sModuleName . '_' . strtolower($sMethod) . '_after',
+                array('result' => &$result, 'params' => $aArgs));
         }
 
         return $result;
@@ -676,7 +680,10 @@ class Engine
      */
     public function getStats()
     {
-        return array('sql' => $this->Database_GetStats(), 'cache' => $this->Cache_GetStats(), 'engine' => array('time_load_module' => round($this->iTimeLoadModule, 3)));
+        return array('sql'    => $this->Database_GetStats(),
+                     'cache'  => $this->Cache_GetStats(),
+                     'engine' => array('time_load_module' => round($this->iTimeLoadModule, 3))
+        );
     }
 
     /**
@@ -830,7 +837,8 @@ class Engine
          * If Plugin Entity doesn't exist, search among it's Module delegates
          */
         if (isset($sPlugin) && !self::GetClassPath($sClass)) {
-            $aModulesChain = Engine::GetInstance()->Plugin_GetDelegationChain('module', 'Plugin' . $sPlugin . '_Module' . $sModule);
+            $aModulesChain = Engine::GetInstance()->Plugin_GetDelegationChain('module',
+                'Plugin' . $sPlugin . '_Module' . $sModule);
             foreach ($aModulesChain as $sModuleName) {
                 $sClassTest = $sModuleName . '_Entity' . $sEntity;
                 if (self::GetClassPath($sClassTest)) {
@@ -938,7 +946,8 @@ class Engine
          * If Plugin Entity doesn't exist, search among it's Module delegates
          */
         if (isset($sPlugin) && !self::GetClassPath($sClass)) {
-            $aModulesChain = Engine::GetInstance()->Plugin_GetDelegationChain('module', 'Plugin' . $sPlugin . '_Module' . $sModule);
+            $aModulesChain = Engine::GetInstance()->Plugin_GetDelegationChain('module',
+                'Plugin' . $sPlugin . '_Module' . $sModule);
             foreach ($aModulesChain as $sModuleName) {
                 $sClassTest = $sModuleName . '_Behavior' . $sEntity;
                 if (self::GetClassPath($sClassTest)) {

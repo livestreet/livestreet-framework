@@ -317,7 +317,8 @@ class ModuleFs extends Module
      */
     public function SaveFileLocalSmart($sFileSource, $sDirDest, $sFileDest, $iMode = null, $bRemoveSource = false)
     {
-        $sFileDestFullPath = rtrim(Config::Get('path.root.server'), "/") . '/' . trim($sDirDest, "/") . '/' . $sFileDest;
+        $sFileDestFullPath = rtrim(Config::Get('path.root.server'), "/") . '/' . trim($sDirDest,
+                "/") . '/' . $sFileDest;
         $this->CreateDirectoryLocalSmart($sDirDest);
 
         if ($this->SaveFileLocal($sFileSource, $sFileDestFullPath, $iMode, $bRemoveSource)) {

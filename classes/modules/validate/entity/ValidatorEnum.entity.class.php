@@ -64,7 +64,8 @@ class ModuleValidate_EntityValidatorEnum extends ModuleValidate_EntityValidator
          * Проверка на вхождение в перечисление
          */
         if (!in_array($sValue, $this->enum)) {
-            return $this->getMessage($this->Lang_Get('validate.enum.not_allowed', null, false), 'msg', array('value' => htmlspecialchars($sValue)));
+            return $this->getMessage($this->Lang_Get('validate.enum.not_allowed', null, false), 'msg',
+                array('value' => htmlspecialchars($sValue)));
         }
         /**
          * Значение корректно

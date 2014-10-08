@@ -187,7 +187,11 @@ abstract class ModuleValidate_EntityValidator extends Entity
         /**
          * Если условие валидации возвращает false, то пропускаем валидацию
          */
-        if ($this->condition and method_exists($oEntity, $this->condition) and !call_user_func_array(array($oEntity, $this->condition), array())) {
+        if ($this->condition and method_exists($oEntity, $this->condition) and !call_user_func_array(array(
+                $oEntity,
+                $this->condition
+            ), array())
+        ) {
             return true;
         }
         if (($sMsg = $this->validate($sValue)) !== true) {

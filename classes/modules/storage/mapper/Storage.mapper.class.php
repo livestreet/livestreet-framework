@@ -68,7 +68,7 @@ class ModuleStorage_MapperStorage extends Mapper
         }
         return array(
             'collection' => $aCollection,
-            'count' => $iTotalCount
+            'count'      => $iTotalCount
         );
     }
 

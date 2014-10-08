@@ -3,7 +3,7 @@
 return array(
     'default' => array(
         // Разрешённые теги
-        'cfgAllowTags' => array(
+        'cfgAllowTags'              => array(
             // вызов метода с параметрами
             array(
                 array(
@@ -50,32 +50,32 @@ return array(
             ),
         ),
         // Коротие теги типа
-        'cfgSetTagShort' => array(
+        'cfgSetTagShort'            => array(
             array(
                 array('br', 'img', 'hr', 'cut', 'ls')
             ),
         ),
         // Преформатированные теги
-        'cfgSetTagPreformatted' => array(
+        'cfgSetTagPreformatted'     => array(
             array(
                 array('pre', 'code', 'codeline', 'video')
             ),
         ),
         // Разрешённые параметры тегов
-        'cfgAllowTagParams' => array(
+        'cfgAllowTagParams'         => array(
             // вызов метода
             array(
                 'img',
                 array(
                     'src',
-                    'alt' => '#text',
+                    'alt'    => '#text',
                     'title',
-                    'align' => array('right', 'left', 'center', 'middle'),
-                    'width' => '#int',
+                    'align'  => array('right', 'left', 'center', 'middle'),
+                    'width'  => '#int',
                     'height' => '#int',
                     'hspace' => '#int',
                     'vspace' => '#int',
-                    'class' => array('image-center')
+                    'class'  => array('image-center')
                 )
             ),
             // следующий вызов метода
@@ -91,10 +91,10 @@ return array(
             array(
                 'object',
                 array(
-                    'width' => '#int',
+                    'width'  => '#int',
                     'height' => '#int',
-                    'data' => array('#domain' => array('youtube.com', 'rutube.ru', 'vimeo.com')),
-                    'type' => '#text'
+                    'data'   => array('#domain' => array('youtube.com', 'rutube.ru', 'vimeo.com')),
+                    'type'   => '#text'
                 )
             ),
             array(
@@ -104,14 +104,14 @@ return array(
             array(
                 'embed',
                 array(
-                    'src' => array('#domain' => array('youtube.com', 'rutube.ru', 'vimeo.com')),
-                    'type' => '#text',
+                    'src'               => array('#domain' => array('youtube.com', 'rutube.ru', 'vimeo.com')),
+                    'type'              => '#text',
                     'allowscriptaccess' => '#text',
-                    'allowfullscreen' => '#text',
-                    'width' => '#int',
-                    'height' => '#int',
-                    'flashvars' => '#text',
-                    'wmode' => '#text'
+                    'allowfullscreen'   => '#text',
+                    'width'             => '#int',
+                    'height'            => '#int',
+                    'flashvars'         => '#text',
+                    'wmode'             => '#text'
                 )
             ),
             array(
@@ -125,9 +125,9 @@ return array(
             array(
                 'iframe',
                 array(
-                    'width' => '#int',
+                    'width'  => '#int',
                     'height' => '#int',
-                    'src' => array('#domain' => array('youtube.com', 'rutube.ru', 'vimeo.com', 'video.yandex.ru'))
+                    'src'    => array('#domain' => array('youtube.com', 'rutube.ru', 'vimeo.com', 'video.yandex.ru'))
                 )
             ),
             array(
@@ -139,9 +139,9 @@ return array(
                 array(
                     'colspan' => '#int',
                     'rowspan' => '#int',
-                    'align' => array('right', 'left', 'center', 'justify'),
-                    'height' => '#int',
-                    'width' => '#int'
+                    'align'   => array('right', 'left', 'center', 'justify'),
+                    'height'  => '#int',
+                    'width'   => '#int'
                 )
             ),
             array(
@@ -149,20 +149,20 @@ return array(
                 array(
                     'colspan' => '#int',
                     'rowspan' => '#int',
-                    'align' => array('right', 'left', 'center', 'justify'),
-                    'height' => '#int',
-                    'width' => '#int'
+                    'align'   => array('right', 'left', 'center', 'justify'),
+                    'height'  => '#int',
+                    'width'   => '#int'
                 )
             ),
             array(
                 'table',
                 array(
-                    'border' => '#int',
+                    'border'      => '#int',
                     'cellpadding' => '#int',
                     'cellspacing' => '#int',
-                    'align' => array('right', 'left', 'center'),
-                    'height' => '#int',
-                    'width' => '#int'
+                    'align'       => array('right', 'left', 'center'),
+                    'height'      => '#int',
+                    'width'       => '#int'
                 )
             ),
         ),
@@ -175,52 +175,52 @@ return array(
                     'allowScriptAccess' => array(
                         'value' => array('sameDomain'),
                     ),
-                    'movie' => array(
+                    'movie'             => array(
                         'value' => array('#domain' => array('youtube.com', 'rutube.ru', 'vimeo.com')),
                     ),
-                    'align' => array(
+                    'align'             => array(
                         'value' => array('bottom', 'middle', 'top', 'left', 'right'),
                     ),
-                    'base' => array(
+                    'base'              => array(
                         'value' => true,
                     ),
-                    'bgcolor' => array(
+                    'bgcolor'           => array(
                         'value' => true,
                     ),
-                    'border' => array(
+                    'border'            => array(
                         'value' => true,
                     ),
-                    'devicefont' => array(
+                    'devicefont'        => array(
                         'value' => true,
                     ),
-                    'flashVars' => array(
+                    'flashVars'         => array(
                         'value' => true,
                     ),
-                    'hspace' => array(
+                    'hspace'            => array(
                         'value' => true,
                     ),
-                    'quality' => array(
+                    'quality'           => array(
                         'value' => array('low', 'medium', 'high', 'autolow', 'autohigh', 'best'),
                     ),
-                    'salign' => array(
+                    'salign'            => array(
                         'value' => array('L', 'T', 'R', 'B', 'TL', 'TR', 'BL', 'BR'),
                     ),
-                    'scale' => array(
+                    'scale'             => array(
                         'value' => array('scale', 'showall', 'noborder', 'exactfit'),
                     ),
-                    'tabindex' => array(
+                    'tabindex'          => array(
                         'value' => true,
                     ),
-                    'title' => array(
+                    'title'             => array(
                         'value' => true,
                     ),
-                    'type' => array(
+                    'type'              => array(
                         'value' => true,
                     ),
-                    'vspace' => array(
+                    'vspace'            => array(
                         'value' => true,
                     ),
-                    'wmode' => array(
+                    'wmode'             => array(
                         'value' => array('window', 'opaque', 'transparent'),
                     ),
                 ),
@@ -228,20 +228,20 @@ return array(
             ),
         ),
         // Параметры тегов являющиеся обязательными
-        'cfgSetTagParamsRequired' => array(
+        'cfgSetTagParamsRequired'   => array(
             array(
                 'img',
                 'src'
             ),
         ),
         // Теги которые необходимо вырезать из текста вместе с контентом
-        'cfgSetTagCutWithContent' => array(
+        'cfgSetTagCutWithContent'   => array(
             array(
                 array('script', 'style')
             ),
         ),
         // Вложенные теги
-        'cfgSetTagChilds' => array(
+        'cfgSetTagChilds'           => array(
             array(
                 'ul',
                 array('li'),
@@ -292,19 +292,19 @@ return array(
             ),
         ),
         // Если нужно оставлять пустые не короткие теги
-        'cfgSetTagIsEmpty' => array(
+        'cfgSetTagIsEmpty'          => array(
             array(
                 array('param', 'embed', 'a', 'iframe')
             ),
         ),
         // Не нужна авто-расстановка <br>
-        'cfgSetTagNoAutoBr' => array(
+        'cfgSetTagNoAutoBr'         => array(
             array(
                 array('ul', 'ol', 'object', 'table', 'tr', 'tbody', 'thead')
             )
         ),
         // Теги с обязательными параметрами
-        'cfgSetTagParamDefault' => array(
+        'cfgSetTagParamDefault'     => array(
             array(
                 'embed',
                 'wmode',
@@ -313,40 +313,40 @@ return array(
             ),
         ),
         // Отключение авто-добавления <br>
-        'cfgSetAutoBrMode' => array(
+        'cfgSetAutoBrMode'          => array(
             array(
                 true
             )
         ),
         // Автозамена
-        'cfgSetAutoReplace' => array(
+        'cfgSetAutoReplace'         => array(
             array(
                 array('+/-', '(c)', '(с)', '(r)', '(C)', '(С)', '(R)'),
                 array('±', '©', '©', '®', '©', '©', '®')
             )
         ),
         // Список допустимых протоколов для ссылок
-        'cfgSetLinkProtocolAllow' => array(
+        'cfgSetLinkProtocolAllow'   => array(
             array(
                 array('http', 'https', 'ftp')
             )
         ),
-        'cfgSetTagNoTypography' => array(
+        'cfgSetTagNoTypography'     => array(
             array(
                 array('code', 'video', 'object')
             ),
         ),
         // Теги, после которых необходимо пропускать одну пробельную строку
-        'cfgSetTagBlockType' => array(
+        'cfgSetTagBlockType'        => array(
             array(
                 array('h4', 'h5', 'h6', 'ol', 'ul', 'blockquote', 'pre', 'table', 'iframe')
             )
         ),
     ),
     // настройки для обработки текста в результатах поиска
-    'search' => array(
+    'search'  => array(
         // Разрешённые теги
-        'cfgAllowTags' => array(
+        'cfgAllowTags'      => array(
             // вызов метода с параметрами
             array(
                 array('span'),

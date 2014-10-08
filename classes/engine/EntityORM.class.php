@@ -178,11 +178,12 @@ abstract class EntityORM extends Entity
      */
     public function Add()
     {
-        if ($this->beforeSave())
+        if ($this->beforeSave()) {
             if ($res = $this->_Method(__FUNCTION__)) {
                 $this->afterSave();
                 return $res;
             }
+        }
         return false;
     }
 
@@ -193,11 +194,12 @@ abstract class EntityORM extends Entity
      */
     public function Update()
     {
-        if ($this->beforeSave())
+        if ($this->beforeSave()) {
             if ($res = $this->_Method(__FUNCTION__)) {
                 $this->afterSave();
                 return $res;
             }
+        }
         return false;
     }
 
@@ -208,11 +210,12 @@ abstract class EntityORM extends Entity
      */
     public function Save()
     {
-        if ($this->beforeSave())
+        if ($this->beforeSave()) {
             if ($res = $this->_Method(__FUNCTION__)) {
                 $this->afterSave();
                 return $res;
             }
+        }
         return false;
     }
 
@@ -223,11 +226,12 @@ abstract class EntityORM extends Entity
      */
     public function Delete()
     {
-        if ($this->beforeDelete())
+        if ($this->beforeDelete()) {
             if ($res = $this->_Method(__FUNCTION__)) {
                 $this->afterDelete();
                 return $res;
             }
+        }
         return false;
     }
 
@@ -428,7 +432,8 @@ abstract class EntityORM extends Entity
         $sModuleName = Engine::GetModuleName($sRootDelegater);
         $sPluginPrefix = Engine::GetPluginPrefix($sRootDelegater);
         $sEntityName = Engine::GetEntityName($sRootDelegater);
-        return Engine::GetInstance()->_CallModule("{$sPluginPrefix}{$sModuleName}_{$sName}{$sEntityName}", array($this));
+        return Engine::GetInstance()->_CallModule("{$sPluginPrefix}{$sModuleName}_{$sName}{$sEntityName}",
+            array($this));
     }
 
     /**

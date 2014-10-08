@@ -88,7 +88,8 @@ class ModuleText extends Module
         if (is_array($aConfig)) {
             foreach ($aConfig as $sMethod => $aExec) {
                 foreach ($aExec as $aParams) {
-                    if (in_array(strtolower($sMethod), array_map("strtolower", array('cfgSetTagCallbackFull', 'cfgSetTagCallback')))) {
+                    if (in_array(strtolower($sMethod),
+                        array_map("strtolower", array('cfgSetTagCallbackFull', 'cfgSetTagCallback')))) {
                         if (isset($aParams[1][0]) and $aParams[1][0] == '_this_') {
                             $aParams[1][0] = $this;
                         }
@@ -191,28 +192,41 @@ class ModuleText extends Module
         /**
          * youtu.be
          */
-        $sText = preg_replace('/<video>http:\/\/(?:www\.|)youtu.be\/([a-zA-Z0-9_\-]+)(&.+)?<\/video>/Ui', '<iframe width="560" height="315" src="http://www.youtube.com/embed/$1?rel=0" frameborder="0" allowfullscreen></iframe>', $sText);
+        $sText = preg_replace('/<video>http:\/\/(?:www\.|)youtu.be\/([a-zA-Z0-9_\-]+)(&.+)?<\/video>/Ui',
+            '<iframe width="560" height="315" src="http://www.youtube.com/embed/$1?rel=0" frameborder="0" allowfullscreen></iframe>',
+            $sText);
         /**
          * youtube.com
          */
-        $sText = preg_replace('/<video>http:\/\/(?:www\.|)youtube\.com\/watch\?v=([a-zA-Z0-9_\-]+)(&.+)?<\/video>/Ui', '<iframe width="560" height="315" src="http://www.youtube.com/embed/$1" frameborder="0" allowfullscreen></iframe>', $sText);
+        $sText = preg_replace('/<video>http:\/\/(?:www\.|)youtube\.com\/watch\?v=([a-zA-Z0-9_\-]+)(&.+)?<\/video>/Ui',
+            '<iframe width="560" height="315" src="http://www.youtube.com/embed/$1" frameborder="0" allowfullscreen></iframe>',
+            $sText);
         /**
          * vimeo.com
          */
-        $sText = preg_replace('/<video>http:\/\/(?:www\.|)vimeo\.com\/(\d+).*<\/video>/i', '<iframe src="http://player.vimeo.com/video/$1" width="500" height="281" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>', $sText);
+        $sText = preg_replace('/<video>http:\/\/(?:www\.|)vimeo\.com\/(\d+).*<\/video>/i',
+            '<iframe src="http://player.vimeo.com/video/$1" width="500" height="281" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>',
+            $sText);
         /**
          * rutube.ru
          */
-        $sText = preg_replace('/<video>http:\/\/(?:www\.|)rutube\.ru\/tracks\/(\d+)\.html.*<\/video>/Ui', '<iframe width="720" height="405" src="//rutube.ru/play/embed/$1" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowfullscreen></iframe>', $sText);
-        $sText = preg_replace('/<video>http:\/\/(?:www\.|)rutube\.ru\/video\/([a-zA-Z0-9_\-]+)\/?<\/video>/Ui', '<iframe width="720" height="405" src="//rutube.ru/play/embed/$1" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowfullscreen></iframe>', $sText);
+        $sText = preg_replace('/<video>http:\/\/(?:www\.|)rutube\.ru\/tracks\/(\d+)\.html.*<\/video>/Ui',
+            '<iframe width="720" height="405" src="//rutube.ru/play/embed/$1" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowfullscreen></iframe>',
+            $sText);
+        $sText = preg_replace('/<video>http:\/\/(?:www\.|)rutube\.ru\/video\/([a-zA-Z0-9_\-]+)\/?<\/video>/Ui',
+            '<iframe width="720" height="405" src="//rutube.ru/play/embed/$1" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowfullscreen></iframe>',
+            $sText);
         /**
          * video.yandex.ru
          */
-        $sText = preg_replace('/<video>http:\/\/video\.yandex\.ru\/users\/([a-zA-Z0-9_\-]+)\/view\/(\d+).*<\/video>/i', '<object width="467" height="345"><param name="video" value="http://video.yandex.ru/users/$1/view/$2/get-object-by-url/redirect"></param><param name="allowFullScreen" value="true"></param><param name="scale" value="noscale"></param><embed src="http://video.yandex.ru/users/$1/view/$2/get-object-by-url/redirect" type="application/x-shockwave-flash" width="467" height="345" allowFullScreen="true" scale="noscale" ></embed></object>', $sText);
+        $sText = preg_replace('/<video>http:\/\/video\.yandex\.ru\/users\/([a-zA-Z0-9_\-]+)\/view\/(\d+).*<\/video>/i',
+            '<object width="467" height="345"><param name="video" value="http://video.yandex.ru/users/$1/view/$2/get-object-by-url/redirect"></param><param name="allowFullScreen" value="true"></param><param name="scale" value="noscale"></param><embed src="http://video.yandex.ru/users/$1/view/$2/get-object-by-url/redirect" type="application/x-shockwave-flash" width="467" height="345" allowFullScreen="true" scale="noscale" ></embed></object>',
+            $sText);
         /**
          * vk.com
          */
-        $sText = preg_replace('/<video>(http:\/\/(?:www\.|)vk\.com\/video_ext\.php.*)<\/video>/i', '<iframe src="$1" width="607" height="360" frameborder="0"></iframe>', $sText);
+        $sText = preg_replace('/<video>(http:\/\/(?:www\.|)vk\.com\/video_ext\.php.*)<\/video>/i',
+            '<iframe src="$1" width="607" height="360" frameborder="0"></iframe>', $sText);
         return $sText;
     }
 
@@ -243,7 +257,8 @@ class ModuleText extends Module
      */
     protected function FlashParamParser($sText)
     {
-        if (preg_match_all("@(<\s*param\s*name\s*=\s*(?:\"|').*(?:\"|')\s*value\s*=\s*(?:\"|').*(?:\"|'))\s*/?\s*>(?!</param>)@Ui", $sText, $aMatch)) {
+        if (preg_match_all("@(<\s*param\s*name\s*=\s*(?:\"|').*(?:\"|')\s*value\s*=\s*(?:\"|').*(?:\"|'))\s*/?\s*>(?!</param>)@Ui",
+            $sText, $aMatch)) {
             foreach ($aMatch[1] as $key => $str) {
                 $str_new = $str . '></param>';
                 $sText = str_replace($aMatch[0][$key], $str_new, $sText);
@@ -269,7 +284,8 @@ class ModuleText extends Module
          */
         if (preg_match_all("@(<object\s.*>)@Ui", $sText, $aMatch)) {
             foreach ($aMatch[1] as $key => $str) {
-                $sText = str_replace($aMatch[0][$key], $aMatch[0][$key] . '<param name="wmode" value="opaque"></param>', $sText);
+                $sText = str_replace($aMatch[0][$key], $aMatch[0][$key] . '<param name="wmode" value="opaque"></param>',
+                    $sText);
             }
         }
         return $sText;

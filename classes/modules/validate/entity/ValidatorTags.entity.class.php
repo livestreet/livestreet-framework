@@ -68,7 +68,8 @@ class ModuleValidate_EntityValidatorTags extends ModuleValidate_EntityValidator
     public function validate($sValue)
     {
         if (is_array($sValue)) {
-            return $this->getMessage($this->Lang_Get('validate.tags.empty', null, false), 'msg', array('min' => $this->min, 'max' => $this->max));
+            return $this->getMessage($this->Lang_Get('validate.tags.empty', null, false), 'msg',
+                array('min' => $this->min, 'max' => $this->max));
         }
         if ($this->allowEmpty && $this->isEmpty($sValue)) {
             return true;
@@ -80,16 +81,20 @@ class ModuleValidate_EntityValidatorTags extends ModuleValidate_EntityValidator
         foreach ($aTags as $sTag) {
             $sTag = trim($sTag, "\r\n\t\0\x0B .");
             $iLength = mb_strlen($sTag, 'UTF-8');
-            if ($iLength >= $this->min and $iLength <= $this->max and !in_array(mb_strtolower($sTag, 'UTF-8'), $aTagsNewLow)) {
+            if ($iLength >= $this->min and $iLength <= $this->max and !in_array(mb_strtolower($sTag, 'UTF-8'),
+                    $aTagsNewLow)
+            ) {
                 $aTagsNew[] = $sTag;
                 $aTagsNewLow[] = mb_strtolower($sTag, 'UTF-8');
             }
         }
         $iCount = count($aTagsNew);
         if ($iCount > $this->count) {
-            return $this->getMessage($this->Lang_Get('validate.tags.count_more', null, false), 'msg', array('count' => $this->count));
+            return $this->getMessage($this->Lang_Get('validate.tags.count_more', null, false), 'msg',
+                array('count' => $this->count));
         } elseif (!$iCount) {
-            return $this->getMessage($this->Lang_Get('validate.tags.empty', null, false), 'msg', array('min' => $this->min, 'max' => $this->max));
+            return $this->getMessage($this->Lang_Get('validate.tags.empty', null, false), 'msg',
+                array('min' => $this->min, 'max' => $this->max));
         }
         /**
          * Если проверка от сущности, то возвращаем обновленное значение

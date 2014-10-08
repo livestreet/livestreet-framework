@@ -221,11 +221,15 @@ class ModuleDatabase extends Module
             /**
              * Заменяем движек, если таковой указан в запросе
              */
-            if (Config::Get('db.tables.engine') != 'InnoDB') $sQuery = str_ireplace('ENGINE=InnoDB', "ENGINE=" . Config::Get('db.tables.engine'), $sQuery);
+            if (Config::Get('db.tables.engine') != 'InnoDB') {
+                $sQuery = str_ireplace('ENGINE=InnoDB', "ENGINE=" . Config::Get('db.tables.engine'), $sQuery);
+            }
 
             if ($sQuery != '') {
                 $bResult = $this->GetConnect($aConfig)->query($sQuery);
-                if ($bResult === false) $aErrors[] = mysql_error();
+                if ($bResult === false) {
+                    $aErrors[] = mysql_error();
+                }
             }
         }
         /**
@@ -291,9 +295,11 @@ class ModuleDatabase extends Module
 
         if ($aRows = $this->GetConnect($aConfig)->select($sQuery)) {
             foreach ($aRows as $aRow) {
-                if ($aRow['Field'] == $sFieldName) break;
+                if ($aRow['Field'] == $sFieldName) {
+                    break;
+                }
             }
-            if (strpos($aRow['Type'], "'{$sType}'") === FALSE) {
+            if (strpos($aRow['Type'], "'{$sType}'") === false) {
                 $aRow['Type'] = str_ireplace('enum(', "enum('{$sType}',", $aRow['Type']);
                 $sQuery = "ALTER TABLE `{$sTableName}` MODIFY `{$sFieldName}` " . $aRow['Type'];
                 $sQuery .= ($aRow['Null'] == 'NO') ? ' NOT NULL ' : ' NULL ';

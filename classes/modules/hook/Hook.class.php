@@ -215,7 +215,12 @@ class ModuleHook extends Module
         if (!in_array($sType, array('module', 'hook', 'function'))) {
             return false;
         }
-        $this->aHooks[$sName][] = array('type' => $sType, 'callback' => $sCallBack, 'params' => $aParams, 'priority' => (int)$iPriority);
+        $this->aHooks[$sName][] = array(
+            'type'     => $sType,
+            'callback' => $sCallBack,
+            'params'   => $aParams,
+            'priority' => (int)$iPriority
+        );
     }
 
     /**

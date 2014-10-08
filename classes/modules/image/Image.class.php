@@ -36,11 +36,11 @@ class ModuleImage extends Module
      * @var array
      */
     protected $aParamsDefault = array(
-        'size_max_width' => 7000,
+        'size_max_width'  => 7000,
         'size_max_height' => 7000,
-        'format' => 'jpg',
-        'format_auto' => true,
-        'quality' => 95,
+        'format'          => 'jpg',
+        'format_auto'     => true,
+        'quality'         => 95,
     );
     /**
      * Тескт последней ошибки
@@ -54,7 +54,9 @@ class ModuleImage extends Module
      * @var array
      */
     protected $aDriversSupport = array(
-        'gd', 'imagick', 'gmagick'
+        'gd',
+        'imagick',
+        'gmagick'
     );
 
     /**
@@ -333,6 +335,7 @@ class ModuleImage extends Module
      */
     public function GetIdDir($sId, $sSubDir = null)
     {
-        return Config::Get('path.uploads.images') . '/' . ($sSubDir ? $sSubDir . '/' : '') . preg_replace('~(.{3})~U', "\\1/", str_pad($sId, 9, "0", STR_PAD_LEFT)) . date('Y/m/d');
+        return Config::Get('path.uploads.images') . '/' . ($sSubDir ? $sSubDir . '/' : '') . preg_replace('~(.{3})~U',
+            "\\1/", str_pad($sId, 9, "0", STR_PAD_LEFT)) . date('Y/m/d');
     }
 }

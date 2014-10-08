@@ -54,7 +54,8 @@ class ModulePluginManager extends ModuleORM
     public function ActivatePlugin($sPlugin)
     {
         if (!$this->CheckPluginsFileWritable()) {
-            $this->Message_AddError($this->Lang_Get('admin.plugins.notices.activation_file_write_error'), $this->Lang_Get('error'), true);
+            $this->Message_AddError($this->Lang_Get('admin.plugins.notices.activation_file_write_error'),
+                $this->Lang_Get('error'), true);
             return false;
         }
         $sPlugin = strtolower($sPlugin);
@@ -72,7 +73,8 @@ class ModulePluginManager extends ModuleORM
         $oPlugin = new $sClassPlugin;
 
         if (in_array($sPlugin, $aPluginItemsActive)) {
-            $this->Message_AddError($this->Lang_Get('admin.plugins.notices.activation_already_error'), $this->Lang_Get('error'), true);
+            $this->Message_AddError($this->Lang_Get('admin.plugins.notices.activation_already_error'),
+                $this->Lang_Get('error'), true);
             return false;
         }
         /**
@@ -82,7 +84,8 @@ class ModulePluginManager extends ModuleORM
             and version_compare(LS_VERSION, (string)$oXml->requires->livestreet, '<')
         ) {
             $this->Message_AddError(
-                $this->Lang_Get('admin.plugins.notices.activation_version_error', array('version' => $oXml->requires->livestreet)),
+                $this->Lang_Get('admin.plugins.notices.activation_version_error',
+                    array('version' => $oXml->requires->livestreet)),
                 $this->Lang_Get('error'), true
             );
             return false;
@@ -96,7 +99,8 @@ class ModulePluginManager extends ModuleORM
                 if (!in_array($sReqPlugin, $aPluginItemsActive)) {
                     $iConflict++;
                     $this->Message_AddError(
-                        $this->Lang_Get('admin.plugins.notices.activation_requires_error', array('plugin' => func_camelize($sReqPlugin))),
+                        $this->Lang_Get('admin.plugins.notices.activation_requires_error',
+                            array('plugin' => func_camelize($sReqPlugin))),
                         $this->Lang_Get('error'), true
                     );
                 }
@@ -129,7 +133,7 @@ class ModulePluginManager extends ModuleORM
                         $this->Lang_Get('admin.plugins.notices.activation_overlap', array(
                             'resource' => $sResource,
                             'delegate' => $aConflict['delegate'],
-                            'plugin' => $aConflict['sign']
+                            'plugin'   => $aConflict['sign']
                         )), $this->Lang_Get('error'), true
                     );
                 }
@@ -144,7 +148,7 @@ class ModulePluginManager extends ModuleORM
                         $this->Lang_Get('admin.plugins.notices.activation_overlap', array(
                             'resource' => $sResource,
                             'delegate' => $aConflict['delegate'],
-                            'plugin' => $aConflict['sign']
+                            'plugin'   => $aConflict['sign']
                         )), $this->Lang_Get('error'), true
                     );
                 }
@@ -165,7 +169,7 @@ class ModulePluginManager extends ModuleORM
                         $this->Message_AddError(
                             $this->Lang_Get('admin.plugins.notices.activation_overlap_inherit', array(
                                 'resource' => $sResource,
-                                'plugin' => $aItem['sign']
+                                'plugin'   => $aItem['sign']
                             )),
                             $this->Lang_Get('error'), true
                         );
@@ -205,7 +209,8 @@ class ModulePluginManager extends ModuleORM
     public function DeactivatePlugin($sPlugin)
     {
         if (!$this->CheckPluginsFileWritable()) {
-            $this->Message_AddError($this->Lang_Get('admin.plugins.notices.activation_file_write_error'), $this->Lang_Get('error'), true);
+            $this->Message_AddError($this->Lang_Get('admin.plugins.notices.activation_file_write_error'),
+                $this->Lang_Get('error'), true);
             return false;
         }
         $sPlugin = strtolower($sPlugin);
@@ -223,7 +228,8 @@ class ModulePluginManager extends ModuleORM
         $oPlugin = new $sClassPlugin;
 
         if (!in_array($sPlugin, $aPluginItemsActive)) {
-            $this->Message_AddError($this->Lang_Get('admin.plugins.notices.deactivation_already_error'), $this->Lang_Get('error'), true);
+            $this->Message_AddError($this->Lang_Get('admin.plugins.notices.deactivation_already_error'),
+                $this->Lang_Get('error'), true);
             return false;
         }
         /**
@@ -235,7 +241,8 @@ class ModulePluginManager extends ModuleORM
                 if ($sReqPlugin == $sPlugin) {
                     $iConflict++;
                     $this->Message_AddError(
-                        $this->Lang_Get('admin.plugins.notices.deactivation_requires_error', array('plugin' => func_camelize($sPlugnCheck))),
+                        $this->Lang_Get('admin.plugins.notices.deactivation_requires_error',
+                            array('plugin' => func_camelize($sPlugnCheck))),
                         $this->Lang_Get('error'), true
                     );
                 }
@@ -329,10 +336,11 @@ class ModulePluginManager extends ModuleORM
                     $sVersionDb = null;
                 }
                 $aInfo = array(
-                    'code' => $sPluginCode,
-                    'is_active' => in_array($sPluginCode, $aPluginItemsActive),
-                    'property' => $oXml,
-                    'apply_update' => (is_null($sVersionDb) or version_compare($sVersionDb, (string)$oXml->version, '<')) ? true : false,
+                    'code'         => $sPluginCode,
+                    'is_active'    => in_array($sPluginCode, $aPluginItemsActive),
+                    'property'     => $oXml,
+                    'apply_update' => (is_null($sVersionDb) or version_compare($sVersionDb, (string)$oXml->version,
+                            '<')) ? true : false,
                 );
                 $aPluginItemsReturn[$sPluginCode] = $aInfo;
             }
@@ -421,12 +429,16 @@ class ModulePluginManager extends ModuleORM
         if (!$this->CheckPluginsFileWritable()) {
             return false;
         }
-        if (!is_array($aPlugins)) $aPlugins = array($aPlugins);
+        if (!is_array($aPlugins)) {
+            $aPlugins = array($aPlugins);
+        }
         $aPlugins = array_unique(array_map('trim', $aPlugins));
         /**
          * Записываем данные в файл PLUGINS.DAT
          */
-        if (@file_put_contents($this->sPluginsDir . Config::Get('sys.plugins.activation_file'), implode(PHP_EOL, $aPlugins)) !== false) {
+        if (@file_put_contents($this->sPluginsDir . Config::Get('sys.plugins.activation_file'),
+                implode(PHP_EOL, $aPlugins)) !== false
+        ) {
             /**
              * Сбрасываем весь кеш, т.к. могут быть закешированы унаследованые плагинами сущности
              */
@@ -562,14 +574,19 @@ class ModulePluginManager extends ModuleORM
         /**
          * Получаем список выполненых миграций из БД
          */
-        $aMigrationItemsGroup = $this->GetMigrationItemsByFilter(array('code' => $sPlugin, '#order' => array('file' => 'asc'), '#index-group' => 'version'));
+        $aMigrationItemsGroup = $this->GetMigrationItemsByFilter(array(
+            'code'         => $sPlugin,
+            '#order'       => array('file' => 'asc'),
+            '#index-group' => 'version'
+        ));
         $aMigrationItemsGroup = array_reverse($this->SortVersions($aMigrationItemsGroup, true), true);
         foreach ($aMigrationItemsGroup as $sVersion => $aMigrationItems) {
             foreach ($aMigrationItems as $oMigration) {
                 $sPath = $sPluginDir . $sVersion . '/' . $oMigration->getFile();
                 if (file_exists($sPath)) {
                     require_once($sPath);
-                    $sClass = 'Plugin' . func_camelize($sPlugin) . '_Update_' . basename($oMigration->getFile(), '.php');
+                    $sClass = 'Plugin' . func_camelize($sPlugin) . '_Update_' . basename($oMigration->getFile(),
+                            '.php');
                     $oUpdate = new $sClass;
                     $oUpdate->down();
                 }

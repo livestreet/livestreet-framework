@@ -73,7 +73,9 @@ class ModuleValidate_EntityValidatorRegexp extends ModuleValidate_EntityValidato
         if ($this->pattern === null) {
             return $this->getMessage($this->Lang_Get('validate.regexp.invalid_pattern', null, false), 'msg');
         }
-        if ((!$this->not && !preg_match($this->pattern, $sValue)) || ($this->not && preg_match($this->pattern, $sValue))) {
+        if ((!$this->not && !preg_match($this->pattern, $sValue)) || ($this->not && preg_match($this->pattern,
+                    $sValue))
+        ) {
             return $this->getMessage($this->Lang_Get('validate.regexp.not_valid', null, false), 'msg');
         }
         return true;

@@ -82,7 +82,8 @@ class ModuleValidate_EntityValidatorString extends ModuleValidate_EntityValidato
     public function validate($sValue)
     {
         if (is_array($sValue)) {
-            return $this->getMessage($this->Lang_Get('validate.string.too_short', null, false), 'msgTooShort', array('min' => $this->min));
+            return $this->getMessage($this->Lang_Get('validate.string.too_short', null, false), 'msgTooShort',
+                array('min' => $this->min));
         }
         if ($this->allowEmpty && $this->isEmpty($sValue)) {
             return true;
@@ -91,13 +92,16 @@ class ModuleValidate_EntityValidatorString extends ModuleValidate_EntityValidato
         $iLength = mb_strlen($sValue, 'UTF-8');
 
         if ($this->min !== null && $iLength < $this->min) {
-            return $this->getMessage($this->Lang_Get('validate.string.too_short', null, false), 'msgTooShort', array('min' => $this->min));
+            return $this->getMessage($this->Lang_Get('validate.string.too_short', null, false), 'msgTooShort',
+                array('min' => $this->min));
         }
         if ($this->max !== null && $iLength > $this->max) {
-            return $this->getMessage($this->Lang_Get('validate.string.too_long', null, false), 'msgTooLong', array('max' => $this->max));
+            return $this->getMessage($this->Lang_Get('validate.string.too_long', null, false), 'msgTooLong',
+                array('max' => $this->max));
         }
         if ($this->is !== null && $iLength !== $this->is) {
-            return $this->getMessage($this->Lang_Get('validate.string.no_lenght', null, false), 'msg', array('length' => $this->is));
+            return $this->getMessage($this->Lang_Get('validate.string.no_lenght', null, false), 'msg',
+                array('length' => $this->is));
         }
         if (!$this->allowEmpty && $this->isEmpty($sValue)) {
             return $this->getMessage($this->Lang_Get('validate.empty_error', null, false), 'msg');

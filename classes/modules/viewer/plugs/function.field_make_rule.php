@@ -45,7 +45,8 @@ function smarty_function_field_make_rule($params, &$smarty)
 
     $aEntityRules = $oEntity->_getValidateRules();
     foreach ($aEntityRules as $aEntityRule) {
-        $oValidator = $oEntity->Validate_CreateValidator($aEntityRule[1], $oEntity, $aEntityRule[0], array_slice($aEntityRule, 2));
+        $oValidator = $oEntity->Validate_CreateValidator($aEntityRule[1], $oEntity, $aEntityRule[0],
+            array_slice($aEntityRule, 2));
         if (in_array($sField, $oValidator->fields) and (!$sScenario or isset($oValidator->on[$sScenario]))) {
             $sType = $oValidator->getTypeValidator();
             /**

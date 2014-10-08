@@ -77,12 +77,12 @@ class ModuleCache_EntityBackendFile extends ModuleCache_EntityBackend
         $sDirCache = $this->GetCacheDir();
         $oCahe = new Zend_Cache_Backend_File(
             array(
-                'cache_dir' => $sDirCache,
-                'file_name_prefix' => Config::Get('sys.cache.prefix'),
-                'read_control_type' => 'crc32',
+                'cache_dir'              => $sDirCache,
+                'file_name_prefix'       => Config::Get('sys.cache.prefix'),
+                'read_control_type'      => 'crc32',
                 'hashed_directory_level' => Config::Get('sys.cache.directory_level'),
-                'read_control' => true,
-                'file_locking' => true,
+                'read_control'           => true,
+                'file_locking'           => true,
             )
         );
         if (isset($aParams['stats_callback'])) {

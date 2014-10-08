@@ -109,10 +109,12 @@ class ModuleValidate_EntityValidatorNumber extends ModuleValidate_EntityValidato
             }
         }
         if ($this->min !== null && $sValue < $this->min) {
-            return $this->getMessage($this->Lang_Get('validate.number.too_small', null, false), 'msgTooSmall', array('min' => $this->min));
+            return $this->getMessage($this->Lang_Get('validate.number.too_small', null, false), 'msgTooSmall',
+                array('min' => $this->min));
         }
         if ($this->max !== null && $sValue > $this->max) {
-            return $this->getMessage($this->Lang_Get('validate.number.too_big', null, false), 'msgTooBig', array('max' => $this->max));
+            return $this->getMessage($this->Lang_Get('validate.number.too_big', null, false), 'msgTooBig',
+                array('max' => $this->max));
         }
         if (!$this->allowEmpty && $this->isEmpty($sValue)) {
             return $this->getMessage($this->Lang_Get('validate.empty_error', null, false), 'msg');

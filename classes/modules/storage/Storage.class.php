@@ -136,7 +136,7 @@ class ModuleStorage extends Module
              * построить строку части WHERE запроса
              */
             $sWhere = $this->oMapperStorage->BuildFilter(array(
-                'key' => $sKey,
+                'key'      => $sKey,
                 'instance' => $sInstance
             ));
             $mData = null;
@@ -175,7 +175,7 @@ class ModuleStorage extends Module
          * построить строку части WHERE запроса
          */
         $sWhere = $this->oMapperStorage->BuildFilter(array(
-            'key' => $sKey,
+            'key'      => $sKey,
             'instance' => $sInstance
         ));
         /*

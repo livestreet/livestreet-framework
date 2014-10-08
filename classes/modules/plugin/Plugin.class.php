@@ -46,13 +46,13 @@ class ModulePlugin extends Module
      * @var array
      */
     protected $aDelegates = array(
-        'module' => array(),
-        'mapper' => array(),
-        'action' => array(),
-        'entity' => array(),
+        'module'   => array(),
+        'mapper'   => array(),
+        'action'   => array(),
+        'entity'   => array(),
         'template' => array(),
-        'block' => array(),
-        'event' => array(),
+        'block'    => array(),
+        'event'    => array(),
         'behavior' => array(),
     );
     /**
@@ -84,12 +84,16 @@ class ModulePlugin extends Module
         /**
          * Запрещаем неподписанные делегаты
          */
-        if (!is_string($sSign) or !strlen($sSign)) return null;
-        if (!in_array($sType, array_keys($this->aDelegates)) or !$sFrom or !$sTo) return null;
+        if (!is_string($sSign) or !strlen($sSign)) {
+            return null;
+        }
+        if (!in_array($sType, array_keys($this->aDelegates)) or !$sFrom or !$sTo) {
+            return null;
+        }
 
         $this->aDelegates[$sType][trim($sFrom)] = array(
             'delegate' => trim($sTo),
-            'sign' => $sSign
+            'sign'     => $sSign
         );
     }
 
@@ -102,12 +106,16 @@ class ModulePlugin extends Module
      */
     public function Inherit($sFrom, $sTo, $sSign = __CLASS__)
     {
-        if (!is_string($sSign) or !strlen($sSign)) return null;
-        if (!$sFrom or !$sTo) return null;
+        if (!is_string($sSign) or !strlen($sSign)) {
+            return null;
+        }
+        if (!$sFrom or !$sTo) {
+            return null;
+        }
 
         $this->aInherits[trim($sFrom)]['items'][] = array(
             'inherit' => trim($sTo),
-            'sign' => $sSign
+            'sign'    => $sSign
         );
         $this->aInherits[trim($sFrom)]['position'] = count($this->aInherits[trim($sFrom)]['items']) - 1;
     }
@@ -200,12 +208,14 @@ class ModulePlugin extends Module
     {
         if (isset($this->aDelegates[$sType][$sFrom]['delegate'])) {
             return array($this->aDelegates[$sType][$sFrom]['delegate']);
-        } else if ($aInherits = $this->GetInherits($sFrom)) {
-            $aReturn = array();
-            foreach (array_reverse($aInherits) as $v) {
-                $aReturn[] = $v['inherit'];
+        } else {
+            if ($aInherits = $this->GetInherits($sFrom)) {
+                $aReturn = array();
+                foreach (array_reverse($aInherits) as $v) {
+                    $aReturn[] = $v['inherit'];
+                }
+                return $aReturn;
             }
-            return $aReturn;
         }
         return null;
     }

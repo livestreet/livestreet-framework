@@ -172,7 +172,9 @@ abstract class ModuleORM extends Module
     {
         if ($sPrimaryKey = $oEntity->_getPrimaryKey()) {
             if ($sPrimaryKeyValue = $oEntity->_getDataOne($sPrimaryKey)) {
-                if ($oEntityNew = $this->GetByFilter(array($sPrimaryKey => $sPrimaryKeyValue), Engine::GetEntityName($oEntity))) {
+                if ($oEntityNew = $this->GetByFilter(array($sPrimaryKey => $sPrimaryKeyValue),
+                    Engine::GetEntityName($oEntity))
+                ) {
                     $oEntity->_setData($oEntityNew->_getData());
                     $oEntity->_setRelationsData(array());
                     return $oEntity;
@@ -220,7 +222,8 @@ abstract class ModuleORM extends Module
                 $aChildren = array();
                 if ($sPrimaryKey = $oEntity->_getPrimaryKey()) {
                     if ($sPrimaryKeyValue = $oEntity->_getDataOne($sPrimaryKey)) {
-                        $aChildren = $this->GetItemsByFilter(array($oEntity->_getTreeParentKey() => $sPrimaryKeyValue), Engine::GetEntityName($oEntity));
+                        $aChildren = $this->GetItemsByFilter(array($oEntity->_getTreeParentKey() => $sPrimaryKeyValue),
+                            Engine::GetEntityName($oEntity));
                     }
                 }
             }
@@ -248,7 +251,8 @@ abstract class ModuleORM extends Module
                 $oParent = null;
                 if ($sPrimaryKey = $oEntity->_getPrimaryKey()) {
                     if ($sParentId = $oEntity->_getTreeParentKeyValue()) {
-                        $oParent = $this->GetByFilter(array($sPrimaryKey => $sParentId), Engine::GetEntityName($oEntity));
+                        $oParent = $this->GetByFilter(array($sPrimaryKey => $sParentId),
+                            Engine::GetEntityName($oEntity));
                     }
                 }
             }
@@ -394,12 +398,14 @@ abstract class ModuleORM extends Module
         /**
          * Хук для возможности изменения фильтра
          */
-        $this->RunBehaviorHook('module_orm_GetByFilter_before', array('aFilter' => &$aFilter, 'sEntityFull' => $sEntityFull), true);
+        $this->RunBehaviorHook('module_orm_GetByFilter_before',
+            array('aFilter' => &$aFilter, 'sEntityFull' => $sEntityFull), true);
         $aEntities = $this->oMapperORM->GetByFilter($aFilter, $sEntityFull);
         /**
          * Хук для возможности кастомной обработки результата
          */
-        $this->RunBehaviorHook('module_orm_GetByFilter_after', array('aEntities' => $aEntities, 'aFilter' => $aFilter, 'sEntityFull' => $sEntityFull), true);
+        $this->RunBehaviorHook('module_orm_GetByFilter_after',
+            array('aEntities' => $aEntities, 'aFilter' => $aFilter, 'sEntityFull' => $sEntityFull), true);
         return $aEntities;
     }
 
@@ -420,7 +426,8 @@ abstract class ModuleORM extends Module
         /**
          * Хук для возможности изменения фильтра
          */
-        $this->RunBehaviorHook('module_orm_GetItemsByFilter_before', array('aFilter' => &$aFilter, 'sEntityFull' => $sEntityFull), true);
+        $this->RunBehaviorHook('module_orm_GetItemsByFilter_before',
+            array('aFilter' => &$aFilter, 'sEntityFull' => $sEntityFull), true);
 
         // Если параметр #cache указан и пуст, значит игнорируем кэширование для запроса
         if (array_key_exists('#cache', $aFilter) && !$aFilter['#cache']) {
@@ -430,9 +437,15 @@ abstract class ModuleORM extends Module
             $aCacheTags = array($sEntityFull . '_save', $sEntityFull . '_delete');
             $iCacheTime = 60 * 60 * 24; // скорее лучше хранить в свойстве сущности, для возможности выборочного переопределения
             // переопределяем из параметров
-            if (isset($aFilter['#cache'][0])) $sCacheKey = $aFilter['#cache'][0];
-            if (isset($aFilter['#cache'][1])) $aCacheTags = $aFilter['#cache'][1];
-            if (isset($aFilter['#cache'][2])) $iCacheTime = $aFilter['#cache'][2];
+            if (isset($aFilter['#cache'][0])) {
+                $sCacheKey = $aFilter['#cache'][0];
+            }
+            if (isset($aFilter['#cache'][1])) {
+                $aCacheTags = $aFilter['#cache'][1];
+            }
+            if (isset($aFilter['#cache'][2])) {
+                $iCacheTime = $aFilter['#cache'][2];
+            }
 
             if (false === ($aEntities = $this->Cache_Get($sCacheKey))) {
                 $aEntities = $this->oMapperORM->GetItemsByFilter($aFilter, $sEntityFull);
@@ -475,10 +488,17 @@ abstract class ModuleORM extends Module
                 }
 
                 $sRelType = $aRelations[$sRelationName][0];
-                $sRelEntity = $this->Plugin_GetRootDelegater('entity', $aRelations[$sRelationName][1]); // получаем корневую сущность, без учета наследников
+                $sRelEntity = $this->Plugin_GetRootDelegater('entity',
+                    $aRelations[$sRelationName][1]); // получаем корневую сущность, без учета наследников
                 $sRelKey = $aRelations[$sRelationName][2];
 
-                if (!array_key_exists($sRelationName, $aRelations) or !in_array($sRelType, array(EntityORM::RELATION_TYPE_BELONGS_TO, EntityORM::RELATION_TYPE_HAS_ONE, EntityORM::RELATION_TYPE_HAS_MANY, EntityORM::RELATION_TYPE_MANY_TO_MANY))) {
+                if (!array_key_exists($sRelationName, $aRelations) or !in_array($sRelType, array(
+                            EntityORM::RELATION_TYPE_BELONGS_TO,
+                            EntityORM::RELATION_TYPE_HAS_ONE,
+                            EntityORM::RELATION_TYPE_HAS_MANY,
+                            EntityORM::RELATION_TYPE_MANY_TO_MANY
+                        ))
+                ) {
                     throw new Exception("The entity <{$sEntityFull}> not have relation <{$sRelationName}>");
                 }
 
@@ -496,17 +516,21 @@ abstract class ModuleORM extends Module
                 $sRelModuleName = Engine::GetModuleName($sRelEntity);
                 $sRelEntityName = Engine::GetEntityName($sRelEntity);
                 $sRelPluginPrefix = Engine::GetPluginPrefix($sRelEntity);
-                $sRelPrimaryKey = method_exists($oRelEntityEmpty, '_getPrimaryKey') ? func_camelize($oRelEntityEmpty->_getPrimaryKey()) : 'Id';
+                $sRelPrimaryKey = method_exists($oRelEntityEmpty,
+                    '_getPrimaryKey') ? func_camelize($oRelEntityEmpty->_getPrimaryKey()) : 'Id';
                 if ($sRelType == EntityORM::RELATION_TYPE_BELONGS_TO) {
-                    $aRelData = Engine::GetInstance()->_CallModule("{$sRelPluginPrefix}{$sRelModuleName}_get{$sRelEntityName}ItemsByArray{$sRelPrimaryKey}", array($aEntityKeys[$sRelKey]));
+                    $aRelData = Engine::GetInstance()->_CallModule("{$sRelPluginPrefix}{$sRelModuleName}_get{$sRelEntityName}ItemsByArray{$sRelPrimaryKey}",
+                        array($aEntityKeys[$sRelKey]));
                 } elseif ($sRelType == EntityORM::RELATION_TYPE_HAS_ONE) {
                     $aFilterRel = array($sRelKey . ' in' => $aEntityPrimaryKeys, '#index-from' => $sRelKey);
                     $aFilterRel = array_merge($aFilterRel, $aRelationFilter);
-                    $aRelData = Engine::GetInstance()->_CallModule("{$sRelPluginPrefix}{$sRelModuleName}_get{$sRelEntityName}ItemsByFilter", array($aFilterRel));
+                    $aRelData = Engine::GetInstance()->_CallModule("{$sRelPluginPrefix}{$sRelModuleName}_get{$sRelEntityName}ItemsByFilter",
+                        array($aFilterRel));
                 } elseif ($sRelType == EntityORM::RELATION_TYPE_HAS_MANY) {
                     $aFilterRel = array($sRelKey . ' in' => $aEntityPrimaryKeys, '#index-group' => $sRelKey);
                     $aFilterRel = array_merge($aFilterRel, $aRelationFilter);
-                    $aRelData = Engine::GetInstance()->_CallModule("{$sRelPluginPrefix}{$sRelModuleName}_get{$sRelEntityName}ItemsByFilter", array($aFilterRel));
+                    $aRelData = Engine::GetInstance()->_CallModule("{$sRelPluginPrefix}{$sRelModuleName}_get{$sRelEntityName}ItemsByFilter",
+                        array($aFilterRel));
                 } elseif ($sRelType == EntityORM::RELATION_TYPE_MANY_TO_MANY) {
                     $sEntityJoin = $aRelations[$sRelationName][3];
                     $sKeyJoin = $aRelations[$sRelationName][4];
@@ -519,7 +543,8 @@ abstract class ModuleORM extends Module
                         $aRelationFilter['#value-default'] = array();
                     }
                     $aFilterRel = array_merge($aFilterAdd, $aRelationFilter);
-                    $aRelData = Engine::GetInstance()->_CallModule("{$sRelPluginPrefix}{$sRelModuleName}_get{$sRelEntityName}ItemsByJoinEntity", array($sEntityJoin, $sKeyJoin, $sRelKey, $aEntityPrimaryKeys, $aFilterRel));
+                    $aRelData = Engine::GetInstance()->_CallModule("{$sRelPluginPrefix}{$sRelModuleName}_get{$sRelEntityName}ItemsByJoinEntity",
+                        array($sEntityJoin, $sKeyJoin, $sRelKey, $aEntityPrimaryKeys, $aFilterRel));
                     $aRelData = $this->_setIndexesGroupJoinField($aRelData, $sKeyJoin);
                 }
                 /**
@@ -528,7 +553,11 @@ abstract class ModuleORM extends Module
                 foreach ($aEntities as $oEntity) {
                     if ($sRelType == EntityORM::RELATION_TYPE_BELONGS_TO) {
                         $sKeyData = $oEntity->_getDataOne($sRelKey);
-                    } elseif (in_array($sRelType, array(EntityORM::RELATION_TYPE_HAS_ONE, EntityORM::RELATION_TYPE_HAS_MANY, EntityORM::RELATION_TYPE_MANY_TO_MANY))) {
+                    } elseif (in_array($sRelType, array(
+                            EntityORM::RELATION_TYPE_HAS_ONE,
+                            EntityORM::RELATION_TYPE_HAS_MANY,
+                            EntityORM::RELATION_TYPE_MANY_TO_MANY
+                        ))) {
                         $sKeyData = $oEntity->_getPrimaryKeyValue();
                     } else {
                         break;
@@ -540,7 +569,8 @@ abstract class ModuleORM extends Module
                     }
                     if ($sRelType == EntityORM::RELATION_TYPE_MANY_TO_MANY) {
                         // Создаём объекты-обёртки для связей MANY_TO_MANY
-                        $oEntity->_setManyToManyRelations(new ORMRelationManyToMany($oEntity->_getRelationsData($sRelationName)), $sRelationName);
+                        $oEntity->_setManyToManyRelations(new ORMRelationManyToMany($oEntity->_getRelationsData($sRelationName)),
+                            $sRelationName);
                     }
                 }
             }
@@ -561,7 +591,8 @@ abstract class ModuleORM extends Module
         /**
          * Хук для возможности кастомной обработки результата
          */
-        $this->RunBehaviorHook('module_orm_GetItemsByFilter_after', array('aEntities' => $aEntities, 'aFilter' => $aFilter, 'sEntityFull' => $sEntityFull), true);
+        $this->RunBehaviorHook('module_orm_GetItemsByFilter_after',
+            array('aEntities' => $aEntities, 'aFilter' => $aFilter, 'sEntityFull' => $sEntityFull), true);
         /**
          * Если запрашиваем постраничный список, то возвращаем сам список и общее количество записей
          */
@@ -589,7 +620,8 @@ abstract class ModuleORM extends Module
     {
         $aIndexedEntities = array();
         foreach ($aEntities as $oEntity) {
-            $sKey = in_array('#index-from-primary', $aFilter) || (!empty($aFilter['#index-from']) && $aFilter['#index-from'] == '#primary') ?
+            $sKey = in_array('#index-from-primary',
+                $aFilter) || (!empty($aFilter['#index-from']) && $aFilter['#index-from'] == '#primary') ?
                 $oEntity->_getPrimaryKey() :
                 $oEntity->_getField($aFilter['#index-from']);
             $aIndexedEntities[$oEntity->_getDataOne($sKey)] = $oEntity;
@@ -653,18 +685,26 @@ abstract class ModuleORM extends Module
         $sEntityFull = $this->_NormalizeEntityRootName($sEntityFull);
         // Если параметр #cache указан и пуст, значит игнорируем кэширование для запроса
         if (array_key_exists('#cache', $aFilter) && !$aFilter['#cache']) {
-            $iValue = $this->oMapperORM->GetAggregateFunctionByFilter($sAggregateFunction, $sField, $aFilter, $sEntityFull);
+            $iValue = $this->oMapperORM->GetAggregateFunctionByFilter($sAggregateFunction, $sField, $aFilter,
+                $sEntityFull);
         } else {
             $sCacheKey = $sEntityFull . "_aggregate_function_by_filter_{$sAggregateFunction}_{$sField}" . serialize($aFilter);
             $aCacheTags = array($sEntityFull . '_save', $sEntityFull . '_delete');
             $iCacheTime = 60 * 60 * 24; // скорее лучше хранить в свойстве сущности, для возможности выборочного переопределения
             // переопределяем из параметров
-            if (isset($aFilter['#cache'][0])) $sCacheKey = $aFilter['#cache'][0];
-            if (isset($aFilter['#cache'][1])) $aCacheTags = $aFilter['#cache'][1];
-            if (isset($aFilter['#cache'][2])) $iCacheTime = $aFilter['#cache'][2];
+            if (isset($aFilter['#cache'][0])) {
+                $sCacheKey = $aFilter['#cache'][0];
+            }
+            if (isset($aFilter['#cache'][1])) {
+                $aCacheTags = $aFilter['#cache'][1];
+            }
+            if (isset($aFilter['#cache'][2])) {
+                $iCacheTime = $aFilter['#cache'][2];
+            }
 
             if (false === ($iValue = $this->Cache_Get($sCacheKey))) {
-                $iValue = $this->oMapperORM->GetAggregateFunctionByFilter($sAggregateFunction, $sField, $aFilter, $sEntityFull);
+                $iValue = $this->oMapperORM->GetAggregateFunctionByFilter($sAggregateFunction, $sField, $aFilter,
+                    $sEntityFull);
                 $this->Cache_Set($iValue, $sCacheKey, $aCacheTags, $iCacheTime);
             }
         }
@@ -689,9 +729,15 @@ abstract class ModuleORM extends Module
             $aCacheTags = array($sEntityFull . '_save', $sEntityFull . '_delete');
             $iCacheTime = 60 * 60 * 24; // скорее лучше хранить в свойстве сущности, для возможности выборочного переопределения
             // переопределяем из параметров
-            if (isset($aFilter['#cache'][0])) $sCacheKey = $aFilter['#cache'][0];
-            if (isset($aFilter['#cache'][1])) $aCacheTags = $aFilter['#cache'][1];
-            if (isset($aFilter['#cache'][2])) $iCacheTime = $aFilter['#cache'][2];
+            if (isset($aFilter['#cache'][0])) {
+                $sCacheKey = $aFilter['#cache'][0];
+            }
+            if (isset($aFilter['#cache'][1])) {
+                $aCacheTags = $aFilter['#cache'][1];
+            }
+            if (isset($aFilter['#cache'][2])) {
+                $iCacheTime = $aFilter['#cache'][2];
+            }
 
             if (false === ($iCount = $this->Cache_Get($sCacheKey))) {
                 $iCount = $this->oMapperORM->GetCountItemsByFilter($aFilter, $sEntityFull);
@@ -719,37 +765,63 @@ abstract class ModuleORM extends Module
         return $this->GetItemsByFilter($aFilter, $sEntityFull);
     }
 
-    public function GetItemsByJoinEntity($sEntityJoin, $sKeyJoin, $sRelationKey, $aRelationValues, $aFilter, $sEntityFull = null)
-    {
+    public function GetItemsByJoinEntity(
+        $sEntityJoin,
+        $sKeyJoin,
+        $sRelationKey,
+        $aRelationValues,
+        $aFilter,
+        $sEntityFull = null
+    ) {
         $sEntityFull = $this->_NormalizeEntityRootName($sEntityFull);
         /**
          * Кеширование
          * Если параметр #cache указан и пуст, значит игнорируем кэширование для запроса
          */
         if (array_key_exists('#cache', $aFilter) && !$aFilter['#cache']) {
-            $aEntities = $this->oMapperORM->GetItemsByJoinEntity($sEntityJoin, $sKeyJoin, $sRelationKey, $aRelationValues, $aFilter, $sEntityFull);
+            $aEntities = $this->oMapperORM->GetItemsByJoinEntity($sEntityJoin, $sKeyJoin, $sRelationKey,
+                $aRelationValues, $aFilter, $sEntityFull);
         } else {
             $sEntityJoin = $this->Plugin_GetRootDelegater('entity', $sEntityJoin);
 
-            $sCacheKey = 'items_by_join_entity_' . serialize(array($sEntityJoin, $sKeyJoin, $sRelationKey, $aRelationValues, $aFilter, $sEntityFull));
+            $sCacheKey = 'items_by_join_entity_' . serialize(array(
+                        $sEntityJoin,
+                        $sKeyJoin,
+                        $sRelationKey,
+                        $aRelationValues,
+                        $aFilter,
+                        $sEntityFull
+                    ));
             /**
              * Формируем теги для сброса кеша
              * Сброс идет по обновлению запрашиваемой сущности
              * Дополнительно по обновлению таблицы связей
              */
-            $aCacheTags = array($sEntityFull . '_save', $sEntityFull . '_delete', $sEntityJoin . '_save', $sEntityJoin . '_delete');
+            $aCacheTags = array(
+                $sEntityFull . '_save',
+                $sEntityFull . '_delete',
+                $sEntityJoin . '_save',
+                $sEntityJoin . '_delete'
+            );
             $iCacheTime = 60 * 60 * 24; // todo: скорее лучше хранить в свойстве сущности, для возможности выборочного переопределения
             /**
              * Переопределяем из параметров
              */
-            if (isset($aFilter['#cache'][0])) $sCacheKey = $aFilter['#cache'][0];
-            if (isset($aFilter['#cache'][1])) $aCacheTags = $aFilter['#cache'][1];
-            if (isset($aFilter['#cache'][2])) $iCacheTime = $aFilter['#cache'][2];
+            if (isset($aFilter['#cache'][0])) {
+                $sCacheKey = $aFilter['#cache'][0];
+            }
+            if (isset($aFilter['#cache'][1])) {
+                $aCacheTags = $aFilter['#cache'][1];
+            }
+            if (isset($aFilter['#cache'][2])) {
+                $iCacheTime = $aFilter['#cache'][2];
+            }
             /**
              * Смотрим в кеше
              */
             if (false === ($aEntities = $this->Cache_Get($sCacheKey))) {
-                $aEntities = $this->oMapperORM->GetItemsByJoinEntity($sEntityJoin, $sKeyJoin, $sRelationKey, $aRelationValues, $aFilter, $sEntityFull);
+                $aEntities = $this->oMapperORM->GetItemsByJoinEntity($sEntityJoin, $sKeyJoin, $sRelationKey,
+                    $aRelationValues, $aFilter, $sEntityFull);
                 $this->Cache_Set($aEntities, $sCacheKey, $aCacheTags, $iCacheTime);
             }
         }
@@ -764,24 +836,42 @@ abstract class ModuleORM extends Module
                  */
                 $aFilter['#cache'][0] = 'count_' . $aFilter['#cache'][0];
             }
-            return array('collection' => $aEntities, 'count' => $this->GetCountItemsByJoinEntity($sEntityJoin, $sKeyJoin, $sRelationKey, $aRelationValues, $aFilter, $sEntityFull = null));
+            return array(
+                'collection' => $aEntities,
+                'count'      => $this->GetCountItemsByJoinEntity($sEntityJoin, $sKeyJoin, $sRelationKey,
+                    $aRelationValues, $aFilter, $sEntityFull = null)
+            );
         }
         return $aEntities;
     }
 
-    public function GetCountItemsByJoinEntity($sEntityJoin, $sKeyJoin, $sRelationKey, $aRelationValues, $aFilter, $sEntityFull = null)
-    {
+    public function GetCountItemsByJoinEntity(
+        $sEntityJoin,
+        $sKeyJoin,
+        $sRelationKey,
+        $aRelationValues,
+        $aFilter,
+        $sEntityFull = null
+    ) {
         $sEntityFull = $this->_NormalizeEntityRootName($sEntityFull);
         /**
          * Кеширование
          * Если параметр #cache указан и пуст, значит игнорируем кэширование для запроса
          */
         if (array_key_exists('#cache', $aFilter) && !$aFilter['#cache']) {
-            $iCount = $this->oMapperORM->GetCountItemsByJoinEntity($sEntityJoin, $sKeyJoin, $sRelationKey, $aRelationValues, $aFilter, $sEntityFull);
+            $iCount = $this->oMapperORM->GetCountItemsByJoinEntity($sEntityJoin, $sKeyJoin, $sRelationKey,
+                $aRelationValues, $aFilter, $sEntityFull);
         } else {
             $sEntityJoin = $this->Plugin_GetRootDelegater('entity', $sEntityJoin);
 
-            $sCacheKey = 'count_items_by_join_entity_' . serialize(array($sEntityJoin, $sKeyJoin, $sRelationKey, $aRelationValues, $aFilter, $sEntityFull));
+            $sCacheKey = 'count_items_by_join_entity_' . serialize(array(
+                        $sEntityJoin,
+                        $sKeyJoin,
+                        $sRelationKey,
+                        $aRelationValues,
+                        $aFilter,
+                        $sEntityFull
+                    ));
             /**
              * Формируем теги для сброса кеша
              * Сброс идет по обновлению таблицы связей
@@ -791,14 +881,21 @@ abstract class ModuleORM extends Module
             /**
              * Переопределяем из параметров
              */
-            if (isset($aFilter['#cache'][0])) $sCacheKey = $aFilter['#cache'][0];
-            if (isset($aFilter['#cache'][1])) $aCacheTags = $aFilter['#cache'][1];
-            if (isset($aFilter['#cache'][2])) $iCacheTime = $aFilter['#cache'][2];
+            if (isset($aFilter['#cache'][0])) {
+                $sCacheKey = $aFilter['#cache'][0];
+            }
+            if (isset($aFilter['#cache'][1])) {
+                $aCacheTags = $aFilter['#cache'][1];
+            }
+            if (isset($aFilter['#cache'][2])) {
+                $iCacheTime = $aFilter['#cache'][2];
+            }
             /**
              * Смотрим в кеше
              */
             if (false === ($iCount = $this->Cache_Get($sCacheKey))) {
-                $iCount = $this->oMapperORM->GetCountItemsByJoinEntity($sEntityJoin, $sKeyJoin, $sRelationKey, $aRelationValues, $aFilter, $sEntityFull);
+                $iCount = $this->oMapperORM->GetCountItemsByJoinEntity($sEntityJoin, $sKeyJoin, $sRelationKey,
+                    $aRelationValues, $aFilter, $sEntityFull);
                 $this->Cache_Set($iCount, $sCacheKey, $aCacheTags, $iCacheTime);
             }
         }
@@ -880,10 +977,14 @@ abstract class ModuleORM extends Module
         $iEntityPosEnd = 0;
         if (strpos($sNameUnderscore, '_items') >= 3) {
             $iEntityPosEnd = strpos($sNameUnderscore, '_items');
-        } else if (strpos($sNameUnderscore, '_by') >= 3) {
-            $iEntityPosEnd = strpos($sNameUnderscore, '_by');
-        } else if (strpos($sNameUnderscore, '_all') >= 3) {
-            $iEntityPosEnd = strpos($sNameUnderscore, '_all');
+        } else {
+            if (strpos($sNameUnderscore, '_by') >= 3) {
+                $iEntityPosEnd = strpos($sNameUnderscore, '_by');
+            } else {
+                if (strpos($sNameUnderscore, '_all') >= 3) {
+                    $iEntityPosEnd = strpos($sNameUnderscore, '_all');
+                }
+            }
         }
         if ($iEntityPosEnd && $iEntityPosEnd > 4) {
             $sEntityName = substr($sNameUnderscore, 4, $iEntityPosEnd - 4);
@@ -899,14 +1000,17 @@ abstract class ModuleORM extends Module
         /**
          * getMaxRatingFromUserByFilter() get_max_rating_from_user_by_filter
          */
-        if (preg_match("@^get_(max|min|avg|sum)_([a-z][a-z0-9]*)_from_([a-z][a-z0-9]*)_by_filter$@i", func_underscore($sName), $aMatch)) {
-            return $this->GetAggregateFunctionByFilter($aMatch[1], $aMatch[2], isset($aArgs[0]) ? $aArgs[0] : array(), func_camelize($aMatch[3]));
+        if (preg_match("@^get_(max|min|avg|sum)_([a-z][a-z0-9]*)_from_([a-z][a-z0-9]*)_by_filter$@i",
+            func_underscore($sName), $aMatch)) {
+            return $this->GetAggregateFunctionByFilter($aMatch[1], $aMatch[2], isset($aArgs[0]) ? $aArgs[0] : array(),
+                func_camelize($aMatch[3]));
         }
 
         /**
          * getMaxRatingFromUserByStatusAndActive() get_max_rating_from_user_by_status_and_active
          */
-        if (preg_match("@^get_(max|min|avg|sum)_([a-z][a-z0-9]*)_from_([a-z][a-z0-9]*)_by_([_a-z]+)$@i", func_underscore($sName), $aMatch)) {
+        if (preg_match("@^get_(max|min|avg|sum)_([a-z][a-z0-9]*)_from_([a-z][a-z0-9]*)_by_([_a-z]+)$@i",
+            func_underscore($sName), $aMatch)) {
             $aSearchParams = explode('_and_', $aMatch[4]);
             $aSplit = array_chunk($aArgs, count($aSearchParams));
             $aFilter = array_combine($aSearchParams, $aSplit[0]);
@@ -952,7 +1056,8 @@ abstract class ModuleORM extends Module
          * getUserItemsByJoinEntity() get_user_items_by_join_entity
          */
         if (preg_match("@^get_([a-z]+)_items_by_join_entity$@i", $sNameUnderscore, $aMatch)) {
-            return $this->GetItemsByJoinEntity($aArgs[0], $aArgs[1], $aArgs[2], $aArgs[3], $aArgs[4], func_camelize($sEntityName));
+            return $this->GetItemsByJoinEntity($aArgs[0], $aArgs[1], $aArgs[2], $aArgs[3], $aArgs[4],
+                func_camelize($sEntityName));
         }
 
         /**
@@ -965,7 +1070,14 @@ abstract class ModuleORM extends Module
          * getUserItemsByCityIdIn()            get_user_items_by_city_id_in
          */
         if (preg_match("@^get_([a-z]+)((_items)|())_by_([_a-z]+)$@i", $sNameUnderscore, $aMatch)) {
-            $aAliases = array('_gte' => ' >=', '_lte' => ' <=', '_gt' => ' >', '_lt' => ' <', '_like' => ' LIKE', '_in' => ' IN');
+            $aAliases = array(
+                '_gte'  => ' >=',
+                '_lte'  => ' <=',
+                '_gt'   => ' >',
+                '_lt'   => ' <',
+                '_like' => ' LIKE',
+                '_in'   => ' IN'
+            );
             $sSearchParams = str_replace(array_keys($aAliases), array_values($aAliases), $aMatch[5]);
             $aSearchParams = explode('_and_', $sSearchParams);
             $aSplit = array_chunk($aArgs, count($aSearchParams));
@@ -1015,10 +1127,10 @@ abstract class ModuleORM extends Module
             $bHasChildren = !empty($aChildren);
             $sEntityId = $oEntity->_getDataOne($oEntity->_getPrimaryKey());
             $aList[$sEntityId] = array(
-                'entity' => $oEntity,
-                'parent_id' => $oEntity->_getTreeParentKeyValue(),
+                'entity'         => $oEntity,
+                'parent_id'      => $oEntity->_getTreeParentKeyValue(),
                 'children_count' => $bHasChildren ? count($aChildren) : 0,
-                'level' => $iLevel,
+                'level'          => $iLevel,
             );
             if ($bHasChildren) {
                 $aList = self::buildTree($aChildren, $aList, $iLevel + 1);

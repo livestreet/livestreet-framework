@@ -72,14 +72,14 @@ class ModuleAsset extends Module
                  * Список файлов для добавления в конец списка
                  * В качестве ключей используется путь до файла либо уникальное имя, в качестве значений - дополнительные параметры
                  */
-                'append' => array(),
+                'append'  => array(),
                 /**
                  * Список файлов для добавления в начало списка
                  */
                 'prepend' => array(),
             ),
-            self::ASSET_TYPE_JS => array(
-                'append' => array(),
+            self::ASSET_TYPE_JS  => array(
+                'append'  => array(),
                 'prepend' => array(),
             ),
         );
@@ -377,7 +377,8 @@ class ModuleAsset extends Module
              * Обрабатываем основной список
              */
             if (Config::Get("module.asset.{$sType}.merge")) {
-                $sFilePath = $this->Merge($aFilesMain[$sType], $sType, (bool)Config::Get("module.asset.{$sType}.compress"));
+                $sFilePath = $this->Merge($aFilesMain[$sType], $sType,
+                    (bool)Config::Get("module.asset.{$sType}.compress"));
                 $aResult[$sType][$sFilePath] = array('file' => $sFilePath);
             } else {
                 $aResult[$sType] = array_merge($aResult[$sType], $aFilesMain[$sType]);
@@ -521,7 +522,8 @@ class ModuleAsset extends Module
                     $aParts[] = $sPart;
                 }
             }
-            return ((array_key_exists('scheme', $aUrl)) ? $aUrl['scheme'] . '://' . $aUrl['host'] : "") . "/" . implode("/", $aParts);
+            return ((array_key_exists('scheme',
+                $aUrl)) ? $aUrl['scheme'] . '://' . $aUrl['host'] : "") . "/" . implode("/", $aParts);
         } else {
             return realpath($sPath);
         }

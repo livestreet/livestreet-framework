@@ -89,7 +89,9 @@ class ModuleAsset_EntityTypeCss extends ModuleAsset_EntityType
                 /**
                  * Если путь является абсолютным, необрабатываем
                  */
-                if (substr($sFilePathAbsolute, 0, 1) == "/" || in_array(substr($sFilePathAbsolute, 0, 6), array('http:/', 'https:'))) {
+                if (substr($sFilePathAbsolute, 0, 1) == "/" || in_array(substr($sFilePathAbsolute, 0, 6),
+                        array('http:/', 'https:'))
+                ) {
                     continue;
                 }
                 /**

@@ -45,8 +45,12 @@ function smarty_function_cfg($aParams, &$oSmarty)
      * Небольшой хак для замены http на https
      */
     $aHttpsKeys = array(
-        'path.skin.web', 'path.framework.frontend.web', 'path.framework.libs_vendor.web',
-        'path.root.web', 'path.skin.assets.web', 'path.framework.web'
+        'path.skin.web',
+        'path.framework.frontend.web',
+        'path.framework.libs_vendor.web',
+        'path.root.web',
+        'path.skin.assets.web',
+        'path.framework.web'
     );
     if (in_array($aParams['name'], $aHttpsKeys) and is_string($mReturn) and Router::GetIsSecureConnection()) {
         $mReturn = preg_replace('#^http://#i', 'https://', $mReturn);

@@ -106,7 +106,8 @@ class ModuleValidate_EntityValidatorEmail extends ModuleValidate_EntityValidator
      */
     public function validateValue($sValue)
     {
-        $bValid = is_string($sValue) && strlen($sValue) <= 254 && (preg_match($this->pattern, $sValue) || $this->allowName && preg_match($this->fullPattern, $sValue));
+        $bValid = is_string($sValue) && strlen($sValue) <= 254 && (preg_match($this->pattern,
+                    $sValue) || $this->allowName && preg_match($this->fullPattern, $sValue));
         if ($bValid) {
             $sDomain = rtrim(substr($sValue, strpos($sValue, '@') + 1), '>');
         }

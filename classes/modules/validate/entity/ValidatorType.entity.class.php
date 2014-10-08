@@ -85,22 +85,40 @@ class ModuleValidate_EntityValidatorType extends ModuleValidate_EntityValidator
 
         if ($this->type === 'integer') {
             $bValid = preg_match('/^[-+]?[0-9]+$/', trim($sValue));
-        } else if ($this->type === 'float') {
-            $bValid = preg_match('/^[-+]?([0-9]*\.)?[0-9]+([eE][-+]?[0-9]+)?$/', trim($sValue));
-        } else if ($this->type === 'date') {
-            $bValid = DateTimeParser::parse($sValue, $this->dateFormat, array('month' => 1, 'day' => 1, 'hour' => 0, 'minute' => 0, 'second' => 0)) !== false;
-        } else if ($this->type === 'time') {
-            $bValid = DateTimeParser::parse($sValue, $this->timeFormat) !== false;
-        } else if ($this->type === 'datetime') {
-            $bValid = DateTimeParser::parse($sValue, $this->datetimeFormat, array('month' => 1, 'day' => 1, 'hour' => 0, 'minute' => 0, 'second' => 0)) !== false;
-        } else if ($this->type === 'array') {
-            $bValid = is_array($sValue);
         } else {
-            return true;
+            if ($this->type === 'float') {
+                $bValid = preg_match('/^[-+]?([0-9]*\.)?[0-9]+([eE][-+]?[0-9]+)?$/', trim($sValue));
+            } else {
+                if ($this->type === 'date') {
+                    $bValid = DateTimeParser::parse($sValue, $this->dateFormat,
+                            array('month' => 1, 'day' => 1, 'hour' => 0, 'minute' => 0, 'second' => 0)) !== false;
+                } else {
+                    if ($this->type === 'time') {
+                        $bValid = DateTimeParser::parse($sValue, $this->timeFormat) !== false;
+                    } else {
+                        if ($this->type === 'datetime') {
+                            $bValid = DateTimeParser::parse($sValue, $this->datetimeFormat, array(
+                                    'month'  => 1,
+                                    'day'    => 1,
+                                    'hour'   => 0,
+                                    'minute' => 0,
+                                    'second' => 0
+                                )) !== false;
+                        } else {
+                            if ($this->type === 'array') {
+                                $bValid = is_array($sValue);
+                            } else {
+                                return true;
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         if (!$bValid) {
-            return $this->getMessage($this->Lang_Get('validate.type.error', null, false), 'msg', array('type' => $this->type));
+            return $this->getMessage($this->Lang_Get('validate.type.error', null, false), 'msg',
+                array('type' => $this->type));
         }
         return true;
     }

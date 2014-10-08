@@ -158,8 +158,8 @@ $config['sys']['logs']['instances'] = array(
     /**
      * Стандартный поток логов
      */
-    'default' => array(
-        'handlers' => array(
+    'default'  => array(
+        'handlers'   => array(
             'Stream' => array(
                 '___path.application.server___/logs/___sys.logs.file___',
                 'debug',
@@ -178,7 +178,7 @@ $config['sys']['logs']['instances'] = array(
      * Логи запросов к БД
      */
     'db_query' => array(
-        'handlers' => array(
+        'handlers'   => array(
             'Stream' => array(
                 '___path.application.server___/logs/___sys.logs.sql_query_file___',
                 'debug',
@@ -199,7 +199,7 @@ $config['sys']['logs']['instances'] = array(
      * Логи ошибок к БД
      */
     'db_error' => array(
-        'handlers' => array(
+        'handlers'   => array(
             'Stream' => array(
                 '___path.application.server___/logs/___sys.logs.sql_error_file___',
                 'debug',
@@ -219,8 +219,8 @@ $config['sys']['logs']['instances'] = array(
     /**
      * Логи cron скриптов
      */
-    'cron' => array(
-        'handlers' => array(
+    'cron'     => array(
+        'handlers'   => array(
             'Stream' => array(
                 '___path.application.server___/logs/___sys.logs.cron_file___',
                 'debug',
@@ -238,7 +238,7 @@ $config['sys']['logs']['instances'] = array(
     /**
      * Вывод собщений в консоле браузера
      */
-    'console' => array(
+    'console'  => array(
         'handlers' => array(
             'BrowserConsole' => array(),
         ),

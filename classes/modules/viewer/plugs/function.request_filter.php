@@ -15,7 +15,7 @@
  *
  * @link http://www.livestreetcms.com
  * @copyright 2013 OOO "ЛС-СОФТ"
- * @author Maxim Mzhelskiy <rus.engine@gmail.com>
+ * @author Serge Pustovit (PSNet) <light.feel@gmail.com>
  *
  */
 

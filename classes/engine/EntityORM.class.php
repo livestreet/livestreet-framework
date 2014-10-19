@@ -451,12 +451,21 @@ abstract class EntityORM extends Entity
                     $this->_aData[$sKey] = $val;
                 }
             }
-            $this->_aOriginalData = $this->_aData;
         }
     }
 
     /**
-     * Возвращает все данные сущности
+     * Устанавливает все оригинальные данные
+     *
+     * @param $aData
+     */
+    public function _setOriginalData($aData)
+    {
+        $this->_aOriginalData = $aData;
+    }
+
+    /**
+     * Возвращает все оригинальные данные сущности
      *
      * @return array
      */
@@ -484,9 +493,21 @@ abstract class EntityORM extends Entity
      *
      * @return array
      */
-    public function _getDataFields()
+    public function _getDataFields($bOnlyChanged = false)
     {
-        return $this->_getData($this->_getFields());
+        $aData = $this->_getData($this->_getFields());
+        if ($bOnlyChanged) {
+            /**
+             * Сравниваем список оригинальных значений с текущими
+             */
+            $aDataOriginal = $this->_getOriginalData();
+            foreach ($aData as $sKey => $sValue) {
+                if (array_key_exists($sKey, $aDataOriginal) and $aDataOriginal[$sKey] === $sValue) {
+                    unset($aData[$sKey]);
+                }
+            }
+        }
+        return $aData;
     }
 
     /**

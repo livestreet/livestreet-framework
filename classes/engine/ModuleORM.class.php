@@ -78,10 +78,12 @@ abstract class ModuleORM extends Module
         }
         if ($res === 0) {
             // у таблицы нет автоинремента
+            $oEntity->_setOriginalData($oEntity->_getDataFields());
             return $oEntity;
         } elseif ($res) {
             // есть автоинкремент, устанавливаем его
             $oEntity->_setData(array($oEntity->_getPrimaryKey() => $res));
+            $oEntity->_setOriginalData($oEntity->_getDataFields());
             /**
              * Смотрим наличие связи many_to_many и добавляем их в бд
              */
@@ -113,6 +115,8 @@ abstract class ModuleORM extends Module
                     $oEntity->resetRelationsData($sRelName);
                 }
             }
+            // обновляем оригинальные данные
+            $oEntity->_setOriginalData($oEntity->_getDataFields());
             // сбрасываем кеш
             $sEntity = $this->Plugin_GetRootDelegater('entity', get_class($oEntity));
             $this->Cache_Clean(Zend_Cache::CLEANING_MODE_MATCHING_TAG, array($sEntity . '_save'));
@@ -176,6 +180,7 @@ abstract class ModuleORM extends Module
                     Engine::GetEntityName($oEntity))
                 ) {
                     $oEntity->_setData($oEntityNew->_getData());
+                    $oEntity->_setOriginalData($oEntity->_getDataFields());
                     $oEntity->_setRelationsData(array());
                     return $oEntity;
                 }
@@ -493,11 +498,11 @@ abstract class ModuleORM extends Module
                 $sRelKey = $aRelations[$sRelationName][2];
 
                 if (!array_key_exists($sRelationName, $aRelations) or !in_array($sRelType, array(
-                            EntityORM::RELATION_TYPE_BELONGS_TO,
-                            EntityORM::RELATION_TYPE_HAS_ONE,
-                            EntityORM::RELATION_TYPE_HAS_MANY,
-                            EntityORM::RELATION_TYPE_MANY_TO_MANY
-                        ))
+                        EntityORM::RELATION_TYPE_BELONGS_TO,
+                        EntityORM::RELATION_TYPE_HAS_ONE,
+                        EntityORM::RELATION_TYPE_HAS_MANY,
+                        EntityORM::RELATION_TYPE_MANY_TO_MANY
+                    ))
                 ) {
                     throw new Exception("The entity <{$sEntityFull}> not have relation <{$sRelationName}>");
                 }
@@ -554,10 +559,10 @@ abstract class ModuleORM extends Module
                     if ($sRelType == EntityORM::RELATION_TYPE_BELONGS_TO) {
                         $sKeyData = $oEntity->_getDataOne($sRelKey);
                     } elseif (in_array($sRelType, array(
-                            EntityORM::RELATION_TYPE_HAS_ONE,
-                            EntityORM::RELATION_TYPE_HAS_MANY,
-                            EntityORM::RELATION_TYPE_MANY_TO_MANY
-                        ))) {
+                        EntityORM::RELATION_TYPE_HAS_ONE,
+                        EntityORM::RELATION_TYPE_HAS_MANY,
+                        EntityORM::RELATION_TYPE_MANY_TO_MANY
+                    ))) {
                         $sKeyData = $oEntity->_getPrimaryKeyValue();
                     } else {
                         break;
@@ -785,13 +790,13 @@ abstract class ModuleORM extends Module
             $sEntityJoin = $this->Plugin_GetRootDelegater('entity', $sEntityJoin);
 
             $sCacheKey = 'items_by_join_entity_' . serialize(array(
-                        $sEntityJoin,
-                        $sKeyJoin,
-                        $sRelationKey,
-                        $aRelationValues,
-                        $aFilter,
-                        $sEntityFull
-                    ));
+                    $sEntityJoin,
+                    $sKeyJoin,
+                    $sRelationKey,
+                    $aRelationValues,
+                    $aFilter,
+                    $sEntityFull
+                ));
             /**
              * Формируем теги для сброса кеша
              * Сброс идет по обновлению запрашиваемой сущности
@@ -865,13 +870,13 @@ abstract class ModuleORM extends Module
             $sEntityJoin = $this->Plugin_GetRootDelegater('entity', $sEntityJoin);
 
             $sCacheKey = 'count_items_by_join_entity_' . serialize(array(
-                        $sEntityJoin,
-                        $sKeyJoin,
-                        $sRelationKey,
-                        $aRelationValues,
-                        $aFilter,
-                        $sEntityFull
-                    ));
+                    $sEntityJoin,
+                    $sKeyJoin,
+                    $sRelationKey,
+                    $aRelationValues,
+                    $aFilter,
+                    $sEntityFull
+                ));
             /**
              * Формируем теги для сброса кеша
              * Сброс идет по обновлению таблицы связей

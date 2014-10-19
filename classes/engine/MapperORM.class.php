@@ -62,16 +62,16 @@ class MapperORM extends Mapper
                         true) . " = " . $this->oDb->escape($oEntity->_getDataOne($sField));
             }
             $sql = "UPDATE " . $sTableName . " SET ?a WHERE {$sWhere}";
-            return $this->oDb->query($sql, $oEntity->_getDataFields());
+            return $this->oDb->query($sql, $oEntity->_getDataFields(true));
         } else {
             $aOriginalData = $oEntity->_getOriginalData();
             $sWhere = implode(' AND ', array_map(create_function(
-                '$k,$v,$oDb',
-                'return "{$oDb->escape($k,true)} = {$oDb->escape($v)}";'
-            ), array_keys($aOriginalData), array_values($aOriginalData),
-            array_fill(0, count($aOriginalData), $this->oDb)));
+                    '$k,$v,$oDb',
+                    'return "{$oDb->escape($k,true)} = {$oDb->escape($v)}";'
+                ), array_keys($aOriginalData), array_values($aOriginalData),
+                array_fill(0, count($aOriginalData), $this->oDb)));
             $sql = "UPDATE " . $sTableName . " SET ?a WHERE 1=1 AND " . $sWhere;
-            return $this->oDb->query($sql, $oEntity->_getDataFields());
+            return $this->oDb->query($sql, $oEntity->_getDataFields(true));
         }
     }
 
@@ -100,10 +100,10 @@ class MapperORM extends Mapper
         } else {
             $aOriginalData = $oEntity->_getOriginalData();
             $sWhere = implode(' AND ', array_map(create_function(
-                '$k,$v,$oDb',
-                'return "{$oDb->escape($k,true)} = {$oDb->escape($v)}";'
-            ), array_keys($aOriginalData), array_values($aOriginalData),
-            array_fill(0, count($aOriginalData), $this->oDb)));
+                    '$k,$v,$oDb',
+                    'return "{$oDb->escape($k,true)} = {$oDb->escape($v)}";'
+                ), array_keys($aOriginalData), array_values($aOriginalData),
+                array_fill(0, count($aOriginalData), $this->oDb)));
             $sql = "DELETE FROM " . $sTableName . " WHERE 1=1 AND " . $sWhere;
             return $this->oDb->query($sql);
         }
@@ -134,6 +134,7 @@ class MapperORM extends Mapper
         if ($aRow = call_user_func_array(array($this->oDb, 'selectRow'), $aQueryParams)) {
             $oEntity = Engine::GetEntity($sEntityFull, $aRow);
             $oEntity->_SetIsNew(false);
+            $oEntity->_setOriginalData($aRow);
             return $oEntity;
         }
         return null;
@@ -203,6 +204,7 @@ class MapperORM extends Mapper
             foreach ($aRows as $aRow) {
                 $oEntity = Engine::GetEntity($sEntityFull, $aRow);
                 $oEntity->_SetIsNew(false);
+                $oEntity->_setOriginalData($aRow);
                 $aItems[] = $oEntity;
             }
         }
@@ -282,14 +284,14 @@ class MapperORM extends Mapper
          */
         $sql = "SELECT {$sFieldsJoinReturn}, b.* FROM ?# t LEFT JOIN ?# b ON b.?# = t.?# WHERE t.?# in ( ?a ) {$sFilterFields} {$sOrder} {$sLimit}";
         $aQueryParams = array_merge(array(
-                $sql,
-                $sTableJoinName,
-                $sTableName,
-                $oEntitySample->_getPrimaryKey(),
-                $sRelationKey,
-                $sKeyJoin,
-                $aRelationValues
-            ), array_values($aFilterFields));
+            $sql,
+            $sTableJoinName,
+            $sTableName,
+            $oEntitySample->_getPrimaryKey(),
+            $sRelationKey,
+            $sKeyJoin,
+            $aRelationValues
+        ), array_values($aFilterFields));
         $aItems = array();
         /**
          * Выполняем запрос
@@ -308,6 +310,8 @@ class MapperORM extends Mapper
                 $aData['_relation_entity'] = Engine::GetEntity($sEntityJoin, $aDataRelation);
                 $oEntity = Engine::GetEntity($sEntityFull, $aData);
                 $oEntity->_SetIsNew(false);
+                unset($aData['_relation_entity']);
+                $oEntity->_setOriginalData($aData);
                 $aItems[] = $oEntity;
             }
         }
@@ -340,14 +344,14 @@ class MapperORM extends Mapper
          */
         $sql = "SELECT count(*) as c FROM ?# t LEFT JOIN ?# b ON b.?# = t.?# WHERE t.?# in ( ?a ) {$sFilterFields} ";
         $aQueryParams = array_merge(array(
-                $sql,
-                $sTableJoinName,
-                $sTableName,
-                $oEntitySample->_getPrimaryKey(),
-                $sRelationKey,
-                $sKeyJoin,
-                $aRelationValues
-            ), array_values($aFilterFields));
+            $sql,
+            $sTableJoinName,
+            $sTableName,
+            $oEntitySample->_getPrimaryKey(),
+            $sRelationKey,
+            $sKeyJoin,
+            $aRelationValues
+        ), array_values($aFilterFields));
         if ($aRow = call_user_func_array(array($this->oDb, 'selectRow'), $aQueryParams)) {
             return $aRow['c'];
         }

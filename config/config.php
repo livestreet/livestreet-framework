@@ -347,6 +347,8 @@ $config['router']['config']['default']['event'] = null;
 $config['router']['config']['default']['params'] = null;
 $config['router']['config']['default']['request'] = null;
 $config['router']['config']['action_not_found'] = 'error';
+// Принудительное использование https для экшенов
+$config['router']['force_secure'] = array();
 
 $config['head']['default']['js'] = array(
     /* Vendor libs */

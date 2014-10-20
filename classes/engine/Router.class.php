@@ -56,6 +56,18 @@ class Router extends LsObject
      */
     static protected $iHttpSecurePort = null;
     /**
+     * Указывает на необходимость принудительного использования https
+     *
+     * @var bool
+     */
+    static protected $bHttpSecureForce = false;
+    /**
+     * Указывает на необходимость принудительного использования http
+     *
+     * @var bool
+     */
+    static protected $bHttpNotSecureForce = false;
+    /**
      * Текущий экшен
      *
      * @var string|null
@@ -444,7 +456,7 @@ class Router extends LsObject
         } else {
             $sHost = isset($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : 'localhost';
         }
-        $bSecure = self::GetIsSecureConnection();
+        $bSecure = self::$bHttpSecureForce ? self::$bHttpSecureForce : (self::$bHttpNotSecureForce ? false : self::GetIsSecureConnection());
         if ($bWithScheme) {
             $sResult = ($bSecure ? 'https' : 'http') . '://';
         }
@@ -707,7 +719,7 @@ class Router extends LsObject
             ? self::getInstance()->aConfigRoute['config']['default']['action']
             : $sAction;
         $aUrl = explode('/', $sPage);
-        $sPage = array_shift($aUrl);
+        $sPage = $sPageOriginal = array_shift($aUrl);
         $sAdditional = join('/', $aUrl);
         // Смотрим, есть ли правило rewrite
         $sPage = self::getInstance()->Rewrite($sPage);
@@ -717,7 +729,61 @@ class Router extends LsObject
         if ($sAdditional and strpos($sAdditional, '?') === false) {
             $sAdditional .= '/';
         }
-        return self::GetPathRootWeb() . (self::$sPrefixUrl ? '/' . self::$sPrefixUrl : '') . "/$sPage/" . ($sAdditional ? "{$sAdditional}" : '');
+
+        $bHttpSecureForceOld = self::$bHttpSecureForce;
+        $bHttpNotSecureForceOld = self::$bHttpNotSecureForce;
+        /**
+         * Проверяем на необходимость принудительного использования https
+         */
+        $aActionsSecure = (array)Config::Get('router.force_secure');
+        if ($aActionsSecure) {
+            if (in_array($sPageOriginal, (array)Config::Get('router.force_secure'))) {
+                self::$bHttpSecureForce = true;
+            } else {
+                self::$bHttpNotSecureForce = true;
+            }
+        }
+        $sPath = self::GetPathRootWeb() . (self::$sPrefixUrl ? '/' . self::$sPrefixUrl : '') . "/$sPage/" . ($sAdditional ? "{$sAdditional}" : '');
+        /**
+         * Возвращаем значения обратно
+         */
+        self::$bHttpSecureForce = $bHttpSecureForceOld;
+        self::$bHttpNotSecureForce = $bHttpNotSecureForceOld;
+        return $sPath;
+    }
+
+    /**
+     * Проверяет на соответствие текущего экшена/евента переданным
+     *
+     * @param array $aActions Список экшенов с евентами в формате array('action1','action1','action3'=>array('event1','event2'))
+     * @return bool
+     */
+    static public function CheckIsCurrentAction($aActions)
+    {
+        $bAllow = false;
+        if (!is_array($aActions)) {
+            $aActions = array($aActions);
+        }
+        foreach ($aActions as $mKey => $sAction) {
+            if (is_int($mKey)) {
+                $aEvents = array();
+            } else {
+                $aEvents = $sAction;
+                $sAction = $mKey;
+            }
+            if (self::GetAction() == $sAction) {
+                if ($aEvents) {
+                    if (in_array(self::GetActionEvent(), $aEvents)) {
+                        $bAllow = true;
+                        break;
+                    }
+                } else {
+                    $bAllow = true;
+                    break;
+                }
+            }
+        }
+        return $bAllow;
     }
 
     /**

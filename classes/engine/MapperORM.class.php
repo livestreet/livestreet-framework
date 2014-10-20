@@ -62,7 +62,8 @@ class MapperORM extends Mapper
                         true) . " = " . $this->oDb->escape($oEntity->_getDataOne($sField));
             }
             $sql = "UPDATE " . $sTableName . " SET ?a WHERE {$sWhere}";
-            return $this->oDb->query($sql, $oEntity->_getDataFields(true));
+            $aFields=$oEntity->_getDataFields(true);
+            return $aFields ? $this->oDb->query($sql, $aFields) : 0;
         } else {
             $aOriginalData = $oEntity->_getOriginalData();
             $sWhere = implode(' AND ', array_map(create_function(
@@ -71,7 +72,8 @@ class MapperORM extends Mapper
                 ), array_keys($aOriginalData), array_values($aOriginalData),
                 array_fill(0, count($aOriginalData), $this->oDb)));
             $sql = "UPDATE " . $sTableName . " SET ?a WHERE 1=1 AND " . $sWhere;
-            return $this->oDb->query($sql, $oEntity->_getDataFields(true));
+            $aFields=$oEntity->_getDataFields(true);
+            return $aFields ? $this->oDb->query($sql, $aFields) : 0;
         }
     }
 

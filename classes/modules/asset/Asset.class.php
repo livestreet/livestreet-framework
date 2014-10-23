@@ -37,11 +37,11 @@ class ModuleAsset extends Module
      */
     const ASSET_TYPE_JS = 'js';
     /**
-     * Дескриптор файла для проверки блокировки
+     * Каталог для проверки блокировки
      *
-     * @var null|resource
+     * @var null|string
      */
-    protected $hDescriptorMergeLock = null;
+    protected $sDirMergeLockk = null;
     /**
      * Список файлов по типам
      * @see Init
@@ -375,11 +375,15 @@ class ModuleAsset extends Module
             }
             /**
              * Обрабатываем основной список
+             * Проверка необходимости мержа файлов
              */
+            $sFilePathMerge = false;
             if (Config::Get("module.asset.{$sType}.merge")) {
-                $sFilePath = $this->Merge($aFilesMain[$sType], $sType,
+                $sFilePathMerge = $this->Merge($aFilesMain[$sType], $sType,
                     (bool)Config::Get("module.asset.{$sType}.compress"));
-                $aResult[$sType][$sFilePath] = array('file' => $sFilePath);
+            }
+            if ($sFilePathMerge) {
+                $aResult[$sType][$sFilePathMerge] = array('file' => $sFilePathMerge);
             } else {
                 $aResult[$sType] = array_merge($aResult[$sType], $aFilesMain[$sType]);
             }
@@ -403,9 +407,11 @@ class ModuleAsset extends Module
      */
     protected function IsLockMerge()
     {
-        $sFile = Config::Get('path.tmp.server') . '/asset.merge.lock';
-        $this->hDescriptorMergeLock = @fopen($sFile, 'a');
-        return $this->Fs_IsLock($this->hDescriptorMergeLock);
+        $this->sDirMergeLock = Config::Get('path.tmp.server') . '/asset-merge-lock';
+        if ($bResult = $this->Fs_IsLockDir($this->sDirMergeLock, 60 * 5)) {
+            $this->sDirMergeLock = null;
+        }
+        return $bResult;
     }
 
     /**
@@ -413,9 +419,9 @@ class ModuleAsset extends Module
      */
     protected function RemoveLockMerge()
     {
-        if ($this->hDescriptorMergeLock) {
-            $this->Fs_RemoveLock($this->hDescriptorMergeLock);
-            $this->hDescriptorMergeLock = null;
+        if ($this->sDirMergeLock) {
+            $this->Fs_RemoveLockDir($this->sDirMergeLock);
+            $this->sDirMergeLock = null;
         }
     }
 
@@ -426,7 +432,7 @@ class ModuleAsset extends Module
      * @param      $sType
      * @param bool $bCompress
      *
-     * @return string Web путь до нового файла
+     * @return string|bool Web путь до нового файла
      */
     protected function Merge($aAssetItems, $sType, $bCompress = false)
     {
@@ -434,9 +440,14 @@ class ModuleAsset extends Module
         $sCacheFile = $sCacheDir . "/" . md5(serialize(array_keys($aAssetItems)) . '_head') . '.' . $sType;
         /**
          * Если файла еще нет, то создаем его
-         * Но только в том случае, если еще другой процесс не начал его создавать - проверка на блокировку
          */
-        if (!file_exists($sCacheFile) and !$this->IsLockMerge()) {
+        if (!file_exists($sCacheFile)) {
+            /**
+             * Но только в том случае, если еще другой процесс не начал его создавать - проверка на блокировку
+             */
+            if ($this->IsLockMerge()) {
+                return false;
+            }
             /**
              * Создаем директорию для кеша текущего скина,
              * если таковая отсутствует

@@ -415,4 +415,48 @@ class ModuleFs extends Module
     {
         return ($hDescriptor && @flock($hDescriptor, LOCK_UN));
     }
+
+    /**
+     * Проверяет наличие блокировки с использованием каталога
+     *
+     * @param $sDir
+     * @param int $iLifeTime
+     * @return bool
+     */
+    public function IsLockDir($sDir, $iLifeTime = 60)
+    {
+        clearstatcache();
+        if ($iLifeCreate = @filectime($sDir) and $iLifeTime < (time() - $iLifeCreate)) {
+            $this->RemoveLockDir($sDir);
+        }
+        return !$this->CreateLockDir($sDir);
+    }
+
+    /**
+     * Создает блокировку с использованием каталога
+     *
+     * @param $sDir
+     * @return bool
+     */
+    public function CreateLockDir($sDir)
+    {
+        if (file_exists($sDir)) {
+            return false;
+        }
+        if (@mkdir($sDir)) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Удаляет блокировку с использованием каталога
+     *
+     * @param $sDir
+     * @return bool
+     */
+    public function RemoveLockDir($sDir)
+    {
+        return @rmdir($sDir);
+    }
 }

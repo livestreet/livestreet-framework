@@ -41,7 +41,7 @@ class ModuleAsset extends Module
      *
      * @var null|string
      */
-    protected $sDirMergeLockk = null;
+    protected $sDirMergeLock = null;
     /**
      * Список файлов по типам
      * @see Init

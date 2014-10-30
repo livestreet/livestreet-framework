@@ -529,11 +529,17 @@ abstract class ModuleORM extends Module
                 } elseif ($sRelType == EntityORM::RELATION_TYPE_HAS_ONE) {
                     $aFilterRel = array($sRelKey . ' in' => $aEntityPrimaryKeys, '#index-from' => $sRelKey);
                     $aFilterRel = array_merge($aFilterRel, $aRelationFilter);
+                    if (isset($aRelations[$sRelationName][3])) {
+                        $aFilterRel = array_merge($aFilterRel, $aRelations[$sRelationName][3]);
+                    }
                     $aRelData = Engine::GetInstance()->_CallModule("{$sRelPluginPrefix}{$sRelModuleName}_get{$sRelEntityName}ItemsByFilter",
                         array($aFilterRel));
                 } elseif ($sRelType == EntityORM::RELATION_TYPE_HAS_MANY) {
                     $aFilterRel = array($sRelKey . ' in' => $aEntityPrimaryKeys, '#index-group' => $sRelKey);
                     $aFilterRel = array_merge($aFilterRel, $aRelationFilter);
+                    if (isset($aRelations[$sRelationName][3])) {
+                        $aFilterRel = array_merge($aFilterRel, $aRelations[$sRelationName][3]);
+                    }
                     $aRelData = Engine::GetInstance()->_CallModule("{$sRelPluginPrefix}{$sRelModuleName}_get{$sRelEntityName}ItemsByFilter",
                         array($aFilterRel));
                 } elseif ($sRelType == EntityORM::RELATION_TYPE_MANY_TO_MANY) {

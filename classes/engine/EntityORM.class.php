@@ -678,8 +678,14 @@ abstract class EntityORM extends Entity
                             $mCmdArgs = array($this->_getDataOne($sRelationKey));
                             break;
                         case self::RELATION_TYPE_HAS_ONE :
-                            $sCmd = "{$sRelPluginPrefix}{$sRelModuleName}_get{$sRelEntityName}By" . func_camelize($sRelationKey);
-                            $mCmdArgs = array($iPrimaryKeyValue);
+                            if (isset($this->aRelations[$sKey][3])) {
+                                $aFilterAdd = $this->aRelations[$sKey][3];
+                            } else {
+                                $aFilterAdd = array();
+                            }
+                            $sCmd = "{$sRelPluginPrefix}{$sRelModuleName}_get{$sRelEntityName}ByFilter";
+                            $aFilterAdd = array_merge(array($sRelationKey => $iPrimaryKeyValue), $aFilterAdd);
+                            $mCmdArgs = array($aFilterAdd);
                             break;
                         case self::RELATION_TYPE_HAS_MANY :
                             if (isset($this->aRelations[$sKey][3])) {

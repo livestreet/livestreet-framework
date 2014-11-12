@@ -42,7 +42,7 @@ function smarty_insert_block($aParams, &$oSmarty)
      * принадлежит ли блок одному из плагинов, или является пользовательским классом движка
      */
     if (isset($aParams['params']) and isset($aParams['params']['plugin'])) {
-        $sBlockTemplate = Plugin::GetTemplatePath($aParams['params']['plugin']) . '/blocks/block.' . $aParams['block'] . '.tpl';
+        $sBlockTemplate = Plugin::GetTemplatePath($aParams['params']['plugin']) . 'blocks/block.' . $aParams['block'] . '.tpl';
         $sBlock = 'Plugin' . ucfirst($aParams['params']['plugin']) . '_Block' . $sBlock;
     } else {
         $sBlockTemplate = 'blocks/block.' . $aParams['block'] . '.tpl';

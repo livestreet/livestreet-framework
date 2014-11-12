@@ -1,6 +1,6 @@
 <?php
 
-class PluginExample_ActionExample extends ActionPlugin
+class PluginExample_ActionIndex extends ActionPlugin
 {
 
     /**

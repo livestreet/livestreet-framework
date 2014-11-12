@@ -1,6 +1,6 @@
 <?php
 
-class PluginExample_ModuleExample extends Module
+class PluginExample_ModuleMain extends Module
 {
 
     protected $oMapper = null;
@@ -11,7 +11,7 @@ class PluginExample_ModuleExample extends Module
     public function Init()
     {
         /**
-         * Создаем объект маппера PluginExample_ModuleExample_MapperExample
+         * Создаем объект маппера PluginExample_ModuleMain_MapperMain
          */
         $this->oMapper = Engine::GetMapper(__CLASS__);
     }

@@ -1,6 +1,6 @@
 <?php
 
-class PluginExample_HookExample extends Hook
+class PluginExample_HookMain extends Hook
 {
 
     /*

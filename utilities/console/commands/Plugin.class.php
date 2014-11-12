@@ -3,6 +3,7 @@
 class CommandPlugin extends LSC
 {
     protected $_name;
+    protected $_name_under;
 
     /*
      * Выводим помощь о команде
@@ -25,9 +26,10 @@ EOD;
             die("The plugin name is not specified.\n");
         }
 
-        $this->_name = $aArgs[0];
+        $this->_name_under = func_underscore($aArgs[0]);
+        $this->_name = func_camelize($this->_name_under);
 
-        $path = strtr($aArgs[0], '/\\', DIRECTORY_SEPARATOR);
+        $path = strtr($this->_name_under, '/\\', DIRECTORY_SEPARATOR);
         $path = Config::Get('path.application.plugins.server') . '/' . $path;
         if (strpos($path, DIRECTORY_SEPARATOR) === false) {
             $path = '.' . DIRECTORY_SEPARATOR . $path;
@@ -48,10 +50,10 @@ EOD;
 
         // Парсим имена плагинов и пересоздаем массив
         foreach ($aList as $sName => $aFile) {
-            $sTarget = str_replace('Example', ucwords($this->_name), $aFile['target']);
-            $sTarget = str_replace('example', strtolower($this->_name), $sTarget);
-            $sNewName = str_replace('Example', ucwords($this->_name), $sName);
-            $sNewName = str_replace('example', strtolower($this->_name), $sNewName);
+            $sTarget = str_replace('Example', $this->_name, $aFile['target']);
+            $sTarget = str_replace('example', $this->_name_under, $sTarget);
+            $sNewName = str_replace('Example', $this->_name, $sName);
+            $sNewName = str_replace('example', $this->_name_under, $sNewName);
             if ($sName != $sNewName) {
                 unset($aList[$sName]);
             }
@@ -72,8 +74,8 @@ EOD;
     public function generatePlugin($source, $params)
     {
         $content = file_get_contents($source);
-        $content = str_replace('Example', ucwords($this->_name), $content);
-        $content = str_replace('example', strtolower($this->_name), $content);
+        $content = str_replace('Example', $this->_name, $content);
+        $content = str_replace('example', $this->_name_under, $content);
         return $content;
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-class PluginExample_BlockExample extends Block
+class PluginExample_BlockMain extends Block
 {
     public function Exec()
     {

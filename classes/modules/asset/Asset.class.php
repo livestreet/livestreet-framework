@@ -290,7 +290,8 @@ class ModuleAsset extends Module
         foreach ($aAssets as $sType => $aFile) {
             if ($oType = $this->CreateObjectType($sType)) {
                 foreach ($aFile as $aParams) {
-                    $aHeader[$sType] .= $oType->getHeadHtml($aParams['file'], $aParams) . PHP_EOL;
+                    $sFile = $this->Fs_GetPathWeb($aParams['file']);
+                    $aHeader[$sType] .= $oType->getHeadHtml($sFile, $aParams) . PHP_EOL;
                 }
             }
         }

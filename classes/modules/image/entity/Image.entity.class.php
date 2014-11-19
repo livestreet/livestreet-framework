@@ -138,6 +138,8 @@ class ModuleImage_EntityImage extends Entity
                 return $this;
             } catch (Imagine\Exception\Exception $e) {
                 $this->setLastError($e->getMessage());
+                // write to log
+                $this->Logger_Warning('Image error: ' . $e->getMessage(), array('exception' => $e));
             }
         }
         return $this;
@@ -185,6 +187,8 @@ class ModuleImage_EntityImage extends Entity
                 return $this;
             } catch (Imagine\Exception\Exception $e) {
                 $this->setLastError($e->getMessage());
+                // write to log
+                $this->Logger_Warning('Image error: ' . $e->getMessage(), array('exception' => $e));
             }
         }
         return $this;
@@ -285,6 +289,8 @@ class ModuleImage_EntityImage extends Entity
                 $oImage->crop($oPointStart, $oBoxCrop);
             } catch (Imagine\Exception\Exception $e) {
                 $this->setLastError($e->getMessage());
+                // write to log
+                $this->Logger_Warning('Image error: ' . $e->getMessage(), array('exception' => $e));
             }
         }
         return $this;
@@ -356,6 +362,12 @@ class ModuleImage_EntityImage extends Entity
         });
     }
 
+    /**
+     * Обертка для удобного вызова методов Imagine с обработкой исключений
+     *
+     * @param callable $fCallback
+     * @return bool
+     */
     public function callExceptionMethod(\Closure $fCallback)
     {
         if (!$oImage = $this->getImage()) {
@@ -365,6 +377,8 @@ class ModuleImage_EntityImage extends Entity
             return $fCallback($oImage);
         } catch (Exception $e) {
             $this->setLastError($e->getMessage());
+            // write to log
+            $this->Logger_Warning('Image error: ' . $e->getMessage(), array('exception' => $e));
             // TODO: fix exception for Gd driver
             if (strpos($e->getFile(), 'Imagine' . DIRECTORY_SEPARATOR . 'Gd')) {
                 restore_error_handler();
@@ -373,6 +387,13 @@ class ModuleImage_EntityImage extends Entity
         return false;
     }
 
+    /**
+     * Устанавливает режим сохранения изображения
+     * ModuleImage::INTERLACE_PLANE - прогрессивный режим
+     *
+     * @param $sScheme  ModuleImage::INTERLACE_*
+     * @return $this
+     */
     public function interlace($sScheme)
     {
         $_this = $this;
@@ -392,6 +413,67 @@ class ModuleImage_EntityImage extends Entity
         return $this;
     }
 
+    /**
+     * Накладывает ватермарк-изображение
+     *
+     * @param string $sFile Полный локальный путь до ватермарка
+     * @param string|\Imagine\Image\Point $mPosition Позиция в которую нужно вставить ватермарк. bottom-left, bottom-right, top-left, top-right, center
+     * @return $this
+     */
+    public function watermark($sFile, $mPosition)
+    {
+        $_this = $this;
+        $this->callExceptionMethod(function ($oImage) use ($_this, $sFile, $mPosition) {
+
+            $oWatermark = $_this->Image_Open($sFile);
+            if (!$oWatermark or !($oWatermark = $oWatermark->getImage())) {
+                return false;
+            }
+
+            if (!is_object($mPosition)) {
+                $oSize = $oImage->getSize();
+                $oSizeW = $oWatermark->getSize();
+                /**
+                 * Проверяем минимальный допустимый размер изображения
+                 */
+                if (($_this->getParam('watermark_min_width') and $_this->getParam('watermark_min_width') > $oSize->getWidth())
+                    or ($_this->getParam('watermark_min_height') and $_this->getParam('watermark_min_height') > $oSize->getHeight())
+                ) {
+                    return false;
+                }
+                /**
+                 * Определяем координаты позиции ватермарка
+                 */
+                if ($mPosition == 'bottom-left') {
+                    $oPosition = new Imagine\Image\Point(0, $oSize->getHeight() - $oSizeW->getHeight());
+                } elseif ($mPosition == 'top-left') {
+                    $oPosition = new Imagine\Image\Point(0, 0);
+                } elseif ($mPosition == 'top-right') {
+                    $oPosition = new Imagine\Image\Point($oSize->getWidth() - $oSizeW->getWidth(), 0);
+                } elseif ($mPosition == 'center') {
+                    $oPosition = new Imagine\Image\Point(round(($oSize->getWidth() - $oSizeW->getWidth()) / 2),
+                        round(($oSize->getHeight() - $oSizeW->getHeight()) / 2));
+                } else {
+                    // bottom-right and other
+                    $oPosition = new Imagine\Image\Point($oSize->getWidth() - $oSizeW->getWidth(),
+                        $oSize->getHeight() - $oSizeW->getHeight());
+                }
+            } else {
+                $oPosition = $mPosition;
+            }
+            $oImage->paste($oWatermark, $oPosition);
+
+        });
+        return $this;
+    }
+
+    /**
+     * Сохраняет изображение в локальный файл
+     * Не рекомендуется использовать этот метод напрямую
+     *
+     * @param string $sFile Полный путь до локального файла
+     * @param string $sFormat Формат сохранения: jpg, gif, png
+     */
     public function internalSave($sFile, $sFormat)
     {
         if (!$oImage = $this->getImage()) {
@@ -399,6 +481,11 @@ class ModuleImage_EntityImage extends Entity
         }
         if ($this->getParam('interlace')) {
             $this->interlace($this->getParam('interlace'));
+        }
+        if ($this->getParam('watermark_use')) {
+            if ($this->getParam('watermark_type') == 'image') {
+                $this->watermark($this->getParam('watermark_image'), $this->getParam('watermark_position'));
+            }
         }
         $oImage->save($sFile, array(
             'format'  => $sFormat,

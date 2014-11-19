@@ -41,12 +41,18 @@ class ModuleImage extends Module
      * @var array
      */
     protected $aParamsDefault = array(
-        'size_max_width'  => 7000,
-        'size_max_height' => 7000,
-        'format'          => 'jpg',
-        'format_auto'     => true,
-        'quality'         => 95,
-        'interlace'       => self::INTERLACE_PLANE,
+        'size_max_width'       => 7000,
+        'size_max_height'      => 7000,
+        'format'               => 'jpg',
+        'format_auto'          => true,
+        'quality'              => 95,
+        'interlace'            => self::INTERLACE_PLANE,
+        'watermark_use'        => false,
+        'watermark_type'       => 'image',
+        'watermark_image'      => null,
+        'watermark_position'   => 'bottom-right',
+        'watermark_min_width'  => 100,
+        'watermark_min_height' => 100,
     );
     /**
      * Тескт последней ошибки
@@ -191,6 +197,8 @@ class ModuleImage extends Module
             return $oImage;
         } catch (Imagine\Exception\Exception $e) {
             $this->SetLastError($e->getMessage());
+            // write to log
+            $this->Logger_Warning('Image error: ' . $e->getMessage(), array('exception' => $e));
             return false;
         }
     }
@@ -229,6 +237,8 @@ class ModuleImage extends Module
             return $oImage;
         } catch (Imagine\Exception\Exception $e) {
             $this->SetLastError($e->getMessage());
+            // write to log
+            $this->Logger_Warning('Image error: ' . $e->getMessage(), array('exception' => $e));
             return false;
         }
     }

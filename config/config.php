@@ -285,6 +285,12 @@ $config['module']['image']['params']['default']['size_max_height'] = 7000;
 $config['module']['image']['params']['default']['format_auto'] = true;
 $config['module']['image']['params']['default']['format'] = 'jpg';
 $config['module']['image']['params']['default']['quality'] = 95;
+$config['module']['image']['params']['default']['watermark_use'] = false;    // Использовать ватермарк или нет
+$config['module']['image']['params']['default']['watermark_type'] = 'image'; // Тип: image - накладывается изображение. Другие типы пока не поддерживаются
+$config['module']['image']['params']['default']['watermark_image'] = null; // Полный серверный путь до картинки ватермарка
+$config['module']['image']['params']['default']['watermark_position'] = 'bottom-right'; // Значения: bottom-left, bottom-right, top-left, top-right, center
+$config['module']['image']['params']['default']['watermark_min_width'] = 100; // Минимальная ширина изображения, начиная с которой будет наложен ватермарк
+$config['module']['image']['params']['default']['watermark_min_height'] = 100; // Минимальная высота изображения, начиная с которой будет наложен ватермарк
 /**
  * Модуль Asset
  * Параметры обработки css/js-файлов

@@ -430,17 +430,17 @@ class ModuleImage_EntityImage extends Entity
                 return false;
             }
 
+            $oSize = $oImage->getSize();
+            /**
+             * Проверяем минимальный допустимый размер изображения
+             */
+            if (($_this->getParam('watermark_min_width') and $_this->getParam('watermark_min_width') > $oSize->getWidth())
+                or ($_this->getParam('watermark_min_height') and $_this->getParam('watermark_min_height') > $oSize->getHeight())
+            ) {
+                return false;
+            }
             if (!is_object($mPosition)) {
-                $oSize = $oImage->getSize();
                 $oSizeW = $oWatermark->getSize();
-                /**
-                 * Проверяем минимальный допустимый размер изображения
-                 */
-                if (($_this->getParam('watermark_min_width') and $_this->getParam('watermark_min_width') > $oSize->getWidth())
-                    or ($_this->getParam('watermark_min_height') and $_this->getParam('watermark_min_height') > $oSize->getHeight())
-                ) {
-                    return false;
-                }
                 /**
                  * Определяем координаты позиции ватермарка
                  */

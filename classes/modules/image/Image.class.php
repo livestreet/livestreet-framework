@@ -29,6 +29,11 @@
 class ModuleImage extends Module
 {
 
+    const INTERLACE_NONE = 'none';
+    const INTERLACE_LINE = 'line';
+    const INTERLACE_PLANE = 'plane';
+    const INTERLACE_PARTITION = 'partition';
+
     /**
      * Дефолтные параметры
      * Основная задача в определении списка доступных ключей массива с параметрами
@@ -41,6 +46,7 @@ class ModuleImage extends Module
         'format'          => 'jpg',
         'format_auto'     => true,
         'quality'         => 95,
+        'interlace'       => self::INTERLACE_PLANE,
     );
     /**
      * Тескт последней ошибки

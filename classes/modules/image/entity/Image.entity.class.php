@@ -299,26 +299,16 @@ class ModuleImage_EntityImage extends Entity
      */
     public function save($sFile)
     {
-        if (!$oImage = $this->getImage()) {
-            return false;
-        }
-        try {
-            $sFormat = ($this->getParam('format_auto') && $this->getFormat()) ? $this->getFormat() : $this->getParam('format');
-            $sFileTmp = Config::Get('path.tmp.server') . DIRECTORY_SEPARATOR . func_generator(20);
-            $oImage->save($sFileTmp, array(
-                'format'  => $sFormat,
-                'quality' => $this->getParam('quality'),
-            ));
+        $_this = $this;
+        return $this->callExceptionMethod(function ($oImage) use ($_this, $sFile) {
 
-            return $this->Image_SaveFile($sFileTmp, $sFile, 0666, true);
-        } catch (Imagine\Exception\Exception $e) {
-            $this->setLastError($e->getMessage());
-            // TODO: fix exception for Gd driver
-            if (strpos($e->getFile(), 'Imagine' . DIRECTORY_SEPARATOR . 'Gd')) {
-                restore_error_handler();
-            }
-        }
-        return false;
+            $sFormat = ($_this->getParam('format_auto') && $_this->getFormat()) ? $_this->getFormat() : $_this->getParam('format');
+            $sFileTmp = Config::Get('path.tmp.server') . DIRECTORY_SEPARATOR . func_generator(20);
+            $_this->internalSave($sFileTmp, $sFormat);
+
+            return $_this->Image_SaveFile($sFileTmp, $sFile, 0666, true);
+
+        });
     }
 
     /**
@@ -328,30 +318,19 @@ class ModuleImage_EntityImage extends Entity
      */
     public function saveTmp()
     {
-        if (!$oImage = $this->getImage()) {
-            return false;
-        }
-        try {
+        $_this = $this;
+        return $this->callExceptionMethod(function ($oImage) use ($_this) {
+
             $sDirTmp = Config::Get('path.tmp.server') . DIRECTORY_SEPARATOR . 'image';
             if (!is_dir($sDirTmp)) {
                 @mkdir($sDirTmp, 0777, true);
             }
-            $sFormat = ($this->getParam('format_auto') && $this->getFormat()) ? $this->getFormat() : $this->getParam('format');
+            $sFormat = ($_this->getParam('format_auto') && $_this->getFormat()) ? $_this->getFormat() : $_this->getParam('format');
             $sFileTmp = $sDirTmp . DIRECTORY_SEPARATOR . func_generator(20);
-            $oImage->save($sFileTmp, array(
-                'format'  => $sFormat,
-                'quality' => $this->getParam('quality'),
-            ));
-
+            $_this->internalSave($sFileTmp, $sFormat);
             return $sFileTmp;
-        } catch (Imagine\Exception\Exception $e) {
-            $this->setLastError($e->getMessage());
-            // TODO: fix exception for Gd driver
-            if (strpos($e->getFile(), 'Imagine' . DIRECTORY_SEPARATOR . 'Gd')) {
-                restore_error_handler();
-            }
-        }
-        return false;
+
+        });
     }
 
     /**
@@ -364,19 +343,26 @@ class ModuleImage_EntityImage extends Entity
      */
     public function saveSmart($sDir, $sFile)
     {
+        $_this = $this;
+        return $this->callExceptionMethod(function ($oImage) use ($_this, $sDir, $sFile) {
+
+            $sFormat = ($_this->getParam('format_auto') && $_this->getFormat()) ? $_this->getFormat() : $_this->getParam('format');
+            $sFileTmp = Config::Get('path.tmp.server') . DIRECTORY_SEPARATOR . func_generator(20);
+            $_this->internalSave($sFileTmp, $sFormat);
+
+            $sFile .= '.' . $sFormat;
+            return $_this->Image_SaveFileSmart($sFileTmp, $sDir, $sFile, 0666, true);
+
+        });
+    }
+
+    public function callExceptionMethod(\Closure $fCallback)
+    {
         if (!$oImage = $this->getImage()) {
             return false;
         }
         try {
-            $sFormat = ($this->getParam('format_auto') && $this->getFormat()) ? $this->getFormat() : $this->getParam('format');
-            $sFileTmp = Config::Get('path.tmp.server') . DIRECTORY_SEPARATOR . func_generator(20);
-            $oImage->save($sFileTmp, array(
-                'format'  => $sFormat,
-                'quality' => $this->getParam('quality'),
-            ));
-
-            $sFile .= '.' . $sFormat;
-            return $this->Image_SaveFileSmart($sFileTmp, $sDir, $sFile, 0666, true);
+            return $fCallback($oImage);
         } catch (Exception $e) {
             $this->setLastError($e->getMessage());
             // TODO: fix exception for Gd driver
@@ -385,5 +371,38 @@ class ModuleImage_EntityImage extends Entity
             }
         }
         return false;
+    }
+
+    public function interlace($sScheme)
+    {
+        $_this = $this;
+        $this->callExceptionMethod(function ($oImage) use ($_this, $sScheme) {
+
+            $aMap = array(
+                ModuleImage::INTERLACE_NONE      => \Imagine\Image\ImageInterface::INTERLACE_NONE,
+                ModuleImage::INTERLACE_LINE      => \Imagine\Image\ImageInterface::INTERLACE_LINE,
+                ModuleImage::INTERLACE_PLANE     => \Imagine\Image\ImageInterface::INTERLACE_PLANE,
+                ModuleImage::INTERLACE_PARTITION => \Imagine\Image\ImageInterface::INTERLACE_PARTITION,
+            );
+            $sScheme = array_key_exists($sScheme,
+                $aMap) ? $aMap[$sScheme] : \Imagine\Image\ImageInterface::INTERLACE_NONE;
+            $oImage->interlace($sScheme);
+
+        });
+        return $this;
+    }
+
+    public function internalSave($sFile, $sFormat)
+    {
+        if (!$oImage = $this->getImage()) {
+            return false;
+        }
+        if ($this->getParam('interlace')) {
+            $this->interlace($this->getParam('interlace'));
+        }
+        $oImage->save($sFile, array(
+            'format'  => $sFormat,
+            'quality' => $this->getParam('quality'),
+        ));
     }
 }

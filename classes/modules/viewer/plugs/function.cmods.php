@@ -27,7 +27,7 @@
  * @param   array $aParams
  * @return  string
  */
-function smarty_function_mod($aParams)
+function smarty_function_cmods($aParams)
 {
     if (empty($aParams['name'])) {
         trigger_error("Parameter 'name' cannot be empty", E_USER_WARNING);

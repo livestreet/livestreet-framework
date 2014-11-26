@@ -1011,7 +1011,7 @@ abstract class ModuleORM extends Module
         /**
          * getMaxRatingFromUserByFilter() get_max_rating_from_user_by_filter
          */
-        if (preg_match("@^get_(max|min|avg|sum)_([a-z][a-z0-9]*)_from_([a-z][a-z0-9]*)_by_filter$@i",
+        if (preg_match("@^get_(max|min|avg|sum)_([a-z][_a-z0-9]*)_from_([a-z][_a-z0-9]*)_by_filter$@i",
             func_underscore($sName), $aMatch)) {
             return $this->GetAggregateFunctionByFilter($aMatch[1], $aMatch[2], isset($aArgs[0]) ? $aArgs[0] : array(),
                 func_camelize($aMatch[3]));
@@ -1020,7 +1020,7 @@ abstract class ModuleORM extends Module
         /**
          * getMaxRatingFromUserByStatusAndActive() get_max_rating_from_user_by_status_and_active
          */
-        if (preg_match("@^get_(max|min|avg|sum)_([a-z][a-z0-9]*)_from_([a-z][a-z0-9]*)_by_([_a-z]+)$@i",
+        if (preg_match("@^get_(max|min|avg|sum)_([a-z][_a-z0-9]*)_from_([a-z][_a-z0-9]*)_by_([_a-z]+)$@i",
             func_underscore($sName), $aMatch)) {
             $aSearchParams = explode('_and_', $aMatch[4]);
             $aSplit = array_chunk($aArgs, count($aSearchParams));
@@ -1034,7 +1034,7 @@ abstract class ModuleORM extends Module
         /**
          * getCountFromUserByFilter() get_count_from_user_by_filter
          */
-        if (preg_match("@^get_count_from_([a-z][a-z0-9]*)_by_filter$@i", func_underscore($sName), $aMatch)) {
+        if (preg_match("@^get_count_from_([a-z][_a-z0-9]*)_by_filter$@i", func_underscore($sName), $aMatch)) {
             return $this->GetCountItemsByFilter(isset($aArgs[0]) ? $aArgs[0] : array(), func_camelize($aMatch[1]));
         }
 

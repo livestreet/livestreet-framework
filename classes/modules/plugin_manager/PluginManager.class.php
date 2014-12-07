@@ -459,7 +459,19 @@ class ModulePluginManager extends ModuleORM
      */
     public function CheckPluginsFileWritable()
     {
-        return @is_writable($this->sPluginsDir . Config::Get('sys.plugins.activation_file'));
+        if (@is_writable($this->sPluginsDir . Config::Get('sys.plugins.activation_file'))) {
+            return true;
+        }
+        /**
+         * Возможно файла еще не существует
+         */
+        if (!file_exists($this->sPluginsDir . Config::Get('sys.plugins.activation_file'))) {
+            if (false !== @file_put_contents($this->sPluginsDir . Config::Get('sys.plugins.activation_file'), '')) {
+                @chmod($this->sPluginsDir . Config::Get('sys.plugins.activation_file'), 0666);
+                return true;
+            }
+        }
+        return false;
     }
 
     /**

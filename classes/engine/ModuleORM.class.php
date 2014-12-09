@@ -524,8 +524,13 @@ abstract class ModuleORM extends Module
                 $sRelPrimaryKey = method_exists($oRelEntityEmpty,
                     '_getPrimaryKey') ? func_camelize($oRelEntityEmpty->_getPrimaryKey()) : 'Id';
                 if ($sRelType == EntityORM::RELATION_TYPE_BELONGS_TO) {
-                    $aRelData = Engine::GetInstance()->_CallModule("{$sRelPluginPrefix}{$sRelModuleName}_get{$sRelEntityName}ItemsByArray{$sRelPrimaryKey}",
-                        array($aEntityKeys[$sRelKey]));
+                    $aFilterRel = array(
+                        func_underscore($sRelPrimaryKey) => $aEntityKeys[$sRelKey],
+                        '#index-from-primary'
+                    );
+                    $aFilterRel = array_merge($aFilterRel, $aRelationFilter);
+                    $aRelData = Engine::GetInstance()->_CallModule("{$sRelPluginPrefix}{$sRelModuleName}_get{$sRelEntityName}ItemsByFilter",
+                        array($aFilterRel));
                 } elseif ($sRelType == EntityORM::RELATION_TYPE_HAS_ONE) {
                     $aFilterRel = array($sRelKey . ' in' => $aEntityPrimaryKeys, '#index-from' => $sRelKey);
                     $aFilterRel = array_merge($aFilterRel, $aRelationFilter);

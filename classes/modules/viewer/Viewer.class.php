@@ -386,7 +386,12 @@ class ModuleViewer extends Module
             if ($this->bResponseSpecificHeader and !headers_sent()) {
                 header('Content-type: application/json');
             }
-            echo getRequest('jsonpCallback', 'callback') . '(' . json_encode($this->aVarsAjax) . ');';
+            $sCallbackName = getRequestStr('jsonpCallbackName') ? getRequestStr('jsonpCallbackName') : 'jsonpCallback';
+            $sCallback = getRequestStr($sCallbackName);
+            if (!preg_match('#^[a-z0-9\-\_]+$#i', $sCallback)) {
+                $sCallback = 'callback';
+            }
+            echo $sCallback . '(' . json_encode($this->aVarsAjax) . ');';
         }
         exit();
     }

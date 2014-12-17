@@ -59,7 +59,12 @@ function smarty_function_date_format($aParams, &$oSmarty)
         }
         if ($iTz === false) {
             if ($oUserCurrent = $oEngine->User_GetUserCurrent() and $oUserCurrent->getSettingsTimezone()) {
-                $iTz = $oUserCurrent->getSettingsTimezone();
+                try {
+                    $oNow = new DateTime(null, new DateTimeZone($oUserCurrent->getSettingsTimezone()));
+                    $iTz = $oNow->getOffset() / 3600;
+                } catch (Exception $e) {
+                    
+                }
             }
         }
     }

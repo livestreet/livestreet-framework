@@ -176,6 +176,12 @@ class Engine
      */
     static protected $sEnvironment = 'local';
     /**
+     * Автозагрузчик классов по стандарту PSR-4
+     *
+     * @var Psr4AutoloaderClass|null
+     */
+    static protected $oAutoloader = null;
+    /**
      * Список загруженных модулей
      *
      * @var array
@@ -680,9 +686,10 @@ class Engine
      */
     public function getStats()
     {
-        return array('sql'    => $this->Database_GetStats(),
-                     'cache'  => $this->Cache_GetStats(),
-                     'engine' => array('time_load_module' => round($this->iTimeLoadModule, 3))
+        return array(
+            'sql'    => $this->Database_GetStats(),
+            'cache'  => $this->Cache_GetStats(),
+            'engine' => array('time_load_module' => round($this->iTimeLoadModule, 3))
         );
     }
 
@@ -1384,6 +1391,26 @@ class Engine
     protected function AutoloadRegister()
     {
         spl_autoload_register(array('Engine', 'autoload'));
+        /**
+         * Подключаем PSR-4 автозагрузчик
+         */
+        require_once(Config::Get('path.framework.libs_vendor.server') . DIRECTORY_SEPARATOR . 'php-fig' . DIRECTORY_SEPARATOR . 'PSR-4' . DIRECTORY_SEPARATOR . 'Psr4AutoloaderClass.php');
+        self::$oAutoloader = new Psr4AutoloaderClass();
+        self::$oAutoloader->register();
+    }
+
+    /**
+     * Добавляет базовую директорию к префиксу пространства имён.
+     *
+     * @param string $sPrefix Префикс пространства имён.
+     * @param string $sBaseDir Базовая директория для файлов классов из пространства имён.
+     * @param bool $bPrepend Если true, добавить базовую директорию в начало стека. В этом случае она будет
+     * проверяться первой.
+     * @return void
+     */
+    static public function AddAutoloaderNamespace($sPrefix, $sBaseDir, $bPrepend = false)
+    {
+        self::$oAutoloader->addNamespace($sPrefix, $sBaseDir, $bPrepend);
     }
 
     /**

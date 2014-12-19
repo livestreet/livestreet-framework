@@ -541,6 +541,12 @@ class ModuleStorage extends Module
      */
     protected function CheckCaller($oCaller)
     {
+        /**
+         * Возможность указывать имя класса плагина строкой
+         */
+        if (is_string($oCaller) and $oCaller) {
+            return true;
+        }
         /*
          * контекст должен быть указан или нулл для движка
          */

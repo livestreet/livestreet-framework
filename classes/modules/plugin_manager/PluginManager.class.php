@@ -614,6 +614,11 @@ class ModulePluginManager extends ModuleORM
         if ($oVersion = $this->GetVersionByCode($sPlugin)) {
             $oVersion->Delete();
         }
+        /**
+         * Удаляем данные плагина из хранилища настроек
+         */
+        $this->Storage_RemoveAll('Plugin' . func_camelize($sPlugin));
+        $this->Storage_Remove('__config__', 'Plugin' . func_camelize($sPlugin)); // хардим удаление конфига админки
     }
 
     /**

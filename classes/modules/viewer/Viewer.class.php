@@ -1118,20 +1118,20 @@ class ModuleViewer extends Module
          */
         if (Config::Get('view.skin') != 'default') {
             // /root/plugins/[plugin name]/templates/skin/[skin name]/dir/test.tpl
-            if (preg_match('@^' . preg_quote(Config::Get('path.application.plugins.server')) . '/([\w\-_]+)/templates/skin/' . preg_quote(Config::Get('view.skin')) . '/@i',
+            if (preg_match('@^' . preg_quote(Config::Get('path.application.plugins.server')) . '/([\w\-_]+)/frontend/skin/' . preg_quote(Config::Get('view.skin')) . '/@i',
                 $sName, $aMatch)) {
                 $sFile = str_replace($aMatch[0],
-                    Config::Get('path.application.plugins.server') . '/' . $aMatch[1] . '/templates/skin/default/',
+                    Config::Get('path.application.plugins.server') . '/' . $aMatch[1] . '/frontend/skin/default/',
                     $sName);
                 if ($this->TemplateExists($sFile)) {
                     return $sFile;
                 }
             }
             // [plugin name]/templates/skin/[skin name]/dir/test.tpl
-            if (preg_match('@^([\w\-_]+)/templates/skin/' . preg_quote(Config::Get('view.skin')) . '/@i', $sName,
+            if (preg_match('@^([\w\-_]+)/frontend/skin/' . preg_quote(Config::Get('view.skin')) . '/@i', $sName,
                 $aMatch)) {
                 $sFile = Config::Get('path.application.plugins.server') . '/' . str_replace($aMatch[0],
-                        $aMatch[1] . '/templates/skin/default/', $sName);
+                        $aMatch[1] . '/frontend/skin/default/', $sName);
                 if ($this->TemplateExists($sFile)) {
                     return $sFile;
                 }

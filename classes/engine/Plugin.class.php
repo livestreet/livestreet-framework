@@ -309,13 +309,13 @@ abstract class Plugin extends LsObject
     {
         $sName = self::GetPluginCode($sName);
         if (!isset(self::$aTemplatePath[$sName])) {
-            $aPaths = glob(Config::Get('path.application.plugins.server') . '/' . $sName . '/templates/skin/*',
+            $aPaths = glob(Config::Get('path.application.plugins.server') . '/' . $sName . '/frontend/skin/*',
                 GLOB_ONLYDIR);
             $sTemplateName = ($aPaths and in_array(Config::Get('view.skin'), array_map('basename', $aPaths)))
                 ? Config::Get('view.skin')
                 : 'default';
 
-            $sDir = Config::Get('path.application.plugins.server') . "/{$sName}/templates/skin/{$sTemplateName}/";
+            $sDir = Config::Get('path.application.plugins.server') . "/{$sName}/frontend/skin/{$sTemplateName}/";
             self::$aTemplatePath[$sName] = is_dir($sDir) ? $sDir : null;
         }
         return self::$aTemplatePath[$sName];
@@ -332,13 +332,13 @@ abstract class Plugin extends LsObject
     {
         $sName = self::GetPluginCode($sName);
         if (!isset(self::$aTemplateWebPath[$sName])) {
-            $aPaths = glob(Config::Get('path.application.plugins.server') . '/' . $sName . '/templates/skin/*',
+            $aPaths = glob(Config::Get('path.application.plugins.server') . '/' . $sName . '/frontend/skin/*',
                 GLOB_ONLYDIR);
             $sTemplateName = ($aPaths and in_array(Config::Get('view.skin'), array_map('basename', $aPaths)))
                 ? Config::Get('view.skin')
                 : 'default';
 
-            self::$aTemplateWebPath[$sName] = Router::GetFixPathWeb(Config::Get('path.application.plugins.web')) . "/{$sName}/templates/skin/{$sTemplateName}/";
+            self::$aTemplateWebPath[$sName] = Router::GetFixPathWeb(Config::Get('path.application.plugins.web')) . "/{$sName}/frontend/skin/{$sTemplateName}/";
         }
         return self::$aTemplateWebPath[$sName];
     }

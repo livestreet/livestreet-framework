@@ -195,7 +195,7 @@ class ModuleLang extends Module
             $sDir = Config::Get('path.application.plugins.server') . '/';
 
             foreach ($aPluginList as $sPluginName) {
-                $aFiles = glob($sDir . $sPluginName . '/templates/' . Config::Get('lang.dir') . '/' . $sLangName . '.php');
+                $aFiles = glob($sDir . $sPluginName . '/frontend/' . Config::Get('lang.dir') . '/' . $sLangName . '.php');
                 if ($aFiles and count($aFiles)) {
                     foreach ($aFiles as $sFile) {
                         if (file_exists($sFile)) {

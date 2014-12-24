@@ -50,7 +50,7 @@ abstract class ActionPlugin extends Action
              * Проверяем в списке шаблонов
              */
             $aMatches[1] = strtolower($aMatches[1]);
-            $aPaths = glob(Config::Get('path.application.plugins.server') . '/' . $aMatches[1] . '/templates/skin/*/actions/Action' . ucfirst($aMatches[2]),
+            $aPaths = glob(Config::Get('path.application.plugins.server') . '/' . $aMatches[1] . '/frontend/skin/*/actions/Action' . ucfirst($aMatches[2]),
                 GLOB_ONLYDIR);
             $sTemplateName = ($aPaths and in_array(
                     Config::Get('view.skin'),
@@ -65,7 +65,7 @@ abstract class ActionPlugin extends Action
                 ? Config::Get('view.skin')
                 : 'default';
 
-            $sDir = Config::Get('path.application.plugins.server') . "/{$aMatches[1]}/templates/skin/{$sTemplateName}/";
+            $sDir = Config::Get('path.application.plugins.server') . "/{$aMatches[1]}/frontend/skin/{$sTemplateName}/";
             $this->sTemplatePathPlugin = is_dir($sDir) ? $sDir : null;
         }
 

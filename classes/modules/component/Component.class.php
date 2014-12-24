@@ -171,7 +171,20 @@ class ModuleComponent extends Module
         list($sPlugin, $sName) = $this->ParserName($sName);
         $sPath = 'components/' . $sName;
         if ($sPlugin) {
-            // todo: компоненты плагинов
+            /**
+             * Проверяем наличие компонента в каталоге текущего шаблона плагина
+             */
+            $sPathTemplate = Config::Get('path.application.plugins.server') . "/{$sPlugin}/frontend/skin/" . Config::Get('view.skin');
+            if (file_exists($sPathTemplate . '/' . $sPath)) {
+                return $sPathTemplate . '/' . $sPath;
+            }
+            /**
+             * Проверяем наличие компонента в общем каталоге плагина
+             */
+            $sPathTemplate = Config::Get('path.application.plugins.server') . "/{$sPlugin}/frontend";
+            if (file_exists($sPathTemplate . '/' . $sPath)) {
+                return $sPathTemplate . '/' . $sPath;
+            }
         } else {
             /**
              * Проверяем наличие компонента в каталоге текущего шаблона
@@ -237,9 +250,8 @@ class ModuleComponent extends Module
         if ($bCheckDelegate) {
             /**
              * Базовое название компонента
-             * todo: нужно учитывать компоненты плагинов, возможно так - component/{plugin}/name или plugin:component.name.template
              */
-            $sNameBase = "component.{$sName}.{$sTemplate}";
+            $sNameBase = ($sPlugin ? "{$sPlugin}:" : '') . "component.{$sName}.{$sTemplate}";
             /**
              * Проверяем наследование по базовому имени
              */

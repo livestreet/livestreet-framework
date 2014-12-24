@@ -43,10 +43,13 @@ class Smarty_Internal_Template_LS extends Smarty_Internal_Template
                  */
                 if (!preg_match("#^\.tpl$#i", $sTpl)) {
                     $aPath = explode('.', $sTpl);
-                    if (count($aPath) == 3 and $aPath[0] == 'component') {
-                        // todo: нужно учесть компоненты плагинов
-                        $sParentTemplate = Engine::getInstance()->Component_GetTemplatePath($aPath[1], $aPath[2],
-                            false);
+                    if (count($aPath) == 3 and preg_match('#^([\w\_]+\:)?component$#i', $aPath[0], $aMatch2)) {
+                        $sPrefix = '';
+                        if (isset($aMatch2[1])) {
+                            $sPrefix = $aMatch2[1];
+                        }
+                        $sParentTemplate = Engine::getInstance()->Component_GetTemplatePath($sPrefix . $aPath[1],
+                            $aPath[2], false);
                     }
                 }
             }

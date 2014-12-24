@@ -1157,6 +1157,10 @@ class ModuleViewer extends Module
 
         $this->SortBlocks();
         /**
+         * Подключение компонентов (css/js)
+         */
+        $this->Component_LoadAll();
+        /**
          * Добавляем JS и CSS по предписанным правилам
          */
         $this->BuildHeadFiles();

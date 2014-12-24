@@ -1,0 +1,362 @@
+<?php
+/*
+ * LiveStreet CMS
+ * Copyright © 2013 OOO "ЛС-СОФТ"
+ *
+ * ------------------------------------------------------
+ *
+ * Official site: www.livestreetcms.com
+ * Contact e-mail: office@livestreetcms.com
+ *
+ * GNU General Public License, version 2:
+ * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+ *
+ * ------------------------------------------------------
+ *
+ * @link http://www.livestreetcms.com
+ * @copyright 2013 OOO "ЛС-СОФТ"
+ * @author Maxim Mzhelskiy <rus.engine@gmail.com>
+ *
+ */
+
+/**
+ * Модуль управления компонентами frontenda'а - независимые единицы (кирпичики) шаблона, состоящие из tpl, css, js
+ *
+ * @package framework.modules
+ * @since 2.0
+ */
+class ModuleComponent extends Module
+{
+
+    /**
+     * Список компонентов для подключения
+     * В качестве ключей указывается название компонента, а в значениях возможные параметры
+     *
+     * @var array
+     */
+    protected $aComponentsList = array();
+    /**
+     * Кеш для json данных компонентов
+     *
+     * @var array
+     */
+    protected $aComponentsData = array();
+    /**
+     * Служебный счетчик для предотвращения зацикливания
+     *
+     * @var int
+     */
+    protected $iCountDependsRecursive = 0;
+
+    /**
+     * Инициализация модуля
+     */
+    public function Init()
+    {
+        $this->InitComponentsList();
+    }
+
+    /**
+     * Инициализация начального списка необходимых для загрузки компонентов
+     */
+    public function InitComponentsList()
+    {
+        if ($aList = Config::Get('components') and is_array($aList)) {
+            func_array_simpleflip($aList, array());
+            $this->aComponentsList = array_merge_recursive($this->aComponentsList, $aList);
+        }
+    }
+
+    /**
+     * Выполняет загрузку необходимых компонентов
+     * Под загрузкой понимается автоматическое подключение необходимых css, js
+     */
+    public function LoadAll()
+    {
+        /**
+         * Строим дерево компонентов с учетом зависимостей
+         */
+        $aTree = array();
+        /**
+         * Для каждого компонента считываем данные из json
+         */
+        $aComponentsName = array_keys($this->aComponentsList);
+        foreach ($aComponentsName as $sName) {
+            $aTree[$sName] = array();
+            /**
+             * Cчитываем данные из json файла компонента
+             */
+            $aData = $this->GetJsonData($sName);
+            /**
+             * Проверяем зависимости
+             */
+            if (isset($aData['dependencies']) and is_array($aData['dependencies'])) {
+                foreach ($aData['dependencies'] as $mKey => $mValue) {
+                    $aTree[$sName][] = strtolower(is_int($mKey) ? $mValue : $mKey);
+                }
+            }
+        }
+        /**
+         * Сортируем компоненты с учетом зависимостей
+         */
+        $this->iCountDependsRecursive = 0;
+        $aTree = $this->GetSortedByDepends($aTree);
+        /**
+         * Подключаем каждый компонент
+         */
+        foreach ($aTree as $sName => $aDepends) {
+            $this->Load($sName);
+        }
+    }
+
+    /**
+     * Загружает/подключает компонент
+     *
+     * @param $sName
+     */
+    public function Load($sName)
+    {
+        /**
+         * Получаем путь до компонента
+         */
+        $sPath = $this->GetPath($sName);
+        /**
+         * Json данные
+         */
+        $aData = $this->GetJsonData($sName);
+        /**
+         * Подключаем стили
+         */
+        if (isset($aData['styles']) and is_array($aData['styles'])) {
+            foreach ($aData['styles'] as $mName => $sAsset) {
+                $sFile = $sPath . '/' . $sAsset;
+                $sFileName = (is_int($mName) ? $sAsset : $mName);
+                $this->Viewer_AppendStyle($sFile, array('name' => "component.{$sName}.{$sFileName}"));
+            }
+        }
+        /**
+         * Подключаем скрипты
+         */
+        if (isset($aData['scripts']) and is_array($aData['scripts'])) {
+            foreach ($aData['scripts'] as $mName => $sAsset) {
+                $sFile = $sPath . '/' . $sAsset;
+                $sFileName = (is_int($mName) ? $sAsset : $mName);
+                $this->Viewer_AppendScript($sFile, array('name' => "component.{$sName}.{$sFileName}"));
+            }
+        }
+    }
+
+    /**
+     * Добавляет новый компонент в список для загрузки
+     *
+     * @param $sName
+     * @param $aParams
+     */
+    public function Add($sName, $aParams = array())
+    {
+        $sName = strtolower($sName);
+        if (!array_key_exists($sName, $this->aComponentsList)) {
+            $this->aComponentsList[$sName] = $aParams;
+        }
+    }
+
+    /**
+     * Возвращает полный серверный путь до компонента
+     *
+     * @param string $sName Имя компонента. Может содержать название плагина, например, "page:alert" - компонент alert плагина page
+     * @return string
+     */
+    public function GetPath($sName)
+    {
+        list($sPlugin, $sName) = $this->ParserName($sName);
+        $sPath = 'components/' . $sName;
+        if ($sPlugin) {
+            // todo: компоненты плагинов
+        } else {
+            /**
+             * Проверяем наличие компонента в каталоге текущего шаблона
+             */
+            $sPathTemplate = $this->Fs_GetPathServerFromWeb(Config::Get('path.skin.web'));
+            if (file_exists($sPathTemplate . '/' . $sPath)) {
+                return $sPathTemplate . '/' . $sPath;
+            }
+            /**
+             * Проверяем на компонент приложения
+             */
+            $sPathTemplate = Config::Get('path.application.server') . '/frontend';
+            if (file_exists($sPathTemplate . '/' . $sPath)) {
+                return $sPathTemplate . '/' . $sPath;
+            }
+            /**
+             * Проверяем на компонент фреймворка
+             */
+            $sPathTemplate = Config::Get('path.framework.server') . '/frontend';
+            if (file_exists($sPathTemplate . '/' . $sPath)) {
+                return $sPathTemplate . '/' . $sPath;
+            }
+        }
+        /**
+         * Не удалось найти компонент
+         */
+        return false;
+    }
+
+    /**
+     * Возвращает полный web путь до компонента с учетом текущей схемы (http/https)
+     *
+     * @param $sName
+     * @return bool
+     */
+    public function GetWebPath($sName)
+    {
+        if ($sPathServer = $this->GetPath($sName)) {
+            return $this->Fs_GetPathWebFromServer($sPathServer);
+        }
+        return false;
+    }
+
+    /**
+     * Возвращает путь до шаблона
+     * Путь может быть как абсолютным, так и относительным корня шаблона
+     * Метод учитывает возможное наследование плагинами, а также учитывает приоритет шаблона (tpl шаблона -> application -> framework)
+     *
+     * @param $sNameFull
+     * @param $sTemplate
+     * @param $bCheckDelegate
+     * @return string
+     */
+    public function GetTemplatePath($sNameFull, $sTemplate = null, $bCheckDelegate = true)
+    {
+        list($sPlugin, $sName) = $this->ParserName($sNameFull);
+        /**
+         * По дефолту используем в качестве имени шаблона название компонента
+         */
+        if (!$sTemplate) {
+            $sTemplate = $sName;
+        }
+        if ($bCheckDelegate) {
+            /**
+             * Базовое название компонента
+             * todo: нужно учитывать компоненты плагинов, возможно так - component/{plugin}/name или plugin:component.name.template
+             */
+            $sNameBase = "component.{$sName}.{$sTemplate}";
+            /**
+             * Проверяем наследование по базовому имени
+             */
+            $sNameBaseInherit = $this->Plugin_GetDelegate('template', $sNameBase);
+            if ($sNameBaseInherit != $sNameBase) {
+                return $sNameBaseInherit;
+            }
+        }
+        /**
+         * Компонент не наследуется, поэтому получаем до него полный серверный путь
+         */
+        if ($sPath = $this->GetPath($sNameFull)) {
+            /**
+             * Получаем путь до файла шаблона из json
+             */
+            $aData = $this->GetJsonData($sNameFull);
+            if (isset($aData['templates'][$sTemplate])) {
+                return "{$sPath}/" . $aData['templates'][$sTemplate];
+            }
+            return "{$sPath}/{$sTemplate}.tpl";
+        }
+        return false;
+    }
+
+    /**
+     * Парсит имя компонента
+     * Имя может содержать название плагина - plugin:component
+     *
+     * @param $sName
+     * @return array Массив из двух элементов, первый - имя плагина, воторой - имя компонента. Если плагина нет, то null вместо его имени
+     */
+    protected function ParserName($sName)
+    {
+        $sName = strtolower($sName);
+        $aPath = explode(':', $sName);
+        if (count($aPath) == 2) {
+            return array($aPath[0], $aPath[1]);
+        }
+        //if (preg_match("#^\{([\w_-]+)\}/?([\w_-]+)$#", $sName, $aMatch)) {
+        return array(null, $sName);
+    }
+
+    /**
+     * Вспомогательный метод для сортировки компонентов по зависимостям
+     *
+     * @param $aComp
+     * @param $aSorted
+     * @param $sName
+     * @return bool
+     */
+    protected function GetDepends($aComp, $aSorted, $sName)
+    {
+        if (isset($aComp[$sName])) {
+            foreach ($aComp[$sName] as $sItem) {
+                if (!isset($aSorted[$sItem])) {
+                    $this->iCountDependsRecursive++;
+                    if ($this->iCountDependsRecursive > 2000) {
+                        return false;
+                    } else {
+                        return $this->GetDepends($aComp, $aSorted, $sItem);
+                    }
+                }
+            }
+        }
+        return $sName;
+    }
+
+    /**
+     * Сортирует компоненты по зависимостям - зависимые подклюючаются ниже
+     *
+     * @param $aComp
+     * @return array|bool
+     */
+    protected function GetSortedByDepends($aComp)
+    {
+        $aSorted = array();
+        foreach ($aComp as $sName => $void) {
+            do {
+                if ($sCompDepend = $this->GetDepends($aComp, $aSorted, $sName)) {
+                    if (isset($aComp[$sCompDepend])) {
+                        $aSorted[$sCompDepend] = $aComp[$sCompDepend];
+                    } else {
+                        break;
+                    }
+                } else {
+                    $aSorted = false;
+                    break;
+                }
+            } while ($sCompDepend != $sName);
+        }
+        return $aSorted;
+    }
+
+    /**
+     * Парсит и возвращает json данные компонента
+     *
+     * @param $sName
+     * @return array
+     */
+    protected function GetJsonData($sName)
+    {
+        /**
+         * Смотрим в кеше
+         */
+        if (isset($this->aComponentsData[$sName])) {
+            return $this->aComponentsData[$sName];
+        }
+        /**
+         * Cчитываем данные из json файла компонента
+         */
+        $sPath = $this->GetPath($sName);
+        $sFileJson = $sPath . '/component.json';
+        if (file_exists($sFileJson)) {
+            if ($sContent = @file_get_contents($sFileJson) and $aData = @json_decode($sContent, true)) {
+                return $this->aComponentsData[$sName] = $aData;
+            }
+        }
+        return array();
+    }
+}

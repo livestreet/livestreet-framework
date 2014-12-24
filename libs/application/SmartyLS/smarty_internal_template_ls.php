@@ -38,6 +38,17 @@ class Smarty_Internal_Template_LS extends Smarty_Internal_Template
                  * Сбрасываем цепочку наследования к начальному состоянию
                  */
                 Engine::getInstance()->Plugin_ResetInheritPosition($sParentTemplate);
+                /**
+                 * В параметре может быть путь до шаблона с ".tpl" в конце, а таже может быть путь до шаблона компонента вида "component.name.template"
+                 */
+                if (!preg_match("#^\.tpl$#i", $sTpl)) {
+                    $aPath = explode('.', $sTpl);
+                    if (count($aPath) == 3 and $aPath[0] == 'component') {
+                        // todo: нужно учесть компоненты плагинов
+                        $sParentTemplate = Engine::getInstance()->Component_GetTemplatePath($aPath[1], $aPath[2],
+                            false);
+                    }
+                }
             }
             $template_resource = $sParentTemplate;
             $bSkipDelegate = true;

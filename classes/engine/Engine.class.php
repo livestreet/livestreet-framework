@@ -572,15 +572,14 @@ class Engine
     public function _CallModule($sName, $aArgs)
     {
         list($oModule, $sModuleName, $sMethod) = $this->GetModule($sName);
-
-        if (!method_exists($oModule, $sMethod)) {
-            // comment for ORM testing
-            //throw new Exception("The module has no required method: ".$sModuleName.'->'.$sMethod.'()');
-        }
+        /**
+         * Необходимость генерации автоматических хуков
+         */
+        $bUseAutoHooks=(bool)Config::Get('sys.module.use_auto_hooks');
 
         $sModuleName = strtolower($sModuleName);
         $aResultHook = array();
-        if (!in_array($sModuleName, array('plugin', 'hook'))) {
+        if ($bUseAutoHooks and !in_array($sModuleName, array('plugin', 'hook'))) {
             $aResultHook = $this->_CallModule('Hook_Run',
                 array('module_' . $sModuleName . '_' . strtolower($sMethod) . '_before', &$aArgs));
         }
@@ -597,7 +596,7 @@ class Engine
             $result = call_user_func_array(array($oModule, $sMethod), $aArgsRef);
         }
 
-        if (!in_array($sModuleName, array('plugin', 'hook'))) {
+        if ($bUseAutoHooks and !in_array($sModuleName, array('plugin', 'hook'))) {
             $this->Hook_Run('module_' . $sModuleName . '_' . strtolower($sMethod) . '_after',
                 array('result' => &$result, 'params' => $aArgs));
         }

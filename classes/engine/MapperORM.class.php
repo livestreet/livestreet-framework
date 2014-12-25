@@ -62,7 +62,7 @@ class MapperORM extends Mapper
                         true) . " = " . $this->oDb->escape($oEntity->_getDataOne($sField));
             }
             $sql = "UPDATE " . $sTableName . " SET ?a WHERE {$sWhere}";
-            $aFields=$oEntity->_getDataFields(true);
+            $aFields = $oEntity->_getDataFields(true);
             return $aFields ? $this->oDb->query($sql, $aFields) : 0;
         } else {
             $aOriginalData = $oEntity->_getOriginalData();
@@ -72,7 +72,7 @@ class MapperORM extends Mapper
                 ), array_keys($aOriginalData), array_values($aOriginalData),
                 array_fill(0, count($aOriginalData), $this->oDb)));
             $sql = "UPDATE " . $sTableName . " SET ?a WHERE 1=1 AND " . $sWhere;
-            $aFields=$oEntity->_getDataFields(true);
+            $aFields = $oEntity->_getDataFields(true);
             return $aFields ? $this->oDb->query($sql, $aFields) : 0;
         }
     }
@@ -120,24 +120,9 @@ class MapperORM extends Mapper
      */
     public function GetByFilter($aFilter, $sEntityFull)
     {
-        $oEntitySample = Engine::GetEntity($sEntityFull);
-        $sTableName = self::GetTableName($sEntityFull);
-
-        list($aFilterFields, $sFilterFields, $sJoinTables) = $this->BuildFilter($aFilter, $oEntitySample);
-        list($sOrder, $sLimit, $sGroup, $sSelect) = $this->BuildFilterMore($aFilter, $oEntitySample);
-
-        if (!$sSelect) {
-            $sSelect = 't.*';
-        }
-
-        $sql = "SELECT {$sSelect} FROM " . $sTableName . " t {$sJoinTables} WHERE 1=1 {$sFilterFields} {$sGroup} {$sOrder} LIMIT 0,1";
-        $aQueryParams = array_merge(array($sql), array_values($aFilterFields));
-
-        if ($aRow = call_user_func_array(array($this->oDb, 'selectRow'), $aQueryParams)) {
-            $oEntity = Engine::GetEntity($sEntityFull, $aRow);
-            $oEntity->_SetIsNew(false);
-            $oEntity->_setOriginalData($aRow);
-            return $oEntity;
+        $aFilter['#limit'] = 1;
+        if ($aResults = $this->GetItemsByFilter($aFilter, $sEntityFull)) {
+            return reset($aResults);
         }
         return null;
     }

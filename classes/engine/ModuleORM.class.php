@@ -631,6 +631,7 @@ abstract class ModuleORM extends Module
      * @param array $aEntities Список сущностей
      * @param array $aFilter Фильтр
      * @return array
+     * @throws
      */
     protected function _setIndexesFromField($aEntities, $aFilter)
     {
@@ -640,6 +641,9 @@ abstract class ModuleORM extends Module
                 $aFilter) || (!empty($aFilter['#index-from']) && $aFilter['#index-from'] == '#primary') ?
                 $oEntity->_getPrimaryKey() :
                 $oEntity->_getField($aFilter['#index-from']);
+            if (is_array($sKey)) {
+                throw new Exception("The entity <" . get_class($oEntity) . "> allow only single key for index-from");
+            }
             $aIndexedEntities[$oEntity->_getDataOne($sKey)] = $oEntity;
         }
         return $aIndexedEntities;

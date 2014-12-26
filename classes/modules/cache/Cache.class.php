@@ -371,6 +371,29 @@ class ModuleCache extends Module
     }
 
     /**
+     * Метод для удобного обращения к кешу с одновременной записью в него (если данных не было в кеше)
+     *
+     * @param string $sName Имя ключа
+     * @param callable $callback Коллбэк функция, которая должна возвращать данные
+     * @param int $iTimeLife Время жизни кеша в секундах
+     * @param array $aTags Список тегов, для возможности удалять сразу несколько кешей по тегу
+     * @param null $sCacheType Тип кеша
+     * @param bool $bForce Принудительно использовать кеширование, даже если оно отключено в конфиге
+     * @return bool|mixed
+     */
+    public function Remember($sName, \Closure $callback, $iTimeLife = 0, $aTags = array(), $sCacheType = null, $bForce = false) {
+        if (!$this->bAllowUse and !($this->bAllowForce and $bForce)) {
+            return $callback();
+        }
+
+        if (false !== ($mData = $this->Get($sName, $sCacheType, $bForce))) {
+            return $mData;
+        }
+        $this->Set($mData = $callback(), $sName, $aTags, $iTimeLife, $sCacheType, $bForce);
+        return $mData;
+    }
+
+    /**
      * Удаляет значение из кеша по ключу(имени)
      *
      * @param string $sName

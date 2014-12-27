@@ -249,7 +249,7 @@ class ModuleAsset extends Module
             /**
              * Проверяем на относительный путь без протокола и без первого слеша
              */
-        } elseif (preg_match('#^[a-z0-9\_]#i', $sFile)) {
+        } elseif (strpos($sFile, '/') !== 0 and strpos($sFile, ':') === false) {
             /**
              * Считаем, что указывался путь относительно корня текущего шаблона
              */

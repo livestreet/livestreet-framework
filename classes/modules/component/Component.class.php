@@ -320,7 +320,7 @@ class ModuleComponent extends Module
     }
 
     /**
-     * Сортирует компоненты по зависимостям - зависимые подклюючаются ниже
+     * Сортирует компоненты по зависимостям - зависимые подключаются ниже
      *
      * @param $aComp
      * @return array|bool
@@ -334,7 +334,7 @@ class ModuleComponent extends Module
                     if (isset($aComp[$sCompDepend])) {
                         $aSorted[$sCompDepend] = $aComp[$sCompDepend];
                     } else {
-                        break;
+                        $aSorted[$sCompDepend] = array();
                     }
                 } else {
                     $aSorted = false;

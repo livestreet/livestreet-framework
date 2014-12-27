@@ -263,4 +263,45 @@ class ModuleSession extends Module
             );
         }
     }
+
+    /**
+     * Устанавливает куку
+     *
+     * @param string $sName
+     * @param string $sValue
+     * @param int|null $iTime
+     * @param bool $bSecure
+     * @param bool $bHttpOnly
+     */
+    public function SetCookie($sName, $sValue, $iTime = null, $bSecure = false, $bHttpOnly = false)
+    {
+        setcookie($sName, $sValue, $iTime, Config::Get('sys.cookie.path'), Config::Get('sys.cookie.host'), $bSecure,
+            $bHttpOnly);
+    }
+
+    /**
+     * Читает куку
+     *
+     * @param string $sName
+     * @param mixed $mDefault
+     * @return string|mixed
+     */
+    public function GetCookie($sName, $mDefault = null)
+    {
+        if (isset($_COOKIE[$sName])) {
+            return $_COOKIE[$sName];
+        }
+        return $mDefault;
+    }
+
+    /**
+     * Удаляет куку
+     *
+     * @param $sName
+     */
+    public function DropCookie($sName)
+    {
+        setcookie($sName, null, -1, Config::Get('sys.cookie.path'), Config::Get('sys.cookie.host'));
+        unset($_COOKIE[$sName]);
+    }
 }

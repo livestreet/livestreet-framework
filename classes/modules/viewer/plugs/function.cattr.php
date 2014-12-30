@@ -35,14 +35,14 @@ function smarty_function_cattr( $params )
     {
         if (is_bool($value) && $value)
         {
-            $result .= "$key ";
+            $result .= $params['prefix'] . "$key ";
         }
         else
         {
             // Удаляем кавычки в начале и конце значения
             if ($value[0] === '"') $value = substr($value, 1, -1);
 
-            $result .= "$key=\"$value\" ";
+            $result .= $params['prefix'] . "$key=\"$value\" ";
         }
     }
 

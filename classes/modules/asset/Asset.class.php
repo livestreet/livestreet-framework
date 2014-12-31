@@ -458,6 +458,7 @@ class ModuleAsset extends Module
             }
             $sContent = '';
             foreach ($aAssetItems as $sFile => $aParams) {
+                $sFile=isset($aParams['file']) ? $aParams['file'] : $aParams['file'];
                 if (strpos($sFile, '//') === 0) {
                     /**
                      * Добавляем текущий протокол

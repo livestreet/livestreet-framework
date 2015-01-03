@@ -30,13 +30,13 @@
 function smarty_function_component($aParams, &$oSmarty)
 {
     if (isset($aParams['_default_short'])) {
-        $aParams['name'] = $aParams['_default_short'];
+        $aParams['component'] = $aParams['_default_short'];
     }
-    if (empty($aParams['name'])) {
-        trigger_error("Config: missing 'name' parametr", E_USER_WARNING);
+    if (empty($aParams['component'])) {
+        trigger_error("Config: missing 'component' parametr", E_USER_WARNING);
         return;
     }
-    $sName = $aParams['name'];
+    $sName = $aParams['component'];
     $sTemplate = null;
     if (isset($aParams['template'])) {
         $sTemplate = $aParams['template'];
@@ -48,7 +48,7 @@ function smarty_function_component($aParams, &$oSmarty)
     if (isset($aParams['params']) and is_array($aParams['params'])) {
         $aComponentParams = $aParams['params'];
     } else {
-        unset($aParams['name']);
+        unset($aParams['component']);
         unset($aParams['_default_short']);
         unset($aParams['template']);
         $aComponentParams = $aParams;

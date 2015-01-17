@@ -59,19 +59,8 @@ function smarty_function_component($aParams, &$oSmarty)
     if ($sPathTemplate = Engine::getInstance()->Component_GetTemplatePath($sName,
             $sTemplate) and Engine::getInstance()->Viewer_TemplateExists($sPathTemplate)
     ) {
-        $oViewerLocal = Engine::getInstance()->Viewer_GetLocalViewer();
-        /**
-         * Загружаем глобальные
-         */
-        $oViewerLocal->Assign($oSmarty->getTemplateVars());
-        /**
-         * Загружаем локальные
-         */
-        foreach ($aComponentParams as $sKey => $mValue) {
-            $oViewerLocal->Assign($sKey, $mValue, true);
-        }
-        $sResult = $oViewerLocal->Fetch($sPathTemplate);
-        unset($oViewerLocal);
+        $sResult = $oSmarty->getSubTemplate($sPathTemplate, $oSmarty->cache_id, $oSmarty->compile_id, null, null,
+            $aComponentParams, Smarty::SCOPE_LOCAL);
     } else {
         $sResult = 'Component template not found: ' . $sName . '/' . ($sTemplate ? $sTemplate : $sName) . '.tpl';
     }

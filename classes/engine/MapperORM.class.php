@@ -67,9 +67,9 @@ class MapperORM extends Mapper
         } else {
             $aOriginalData = $oEntity->_getOriginalData();
             $sWhere = implode(' AND ', array_map(create_function(
-                    '$k,$v,$oDb',
-                    'return "{$oDb->escape($k,true)} = {$oDb->escape($v)}";'
-                ), array_keys($aOriginalData), array_values($aOriginalData),
+                '$k,$v,$oDb',
+                'return "{$oDb->escape($k,true)} = {$oDb->escape($v)}";'
+            ), array_keys($aOriginalData), array_values($aOriginalData),
                 array_fill(0, count($aOriginalData), $this->oDb)));
             $sql = "UPDATE " . $sTableName . " SET ?a WHERE 1=1 AND " . $sWhere;
             $aFields = $oEntity->_getDataFields(true);
@@ -102,9 +102,9 @@ class MapperORM extends Mapper
         } else {
             $aOriginalData = $oEntity->_getOriginalData();
             $sWhere = implode(' AND ', array_map(create_function(
-                    '$k,$v,$oDb',
-                    'return "{$oDb->escape($k,true)} = {$oDb->escape($v)}";'
-                ), array_keys($aOriginalData), array_values($aOriginalData),
+                '$k,$v,$oDb',
+                'return "{$oDb->escape($k,true)} = {$oDb->escape($v)}";'
+            ), array_keys($aOriginalData), array_values($aOriginalData),
                 array_fill(0, count($aOriginalData), $this->oDb)));
             $sql = "DELETE FROM " . $sTableName . " WHERE 1=1 AND " . $sWhere;
             return $this->oDb->query($sql);
@@ -432,47 +432,55 @@ class MapperORM extends Mapper
                 } elseif (!in_array($value, array('asc', 'desc'))) {
                     $value = 'asc';
                 }
-                /**
-                 * Проверяем на простые выражения: field1 + field2 * field3
-                 */
-                $aKeyPath = preg_split("#\s?([\-\+\*\\\])\s?#", $key, -1, PREG_SPLIT_DELIM_CAPTURE);
-                if (count($aKeyPath) > 2) {
-                    $key = '';
-                    foreach ($aKeyPath as $i => $sKey) {
-                        if ($i % 2 == 0) {
-                            $key .= 't.' . $this->oDb->escape($oEntitySample->_getField(trim($sKey)), true);
-                        } else {
-                            $key .= " {$sKey} ";
-                        }
-                    }
+
+                if (substr($key, 0, 1) == '#') {
+                    /**
+                     * Используем "как есть"
+                     */
+                    $key = ltrim($key, '#');
                 } else {
                     /**
-                     * Проверяем на FIELD:id -> FIELD(id,?a)
+                     * Проверяем на простые выражения: field1 + field2 * field3
                      */
-                    $aKeys = explode(':', $key);
-                    if (count($aKeys) == 2) {
-                        if (strtolower($aKeys[0]) == 'field' and is_array($aFilter['#order'][$key]) and count($aFilter['#order'][$key])) {
-                            $key = 'FIELD(t.' . $this->oDb->escape($oEntitySample->_getField(trim($aKeys[1])),
-                                    true) . ',' . join(',', $aFilter['#order'][$key]) . ')';
-                            $value = '';
-                        } else {
-                            /**
-                             * Неизвестное выражение
-                             */
-                            continue;
+                    $aKeyPath = preg_split("#\s?([\-\+\*\\\])\s?#", $key, -1, PREG_SPLIT_DELIM_CAPTURE);
+                    if (count($aKeyPath) > 2) {
+                        $key = '';
+                        foreach ($aKeyPath as $i => $sKey) {
+                            if ($i % 2 == 0) {
+                                $key .= 't.' . $this->oDb->escape($oEntitySample->_getField(trim($sKey)), true);
+                            } else {
+                                $key .= " {$sKey} ";
+                            }
                         }
                     } else {
                         /**
-                         * Пропускаем экранирование функций
+                         * Проверяем на FIELD:id -> FIELD(id,?a)
                          */
-                        if (!in_array($key, array('rand()'))) {
-                            /**
-                             * Проверяем наличие префикса таблицы
-                             */
-                            if (!strpos($oEntitySample->_getField($key), '.')) {
-                                $key = 't.' . $this->oDb->escape($oEntitySample->_getField($key), true);
+                        $aKeys = explode(':', $key);
+                        if (count($aKeys) == 2) {
+                            if (strtolower($aKeys[0]) == 'field' and is_array($aFilter['#order'][$key]) and count($aFilter['#order'][$key])) {
+                                $key = 'FIELD(t.' . $this->oDb->escape($oEntitySample->_getField(trim($aKeys[1])),
+                                        true) . ',' . join(',', $aFilter['#order'][$key]) . ')';
+                                $value = '';
                             } else {
-                                $key = $oEntitySample->_getField($key);
+                                /**
+                                 * Неизвестное выражение
+                                 */
+                                continue;
+                            }
+                        } else {
+                            /**
+                             * Пропускаем экранирование функций
+                             */
+                            if (!in_array($key, array('rand()'))) {
+                                /**
+                                 * Проверяем наличие префикса таблицы
+                                 */
+                                if (!strpos($oEntitySample->_getField($key), '.')) {
+                                    $key = 't.' . $this->oDb->escape($oEntitySample->_getField($key), true);
+                                } else {
+                                    $key = $oEntitySample->_getField($key);
+                                }
                             }
                         }
                     }

@@ -575,7 +575,7 @@ class Engine
         /**
          * Необходимость генерации автоматических хуков
          */
-        $bUseAutoHooks=(bool)Config::Get('sys.module.use_auto_hooks');
+        $bUseAutoHooks = (bool)Config::Get('sys.module.use_auto_hooks');
 
         $sModuleName = strtolower($sModuleName);
         $aResultHook = array();
@@ -1100,7 +1100,7 @@ class Engine
     }
 
     /**
-     * Возвращает информацию об объекта или классе
+     * Возвращает информацию об объекте или классе
      *
      * @static
      * @param LsObject|string $oObject Объект или имя класса
@@ -1114,7 +1114,39 @@ class Engine
      */
     public static function GetClassInfo($oObject, $iFlag = self::CI_DEFAULT, $bSingle = false)
     {
+        static $aCache;
+        /**
+         * Проверяем данные в статическом кеше
+         */
         $sClassName = is_string($oObject) ? $oObject : get_class($oObject);
+        $sCacheKey = "{$sClassName}";
+        if (isset($aCache[$sCacheKey])) {
+            $aResultFull = $aCache[$sCacheKey];
+        } else {
+            $aCache[$sCacheKey] = $aResultFull = self::ParserClassInfo($sClassName);
+        }
+        /**
+         * Возвращаем только нужные данные
+         */
+        $aResult = array();
+        foreach ($aResultFull as $k => $v) {
+            if ($iFlag & $k) {
+                $aResult[$k] = $v;
+            }
+        }
+
+        return $bSingle ? array_pop($aResult) : $aResult;
+    }
+
+    /**
+     * Парсит имя класса на составляющие
+     *
+     * @param string $sClassName Имя класса
+     * @param int $iFlag Маска по которой нужно вернуть рузультат. Доступные маски определены в константах CI_*
+     * @return array
+     */
+    protected static function ParserClassInfo($sClassName, $iFlag = self::CI_ALL)
+    {
         $aResult = array();
         if ($iFlag & self::CI_PLUGIN) {
             $aResult[self::CI_PLUGIN] = preg_match('/^Plugin([^_]+)/', $sClassName, $aMatches)
@@ -1162,9 +1194,7 @@ class Engine
                 : null;
         }
         if ($iFlag & self::CI_METHOD) {
-            $sModuleName = isset($aResult[self::CI_MODULE])
-                ? $aResult[self::CI_MODULE]
-                : self::GetClassInfo($sClassName, self::CI_MODULE, true);
+            $sModuleName = $aResult[self::CI_MODULE];
             $aResult[self::CI_METHOD] = preg_match('/_([^_]+)$/', $sClassName, $aMatches)
                 ? ($sModuleName && strtolower($aMatches[1]) == strtolower('module' . $sModuleName)
                     ? null
@@ -1173,9 +1203,7 @@ class Engine
                 : null;
         }
         if ($iFlag & self::CI_PPREFIX) {
-            $sPluginName = isset($aResult[self::CI_PLUGIN])
-                ? $aResult[self::CI_PLUGIN]
-                : self::GetClassInfo($sClassName, self::CI_PLUGIN, true);
+            $sPluginName = $aResult[self::CI_PLUGIN];
             $aResult[self::CI_PPREFIX] = $sPluginName
                 ? "Plugin{$sPluginName}_"
                 : '';
@@ -1186,21 +1214,18 @@ class Engine
                 : null;
         }
         if ($iFlag & self::CI_INHERITS) {
-            $sInherit = isset($aResult[self::CI_INHERIT])
-                ? $aResult[self::CI_INHERIT]
-                : self::GetClassInfo($sClassName, self::CI_INHERIT, true);
+            $sInherit = $aResult[self::CI_INHERIT];
             $aResult[self::CI_INHERITS] = $sInherit
-                ? self::GetClassInfo(
+                ? self::ParserClassInfo(
                     $sInherit,
-                    self::CI_OBJECT,
-                    false)
+                    self::CI_OBJECT)
                 : null;
         }
         if ($iFlag & self::CI_CLASSPATH) {
             $aResult[self::CI_CLASSPATH] = self::GetClassPath($sClassName);
         }
 
-        return $bSingle ? array_pop($aResult) : $aResult;
+        return $aResult;
     }
 
     /**
@@ -1213,7 +1238,7 @@ class Engine
      */
     public static function GetClassPath($oObject)
     {
-        $aInfo = self::GetClassInfo(
+        $aInfo = self::ParserClassInfo(
             $oObject,
             self::CI_OBJECT
         );

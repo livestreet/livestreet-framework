@@ -1026,7 +1026,7 @@ class Engine
     }
 
     /**
-     * Возвращает имя плагина моудля если модул принадлежит плагину.
+     * Возвращает имя плагина модуля если модуль принадлежит плагину.
      * Например <pre>Openid</pre>
      *
      * @static
@@ -1119,12 +1119,11 @@ class Engine
          * Проверяем данные в статическом кеше
          */
         $sClassName = is_string($oObject) ? $oObject : get_class($oObject);
-        $sCacheKey = "{$sClassName}";
-        if (isset($aCache[$sCacheKey])) {
-            $aResultFull = $aCache[$sCacheKey];
-        } else {
-            $aCache[$sCacheKey] = $aResultFull = self::ParserClassInfo($sClassName);
+        $sCacheKey = $sClassName;
+        if (!isset($aCache[$sCacheKey])) {
+            $aCache[$sCacheKey] = self::ParserClassInfo($sClassName);
         }
+        $aResultFull = $aCache[$sCacheKey];
         /**
          * Возвращаем только нужные данные
          */

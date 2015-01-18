@@ -212,7 +212,7 @@ class Config
             }
         } else {
             if (is_string($cfg) and strpos($cfg, '___') !== false) {
-                if (preg_match_all('~___([\S|\.]+)___~Ui', $cfg, $aMatch, PREG_SET_ORDER)) {
+                if (preg_match_all('~___([\S|\.]+)___~U', $cfg, $aMatch, PREG_SET_ORDER)) {
                     foreach ($aMatch as $aItem) {
                         $cfg = str_replace('___' . $aItem[1] . '___', Config::Get($aItem[1], $sInstance), $cfg);
                     }

@@ -56,6 +56,16 @@ class Smarty_Internal_Template_LS extends Smarty_Internal_Template
             $template_resource = $sParentTemplate;
             $bSkipDelegate = true;
         }
+        /*
+         * Ловим использование extends на файлы компонентов
+         * Синтаксис: {extends 'Component@compname.template'}
+         */
+        if (preg_match('#^Component@(.+)#i', $template_resource, $aMatch)) {
+            $aPath = explode('.', $aMatch[1], 2);
+            $template_resource = Engine::getInstance()->Component_GetTemplatePath($aPath[0], $aPath[1], true);
+            $bSkipDelegate = true;
+        }
+
         if (!$bSkipDelegate) {
             $template_resource = Engine::getInstance()->Plugin_GetDelegate('template', $template_resource);
         }

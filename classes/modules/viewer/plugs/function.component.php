@@ -45,15 +45,20 @@ function smarty_function_component($aParams, &$oSmarty)
      * Получаем параметры компонента
      */
     $aComponentParams = array();
+
     if (isset($aParams['params']) and is_array($aParams['params'])) {
         $aComponentParams = array_merge($aParams['params'], $aParams);
     } else {
-        unset($aParams['component']);
-        unset($aParams['_default_short']);
-        unset($aParams['template']);
         $aComponentParams = $aParams;
     }
+
+    unset($aComponentParams['_default_short']);
+    unset($aComponentParams['component']);
+    unset($aComponentParams['template']);
+    unset($aComponentParams['params']);
+
     $aComponentParams['params'] = $aComponentParams;
+
     /**
      * Получаем путь до шаблона
      */

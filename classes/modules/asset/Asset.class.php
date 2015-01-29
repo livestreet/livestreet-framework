@@ -306,7 +306,7 @@ class ModuleAsset extends Module
     public function Processing()
     {
         $aTypes = array_keys($this->aAssets);
-        $aFilesMain = $aResult = array_combine($aTypes, array_pad(array(), count($aTypes), array()));
+        $aFilesMain = $aFilesTemplate = $aResult = array_combine($aTypes, array_pad(array(), count($aTypes), array()));
         /**
          * Сначала добавляем файлы из конфига
          */
@@ -335,6 +335,34 @@ class ModuleAsset extends Module
                 $aFilesMain[$sType][$sFileKey] = $aParams;
             }
         }
+        /**
+         * Формируем файлы из шаблона
+         */
+        $aConfigAssets = (array)Config::Get('head.template');
+        foreach ($aConfigAssets as $sType => $aAssets) {
+            if (!$this->CheckAssetType($sType)) {
+                continue;
+            }
+            /**
+             * Перебираем файлы
+             */
+            foreach ($aAssets as $sFile => $aParams) {
+                if (is_numeric($sFile)) {
+                    $sFile = $aParams;
+                    $aParams = array();
+                }
+                $aParams['file'] = $sFile;
+                /**
+                 * Подготавливаем параметры
+                 */
+                $aParams = $this->PrepareParams($aParams);
+                /**
+                 * В качестве уникального ключа использется имя или путь до файла
+                 */
+                $sFileKey = $aParams['name'] ? $aParams['name'] : $aParams['file'];
+                $aFilesTemplate[$sType][$sFileKey] = $aParams;
+            }
+        }
 
         foreach ($aTypes as $sType) {
             /**
@@ -343,7 +371,8 @@ class ModuleAsset extends Module
             $aFilesMain[$sType] = array_merge(
                 $this->aAssets[$sType]['prepend'],
                 $aFilesMain[$sType],
-                $this->aAssets[$sType]['append']
+                $this->aAssets[$sType]['append'],
+                $aFilesTemplate[$sType]
             );
             /**
              * Выделяем файлы для конкретных браузеров

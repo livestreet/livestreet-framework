@@ -184,7 +184,7 @@ class ModuleFs extends Module
     public function GetPathRelativeFromServer($sPath)
     {
         $sServerPath = rtrim(str_replace(DIRECTORY_SEPARATOR, '/', Config::Get('path.root.server')), '/');
-        return str_replace($sServerPath, '', str_replace(DIRECTORY_SEPARATOR, '/', $sPath));
+        return str_ireplace($sServerPath, '', str_replace(DIRECTORY_SEPARATOR, '/', $sPath));
     }
 
     /**
@@ -214,7 +214,7 @@ class ModuleFs extends Module
     {
         $sServerPath = rtrim(str_replace(DIRECTORY_SEPARATOR, '/', Config::Get('path.root.server')), '/');
         $sWebPath = Router::GetPathRootWeb();
-        return str_replace($sServerPath, $sWebPath, str_replace(DIRECTORY_SEPARATOR, '/', $sPath));
+        return str_ireplace($sServerPath, $sWebPath, str_replace(DIRECTORY_SEPARATOR, '/', $sPath));
     }
 
     /**

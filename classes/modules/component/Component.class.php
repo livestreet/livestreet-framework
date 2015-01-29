@@ -193,21 +193,23 @@ class ModuleComponent extends Module
             if (file_exists($sPathTemplate . '/' . $sPath)) {
                 return $sPathTemplate . '/' . $sPath;
             }
-            /**
-             * Проверяем на компонент приложения
-             */
-            $sPathTemplate = Config::Get('path.application.server') . '/frontend';
-            if (file_exists($sPathTemplate . '/' . $sPath)) {
-                return $sPathTemplate . '/' . $sPath;
-            }
-            /**
-             * Проверяем на компонент фреймворка
-             */
-            $sPathTemplate = Config::Get('path.framework.server') . '/frontend';
-            if (file_exists($sPathTemplate . '/' . $sPath)) {
-                return $sPathTemplate . '/' . $sPath;
-            }
         }
+
+        /**
+         * Проверяем на компонент приложения
+         */
+        $sPathTemplate = Config::Get('path.application.server') . '/frontend';
+        if (file_exists($sPathTemplate . '/' . $sPath)) {
+            return $sPathTemplate . '/' . $sPath;
+        }
+        /**
+         * Проверяем на компонент фреймворка
+         */
+        $sPathTemplate = Config::Get('path.framework.server') . '/frontend';
+        if (file_exists($sPathTemplate . '/' . $sPath)) {
+            return $sPathTemplate . '/' . $sPath;
+        }
+
         /**
          * Не удалось найти компонент
          */

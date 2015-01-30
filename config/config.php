@@ -359,75 +359,8 @@ $config['router']['config']['action_not_found'] = 'error';
 // Принудительное использование https для экшенов
 $config['router']['force_secure'] = array();
 
-$config['head']['default']['js'] = array(
-    /* Vendor libs */
-    "___path.framework.frontend.web___/js/vendor/html5shiv.js" => array('browser' => 'lt IE 9'),
-    "___path.framework.frontend.web___/js/vendor/jquery-1.9.1.min.js",
-    "___path.framework.frontend.web___/js/vendor/jquery-ui/js/jquery-ui-1.10.2.custom.min.js",
-    "___path.framework.frontend.web___/js/vendor/jquery-ui/js/localization/jquery-ui-datepicker-ru.js",
-    "___path.framework.frontend.web___/js/vendor/jquery.browser.js",
-    "___path.framework.frontend.web___/js/vendor/jquery.scrollto.js",
-    "___path.framework.frontend.web___/js/vendor/jquery.rich-array.min.js",
-    "___path.framework.frontend.web___/js/vendor/jquery.form.js",
-    "___path.framework.frontend.web___/js/vendor/jquery.jqplugin.js",
-    "___path.framework.frontend.web___/js/vendor/jquery.cookie.js",
-    "___path.framework.frontend.web___/js/vendor/jquery.serializejson.js",
-    "___path.framework.frontend.web___/js/vendor/jquery.file.js",
-    "___path.framework.frontend.web___/js/vendor/jcrop/jquery.Jcrop.js",
-    "___path.framework.frontend.web___/js/vendor/jquery.placeholder.min.js",
-    "___path.framework.frontend.web___/js/vendor/jquery.charcount.js",
-    "___path.framework.frontend.web___/js/vendor/jquery.imagesloaded.js",
-    "___path.framework.frontend.web___/js/vendor/jquery.fileupload.js",
-    "___path.framework.frontend.web___/js/vendor/jquery.timers.js",
-    "___path.framework.frontend.web___/js/vendor/notifier/jquery.notifier.js",
-    "___path.framework.frontend.web___/js/vendor/prettify/prettify.js",
-    "___path.framework.frontend.web___/js/vendor/prettyphoto/js/jquery.prettyphoto.js",
-    "___path.framework.frontend.web___/js/vendor/parsley/parsley.js",
-    "___path.framework.frontend.web___/js/vendor/parsley/i18n/messages.ru.js",
-    "___path.framework.frontend.web___/js/vendor/fotorama/fotorama.js",
-    "___path.framework.frontend.web___/js/vendor/nprogress/nprogress.js",
-    "___path.framework.frontend.web___/js/vendor/colorbox/jquery.colorbox.js",
-    /* Core */
-    "___path.framework.frontend.web___/js/core/polyfills.js",
-    "___path.framework.frontend.web___/js/core/main.js",
-    "___path.framework.frontend.web___/js/core/dev.js",
-    "___path.framework.frontend.web___/js/core/hook.js",
-    "___path.framework.frontend.web___/js/core/i18n.js",
-    "___path.framework.frontend.web___/js/core/ie.js",
-    "___path.framework.frontend.web___/js/core/ajax.js",
-    "___path.framework.frontend.web___/js/core/registry.js",
-    "___path.framework.frontend.web___/js/core/utils.js",
-    "___path.framework.frontend.web___/js/core/timer.js",
-    /* User Interface */
-    "___path.framework.frontend.web___/js/ui/dropdown.js",
-    "___path.framework.frontend.web___/js/ui/tab.js",
-    "___path.framework.frontend.web___/js/ui/modal.js",
-    "___path.framework.frontend.web___/js/ui/toolbar.js",
-    "___path.framework.frontend.web___/js/ui/tooltip.js",
-    "___path.framework.frontend.web___/js/ui/autocomplete.js",
-    "___path.framework.frontend.web___/js/ui/notification.js",
-    "___path.framework.frontend.web___/js/ui/alert.js",
-    "___path.framework.frontend.web___/js/ui/captcha.js",
-);
-
-$config['head']['default']['css'] = array(
-    // Framework styles
-    "___path.framework.frontend.web___/css/reset.css",
-    "___path.framework.frontend.web___/css/helpers.css",
-    "___path.framework.frontend.web___/css/text.css",
-    "___path.framework.frontend.web___/css/dropdowns.css",
-    "___path.framework.frontend.web___/css/buttons.css",
-    "___path.framework.frontend.web___/css/forms.css",
-    "___path.framework.frontend.web___/css/navs.css",
-    "___path.framework.frontend.web___/css/modals.css",
-    "___path.framework.frontend.web___/css/tooltip.css",
-    "___path.framework.frontend.web___/css/alerts.css",
-    "___path.framework.frontend.web___/css/toolbar.css",
-    "___path.framework.frontend.web___/css/typography.css",
-    "___path.framework.frontend.web___/css/grid.css"
-);
-
-/**
+$config['head']['default']['js'] = array();
+$config['head']['default']['css'] = array();/**
  * Установка локали
  */
 setlocale(LC_ALL, "ru_RU.UTF-8");

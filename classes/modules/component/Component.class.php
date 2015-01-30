@@ -279,6 +279,35 @@ class ModuleComponent extends Module
     }
 
     /**
+     * Возвращает полный серверный путь до css/js компонента
+     *
+     * @param $sNameFull
+     * @param $sAssetType
+     * @param $sAssetName
+     * @return bool|string
+     */
+    public function GetAssetPath($sNameFull, $sAssetType, $sAssetName) {
+        if ($sPath = $this->GetPath($sNameFull)) {
+            if (in_array($sAssetType,array('scripts','js'))) {
+                $sAssetType='scripts';
+                $sAssetExt='js';
+            } else {
+                $sAssetType='styles';
+                $sAssetExt='css';
+            }
+            /**
+             * Получаем путь до файла шаблона из json
+             */
+            $aData = $this->GetJsonData($sNameFull);
+            if (isset($aData[$sAssetType][$sAssetName])) {
+                return "{$sPath}/" . $aData[$sAssetType][$sAssetName];
+            }
+            return "{$sPath}/{$sAssetName}.{$sAssetExt}";
+        }
+        return false;
+    }
+
+    /**
      * Парсит имя компонента
      * Имя может содержать название плагина - plugin:component
      *

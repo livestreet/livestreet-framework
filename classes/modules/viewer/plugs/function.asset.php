@@ -53,6 +53,14 @@ function smarty_function_asset($aParams, &$oSmarty)
     $sKeyIncluded = 'smarty_asset_included';
     $aIncluded = $oEngine->Cache_GetLife($sKeyIncluded);
     /**
+     * Проверяем на компонент
+     */
+    if (preg_match('#^Component@(.+)#i', $aParams['file'], $aMatch)) {
+        $aPath = explode('.', $aMatch[1], 2);
+        $aParams['file'] = Engine::getInstance()->Component_GetAssetPath($aPath[0], $sTypeAsset, $aPath[1]);
+        $aParams['file'] = Engine::getInstance()->Fs_GetPathWebFromServer($aParams['file']);
+    }
+    /**
      * Подготавливаем параметры
      */
     $aParams = $oEngine->Asset_PrepareParams($aParams);

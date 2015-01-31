@@ -360,7 +360,8 @@ $config['router']['config']['action_not_found'] = 'error';
 $config['router']['force_secure'] = array();
 
 $config['head']['default']['js'] = array();
-$config['head']['default']['css'] = array();/**
+$config['head']['default']['css'] = array();
+/**
  * Установка локали
  */
 setlocale(LC_ALL, "ru_RU.UTF-8");

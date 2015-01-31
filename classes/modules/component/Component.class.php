@@ -296,7 +296,7 @@ class ModuleComponent extends Module
                 $sAssetExt='css';
             }
             /**
-             * Получаем путь до файла шаблона из json
+             * Получаем путь до файла из json
              */
             $aData = $this->GetJsonData($sNameFull);
             if (isset($aData[$sAssetType][$sAssetName])) {

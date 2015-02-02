@@ -310,7 +310,15 @@ $config['module']['cron']['use_fork'] = false; // Использовать па�
 // Модуль Ls
 $config['module']['ls']['send_general'] = true;    // Отправка на сервер LS общей информации о сайте (домен, версия LS и плагинов)
 $config['module']['ls']['use_counter'] = true;    // Использование счетчика GA
-
+/**
+ * Модуль Validate
+ */
+// Настройки Google рекаптчи - https://www.google.com/recaptcha/admin#createsite
+$config['module']['validate']['recaptcha']= array(
+    'site_key' => '', // Ключ
+    'secret_key' => '', // Секретный ключ
+    'use_ip' => false, // Использовать при валидации IP адрес клиента
+);
 
 // Какие модули должны быть загружены на старте
 $config['module']['autoLoad'] = array('Hook', 'Cache', 'Logger', 'Security', 'Session', 'Lang', 'Message');

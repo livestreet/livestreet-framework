@@ -11,6 +11,7 @@
     "templates": {
         "field": "field.tpl",
         "captcha": "field.captcha.tpl",
+        "recaptcha": "field.recaptcha.tpl",
         "category": "field.category.tpl",
         "checkbox": "field.checkbox.tpl",
         "date": "field.date.tpl",
@@ -30,6 +31,7 @@
     },
     "scripts": {
         "captcha": "js/field.captcha.js",
+        "recaptcha": "js/field.recaptcha.js",
         "geo": "js/field.geo.js",
         "image-ajax": "js/field.image-ajax.js"
     },

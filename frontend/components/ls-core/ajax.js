@@ -46,7 +46,7 @@ ls.ajax = (function ($) {
 					if ( response.sMsgTitle || response.sMsg ) ls.msg.error( response.sMsgTitle, response.sMsg );
 				} else {
 					if ( response.sMsgTitle || response.sMsg ) ls.msg.notice( response.sMsgTitle, response.sMsg );
-					callback.apply( this, arguments );
+					if ( $.isFunction( callback ) ) callback.apply( this, arguments );
 				}
 
 				// TODO: Добавить общий коллбэк

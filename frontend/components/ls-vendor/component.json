@@ -24,6 +24,7 @@
         "jquery.notifier": "notifier/jquery.notifier.js",
         "jquery.colorbox": "colorbox/jquery.colorbox.js",
         "jquery.chosen": "chosen/chosen.jquery.min.js",
+        "jquery.chosen-order": "chosen-order/chosen.order.jquery.js",
 
         "nprogress": "nprogress/nprogress.js",
         "fotorama": "fotorama/fotorama.js",

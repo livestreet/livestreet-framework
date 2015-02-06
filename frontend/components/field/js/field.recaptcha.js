@@ -75,4 +75,5 @@ function ___ls_grecaptcha_onload() {
     jQuery.livestreet.lsReCaptcha.prototype.initNotReady();
     $(window).trigger('___ls_grecaptcha_onload');
 }
+window['___grecaptcha_cfg'] = window['___grecaptcha_cfg'] || [];
 window['___grecaptcha_cfg']['onload'] = '___ls_grecaptcha_onload';

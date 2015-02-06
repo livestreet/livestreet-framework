@@ -560,3 +560,10 @@ function func_method_exists($mObject, $sMethod, $sType = null)
     }
     return false;
 }
+
+function func_array_unshift_assoc(&$aArr, $sKey, $mVal)
+{
+    $aArr = array_reverse($aArr, true);
+    $aArr[$sKey] = $mVal;
+    $aArr = array_reverse($aArr, true);
+}

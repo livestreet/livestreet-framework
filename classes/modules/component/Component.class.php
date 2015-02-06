@@ -131,7 +131,7 @@ class ModuleComponent extends Module
             foreach ($aData['styles'] as $mName => $sAsset) {
                 $sFile = $sPath . '/' . $sAsset;
                 $sFileName = (is_int($mName) ? $sAsset : $mName);
-                $this->Viewer_AppendStyle($sFile, array('name' => "component.{$sName}.{$sFileName}"));
+                $this->Viewer_PrependStyle($sFile, array('name' => "component.{$sName}.{$sFileName}"));
             }
         }
         /**
@@ -141,7 +141,7 @@ class ModuleComponent extends Module
             foreach ($aData['scripts'] as $mName => $sAsset) {
                 $sFile = $sPath . '/' . $sAsset;
                 $sFileName = (is_int($mName) ? $sAsset : $mName);
-                $this->Viewer_AppendScript($sFile, array('name' => "component.{$sName}.{$sFileName}"));
+                $this->Viewer_PrependScript($sFile, array('name' => "component.{$sName}.{$sFileName}"));
             }
         }
     }

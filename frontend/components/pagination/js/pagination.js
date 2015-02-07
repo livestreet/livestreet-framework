@@ -11,7 +11,7 @@
 (function($) {
 	"use strict";
 
-	$.widget( "livestreet.lsPagination", {
+	$.widget( "livestreet.lsPagination", $.livestreet.lsComponent, {
 		/**
 		 * Дефолтные опции
 		 */
@@ -22,12 +22,6 @@
 
 				// Комбинация клавиш для перехода на предыдущую страницу
 				prev: 'ctrl+left'
-			},
-
-			// Селекторы
-			selectors: {
-				next: '.js-pagination-next',
-				prev: '.js-pagination-prev'
 			},
 
 			// Хэш добавляемый к url при переходе на страницу
@@ -44,13 +38,8 @@
 		 * @private
 		 */
 		_create: function () {
-			this.elements = {
-				next: this.element.find(this.options.selectors.next),
-				prev: this.element.find(this.options.selectors.prev)
-			};
-
-			this.document.bind( 'keydown', this.options.keys.next, this.next.bind(this, false) );
-			this.document.bind( 'keydown', this.options.keys.prev, this.prev.bind(this, false) );
+			this.document.bind( 'keydown' + this.eventNamespace, this.options.keys.next, this.next.bind(this, false) );
+			this.document.bind( 'keydown' + this.eventNamespace, this.options.keys.prev, this.prev.bind(this, false) );
 		},
 
 		/**
@@ -60,8 +49,10 @@
 		 */
 		_go: function ( name ) {
 			return function( useHash ) {
-				if ( this.elements[ name ].length ) {
-					window.location = this.elements[ name ].attr('href') + ( this.options.hash[ name ] && useHash ? '#' + this.options.hash[ name ] : '' );
+				var url = this.element.data( 'pagination-' + name );
+
+				if ( url ) {
+					window.location = url + ( this.options.hash[ name ] && useHash ? '#' + this.options.hash[ name ] : '' );
 				} else {
 					ls.msg.error( null, name == 'next' ? ls.lang.get('pagination.notices.last') : ls.lang.get('pagination.notices.first') );
 				}

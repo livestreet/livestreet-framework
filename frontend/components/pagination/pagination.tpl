@@ -1,84 +1,100 @@
 {**
  * Пагинация
  *
- * @param string $paging     Массив с параметрами пагинации
+ * @param integer $total
+ * @param integer $current
+ * @param string  $url
+ * @param string  $padding (2)
+ * @param bool    $showSingle (false)
+ * @param bool    $showPager (false)
+ *
  * @param string $classes    Дополнительные классы
  * @param string $mods       Список классов-модификаторов
- * @param string $attributes Атрибуты
- *
- * TODO: Сделать универсальные ссылки
+ * @param array  $attributes Атрибуты
  *}
 
 {* Название компонента *}
 {$component = 'pagination'}
 
-{* Переменные *}
-{$_paging = $smarty.local.paging}
 
 {**
  * Элемент пагинации
  *
  * @param bool   $isActive (false) Если true, то элемент помечается как активный (текущая страница)
- * @param string $url              Ссылка
  * @param string $text             Текст
+ * @param string $page             Страница
  * @param string $linkClasses      Дополнительные классы для ссылки
  *}
-{function item}
-	<li class="{$component}-item {if $isActive}active{/if}">
-		{if $url}
-			<a class="{$component}-item-inner {$component}-item-link {$linkClasses}" href="{$url}">{$text}</a>
-		{else}
-			<span class="{$component}-item-inner">{$text}</span>
-		{/if}
-	</li>
+{function pagination_item page=0 text='' isActive=false}
+    <li class="{$component}-item {if $isActive}active{/if}">
+        {if $isActive || ! $page}
+            <span class="{$component}-item-inner">{$text|default:$page}</span>
+        {else}
+            <a class="{$component}-item-inner {$component}-item-link {$linkClasses}" href="{str_replace('__page__', $page, $url)}">{$text|default:$page}</a>
+        {/if}
+    </li>
 {/function}
 
-{**
- * Страницы
- *}
-{if $_paging && $_paging.iCountPage > 1}
-	<nav class="{$component} {cmods name=$component mods=$smarty.local.mods} {$smarty.local.classes} js-{$component}" role="navigation" {cattr list=$smarty.local.attributes}>
-		{* Следущая / предыдущая страница *}
-		<ul class="{$component}-list">
-			{* Следущая страница *}
-			{if $_paging.iPrevPage}
-				{item url="{$_paging.sBaseUrl}{if $_paging.iPrevPage > 1}/page{$_paging.iPrevPage}{/if}/{$_paging.sGetParams}" text="&larr; {$aLang.pagination.previous}" linkClasses="js-{$component}-prev"}
-			{else}
-				{item text="&larr; {$aLang.pagination.previous}"}
-			{/if}
 
-			{* Предыдущая страница *}
-			{if $_paging.iNextPage}
-				{item url="{$_paging.sBaseUrl}/page{$_paging.iNextPage}/{$_paging.sGetParams}" text="{$aLang.pagination.next} &rarr;" linkClasses="js-{$component}-next"}
-			{else}
-				{item text="{$aLang.pagination.next} &rarr;"}
-			{/if}
-		</ul>
+{* Генерируем копии локальных переменных, *}
+{* чтобы их можно было изменять в дочерних шаблонах *}
+{foreach [ 'total', 'showPager', 'showSingle', 'current', 'url', 'padding', 'mods', 'classes', 'attributes' ] as $param}
+    {assign var="$param" value=$smarty.local.$param}
+{/foreach}
 
-		{* Список страниц *}
-		<ul class="{$component}-list">
-			{* Первая страница *}
-			{if $_paging.iCurrentPage > 1}
-				{item url="{$_paging.sBaseUrl}/{$_paging.sGetParams}" text=$aLang.pagination.first}
-			{/if}
+{* Дефолтные значения *}
+{$padding = $padding|default:2}
 
-			{* Страницы слева от текущей *}
-			{foreach $_paging.aPagesLeft as $iPage}
-				{item url="{$_paging.sBaseUrl}{if $iPage > 1}/page{$iPage}{/if}/{$_paging.sGetParams}" text=$iPage}
-			{/foreach}
+{block 'pagination_options'}{/block}
 
-			{* Текущая активная страница *}
-			{item isActive=true text=$_paging.iCurrentPage}
 
-			{* Страницы справа от текущей *}
-			{foreach $_paging.aPagesRight as $iPage}
-				{item url="{$_paging.sBaseUrl}{if $iPage > 1}/page{$iPage}{/if}/{$_paging.sGetParams}" text=$iPage}
-			{/foreach}
+{if $total && $current}
+    {* Вычисляем следующую страницу *}
+    {$next = ( $current == $total ) ? 0 : $current + 1}
 
-			{* Последняя страница *}
-			{if $_paging.iCurrentPage < $_paging.iCountPage}
-				{item url="{$_paging.sBaseUrl}/page{$_paging.iCountPage}/{$_paging.sGetParams}" text=$aLang.pagination.last}
-			{/if}
-		</ul>
-	</nav>
+    {* Вычисляем предыдущую страницу *}
+    {$prev = $current - 1}
+
+    {* Вычисляем стартовую и конечную страницы *}
+    {$start = 1}
+    {$end = $total}
+
+    {* Проверяем нужно ли выводить разделители "..." или нет *}
+    {if $total > $padding * 2 + 1}
+        {$start = ( $current - $padding < 4 ) ? 1 : $current - $padding}
+        {$end = ( $current + $padding > $total - 3 ) ? $total : $current + $padding}
+    {/if}
+
+
+    {* Пагинация *}
+    <nav class="{$component} {cmods name=$component mods=$mods} {$classes}" {cattr list=$attributes}
+        {if $next}data-pagination-next="{str_replace('__page__', $next, $url)}"{/if}
+        {if $prev}data-pagination-prev="{str_replace('__page__', $prev, $url)}"{/if}>
+
+        {if $showPager}
+            <ul class="{$component}-list {$component}-pager">
+                {* Следущая страница *}
+                {pagination_item page=$prev text="&larr; {$aLang.pagination.previous}" linkClasses="js-{$component}-prev"}
+
+                {* Предыдущая страница *}
+                {pagination_item page=$next text="{$aLang.pagination.next} &rarr;" linkClasses="js-{$component}-next"}
+            </ul>
+        {/if}
+
+        <ul class="{$component}-list">
+            {if $start > 2}
+                {pagination_item page=1}
+                {pagination_item text='...'}
+            {/if}
+
+            {section 'pagination' start=$start loop=$end + 1}
+                {pagination_item page=$smarty.section.pagination.index isActive=( $smarty.section.pagination.index === $current )}
+            {/section}
+
+            {if $end < $total - 1}
+                {pagination_item text='...'}
+                {pagination_item page=$total}
+            {/if}
+        </ul>
+    </nav>
 {/if}

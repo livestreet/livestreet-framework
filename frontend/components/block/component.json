@@ -5,7 +5,10 @@
         "ls-vendor": "*",
         "ls-core": "*",
         "ls-component": "*",
-        "css-reset": "*"
+        "css-reset": "*",
+        "alert": "*",
+        "tabs": "*",
+        "item": "*"
     },
     "templates": {
         "block": "block.tpl"

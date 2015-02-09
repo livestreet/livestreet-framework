@@ -35,6 +35,9 @@
     min-height: 150px;
     background-position: 50% 45px;
 }
+.tab-pane-content {
+    padding: 20px;
+}
 
 /**
  * Align left

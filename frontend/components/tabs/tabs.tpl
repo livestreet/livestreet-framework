@@ -37,7 +37,18 @@
         {foreach $tabs as $tab}
             {if $tab[ 'is_enabled' ]|default:true}
                 <div class="tab-pane" {if $tab@first}style="display: block"{/if} data-tab-type="tab-pane" id="{$tab[ 'uid' ]}">
-                    {$tab[ 'content' ]}
+                    {if $tab[ 'content' ]}
+                        <div class="tab-pane-content">
+                            {$tab[ 'content' ]}
+                        </div>
+                    {/if}
+
+                    {* Item group *}
+                    {if is_array( $tab[ 'list' ] )}
+                        {component 'item' template='group' params=$tab[ 'list' ]}
+                    {elseif $tab[ 'list' ]}
+                        {$tab[ 'list' ]}
+                    {/if}
                 </div>
             {/if}
         {/foreach}

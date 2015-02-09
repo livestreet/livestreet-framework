@@ -21,6 +21,9 @@
 {* Путь до папки с изображенями *}
 {$imagesDir = "{$LS->Component_GetWebPath('email')}/images"}
 
+{$title = $smarty.local.title}
+{$content = $smarty.local.content}
+
 
 {* Фон *}
 <table width="100%" align="center" bgcolor="#{$backgroundColor}" cellpadding="0" cellspacing="0" style="border-collapse: collapse;">
@@ -66,6 +69,7 @@
 									<tr>
 										<td valign="top">
 											{block 'content'}{/block}
+											{$content}
 											<br>
 											<br>
 											{$aLang.emails.common.regards} <a href="{Router::GetPath('/')}">{Config::Get('view.name')}</a>

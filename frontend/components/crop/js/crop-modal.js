@@ -49,14 +49,10 @@ ls.cropModal = (function ($) {
                     }, options.params || {});
 
                     ls.ajax.load( options.urls.save, paramsRequest, function( response ) {
-                        if ( response.bStateError ) {
-                            ls.msg.error( null, response.sMsg );
-                        } else {
-                            modal.hide();
+                        modal.hide();
 
-                            if ( $.isFunction( options.aftersave ) ) {
-                                options.aftersave( response, modal, image );
-                            }
+                        if ( $.isFunction( options.aftersave ) ) {
+                            options.aftersave( response, modal, image );
                         }
                     });
                 });

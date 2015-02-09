@@ -5,9 +5,11 @@
         "css-reset": "*"
     },
     "templates": {
-        "item": "item.tpl"
+        "item": "item.tpl",
+        "group": "item-group.tpl"
     },
     "styles": {
-        "item": "css/item.css"
+        "item": "css/item.css",
+        "group": "css/item-group.css"
     }
 }

@@ -4,23 +4,39 @@
 
 {$component = 'item'}
 
-{block 'options'}
-    {$image = $smarty.local.image}
-    {$classes = $smarty.local.classes}
-    {$mods = $smarty.local.mods}
-    {$content = $smarty.local.content}
-    {$desc = $smarty.local.desc}
-    {$title = $smarty.local.title}
-{/block}
+{* Генерируем копии локальных переменных, *}
+{* чтобы их можно было изменять в дочерних шаблонах *}
+{foreach [ 'image', 'content', 'desc', 'title', 'titleUrl', 'element', 'mods', 'classes', 'attributes' ] as $param}
+    {assign var="$param" value=$smarty.local.$param}
+{/foreach}
 
-<li class="{$component} {$smarty.local.classes} {cmods name=$component mods=$smarty.local.mods}" {cattr list=$smarty.local.attributes}>
-    <a href="{$image[ 'url' ]}">
-        <img src="{$image[ 'path' ]}" alt="{$image[ 'alt' ]}" title="{$image[ 'title' ]}" class="{$component}-image {$image[ 'classes' ]}">
-    </a>
+{block 'item_options'}{/block}
 
-    <div class="{$component}-content js-{$component}-content">
+{* Дефолтные значения *}
+{$classes = "$classes clearfix"}
+{$element = $element|default:'div'}
+
+{if $image}
+    {$mods = "$mods has-image"}
+{/if}
+
+{* Item *}
+<{$element} class="{$component} {$classes} {cmods name=$component mods=$mods}" {cattr list=$attributes}>
+    {if $image}
+        <div class="{$component}-left">
+            <a href="{$image[ 'url' ]}">
+                <img src="{$image[ 'path' ]}" alt="{$image[ 'alt' ]}" title="{$image[ 'title' ]}" class="{$component}-image {$image[ 'classes' ]}">
+            </a>
+        </div>
+    {/if}
+
+    <div class="{$component}-body js-{$component}-body">
         {if $title}
-            <h3 class="{$component}-title">{$title}</h3>
+            {if $titleUrl}
+                <h3 class="{$component}-title"><a href="{$titleUrl}">{$title}</a></h3>
+            {else}
+                <h3 class="{$component}-title">{$title}</h3>
+            {/if}
         {/if}
 
         <div class="{$component}-description">
@@ -29,4 +45,4 @@
 
         {$content}
     </div>
-</li>
+</{$element}>

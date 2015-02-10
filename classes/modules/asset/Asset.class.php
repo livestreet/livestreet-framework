@@ -189,6 +189,8 @@ class ModuleAsset extends Module
         $aResult['browser'] = (isset($aParams['browser']) and $aParams['browser']) ? $aParams['browser'] : null;
         $aResult['plugin'] = (isset($aParams['plugin']) and $aParams['plugin']) ? $aParams['plugin'] : null;
         $aResult['name'] = (isset($aParams['name']) and $aParams['name']) ? strtolower($aParams['name']) : null;
+        $aResult['defer'] = (isset($aParams['defer']) and $aParams['defer']) ? true : false;
+        $aResult['async'] = (isset($aParams['async']) and $aParams['async']) ? true : false;
         if (isset($aParams['file'])) {
             $aResult['file'] = $this->GetFileWeb($aParams['file'], $aParams);
         } else {
@@ -384,6 +386,24 @@ class ModuleAsset extends Module
                 }
             );
             /**
+             * Выделяем файлы с атрибутом defer
+             */
+            $aFilesDefer = array_filter(
+                $aFilesMain[$sType],
+                function ($aParams) {
+                    return $aParams['defer'] ? true : false;
+                }
+            );
+            /**
+             * Выделяем файлы с атрибутом async
+             */
+            $aFilesAsync = array_filter(
+                $aFilesMain[$sType],
+                function ($aParams) {
+                    return $aParams['async'] ? true : false;
+                }
+            );
+            /**
              * Исключаем файлы из основного списка
              */
             $aFilesMain[$sType] = array_diff_key($aFilesMain[$sType], $aFilesBrowser);
@@ -407,14 +427,55 @@ class ModuleAsset extends Module
              * Обрабатываем основной список
              * Проверка необходимости мержа файлов
              */
-            $sFilePathMerge = false;
+            $bMergeComplete = false;
             if (Config::Get("module.asset.{$sType}.merge")) {
-                $sFilePathMerge = $this->Merge($aFilesMain[$sType], $sType,
-                    (bool)Config::Get("module.asset.{$sType}.compress"));
+                /**
+                 * Список файлов для основного мержа
+                 */
+                $aFileNeedMerge = array_diff_key($aFilesMain[$sType], $aFilesDefer, $aFilesAsync);
+                if ($sFilePathMerge = $this->Merge($aFileNeedMerge, $sType,
+                    (bool)Config::Get("module.asset.{$sType}.compress"))
+                ) {
+                    $aResult[$sType][$sFilePathMerge] = array('file' => $sFilePathMerge);
+
+                    /**
+                     * Список файлов для мержа с атрибутом defer
+                     */
+                    $bMergeDeferComplete = false;
+                    $aFileNeedMerge = array_diff_key($aFilesDefer, $aFilesNoMerge);
+                    if ($aFileNeedMerge) {
+                        if ($sFilePathMerge = $this->Merge($aFileNeedMerge, $sType,
+                            (bool)Config::Get("module.asset.{$sType}.compress"))
+                        ) {
+                            $aResult[$sType][$sFilePathMerge] = array('file' => $sFilePathMerge, 'defer' => true);
+                            $bMergeDeferComplete = true;
+                        }
+                    } else {
+                        $bMergeDeferComplete = true;
+                    }
+
+                    /**
+                     * Список файлов для мержа с атрибутом async
+                     */
+                    $bMergeAsyncComplete = false;
+                    $aFileNeedMerge = array_diff_key($aFilesAsync, $aFilesNoMerge);
+                    if ($aFileNeedMerge) {
+                        if ($sFilePathMerge = $this->Merge($aFileNeedMerge, $sType,
+                            (bool)Config::Get("module.asset.{$sType}.compress"))
+                        ) {
+                            $aResult[$sType][$sFilePathMerge] = array('file' => $sFilePathMerge, 'async' => true);
+                            $bMergeAsyncComplete = true;
+                        }
+                    } else {
+                        $bMergeAsyncComplete = true;
+                    }
+
+                    if ($bMergeDeferComplete and $bMergeAsyncComplete) {
+                        $bMergeComplete = true;
+                    }
+                }
             }
-            if ($sFilePathMerge) {
-                $aResult[$sType][$sFilePathMerge] = array('file' => $sFilePathMerge);
-            } else {
+            if (!$bMergeComplete) {
                 $aResult[$sType] = array_merge($aResult[$sType], $aFilesMain[$sType]);
             }
             /**
@@ -487,7 +548,7 @@ class ModuleAsset extends Module
             }
             $sContent = '';
             foreach ($aAssetItems as $sFile => $aParams) {
-                $sFile=isset($aParams['file']) ? $aParams['file'] : $aParams['file'];
+                $sFile = isset($aParams['file']) ? $aParams['file'] : $aParams['file'];
                 if (strpos($sFile, '//') === 0) {
                     /**
                      * Добавляем текущий протокол

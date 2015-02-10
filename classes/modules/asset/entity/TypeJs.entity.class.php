@@ -58,7 +58,9 @@ class ModuleAsset_EntityTypeJs extends ModuleAsset_EntityType
      */
     public function getHeadHtml($sFile, $aParams)
     {
-        $sHtml = '<script type="text/javascript" src="' . $sFile . '"></script>';
+        $sDefer = (isset($aParams['defer']) and $aParams['defer']) ? ' defer ' : '';
+        $sAsync = (isset($aParams['async']) and $aParams['async']) ? ' async ' : '';
+        $sHtml = '<script type="text/javascript" src="' . $sFile . '" ' . $sDefer . $sAsync . '></script>';
         return $this->wrapForBrowser($sHtml, $aParams);
     }
 }

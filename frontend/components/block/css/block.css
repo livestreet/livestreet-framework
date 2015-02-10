@@ -27,7 +27,7 @@
 
 /* Шапка */
 .block-header {
-    padding: 15px 20px;
+    padding: 15px 15px;
     position: relative;
     background: #fafafa;
     border-radius: 3px 3px 0 0;
@@ -41,7 +41,7 @@
 
 /* Навигация */
 .block .tab-list {
-    padding: 20px;
+    padding: 15px;
     margin-bottom: 0;
     border-bottom: 1px solid #eee;
 }

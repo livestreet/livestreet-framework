@@ -36,7 +36,10 @@
     margin-bottom: 15px;
 }
 .item-description {
-    
+    margin-bottom: 15px;
+}
+.item-description:last-child {
+    margin-bottom: 0;
 }
 .item-actions {
     position: absolute;

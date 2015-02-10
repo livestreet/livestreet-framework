@@ -39,9 +39,11 @@
             {/if}
         {/if}
 
-        <div class="{$component}-description">
-            {$desc}
-        </div>
+        {if $desc}
+            <div class="{$component}-description">
+                {$desc}
+            </div>
+        {/if}
 
         {$content}
     </div>

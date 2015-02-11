@@ -129,6 +129,12 @@ class ModuleViewer extends Module
      * @var array
      */
     protected $aMenuFetch = array();
+    /**
+     * Объект Open Graph
+     *
+     * @var ModuleViewer_EntityOpenGraph
+     */
+    protected $oOpenGraph = array();
 
     /**
      * Инициализация модуля
@@ -161,6 +167,10 @@ class ModuleViewer extends Module
          * SEO описание страницы
          */
         $this->sHtmlDescription = Config::Get('view.description');
+        /**
+         * Объект Open Graph
+         */
+        $this->oOpenGraph = Engine::GetEntity('ModuleViewer_EntityOpenGraph');
 
         /**
          * Создаём объект Smarty и устанавливаем необходимые параметры
@@ -1098,6 +1108,27 @@ class ModuleViewer extends Module
     }
 
     /**
+     * Возвращает текущий объект Open Graph
+     *
+     * @return ModuleViewer_EntityOpenGraph
+     */
+    public function getOpenGraph()
+    {
+        return $this->oOpenGraph;
+    }
+
+    /**
+     * Устанавливает значение параметра для объекта Open Graph
+     *
+     * @param $sName
+     * @param $mValue
+     */
+    public function setOpenGraphProperty($sName, $mValue)
+    {
+        $this->oOpenGraph->setProperty($sName, $mValue);
+    }
+
+    /**
      * Обработка поиска файла шаблона, если его не смог найти шаблонизатор Smarty
      *
      * @param string $sType Тип шаблона/ресурса
@@ -1170,5 +1201,12 @@ class ModuleViewer extends Module
          */
         $this->BuildMenu();
         $this->MenuVarAssign();
+        /**
+         * Через хук добавляем данные Open Graph
+         */
+        $_this = $this;
+        $this->Hook_AddExecFunction('template_html_head_end', function () use ($_this) {
+            return $_this->oOpenGraph->render();
+        }, 10000);
     }
 }

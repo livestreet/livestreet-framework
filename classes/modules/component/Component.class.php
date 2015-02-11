@@ -128,20 +128,38 @@ class ModuleComponent extends Module
          * Подключаем стили
          */
         if (isset($aData['styles']) and is_array($aData['styles'])) {
-            foreach ($aData['styles'] as $mName => $sAsset) {
+            foreach ($aData['styles'] as $mName => $mAsset) {
+                $aParams = array();
+                if (is_array($mAsset)) {
+                    $sAsset = isset($mAsset['file']) ? $mAsset['file'] : 'not_found_file_param';
+                    unset($mAsset['file']);
+                    $aParams = $mAsset;
+                } else {
+                    $sAsset = $mAsset;
+                }
                 $sFile = $sPath . '/' . $sAsset;
                 $sFileName = (is_int($mName) ? $sAsset : $mName);
-                $this->Viewer_PrependStyle($sFile, array('name' => "component.{$sName}.{$sFileName}"));
+                $aParams['name'] = "component.{$sName}.{$sFileName}";
+                $this->Viewer_PrependStyle($sFile, $aParams);
             }
         }
         /**
          * Подключаем скрипты
          */
         if (isset($aData['scripts']) and is_array($aData['scripts'])) {
-            foreach ($aData['scripts'] as $mName => $sAsset) {
+            foreach ($aData['scripts'] as $mName => $mAsset) {
+                $aParams = array();
+                if (is_array($mAsset)) {
+                    $sAsset = isset($mAsset['file']) ? $mAsset['file'] : 'not_found_file_param';
+                    unset($mAsset['file']);
+                    $aParams = $mAsset;
+                } else {
+                    $sAsset = $mAsset;
+                }
                 $sFile = $sPath . '/' . $sAsset;
                 $sFileName = (is_int($mName) ? $sAsset : $mName);
-                $this->Viewer_PrependScript($sFile, array('name' => "component.{$sName}.{$sFileName}"));
+                $aParams['name'] = "component.{$sName}.{$sFileName}";
+                $this->Viewer_PrependScript($sFile, $aParams);
             }
         }
     }
@@ -286,14 +304,15 @@ class ModuleComponent extends Module
      * @param $sAssetName
      * @return bool|string
      */
-    public function GetAssetPath($sNameFull, $sAssetType, $sAssetName) {
+    public function GetAssetPath($sNameFull, $sAssetType, $sAssetName)
+    {
         if ($sPath = $this->GetPath($sNameFull)) {
-            if (in_array($sAssetType,array('scripts','js'))) {
-                $sAssetType='scripts';
-                $sAssetExt='js';
+            if (in_array($sAssetType, array('scripts', 'js'))) {
+                $sAssetType = 'scripts';
+                $sAssetExt = 'js';
             } else {
-                $sAssetType='styles';
-                $sAssetExt='css';
+                $sAssetType = 'styles';
+                $sAssetExt = 'css';
             }
             /**
              * Получаем путь до файла из json

@@ -1257,7 +1257,7 @@ abstract class ModuleORM extends Module
         if (is_null($sEntity)) {
             $sPluginPrefix = Engine::GetPluginPrefix($this);
             $sModuleName = Engine::GetModuleName($this);
-            $sEntityName = Engine::GetEntityName($this);
+            $sEntityName = Engine::GetEntityName($this) ?: $sModuleName;
         } elseif (substr_count($sEntity, '_')) {
             $sPluginPrefix = Engine::GetPluginPrefix($sEntity);
             $sModuleName = Engine::GetModuleName($sEntity);

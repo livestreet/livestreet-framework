@@ -984,6 +984,16 @@ class ModuleViewer extends Module
     }
 
     /**
+     * Возвращает описание страницы desciption
+     *
+     * @return string
+     */
+    public function GetHtmlDescription()
+    {
+        return $this->sHtmlDescription;
+    }
+
+    /**
      * Устанавливает основной адрес страницы
      *
      * @param string $sUrl URL страницы
@@ -1112,7 +1122,7 @@ class ModuleViewer extends Module
      *
      * @return ModuleViewer_EntityOpenGraph
      */
-    public function getOpenGraph()
+    public function GetOpenGraph()
     {
         return $this->oOpenGraph;
     }
@@ -1123,7 +1133,7 @@ class ModuleViewer extends Module
      * @param $sName
      * @param $mValue
      */
-    public function setOpenGraphProperty($sName, $mValue)
+    public function SetOpenGraphProperty($sName, $mValue)
     {
         $this->oOpenGraph->setProperty($sName, $mValue);
     }

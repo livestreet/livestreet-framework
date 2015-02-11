@@ -101,7 +101,7 @@ class Engine
     const CI_HOOK = 64;
 
     /**
-     * Имя класс наследования
+     * Имя класса наследования
      * @var int
      */
     const CI_INHERIT = 128;
@@ -643,7 +643,7 @@ class Engine
             throw new Exception("Undefined method module: " . $sName);
         }
         /**
-         * Подхватыем делегат модуля (в случае наличия такового)
+         * Подхватываем делегат модуля (в случае наличия такового)
          */
         if (!in_array($sModuleName, array('Plugin', 'Hook'))) {
             $sModuleClass = $this->Plugin_GetDelegate('module', $sModuleClass);

@@ -634,7 +634,7 @@ class Router extends LsObject
     /**
      * Устанавливает значение параметра
      *
-     * @param int $iOffset Номер параметра, по идеи может быть не только числом
+     * @param int $iOffset Номер параметра, по идее может быть не только числом
      * @param mixed $value
      */
     static public function SetParam($iOffset, $value)
@@ -804,7 +804,7 @@ class Router extends LsObject
      * Стандартизирует определение внутренних ресурсов.
      *
      * Пытается по переданому экшену найти rewrite rule и
-     * вернуть стандартное название ресусрса.
+     * вернуть стандартное название ресурса.
      *
      * @see    Rewrite
      * @param  string $sPage

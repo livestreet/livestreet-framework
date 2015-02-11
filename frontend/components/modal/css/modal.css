@@ -17,7 +17,7 @@
     min-width: 300px;
     max-width: 500px;
     color: #333;
-    border: 1px solid #666;
+    border-radius: 4px;
     background-color: #fff;
     z-index: 1000;
     -webkit-box-shadow: 0 0 15px rgba(0,0,0,.5);
@@ -50,6 +50,7 @@
 .modal-header {
     background: #fafafa;
     border-bottom: 1px solid #eee;
+    border-radius: 4px 4px 0 0;
     padding: 15px 20px 13px;
     position: relative;
     min-height: 10px;
@@ -61,9 +62,11 @@
 }
 
 
-/* Nav */
-.modal > .nav {
-	padding: 20px 20px 0;
+/* Табы */
+.modal .tab-list {
+    padding: 15px;
+    margin-bottom: 0;
+    border-bottom: 1px solid #eee;
 }
 
 
@@ -93,7 +96,8 @@
 .modal .modal-footer {
     background: #fafafa;
     border-top: 1px solid #eee;
-    padding: 15px 20px;
+    border-radius: 0 0 4px 4px;
+    padding: 15px;
     text-align: right;
 }
 
@@ -101,11 +105,11 @@
 /* Loader */
 .modal-loader {
     display: none;
-    width: 100px; 
+    width: 100px;
     height: 50px;
     margin: -25px 0 0 -50px;
     position: fixed;
-    top: 50%; 
+    top: 50%;
     left: 50%;
     border-radius: 5px;
     background-color: #000;
@@ -129,7 +133,7 @@
 .modal-overlay {
     display: none;
     position: fixed;
-    top: 0; 
+    top: 0;
     bottom: 0;
     left: 0;
     right: 0;

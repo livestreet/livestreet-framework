@@ -42,7 +42,7 @@ require_once(LS_DKCACHE_PATH . 'Cache/Backend/Profiler.php');
  *        return $oUser;
  *    }
  *
- *    // Обновляет пользовател в БД
+ *    // Обновляет пользователя в БД
  *    public function UpdateUser($oUser) {
  *        // Удаляем кеш конкретного пользователя
  *        $this->Cache_Delete("user_login_{$oUser->getLogin()}");

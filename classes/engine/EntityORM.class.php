@@ -278,7 +278,7 @@ abstract class EntityORM extends Entity
     }
 
     /**
-     * Хук, срабатывает после сохранением сущности
+     * Хук, срабатывает после сохранения сущности
      *
      */
     protected function afterSave()
@@ -575,7 +575,7 @@ abstract class EntityORM extends Entity
     }
 
     /**
-     * Возвращает список данный связей
+     * Возвращает список данных связей
      *
      * @param string|null $sKey
      *
@@ -603,7 +603,7 @@ abstract class EntityORM extends Entity
     }
 
     /**
-     * Устанавливает вспомогательные объекты для связи many_to_many
+     * Устанавливает вспомогательные объекты для связи MANY_TO_MANY
      *
      * @param array $aData
      * @param string|null $sRelationKey
@@ -618,8 +618,8 @@ abstract class EntityORM extends Entity
     }
 
     /**
-     * Возвращает сущность связи при many to many
-     * Актуально только в том случае, если текущая сущность была получена через обращение к связи many to many
+     * Возвращает сущность связи при MANY_TO_MANY
+     * Актуально только в том случае, если текущая сущность была получена через обращение к связи MANY_TO_MANY
      *
      * @return mixed|null
      */

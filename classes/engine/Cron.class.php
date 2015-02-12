@@ -113,7 +113,7 @@ abstract class Cron extends LsObject
     public function Exec()
     {
         /**
-         * Если выполнение процесса заблокирован, завершаемся
+         * Если выполнение процесса заблокировано, завершаемся
          */
         if ($this->isLock()) {
             $this->Log('Try to exec already run process');
@@ -153,7 +153,7 @@ abstract class Cron extends LsObject
     }
 
     /**
-     * Клиентская функция будет переопределятся в наследниках класса
+     * Клиентская функция будет переопределяться в наследниках класса
      * для обеспечивания выполнения основного функционала.
      */
     abstract public function Client();

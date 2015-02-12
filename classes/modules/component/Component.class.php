@@ -192,9 +192,9 @@ class ModuleComponent extends Module
             /**
              * Проверяем наличие компонента в каталоге текущего шаблона плагина
              */
-            $sPathTemplate = Config::Get('path.application.plugins.server') . "/{$sPlugin}/frontend/skin/" . Config::Get('view.skin');
-            if (file_exists($sPathTemplate . '/' . $sPath)) {
-                return $sPathTemplate . '/' . $sPath;
+            $sPathTemplate = Plugin::GetTemplatePath($sPlugin);
+            if (file_exists($sPathTemplate . $sPath)) {
+                return $sPathTemplate . $sPath;
             }
             /**
              * Проверяем наличие компонента в общем каталоге плагина

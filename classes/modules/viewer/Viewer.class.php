@@ -565,6 +565,18 @@ class ModuleViewer extends Module
         if ($sType == 'template' and isset($aParams['dir'])) {
             $sName = rtrim($aParams['dir'], '/') . '/' . ltrim($sName, '/');
         }
+        /**
+         * Проверяем на уникальность
+         */
+        if (isset($aParams['unique']) and $aParams['unique']) {
+            if (isset($this->aBlocks[$sGroup])) {
+                foreach ($this->aBlocks[$sGroup] as $aBlock) {
+                    if ($aBlock['name'] == $sName) {
+                        return true;
+                    }
+                }
+            }
+        }
         $this->aBlocks[$sGroup][] = array(
             'type'     => $sType,
             'name'     => $sName,

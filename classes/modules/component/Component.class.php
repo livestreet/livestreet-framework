@@ -186,7 +186,7 @@ class ModuleComponent extends Module
      */
     public function GetPath($sName)
     {
-        list($sPlugin, $sName) = $this->ParserName($sName);
+        list($sPlugin, $sName) = $this->ParseName($sName);
         $sPath = 'components/' . $sName;
         if ($sPlugin) {
             /**
@@ -260,7 +260,7 @@ class ModuleComponent extends Module
      */
     public function GetTemplatePath($sNameFull, $sTemplate = null, $bCheckDelegate = true)
     {
-        list($sPlugin, $sName) = $this->ParserName($sNameFull);
+        list($sPlugin, $sName) = $this->ParseName($sNameFull);
         /**
          * По дефолту используем в качестве имени шаблона название компонента
          */
@@ -333,7 +333,7 @@ class ModuleComponent extends Module
      * @param $sName
      * @return array Массив из двух элементов, первый - имя плагина, воторой - имя компонента. Если плагина нет, то null вместо его имени
      */
-    protected function ParserName($sName)
+    protected function ParseName($sName)
     {
         $sName = strtolower($sName);
         $aPath = explode(':', $sName);

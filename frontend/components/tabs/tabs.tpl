@@ -49,6 +49,8 @@
                     {elseif $tab[ 'list' ]}
                         {$tab[ 'list' ]}
                     {/if}
+
+                    {$tab[ 'body' ]}
                 </div>
             {/if}
         {/foreach}

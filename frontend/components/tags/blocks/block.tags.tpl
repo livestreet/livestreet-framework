@@ -1,10 +1,11 @@
 {**
  * Теги
- *
- * @styles css/blocks.css
  *}
 
-{component 'block'
-    mods     = 'tags'
-    title    = {lang 'tags.block_tags.title'}
-    content  = {component 'tags' template='cloud' tags=$smarty.local.tags url=$smarty.local.url}}
+{extends 'component@block.block'}
+
+{block 'block_options' append}
+    {$mods = "$mods tags"}
+    {$title = $title|default:{lang 'tags.block_tags.title'}}
+    {$content  = {component 'tags' template='cloud' tags=$smarty.local.tags url=$smarty.local.url}}
+{/block}

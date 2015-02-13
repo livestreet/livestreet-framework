@@ -12,6 +12,6 @@
  */
 if ( ! document.createElement( 'button' ).hasOwnProperty( 'form' ) ) {
 	jQuery( document ).on( 'click', 'button[form]', function () {
-		jQuery( $( this ).attr( 'form' ) ).submit();
+		jQuery( '#' + $( this ).attr( 'form' ) ).submit();
 	});
 }

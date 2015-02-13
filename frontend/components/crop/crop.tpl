@@ -13,16 +13,10 @@
  * TODO: Разделить на модальное и на контейнер с кропом
  *}
 
-{extends 'Component@modal.modal'}
-
-{block 'modal_options' append}
-    {$mods = "$mods crop"}
-    {$title = $smarty.local.title|escape|default:{lang 'crop.title'}}
+{capture 'modal_content'}
     {$desc = $smarty.local.desc|escape}
     {$usePreview = $smarty.local.usePreview}
-{/block}
 
-{block 'modal_content'}
     {if $desc}
         <p class="crop-desc">{$desc}</p>
     {/if}
@@ -46,8 +40,13 @@
             </div>
         {/if}
     </div>
-{/block}
+{/capture}
 
-{block 'modal_footer_begin'}
-    {component 'button' text=$aLang.common.save classes='js-crop-submit' mods='primary'}
-{/block}
+{component 'modal'
+    title         = $smarty.local.title|escape|default:{lang 'crop.title'}
+    content       = $smarty.capture.modal_content
+    mods          = 'uploader'
+    primaryButton  = [
+        'text'    => {lang 'common.save'},
+        'classes' => 'js-crop-submit'
+    ]}

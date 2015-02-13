@@ -2,13 +2,7 @@
  * Информация об активном файле
  *}
 
-{extends './uploader-block.tpl'}
-
-{block 'block_options' append}
-	{$classes = "{$classes} uploader-info js-uploader-info"}
-{/block}
-
-{block 'block_content'}
+{capture 'block_content'}
 	{$component_info = 'uploader-info'}
 
 	{* Информация о файле *}
@@ -35,4 +29,8 @@
 		{* @hook Конец блока с информацией о файле *}
 		{hook run='uploader_info_end'}
 	</div>
-{/block}
+{/capture}
+
+{component 'uploader' template='block'
+	classes='uploader-info js-uploader-info'
+	content=$smarty.capture.block_content}

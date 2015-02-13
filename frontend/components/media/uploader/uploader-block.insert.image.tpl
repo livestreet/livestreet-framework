@@ -4,18 +4,7 @@
  * @param boolean $useSizes
  *}
 
-{extends 'Component@uploader.uploader-block'}
-
-{block 'block_options' append}
-	{$classes = "{$classes} js-media-info-block"}
-	{$attributes = array_merge( $attributes|default:[], [ 'data-type' => 'insert', 'data-filetype' => '1' ] )}
-{/block}
-
-{block 'block_title'}
-	{lang name='media.insert.settings.title'}
-{/block}
-
-{block 'block_content'}
+{capture 'block_content'}
 	<form method="post" action="" enctype="multipart/form-data">
 		{* Выравнивание *}
 		{component 'field' template='select'
@@ -36,4 +25,10 @@
 				items         = [[ 'value' => 'original', 'text' => {lang name='media.insert.settings.fields.size.original'} ]]}
 		{/if}
 	</form>
-{/block}
+{/capture}
+
+{component 'uploader' template='block'
+    title      = {lang 'media.insert.settings.title'}
+    content    = $smarty.capture.block_content
+    classes    = 'js-media-info-block'
+    attributes = [ 'data-type' => 'insert', 'data-filetype' => '1' ]}

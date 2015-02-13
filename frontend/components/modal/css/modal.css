@@ -63,7 +63,7 @@
 
 
 /* Табы */
-.modal .tab-list {
+.modal .tabs.modal-tabs .tab-list {
     padding: 15px;
     margin-bottom: 0;
     border-bottom: 1px solid #eee;

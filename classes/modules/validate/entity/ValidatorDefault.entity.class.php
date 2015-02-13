@@ -20,20 +20,14 @@
  */
 
 /**
- * Если значение не установлено, то присваивает ему дефолтное значение
- * Данный метод валидации применим только к валадции сущностей (Entity)
+ * Если значение не установлено, то присваивает дефолтное значение
+ * Данный метод валидации применим только к валидации сущностей (Entity)
  *
  * @package framework.modules.validate
  * @since 1.0
  */
 class ModuleValidate_EntityValidatorDefault extends ModuleValidate_EntityValidator
 {
-    /**
-     * Допускать или нет пустое значение
-     *
-     * @var bool
-     */
-    public $allowEmpty = true;
     /**
      * Дефолтное значение
      *
@@ -52,7 +46,7 @@ class ModuleValidate_EntityValidatorDefault extends ModuleValidate_EntityValidat
         /**
          * Выставляем дефолтное значение
          */
-        if ($this->isEmpty($sValue) and $this->oEntityCurrent) {
+        if ($this->isEmpty($sValue)) {
             $this->setValueOfCurrentEntity($this->sFieldCurrent, $this->value);
         }
         return true;

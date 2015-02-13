@@ -68,8 +68,7 @@ class ModuleValidate_EntityValidatorTags extends ModuleValidate_EntityValidator
     public function validate($sValue)
     {
         if (is_array($sValue)) {
-            return $this->getMessage($this->Lang_Get('validate.tags.empty', null, false), 'msg',
-                array('min' => $this->min, 'max' => $this->max));
+            return $this->getMessage($this->Lang_Get('validate.tags.not_valid', null, false), 'msg');
         }
         if ($this->allowEmpty && $this->isEmpty($sValue)) {
             return true;

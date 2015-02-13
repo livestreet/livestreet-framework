@@ -82,8 +82,7 @@ class ModuleValidate_EntityValidatorString extends ModuleValidate_EntityValidato
     public function validate($sValue)
     {
         if (is_array($sValue)) {
-            return $this->getMessage($this->Lang_Get('validate.string.too_short', null, false), 'msgTooShort',
-                array('min' => $this->min));
+            return $this->getMessage($this->Lang_Get('validate.string.not_valid', null, false), 'msg');
         }
         if ($this->allowEmpty && $this->isEmpty($sValue)) {
             return true;
@@ -100,7 +99,7 @@ class ModuleValidate_EntityValidatorString extends ModuleValidate_EntityValidato
                 array('max' => $this->max));
         }
         if ($this->is !== null && $iLength !== $this->is) {
-            return $this->getMessage($this->Lang_Get('validate.string.no_lenght', null, false), 'msg',
+            return $this->getMessage($this->Lang_Get('validate.string.no_length', null, false), 'msg',
                 array('length' => $this->is));
         }
         if (!$this->allowEmpty && $this->isEmpty($sValue)) {

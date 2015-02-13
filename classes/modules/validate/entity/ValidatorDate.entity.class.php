@@ -59,7 +59,7 @@ class ModuleValidate_EntityValidatorDate extends ModuleValidate_EntityValidator
     public function validate($sValue)
     {
         if (is_array($sValue)) {
-            return $this->getMessage($this->Lang_Get('validate_date_format_invalid', null, false), 'msg');
+            return $this->getMessage($this->Lang_Get('validate.date.format_invalid', null, false), 'msg');
         }
         if ($this->allowEmpty && $this->isEmpty($sValue)) {
             return true;

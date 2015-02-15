@@ -78,12 +78,12 @@ abstract class ModuleORM extends Module
         }
         if ($res === 0) {
             // у таблицы нет автоинремента
-            $oEntity->_setOriginalData($oEntity->_getDataFields());
+            $oEntity->_setOriginalData($oEntity->_getDataFieldsForDb());
             return $oEntity;
         } elseif ($res) {
             // есть автоинкремент, устанавливаем его
             $oEntity->_setData(array($oEntity->_getPrimaryKey() => $res));
-            $oEntity->_setOriginalData($oEntity->_getDataFields());
+            $oEntity->_setOriginalData($oEntity->_getDataFieldsForDb());
             /**
              * Смотрим наличие связи many_to_many и добавляем их в бд
              */
@@ -116,7 +116,7 @@ abstract class ModuleORM extends Module
                 }
             }
             // обновляем оригинальные данные
-            $oEntity->_setOriginalData($oEntity->_getDataFields());
+            $oEntity->_setOriginalData($oEntity->_getDataFieldsForDb());
             // сбрасываем кеш
             $sEntity = $this->Plugin_GetRootDelegater('entity', get_class($oEntity));
             $this->Cache_Clean(Zend_Cache::CLEANING_MODE_MATCHING_TAG, array($sEntity . '_save'));

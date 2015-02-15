@@ -38,7 +38,7 @@ class MapperORM extends Mapper
         $sTableName = self::GetTableName($oEntity);
 
         $sql = "INSERT INTO " . $sTableName . " SET ?a ";
-        return $this->oDb->query($sql, $oEntity->_getDataFields());
+        return $this->oDb->query($sql, $oEntity->_getDataFieldsForDb());
     }
 
     /**
@@ -62,7 +62,7 @@ class MapperORM extends Mapper
                         true) . " = " . $this->oDb->escape($oEntity->_getDataOne($sField));
             }
             $sql = "UPDATE " . $sTableName . " SET ?a WHERE {$sWhere}";
-            $aFields = $oEntity->_getDataFields(true);
+            $aFields = $oEntity->_getDataFieldsForDb(true);
             return $aFields ? $this->oDb->query($sql, $aFields) : 0;
         } else {
             $aOriginalData = $oEntity->_getOriginalData();
@@ -72,7 +72,7 @@ class MapperORM extends Mapper
             ), array_keys($aOriginalData), array_values($aOriginalData),
                 array_fill(0, count($aOriginalData), $this->oDb)));
             $sql = "UPDATE " . $sTableName . " SET ?a WHERE 1=1 AND " . $sWhere;
-            $aFields = $oEntity->_getDataFields(true);
+            $aFields = $oEntity->_getDataFieldsForDb(true);
             return $aFields ? $this->oDb->query($sql, $aFields) : 0;
         }
     }
@@ -189,9 +189,8 @@ class MapperORM extends Mapper
         $aItems = array();
         if ($aRows = call_user_func_array(array($this->oDb, 'select'), $aQueryParams)) {
             foreach ($aRows as $aRow) {
-                $oEntity = Engine::GetEntity($sEntityFull, $aRow);
-                $oEntity->_SetIsNew(false);
-                $oEntity->_setOriginalData($aRow);
+                $oEntity = Engine::GetEntity($sEntityFull);
+                $oEntity->_setDataFromDb($aRow);
                 $aItems[] = $oEntity;
             }
         }
@@ -295,8 +294,8 @@ class MapperORM extends Mapper
                     }
                 }
                 $aData['_relation_entity'] = Engine::GetEntity($sEntityJoin, $aDataRelation);
-                $oEntity = Engine::GetEntity($sEntityFull, $aData);
-                $oEntity->_SetIsNew(false);
+                $oEntity = Engine::GetEntity($sEntityFull);
+                $oEntity->_setDataFromDb($aData);
                 unset($aData['_relation_entity']);
                 $oEntity->_setOriginalData($aData);
                 $aItems[] = $oEntity;

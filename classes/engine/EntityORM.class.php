@@ -76,6 +76,12 @@ abstract class EntityORM extends Entity
      */
     protected $aRelationsData = array();
     /**
+     * Список полей, которые нужно хранить как json строку
+     *
+     * @var array
+     */
+    protected $aJsonFields = array();
+    /**
      * Объекты связей many_to_many
      *
      * @var array
@@ -98,6 +104,27 @@ abstract class EntityORM extends Entity
     {
         parent::__construct($aParam);
         $this->aRelations = $this->_getRelations();
+    }
+
+    /**
+     * Устанавливает данные сущности из БД
+     *
+     * @param $aData
+     */
+    public function _setDataFromDb($aData)
+    {
+        $this->_SetIsNew(false);
+        $this->_setOriginalData($aData);
+        foreach ($aData as $sField => $mValue) {
+            if (in_array($sField, $this->aJsonFields)) {
+                if (!is_null($mValue) and $mJsonData = @json_decode($mValue, true)) {
+                    $aData[$sField] = $mJsonData;
+                } else {
+                    $aData[$sField] = null;
+                }
+            }
+        }
+        $this->_setData($aData);
     }
 
     /**
@@ -505,6 +532,20 @@ abstract class EntityORM extends Entity
                 if (array_key_exists($sKey, $aDataOriginal) and $aDataOriginal[$sKey] === $sValue) {
                     unset($aData[$sKey]);
                 }
+            }
+        }
+        return $aData;
+    }
+
+    public function _getDataFieldsForDb($bOnlyChanged = false)
+    {
+        $aData = $this->_getDataFields($bOnlyChanged);
+        /**
+         * Проверяем на json поля
+         */
+        foreach ($aData as $sField => $mValue) {
+            if (in_array($sField, $this->aJsonFields)) {
+                $aData[$sField] = json_encode($mValue);
             }
         }
         return $aData;

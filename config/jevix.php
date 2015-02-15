@@ -333,7 +333,7 @@ return array(
         ),
         'cfgSetTagNoTypography'     => array(
             array(
-                array('code', 'video', 'object')
+                array('pre', 'code', 'video', 'object')
             ),
         ),
         // Теги, после которых необходимо пропускать одну пробельную строку

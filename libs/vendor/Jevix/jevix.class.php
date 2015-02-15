@@ -261,7 +261,7 @@ class Jevix{
 	function cfgAllowTagParams($tag, $params){
 		if(!isset($this->tagsRules[$tag])) throw new Exception("Тег $tag отсутствует в списке разрешённых тегов");
 		if(!is_array($params)) $params = array($params);
-		// Если ключа со списком разрешенных параметров не существует - создаём ео
+		// Если ключа со списком разрешенных параметров не существует - создаём его
 		if(!isset($this->tagsRules[$tag][self::TR_PARAM_ALLOWED])) {
 			$this->tagsRules[$tag][self::TR_PARAM_ALLOWED] = array();
 		}
@@ -302,7 +302,7 @@ class Jevix{
 		if(!is_array($childs)) $childs = array($childs);
 		// Тег является контейнером и не может содержать текст
 		if($isContainerOnly) $this->tagsRules[$tag][self::TR_TAG_CONTAINER] = true;
-		// Если ключа со списком разрешенных тегов не существует - создаём ео
+		// Если ключа со списком разрешенных тегов не существует - создаём его
 		if(!isset($this->tagsRules[$tag][self::TR_TAG_CHILD_TAGS])) {
 			$this->tagsRules[$tag][self::TR_TAG_CHILD_TAGS] = array();
 		}
@@ -312,7 +312,7 @@ class Jevix{
 			if(!isset($this->tagsRules[$child])) throw new Exception("Тег $child отсутствует в списке разрешённых тегов");
 			if(!isset($this->tagsRules[$child][self::TR_TAG_PARENT])) $this->tagsRules[$child][self::TR_TAG_PARENT] = array();
 			$this->tagsRules[$child][self::TR_TAG_PARENT][$tag] = true;
-			// Указанные разрешённые теги могут находится только внтутри тега-контейнера
+			// Указанные разрешённые теги могут находиться только внтутри тега-контейнера
 			if($isChildOnly) $this->tagsRules[$child][self::TR_TAG_CHILD] = true;
 		}
 	}
@@ -481,10 +481,6 @@ class Jevix{
 			$this->text = $text;
 		}
 
-
-		if(!empty($this->autoReplace)){
-			$this->text = str_ireplace($this->autoReplace['from'], $this->autoReplace['to'], $this->text);
-		}
 		$this->textBuf = $this->strToArray($this->text);
 		$this->textLen = count($this->textBuf);
 		$this->getCh();
@@ -640,7 +636,7 @@ class Jevix{
 	/**
 	 * Пропуск текста до нахождения указанной строки или символа
 	 *
-	 * @param string $str строка или символ ля поиска
+	 * @param string $str строка или символ для поиска
 	 * @return boolean
 	 */
 	protected function skipUntilStr($str){
@@ -666,7 +662,7 @@ class Jevix{
 					$this->getCh();
 				}
 
-				// При неудаче откатываемся с переходим на следующий символ
+				// При неудаче откатываемся с переходом на следующий символ
 				if(!$strOK){
 					$this->restoreState();
 				} else {
@@ -705,9 +701,11 @@ class Jevix{
 	}
 
 	/**
-	 *  Получает име (тега, параметра) по принципу 1 сиивол далее цифра или символ
+	 *  Получает имя (тега, параметра) по принципу 1 символ, далее цифра или символ
 	 *
 	 * @param string $name
+	 * @param bool $minus
+	 * @return bool
 	 */
 	protected function name(&$name = '', $minus = false){
 		if(($this->curChClass & self::LAT) == self::LAT){
@@ -973,7 +971,7 @@ class Jevix{
 			if(!isset($this->tagsRules[$parentTag][self::TR_TAG_CHILD_TAGS][$tag])) return '';
 		}
 
-		// Тег может находится только внтури другого тега
+		// Тег может находиться только внутри другого тега
 		if(isset($tagRules[self::TR_TAG_CHILD])){
 			if(!isset($tagRules[self::TR_TAG_PARENT][$parentTag])) return $content;
 		}
@@ -1180,7 +1178,7 @@ class Jevix{
 				$this->skipUntilCh('<');
 			}
 
-			// <Тег> кекст </Тег>
+			// <Тег> текст </Тег>
 			if($this->curCh == '<' && $this->tag($tag, $params, $text, $shortTag)){
 				// Преобразуем тег в текст
 				$tagText = $this->makeTag($tag, $params, $text, $shortTag, $parentTag);
@@ -1221,6 +1219,15 @@ class Jevix{
 
 			// Текст
 			} elseif($this->text($text)){
+				/**
+				 * Исправление работы автозамены (cfgSetAutoReplace) на корректную
+				 *
+				 * fix by Serge Pustovit (PSNet) <light.feel@gmail.com> http://psnet.lookformp3.net
+				 * @link https://github.com/livestreet/livestreet-framework/issues/62
+				 */
+				if(!empty($this->autoReplace)){
+					$text = str_ireplace($this->autoReplace['from'], $this->autoReplace['to'], $text);
+				}
 				$content.=$text;
 			}
 		}
@@ -1243,7 +1250,7 @@ class Jevix{
 		while($this->curChClass & self::NL){
 			// Проверяем, не превышен ли лимит 
 			if($limit>0 and $count>=$limit) break;
-			// Если символ новый строки ткой же как и первый увеличиваем счетчик
+			// Если символ новый строки такой же как и первый увеличиваем счетчик
 			// новых строк. Это сработает при любых сочетаниях
 			// \r\n\r\n, \r\r, \n\n - две перевода
 			if($nl == $firstNL) $count++;
@@ -1254,18 +1261,35 @@ class Jevix{
 		return true;
 	}
 
+	/**
+	 * Проверка на дефис
+	 * fix by Serge Pustovit (PSNet) <light.feel@gmail.com> http://psnet.lookformp3.net
+	 *
+	 * @param $dash         возвращаемое представление дефиса
+	 * @return bool
+	 */
 	protected function dash(&$dash){
-		if($this->curCh != '-') return false;
+		if ($this->curCh != '-') {
+			return false;
+		}
 		$dash = '';
 		$this->saveState();
 		$this->getCh();
 		// Несколько подряд
-		while($this->curCh == '-') $this->getCh();
-		if(!$this->skipNL() && !$this->skipSpaces()){
+		while ($this->curCh == '-') {
+			$this->getCh();
+		}
+		// Количество переводов строк
+		$iNL = 0;
+		if (!$this->skipNL($iNL) && !$this->skipSpaces()) {
 			$this->restoreState();
 			return false;
 		}
 		$dash = $this->dash;
+		if ($iNL) {
+			// Вернуть нужное количествово переводов строк
+			$dash .= str_repeat($this->br, $iNL);
+		}
 		return true;
 	}
 
@@ -1408,7 +1432,7 @@ class Jevix{
 			} elseif ($typoEnabled && ($this->curChClass & self::HTML_QUOTE) && $this->quote($spCount, $quote, $closed)){
 				// Кавычки
 				$this->quotesOpened+=$closed ? -1 : 1;
-				// Исправляем ситуацию если кавычка закрыввается раньше чем открывается
+				// Исправляем ситуацию если кавычка закрывается раньше чем открывается
 				if($this->quotesOpened<0){
 					$closed = false;
 					$this->quotesOpened=1;
@@ -1554,7 +1578,7 @@ function uniord($c) {
 }
 
 /**
- * Функция chr() для мультибайтовы строк
+ * Функция chr() для мультибайтовых строк
  *
  * @param int $c код символа
  * @return string символ utf-8
@@ -1575,4 +1599,3 @@ function unichr($c) {
 	return false;
     }
 }
-?>

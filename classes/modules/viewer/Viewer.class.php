@@ -85,6 +85,12 @@ class ModuleViewer extends Module
      */
     protected $sHtmlCanonical;
     /**
+     * Указание поисковику директив для индексирования страницы
+     *
+     * @var string
+     */
+    protected $sHtmlRobots = 'index,follow';
+    /**
      * Html код для подключения js,css
      *
      * @var array
@@ -215,7 +221,7 @@ class ModuleViewer extends Module
     }
 
     /**
-     * Выполняет загрузку необходимый(возможно даже системный :)) переменных в шалон
+     * Выполняет загрузку необходимых (возможно даже системных :)) переменных в шаблон
      *
      */
     public function VarAssign()
@@ -269,6 +275,7 @@ class ModuleViewer extends Module
         $this->Assign("aHtmlHeadFiles", $this->aHtmlHeadFiles);
         $this->Assign("aHtmlRssAlternate", $this->aHtmlRssAlternate);
         $this->Assign("sHtmlCanonical", func_urlspecialchars($this->sHtmlCanonical));
+        $this->Assign("sHtmlRobots", $this->sHtmlRobots);
         /**
          * Загружаем список активных плагинов
          */
@@ -986,7 +993,7 @@ class ModuleViewer extends Module
     }
 
     /**
-     * Устанавливает описание страницы desciption
+     * Устанавливает описание страницы description
      *
      * @param string $sText Описание
      */
@@ -996,7 +1003,7 @@ class ModuleViewer extends Module
     }
 
     /**
-     * Возвращает описание страницы desciption
+     * Возвращает описание страницы description
      *
      * @return string
      */
@@ -1015,6 +1022,40 @@ class ModuleViewer extends Module
     {
         if (!$this->sHtmlCanonical or $bRewrite) {
             $this->sHtmlCanonical = $sUrl;
+        }
+    }
+
+    /**
+     * Устанавливает директивы индексирования для поисковика
+     *
+     * @param string $sText Поисковые директивы
+     */
+    public function SetHtmlRobots($sText)
+    {
+        $this->sHtmlRobots = $sText;
+    }
+
+    /**
+     * Возвращает директивы индексирования для поисковика
+     *
+     * @return string
+     */
+    public function GetHtmlRobots()
+    {
+        return $this->sHtmlRobots;
+    }
+
+    /**
+     * Устанавливает директивы запрета индексирования для поисковика
+     *
+     * @param bool $bNoIndex Запретить или разрешить индексирование
+     */
+    public function SetHtmlNoIndex($bNoIndex = true)
+    {
+        if ($bNoIndex) {
+            $this->SetHtmlRobots('noindex,nofollow');
+        } else {
+            $this->SetHtmlRobots('index,follow');
         }
     }
 

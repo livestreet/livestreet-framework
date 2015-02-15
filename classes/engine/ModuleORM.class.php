@@ -525,7 +525,7 @@ abstract class ModuleORM extends Module
                     '_getPrimaryKey') ? func_camelize($oRelEntityEmpty->_getPrimaryKey()) : 'Id';
                 if ($sRelType == EntityORM::RELATION_TYPE_BELONGS_TO) {
                     $aFilterRel = array(
-                        func_underscore($sRelPrimaryKey) . 'in' => $aEntityKeys[$sRelKey],
+                        func_underscore($sRelPrimaryKey) . ' in' => $aEntityKeys[$sRelKey],
                         '#index-from-primary'
                     );
                     $aFilterRel = array_merge($aFilterRel, $aRelationFilter);

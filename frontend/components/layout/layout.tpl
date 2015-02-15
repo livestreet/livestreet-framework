@@ -30,6 +30,7 @@
         <meta name="description" content="{$sHtmlDescription}">
         <meta name="keywords" content="{$sHtmlKeywords}">
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="{$sHtmlRobots}">
 
         <title>{block 'layout_title'}{$sHtmlTitle}{/block}</title>
 

@@ -4,6 +4,9 @@
     "dependencies": {
         "css-reset": "*"
     },
+    "templates": {
+        "badge": "badge.tpl"
+    },
     "styles": {
         "badge": "css/badge.css"
     }

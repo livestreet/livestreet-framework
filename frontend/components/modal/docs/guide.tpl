@@ -7,7 +7,7 @@
 
 <script>
     jQuery(function ($) {
-        $('.js-tabs-default').lsTabs();
+        $('.js-modal-tabs').lsTabs();
     });
 </script>
 
@@ -102,7 +102,6 @@ jQuery(function ($) {
         classes='modal-visible'
         title='Modal'
         tabs=[
-            'classes' => 'js-tabs-default',
             'tabs' => [
                 [ 'text' => 'Tab 1', 'content' => 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Odio, nesciunt.' ],
                 [ 'text' => 'Tab 2', 'content' => 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Odio, nesciunt. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Odio, nesciunt.' ]
@@ -111,16 +110,10 @@ jQuery(function ($) {
 {/capture}
 
 {capture 'test_example_code'}
-<script>
-    jQuery(function($) {
-        $('.js-tabs-default').lsTabs();
-    });
-</script>
-
 {ldelim}component 'modal'
     title='Modal'
+    classes='js-mymodal'
     tabs=[
-        'classes' => 'js-tabs-default',
         'tabs' => [
             [ 'text' => 'Tab 1', 'content' => 'Lorem ipsum...' ],
             [ 'text' => 'Tab 2', 'content' => 'Lorem ipsum...' ]

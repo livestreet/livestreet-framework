@@ -5,6 +5,9 @@
         "css-reset": "*",
         "typography": "*"
     },
+    "templates": {
+        "text": "text.tpl"
+    },
     "styles": {
         "text": "css/text.css"
     }

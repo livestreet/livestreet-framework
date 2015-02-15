@@ -47,7 +47,7 @@
     {/block}
 
     {* Tabs *}
-    {( is_array( $tabs ) ) ? {component 'tabs' classes='modal-tabs' params=$tabs} : $tabs}
+    {( is_array( $tabs ) ) ? {component 'tabs' classes='modal-tabs js-modal-tabs' params=$tabs} : $tabs}
 
     {$body}
 

@@ -150,7 +150,9 @@ var ls = ls || {};
 		options: {
 			selectors: {
 				// Кнопка закрытия модального
-				close: '[data-type=modal-close]'
+				close: '[data-type=modal-close]',
+				// Табы
+				tabs: '.js-modal-tabs'
 			},
 			// Анимация при показе
 			show: {
@@ -174,7 +176,9 @@ var ls = ls || {};
 			// Callbacks
 			create: null,
 			aftershow: null,
-			afterhide: null
+			afterhide: null,
+
+			tabsOptions: {}
 		},
 
 		/**
@@ -196,6 +200,9 @@ var ls = ls || {};
 					_overlay.element.append(this.element);
 				}.bind(this));
 			}
+
+			// Табы
+			if ( this.elements.tabs ) this.elements.tabs.lsTabs( this.option( 'tabsOptions' ) );
 
 			// События
 			// ----------

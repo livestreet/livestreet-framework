@@ -127,7 +127,7 @@
  *}
 {test_heading text='Группировка кнопок'}
 
-<p>Шаблон <code>group</code> позволяет группировать кнопки.</p>
+<p>Шаблон <code>group</code> позволяет группировать кнопки. По умолчанию кнопки группируются горизонтально, для вертикальной группировки необходимо добавить мод-ор <code>vertical</code>.</p>
 
 {capture 'test_example_content'}
     {component 'button' template='group' buttons=[
@@ -148,6 +148,14 @@
     <br>
     {component 'button' template='group' buttons=[
         [ 'text' => 'Middle' ]
+    ]}
+    <br>
+    {component 'button' template='group' mods='vertical' buttons=[
+        [ 'text' => 'Left' ],
+        [ 'text' => 'Middle' ],
+        [ 'text' => 'Middle' ],
+        [ 'text' => 'Middle' ],
+        [ 'text' => 'Right' ]
     ]}
 {/capture}
 
@@ -171,6 +179,8 @@
 {ldelim}component 'button' template='group' buttons=[
     [ 'text' => 'Middle' ]
 ]{rdelim}
+
+{ldelim}component 'button' template='group' mods='vertical' buttons=[ ... ]{rdelim}
 {/capture}
 
 {test_example content=$smarty.capture.test_example_content code=$smarty.capture.test_example_code}
@@ -238,6 +248,30 @@
             ]
         ]
     ]}
+    <br>
+    {component 'button' template='toolbar' mods='vertical' groups=[
+        [
+            'buttons' => [
+                [ 'icon' => 'ok' ],
+                [ 'icon' => 'remove' ],
+                [ 'icon' => 'zoom-in' ],
+                [ 'icon' => 'zoom-out' ]
+            ]
+        ],
+        [
+            'buttons' => [
+                [ 'text' => '1' ],
+                [ 'text' => '2' ],
+                [ 'text' => '3' ],
+                [ 'text' => '4' ]
+            ]
+        ],
+        [
+            'buttons' => [
+                [ 'text' => '1' ]
+            ]
+        ]
+    ]}
 {/capture}
 
 {capture 'test_example_code'}
@@ -264,6 +298,7 @@
         ]
     ]
 ]{rdelim}
+{ldelim}component 'button' template='toolbar' mods='vertical' groups=[ ... ]{rdelim}
 {/capture}
 
 {test_example content=$smarty.capture.test_example_content code=$smarty.capture.test_example_code}

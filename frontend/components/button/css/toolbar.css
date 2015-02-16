@@ -13,3 +13,19 @@
 .button-toolbar > .button-group:first-child {
     margin-left: 0;
 }
+
+/**
+ * @modifier vertical Вертикальная группировка
+ */
+.button-toolbar--vertical {
+    display: inline-block;
+}
+.button-toolbar--vertical > .button-group {
+    float: none;
+    display: block;
+    margin-left: 0;
+    margin-top: 10px;
+}
+.button-toolbar--vertical > .button-group:first-child {
+    margin-top: 0;
+}

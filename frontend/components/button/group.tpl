@@ -17,14 +17,27 @@
 
 {block 'button_group_options'}{/block}
 
-<div class="{$component} {cmods name=$component mods=$mods} {$classes} clearfix" {cattr list=$attributes} role="{$role|default:'group'}">
-    {foreach $buttons as $button}
-        {if is_array( $button )}
-            {block 'button_group_button'}
-                {component 'button' params=array_merge( $buttonParams|default:[], $button )}
-            {/block}
+{$role = $role|default:'group'}
+
+{* Делаем группировку по умолчанию горизонтальной *}
+{if ! in_array( 'vertical', explode( ' ', $mods ) )}
+    {$mods = "$mods horizontal"}
+{/if}
+
+{if $buttons}
+    <div class="{$component} {cmods name=$component mods=$mods} {$classes} clearfix" {cattr list=$attributes} role="{$role}">
+        {if is_array( $buttons )}
+            {foreach $buttons as $button}
+                {if is_array( $button )}
+                    {block 'button_group_button'}
+                        {component 'button' params=array_merge( $buttonParams|default:[], $button )}
+                    {/block}
+                {else}
+                    {$button}
+                {/if}
+            {/foreach}
         {else}
-            {$button}
+            {$buttons}
         {/if}
-    {/foreach}
-</div>
+    </div>
+{/if}

@@ -148,7 +148,7 @@ class ModuleImage_EntityImage extends Entity
     /**
      * Вырезает максимально возможный прямоугольный в нужной пропорции
      *
-     * @param float $fProp Пропорция в котрой вырезать кроп, расчитывается как Width/Height
+     * @param float $fProp Пропорция в которой вырезать кроп, расчитывается как Width/Height
      * @param string $sPosition Вырезать из центра
      * @return ModuleImage_EntityImage
      */
@@ -340,7 +340,7 @@ class ModuleImage_EntityImage extends Entity
     }
 
     /**
-     * Сохраняет изображения в файл
+     * Сохраняет изображение в файл
      *
      * @param string $sDir Директория куда нужно сохранить изображение относительно корня сайта (path.root.server)
      * @param string $sFile Имя файла для сохранения, без расширения (расширение подставляется автоматически в зависимости от типа изображения)
@@ -473,6 +473,7 @@ class ModuleImage_EntityImage extends Entity
      *
      * @param string $sFile Полный путь до локального файла
      * @param string $sFormat Формат сохранения: jpg, gif, png
+     * @return bool
      */
     public function internalSave($sFile, $sFormat)
     {

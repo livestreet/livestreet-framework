@@ -281,7 +281,7 @@ class ModuleLogger extends Module
     }
 
     /**
-     * Конвертирует уровень в сзначине библиотеки Monolog
+     * Конвертирует уровень в значение библиотеки Monolog
      *
      * @param string $sLevel
      *

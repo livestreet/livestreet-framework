@@ -84,7 +84,7 @@ class ModuleComponent extends Module
         foreach ($aComponentsName as $sName) {
             $aTree[$sName] = array();
             /**
-             * Cчитываем данные из json файла компонента
+             * Считываем данные из json файла компонента
              */
             $aData = $this->GetJsonData($sName);
             /**
@@ -410,7 +410,7 @@ class ModuleComponent extends Module
             return $this->aComponentsData[$sName];
         }
         /**
-         * Cчитываем данные из json файла компонента
+         * Считываем данные из json файла компонента
          */
         $sPath = $this->GetPath($sName);
         $sFileJson = $sPath . '/component.json';

@@ -37,7 +37,7 @@ require_once(Config::Get('path.framework.libs_vendor.server') . '/phpMailer/clas
 class ModuleMail extends Module
 {
     /**
-     * Основной объект рассылбщика
+     * Основной объект рассыльщика
      *
      * @var phpmailer
      */

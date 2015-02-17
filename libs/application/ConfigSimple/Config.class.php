@@ -53,7 +53,7 @@ class Config
     protected $aConfig = array();
 
     /**
-     * Disabled constract process
+     * Disabled construct process
      */
     protected function __construct()
     {
@@ -149,7 +149,7 @@ class Config
     }
 
     /**
-     * Retrive information from configuration array
+     * Retrieve information from configuration array
      *
      * @param  string $sKey Ключ
      * @param  string $sInstance Название инстанции конфига
@@ -288,7 +288,7 @@ class Config
     }
 
     /**
-     * Find all keys recursivly in config array
+     * Find all keys recursively in config array
      *
      * @return array
      */

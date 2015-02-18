@@ -20,6 +20,8 @@ ls.ajax = (function ($) {
 		more = more || {};
 		params = params || {};
 
+		more.showNotices = typeof more.showNotices === 'undefined' ? true : more.showNotices;
+
 		if ( ! more.progressNotShow ) {
 			NProgress.start();
 		}
@@ -43,13 +45,13 @@ ls.ajax = (function ($) {
 			dataType: 'json',
 			success: function( response ) {
 				if ( response.bStateError ) {
-					if ( response.sMsgTitle || response.sMsg ) ls.msg.error( response.sMsgTitle, response.sMsg );
+					if ( more.showNotices && ( response.sMsgTitle || response.sMsg ) ) ls.msg.error( response.sMsgTitle, response.sMsg );
 				} else {
-					if ( response.sMsgTitle || response.sMsg ) ls.msg.notice( response.sMsgTitle, response.sMsg );
+					if ( more.showNotices && ( response.sMsgTitle || response.sMsg ) ) ls.msg.notice( response.sMsgTitle, response.sMsg );
 					if ( $.isFunction( callback ) ) callback.apply( this, arguments );
 				}
 
-				// TODO: Добавить общий коллбэк
+				if ( $.isFunction( more.onResponse ) ) more.onResponse.apply( this, arguments );
 
 				ls.dev.debug("ajax success: ");
 				ls.dev.debug.apply(ls.dev, arguments);
@@ -119,6 +121,8 @@ ls.ajax = (function ($) {
 					}
 					callback(result, status, xhr, form);
 				}
+
+				if ( $.isFunction( more.onResponse ) ) more.onResponse.apply( this, arguments );
 			} : function () {
 				ls.dev.debug("ajax success: ");
 				ls.dev.debug.apply(ls.dev, arguments);

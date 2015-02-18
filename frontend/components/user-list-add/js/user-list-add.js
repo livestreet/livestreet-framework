@@ -92,7 +92,7 @@
         add: function( users ) {
             if ( ! users ) return;
 
-            this._load( 'add', { 'users': users }, this._onAdd );
+            this._load( 'add', { 'users': users }, '_onAdd' );
         },
 
         /**

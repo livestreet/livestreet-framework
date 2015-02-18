@@ -92,6 +92,19 @@ class ModuleMessage extends Module
     }
 
     /**
+     * Переносит все сообщения в массив для сессионного использования
+     * Используется перед выполнением редиректа
+     *
+     */
+    public function SaveMessages()
+    {
+        $this->aMsgErrorSession = array_merge($this->GetErrorSession(), $this->GetError());
+        $this->aMsgNoticeSession = array_merge($this->GetNoticeSession(), $this->GetNotice());
+        $this->aMsgError = array();
+        $this->aMsgNotice = array();
+    }
+
+    /**
      * Добавляет новое сообщение об ошибке
      *
      * @param string $sMsg Сообщение

@@ -214,24 +214,20 @@
 						li = $('<li class="markItUpButton markItUpButton'+t+(i)+' '+(button.className||'')+'"><a href="" '+key+' title="'+title+'">'+(button.name||'')+'</a></li>')
 						.bind("contextmenu.markItUp", function() { // prevent contextmenu on mac and allow ctrl+click
 							return false;
-						}).bind('click.markItUp', function(e) {
-							e.preventDefault();
+						}).bind('click.markItUp', function() {
+							$('> ul', this).toggle();
+							$(document).one('click', function() { // close dropmenu if click outside
+								$('ul ul', header).hide();
+							});
+							return false;
 						}).bind("focusin.markItUp", function(){
-                            $$.focus();
+							$$.focus();
 						}).bind('mouseup', function() {
 							if (button.call) {
 								eval(button.call)();
 							}
 							setTimeout(function() { markup(button) },1);
 							return false;
-						}).bind('mouseenter.markItUp', function() {
-								$('> ul', this).show();
-								$(document).one('click', function() { // close dropmenu if click outside
-										$('ul ul', header).hide();
-									}
-								);
-						}).bind('mouseleave.markItUp', function() {
-								$('> ul', this).hide();
 						}).appendTo(ul);
 						if (button.dropMenu) {
 							levels.push(i);

@@ -1,0 +1,17 @@
+{
+    "name": "slider",
+    "version": "1.0.0",
+    "dependencies": {
+        "css-reset": "*"
+    },
+    "scripts": {
+        "vendor-fotorama": "vendor/fotorama/fotorama.js",
+        "slider": "js/slider.js"
+    },
+    "styles": {
+        "vendor-fotorama": "vendor/fotorama/fotorama.css"
+    },
+    "templates": {
+        "slider": "slider.tpl"
+    }
+}

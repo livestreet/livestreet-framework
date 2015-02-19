@@ -101,7 +101,7 @@
             ls.ajax.submit( this.options.urls[ url ], form, callback.bind( this ), {
                 params: this.option( 'params' ) || {},
                 onResponse: function () {
-                    if ( more.lock ) lls.utils.formUnlock( form );
+                    if ( more.lock ) ls.utils.formUnlock( form );
                     if ( $.isFunction( more.onResponse ) ) more.onResponse.apply( this, arguments );
                 }
             });

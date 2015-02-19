@@ -30,12 +30,20 @@
         "upload-area": "field.upload-area.tpl"
     },
     "scripts": {
+        "vendor-chosen": "vendor/chosen/chosen.jquery.min.js",
+        "vendor-chosen-order": "vendor/chosen-order/chosen.order.jquery.js",
+        "vendor-parsley": "vendor/parsley/parsley.js",
+        "vendor-parsley-ru": "vendor/parsley/i18n/messages.ru.js",
+        "jquery-ui-timepicker-addon": "vendor/timepicker/jquery-ui-timepicker-addon.js",
+
         "captcha": "js/field.captcha.js",
         "recaptcha": "js/field.recaptcha.js",
         "geo": "js/field.geo.js",
         "image-ajax": "js/field.image-ajax.js"
     },
     "styles": {
+        "vendor-chosen": "vendor/chosen/chosen.css",
+        "vendor-timepicker": "vendor/timepicker/jquery-ui-timepicker-addon.css",
         "field": "css/field.css"
     }
 }

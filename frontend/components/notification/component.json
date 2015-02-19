@@ -6,7 +6,11 @@
         "ls-core": "*",
         "css-reset": "*"
     },
+    "styles": {
+        "vendor-notifier": "vendor/notifier/jquery.notifier.css"
+    },
     "scripts": {
+        "vendor-notifier": "vendor/notifier/jquery.notifier.js",
         "notification": "js/notification.js"
     }
 }

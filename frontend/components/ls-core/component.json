@@ -5,6 +5,7 @@
         "ls-vendor": "*"
     },
     "scripts": {
+        "vendor-nprogress": "vendor/nprogress/nprogress.js",
         "ajax": "ajax.js",
         "dev": "dev.js",
         "hook": "hook.js",
@@ -14,5 +15,8 @@
         "registry": "registry.js",
         "timer": "timer.js",
         "utils": "utils.js"
+    },
+    "styles": {
+        "vendor-nprogress": "vendor/nprogress/nprogress.css"
     }
 }

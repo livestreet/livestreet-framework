@@ -9,9 +9,27 @@
 
 {$component = 'accordion'}
 
-<div class="{$component} {cmods name=$component mods=$smarty.local.mods} {$smarty.local.classes}" {cattr list=$smarty.local.attributes}>
-    {foreach $smarty.local.items as $item}
-        <h3 class="{$component}-title">{$item[ 'title' ]}</h3>
-        <div class="{$component}-content">{$item[ 'content' ]}</div>
-    {/foreach}
+{* Генерируем копии локальных переменных, *}
+{* чтобы их можно было изменять в дочерних шаблонах *}
+{foreach [ 'items', 'mods', 'classes', 'attributes' ] as $param}
+    {assign var="$param" value=$smarty.local.$param}
+{/foreach}
+
+{block 'accordion_options'}{/block}
+
+{* Accordion *}
+<div class="{$component} {cmods name=$component mods=$mods} {$classes}" {cattr list=$attributes}>
+    {if is_array( $items )}
+        {foreach $items as $item}
+            {if is_array( $item )}
+                {block 'accordion_item'}
+                    {component 'accordion' template='item' params=$item}
+                {/block}
+            {else}
+                {$item}
+            {/if}
+        {/foreach}
+    {else}
+        {$items}
+    {/if}
 </div>

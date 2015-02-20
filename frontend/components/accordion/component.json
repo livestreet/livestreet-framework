@@ -7,7 +7,8 @@
         "ls-core": "*"
     },
     "templates": {
-        "accordion": "accordion.tpl"
+        "accordion": "accordion.tpl",
+        "item": "accordion-item.tpl"
     },
     "scripts": {
         "accordion": "js/accordion.js"

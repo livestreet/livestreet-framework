@@ -822,9 +822,13 @@ class Router extends LsObject
      * Выполняет редирект, предварительно завершая работу Engine
      *
      * @param string $sLocation URL для редиректа
+     * @param bool $bSaveMessages Перенести системные сообщения на следующую страницу
      */
-    static public function Location($sLocation)
+    static public function Location($sLocation, $bSaveMessages = false)
     {
+        if ($bSaveMessages) {
+            self::getInstance()->Message_SaveMessages();
+        }
         self::getInstance()->oEngine->Shutdown();
         func_header_location($sLocation);
     }

@@ -568,7 +568,7 @@ function func_array_unshift_assoc(&$aArr, $sKey, $mVal)
     $aArr = array_reverse($aArr, true);
 }
 
-function func_init_return_bytes($sSizeStr)
+function func_ini_return_bytes($sSizeStr)
 {
     switch (substr($sSizeStr, -1)) {
         case 'M':

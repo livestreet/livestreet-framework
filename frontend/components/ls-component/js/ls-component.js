@@ -97,17 +97,16 @@
             more = more || {};
             more.lock = typeof more.lock === 'undefined' ? true : more.lock;
 
-            if ( more.lock ) ls.utils.formLock( form );
+            form.bind('form-submit-validate',function(){
+                // todo: это не сработает, т.к. в jquery.form.js есть принудительная установка disabled=false
+                if ( more.lock ) ls.utils.formLock( form );
+            });
 
             ls.ajax.submit( this.options.urls[ url ], form, callback.bind( this ), {
                 params: this.option( 'params' ) || {},
                 onResponse: function () {
                     if ( more.lock ) ls.utils.formUnlock( form );
                     if ( $.isFunction( more.onResponse ) ) more.onResponse.apply( this, arguments );
-                },
-                onValidateFail: function() {
-                    if ( more.lock ) ls.utils.formUnlock( form );
-                    if ( $.isFunction( more.onValidateFail ) ) more.onValidateFail.apply( this, arguments );
                 }
             });
         },

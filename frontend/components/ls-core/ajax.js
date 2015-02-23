@@ -104,6 +104,7 @@ ls.ajax = (function ($) {
 					var res=form.parsley('validate');
 					if (!res) {
 						NProgress.done();
+						if ( $.isFunction( more.onValidateFail ) ) more.onValidateFail.apply( this, arguments );
 					}
 					return res;
 				}

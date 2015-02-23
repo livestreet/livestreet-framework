@@ -94,6 +94,7 @@
          * Отправка формы
          */
         _submit: function( url, form, callback, more ) {
+            more = more || {};
             more.lock = typeof more.lock === 'undefined' ? true : more.lock;
 
             if ( more.lock ) ls.utils.formLock( form );
@@ -103,6 +104,10 @@
                 onResponse: function () {
                     if ( more.lock ) ls.utils.formUnlock( form );
                     if ( $.isFunction( more.onResponse ) ) more.onResponse.apply( this, arguments );
+                },
+                onValidateFail: function() {
+                    if ( more.lock ) ls.utils.formUnlock( form );
+                    if ( $.isFunction( more.onValidateFail ) ) more.onValidateFail.apply( this, arguments );
                 }
             });
         },

@@ -36,7 +36,8 @@ class ModuleComponent extends Module
      */
     protected $aComponentsList = array();
     /**
-     * Кеш для json данных компонентов
+     * Кеш для данных компонентов - json и каталоги
+     * Для каждого компонента есть ключи paths и json
      *
      * @var array
      */
@@ -84,14 +85,21 @@ class ModuleComponent extends Module
         foreach ($aComponentsName as $sName) {
             $aTree[$sName] = array();
             /**
-             * Считываем данные из json файла компонента
+             * Считываем данные компонента
              */
-            $aData = $this->GetJsonData($sName);
+            $aData = $this->GetComponentData($sName);
+            $aData = $aData['json'];
             /**
              * Проверяем зависимости
              */
             if (isset($aData['dependencies']) and is_array($aData['dependencies'])) {
                 foreach ($aData['dependencies'] as $mKey => $mValue) {
+                    if (!is_int($mKey) and $mValue === false) {
+                        /**
+                         * Пропускаем отмененную зависимость
+                         */
+                        continue;
+                    }
                     $aTree[$sName][] = strtolower(is_int($mKey) ? $mValue : $mKey);
                 }
             }
@@ -117,18 +125,15 @@ class ModuleComponent extends Module
     public function Load($sName)
     {
         /**
-         * Получаем путь до компонента
-         */
-        $sPath = $this->GetPath($sName);
-        /**
          * Json данные
          */
-        $aData = $this->GetJsonData($sName);
+        $aData = $this->GetComponentData($sName);
+        $aDataMeta = $aData['json'];
         /**
          * Подключаем стили
          */
-        if (isset($aData['styles']) and is_array($aData['styles'])) {
-            foreach ($aData['styles'] as $mName => $mAsset) {
+        if (isset($aDataMeta['styles']) and is_array($aDataMeta['styles'])) {
+            foreach ($aDataMeta['styles'] as $mName => $mAsset) {
                 $aParams = array();
                 if (is_array($mAsset)) {
                     $sAsset = isset($mAsset['file']) ? $mAsset['file'] : 'not_found_file_param';
@@ -137,7 +142,18 @@ class ModuleComponent extends Module
                 } else {
                     $sAsset = $mAsset;
                 }
-                $sFile = $sPath . '/' . $sAsset;
+                if ($sAsset === false) {
+                    continue;
+                }
+                /**
+                 * Смотрим в каком каталоге есть файл
+                 */
+                foreach ($aData['paths'] as $sPath) {
+                    $sFile = $sPath . '/' . $sAsset;
+                    if (file_exists($sFile)) {
+                        break;
+                    }
+                }
                 $sFileName = (is_int($mName) ? $sAsset : $mName);
                 $aParams['name'] = "component.{$sName}.{$sFileName}";
                 $this->Viewer_PrependStyle($sFile, $aParams);
@@ -146,8 +162,8 @@ class ModuleComponent extends Module
         /**
          * Подключаем скрипты
          */
-        if (isset($aData['scripts']) and is_array($aData['scripts'])) {
-            foreach ($aData['scripts'] as $mName => $mAsset) {
+        if (isset($aDataMeta['scripts']) and is_array($aDataMeta['scripts'])) {
+            foreach ($aDataMeta['scripts'] as $mName => $mAsset) {
                 $aParams = array();
                 if (is_array($mAsset)) {
                     $sAsset = isset($mAsset['file']) ? $mAsset['file'] : 'not_found_file_param';
@@ -156,7 +172,18 @@ class ModuleComponent extends Module
                 } else {
                     $sAsset = $mAsset;
                 }
-                $sFile = $sPath . '/' . $sAsset;
+                if ($sAsset === false) {
+                    continue;
+                }
+                /**
+                 * Смотрим в каком каталоге есть файл
+                 */
+                foreach ($aData['paths'] as $sPath) {
+                    $sFile = $sPath . '/' . $sAsset;
+                    if (file_exists($sFile)) {
+                        break;
+                    }
+                }
                 $sFileName = (is_int($mName) ? $sAsset : $mName);
                 $aParams['name'] = "component.{$sName}.{$sFileName}";
                 $this->Viewer_PrependScript($sFile, $aParams);
@@ -179,63 +206,33 @@ class ModuleComponent extends Module
     }
 
     /**
+     * Возвращает полные серверные пути до компонента
+     *
+     * @param string $sName Имя компонента. Может содержать название плагина, например, "page:alert" - компонент alert плагина page
+     * @return string
+     */
+    public function GetPaths($sName)
+    {
+        $aData = $this->GetComponentData($sName);
+        return $aData['paths'];
+    }
+
+    /**
      * Возвращает полный серверный путь до компонента
+     * Т.к. путей может быть несколько, то возвращаем первый по приоритету
      *
      * @param string $sName Имя компонента. Может содержать название плагина, например, "page:alert" - компонент alert плагина page
      * @return string
      */
     public function GetPath($sName)
     {
-        list($sPlugin, $sName) = $this->ParseName($sName);
-        $sPath = 'components/' . $sName;
-        if ($sPlugin) {
-            /**
-             * Проверяем наличие компонента в каталоге текущего шаблона плагина
-             */
-            $sPathTemplate = Plugin::GetTemplatePath($sPlugin);
-            if (file_exists($sPathTemplate . $sPath)) {
-                return $sPathTemplate . $sPath;
-            }
-            /**
-             * Проверяем наличие компонента в общем каталоге плагина
-             */
-            $sPathTemplate = Config::Get('path.application.plugins.server') . "/{$sPlugin}/frontend";
-            if (file_exists($sPathTemplate . '/' . $sPath)) {
-                return $sPathTemplate . '/' . $sPath;
-            }
-        } else {
-            /**
-             * Проверяем наличие компонента в каталоге текущего шаблона
-             */
-            $sPathTemplate = $this->Fs_GetPathServerFromWeb(Config::Get('path.skin.web'));
-            if (file_exists($sPathTemplate . '/' . $sPath)) {
-                return $sPathTemplate . '/' . $sPath;
-            }
-        }
-
-        /**
-         * Проверяем на компонент приложения
-         */
-        $sPathTemplate = Config::Get('path.application.server') . '/frontend';
-        if (file_exists($sPathTemplate . '/' . $sPath)) {
-            return $sPathTemplate . '/' . $sPath;
-        }
-        /**
-         * Проверяем на компонент фреймворка
-         */
-        $sPathTemplate = Config::Get('path.framework.server') . '/frontend';
-        if (file_exists($sPathTemplate . '/' . $sPath)) {
-            return $sPathTemplate . '/' . $sPath;
-        }
-
-        /**
-         * Не удалось найти компонент
-         */
-        return false;
+        $aPaths = $this->GetPaths($sName);
+        return reset($aPaths);
     }
 
     /**
      * Возвращает полный web путь до компонента с учетом текущей схемы (http/https)
+     * Т.к. путей может быть несколько, то возвращаем первый по приоритету
      *
      * @param $sName
      * @return bool
@@ -283,15 +280,18 @@ class ModuleComponent extends Module
         /**
          * Компонент не наследуется, поэтому получаем до него полный серверный путь
          */
-        if ($sPath = $this->GetPath($sNameFull)) {
-            /**
-             * Получаем путь до файла шаблона из json
-             */
-            $aData = $this->GetJsonData($sNameFull);
-            if (isset($aData['templates'][$sTemplate])) {
-                return "{$sPath}/" . $aData['templates'][$sTemplate];
+        $aData = $this->GetComponentData($sNameFull);
+        $aDataJson = $aData['json'];
+        foreach ($aData['paths'] as $sPath) {
+            if (isset($aDataJson['templates'][$sTemplate])) {
+                $sTpl = $aDataJson['templates'][$sTemplate];
+            } else {
+                $sTpl = "{$sTemplate}.tpl";
             }
-            return "{$sPath}/{$sTemplate}.tpl";
+            $sFile = $sPath . '/' . $sTpl;
+            if (file_exists($sFile)) {
+                return $sFile;
+            }
         }
         return false;
     }
@@ -306,22 +306,29 @@ class ModuleComponent extends Module
      */
     public function GetAssetPath($sNameFull, $sAssetType, $sAssetName)
     {
-        if ($sPath = $this->GetPath($sNameFull)) {
-            if (in_array($sAssetType, array('scripts', 'js'))) {
-                $sAssetType = 'scripts';
-                $sAssetExt = 'js';
-            } else {
-                $sAssetType = 'styles';
-                $sAssetExt = 'css';
+        $aData = $this->GetComponentData($sNameFull);
+
+        if (in_array($sAssetType, array('scripts', 'js'))) {
+            $sAssetType = 'scripts';
+            $sAssetExt = 'js';
+        } else {
+            $sAssetType = 'styles';
+            $sAssetExt = 'css';
+        }
+        /**
+         * Получаем путь до файла из json
+         */
+        $aDataJson = $aData['json'];
+        if (isset($aDataJson[$sAssetType][$sAssetName])) {
+            $sAsset = $aDataJson[$sAssetType][$sAssetName];
+        } else {
+            $sAsset = "{$sAssetName}.{$sAssetExt}";
+        }
+        foreach ($aData['paths'] as $sPath) {
+            $sFile = $sPath . '/' . $sAsset;
+            if (file_exists($sFile)) {
+                return $sFile;
             }
-            /**
-             * Получаем путь до файла из json
-             */
-            $aData = $this->GetJsonData($sNameFull);
-            if (isset($aData[$sAssetType][$sAssetName])) {
-                return "{$sPath}/" . $aData[$sAssetType][$sAssetName];
-            }
-            return "{$sPath}/{$sAssetName}.{$sAssetExt}";
         }
         return false;
     }
@@ -396,12 +403,12 @@ class ModuleComponent extends Module
     }
 
     /**
-     * Парсит и возвращает json данные компонента
+     * Возвращает данные компонента
      *
      * @param $sName
      * @return array
      */
-    protected function GetJsonData($sName)
+    protected function GetComponentData($sName)
     {
         /**
          * Смотрим в кеше
@@ -410,15 +417,106 @@ class ModuleComponent extends Module
             return $this->aComponentsData[$sName];
         }
         /**
-         * Считываем данные из json файла компонента
+         * Получаем список каталогов, где находится компонент и json мета информацию
          */
-        $sPath = $this->GetPath($sName);
-        $sFileJson = $sPath . '/component.json';
-        if (file_exists($sFileJson)) {
-            if ($sContent = @file_get_contents($sFileJson) and $aData = @json_decode($sContent, true)) {
-                return $this->aComponentsData[$sName] = $aData;
+        $aPaths = $this->GetComponentPaths($sName);
+        $this->aComponentsData[$sName] = array(
+            'json'  => $this->GetComponentJson($aPaths),
+            'paths' => $aPaths,
+
+        );
+        return $this->aComponentsData[$sName];
+    }
+
+    /**
+     * Возвращает список каталогов, где находится компонент.
+     * Каталоги возвращаются согласно приоритету - сначала идут самые приоритетные.
+     *
+     * @param $sName
+     * @return array
+     */
+    protected function GetComponentPaths($sName)
+    {
+        list($sPlugin, $sName) = $this->ParseName($sName);
+        $sPath = 'components/' . $sName;
+        $aPaths = array();
+        if ($sPlugin) {
+            /**
+             * Проверяем наличие компонента в каталоге текущего шаблона плагина
+             */
+            $sPathTemplate = Plugin::GetTemplatePath($sPlugin);
+            if (file_exists($sPathTemplate . $sPath)) {
+                $aPaths[] = $sPathTemplate . $sPath;
+            }
+            /**
+             * Проверяем наличие компонента в общем каталоге плагина
+             */
+            $sPathTemplate = Config::Get('path.application.plugins.server') . "/{$sPlugin}/frontend";
+            if (file_exists($sPathTemplate . '/' . $sPath)) {
+                $aPaths[] = $sPathTemplate . '/' . $sPath;
+            }
+        } else {
+            /**
+             * Проверяем наличие компонента в каталоге текущего шаблона
+             */
+            $sPathTemplate = $this->Fs_GetPathServerFromWeb(Config::Get('path.skin.web'));
+            if (file_exists($sPathTemplate . '/' . $sPath)) {
+                $aPaths[] = $sPathTemplate . '/' . $sPath;
             }
         }
-        return array();
+
+        /**
+         * Проверяем на компонент приложения
+         */
+        $sPathTemplate = Config::Get('path.application.server') . '/frontend';
+        if (file_exists($sPathTemplate . '/' . $sPath)) {
+            $aPaths[] = $sPathTemplate . '/' . $sPath;
+        }
+        /**
+         * Проверяем на компонент фреймворка
+         */
+        $sPathTemplate = Config::Get('path.framework.server') . '/frontend';
+        if (file_exists($sPathTemplate . '/' . $sPath)) {
+            $aPaths[] = $sPathTemplate . '/' . $sPath;
+        }
+        return $aPaths;
+    }
+
+    /**
+     * Возвращает json данные компонента с учетом наследования
+     *
+     * @param $aPaths
+     * @return array|mixed
+     */
+    protected function GetComponentJson(&$aPaths)
+    {
+        /**
+         * Получаем пути в обратном порядке, т.к. будем мержить данные
+         */
+        $aPaths = array_reverse($aPaths);
+        $aPathsNew = array();
+        $aJson = array();
+        foreach ($aPaths as $sPath) {
+            $sFileJson = $sPath . '/component.json';
+            if (file_exists($sFileJson)) {
+                if ($sContent = @file_get_contents($sFileJson) and $aData = @json_decode($sContent, true)) {
+                    if (isset($aData['mode']) and $aData['mode'] == 'delegate') {
+                        $aJson = $aData;
+                        /**
+                         * Удаляем прошлые каталоги
+                         */
+                        $aPathsNew = array();
+                    } else {
+                        $aJson = func_array_merge_assoc($aJson, $aData);
+                    }
+                }
+            }
+            $aPathsNew[] = $sPath;
+        }
+        /**
+         * Подменяем пути
+         */
+        $aPaths = array_reverse($aPathsNew);
+        return $aJson;
     }
 }

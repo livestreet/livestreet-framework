@@ -20,12 +20,12 @@
  */
 
 /**
- * Валидатор google re-каптчи
+ * Валидатор каптчи (число с картинки)
  *
  * @package framework.modules.validate
  * @since 1.0
  */
-class ModuleValidate_EntityValidatorRecaptcha extends ModuleValidate_EntityValidator
+class ModuleValidate_EntityValidatorCaptchaKcaptcha extends ModuleValidate_EntityValidator
 {
     /**
      * Допускать или нет пустое значение
@@ -33,6 +33,12 @@ class ModuleValidate_EntityValidatorRecaptcha extends ModuleValidate_EntityValid
      * @var bool
      */
     public $allowEmpty = false;
+    /**
+     * Название каптчи для возможности создавать несколько независимых каптч на странице
+     *
+     * @var string
+     */
+    public $name = '';
 
     /**
      * Запуск валидации
@@ -49,24 +55,11 @@ class ModuleValidate_EntityValidatorRecaptcha extends ModuleValidate_EntityValid
         if ($this->allowEmpty && $this->isEmpty($sValue)) {
             return true;
         }
-        $sSecret = Config::Get('module.validate.recaptcha.secret_key');
-        $sUrl = "https://www.google.com/recaptcha/api/siteverify?secret={$sSecret}&response={$sValue}";
-        if (Config::Get('module.validate.recaptcha.use_ip')) {
-            $sUrl .= '&remoteip=' . func_getIp();
+
+        $sSessionName = 'captcha_keystring' . ($this->name ? '_' . $this->name : '');
+        if (!isset($_SESSION[$sSessionName]) or $_SESSION[$sSessionName] != strtolower($sValue)) {
+            return $this->getMessage($this->Lang_Get('validate.captcha.not_valid', null, false), 'msg');
         }
-        if ($sData = file_get_contents($sUrl)) {
-            if ($aData = @json_decode($sData, true)) {
-                if (isset($aData['success']) and $aData['success']) {
-                    return true;
-                }
-            } else {
-                $this->Logger_Warning('ReCaptcha: error json decode', array('url' => $sUrl));
-            }
-        } else {
-            $aError = error_get_last();
-            $this->Logger_Warning('ReCaptcha: ' . ($aError ? $aError['message'] : 'error server request'),
-                array('url' => $sUrl));
-        }
-        return $this->getMessage($this->Lang_Get('validate.captcha.not_valid', null, false), 'msg');
+        return true;
     }
 }

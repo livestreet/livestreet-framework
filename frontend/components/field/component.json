@@ -11,7 +11,8 @@
     "templates": {
         "field": "field.tpl",
         "captcha": "field.captcha.tpl",
-        "recaptcha": "field.recaptcha.tpl",
+        "captcha-kcaptcha": "field.captcha-kcaptcha.tpl",
+        "captcha-recaptcha": "field.captcha-recaptcha.tpl",
         "category": "field.category.tpl",
         "checkbox": "field.checkbox.tpl",
         "date": "field.date.tpl",

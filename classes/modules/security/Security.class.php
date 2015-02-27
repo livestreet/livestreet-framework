@@ -116,10 +116,9 @@ class ModuleSecurity extends Module
     protected function GenerateSecurityKey()
     {
         /**
-         * Сначала получаем уникальные данные пользователя по его браузеру и IP
+         * Сначала получаем уникальные данные пользователя по его браузеру
          */
         $sDataForHash = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '';
-        $sDataForHash .= isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '';
         /**
          * Далее добавляем ID сессии и уникальный ключ из конфига
          */

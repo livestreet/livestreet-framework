@@ -438,7 +438,9 @@ abstract class ModuleORM extends Module
         if (array_key_exists('#cache', $aFilter) && !$aFilter['#cache']) {
             $aEntities = $this->oMapperORM->GetItemsByFilter($aFilter, $sEntityFull);
         } else {
-            $sCacheKey = $sEntityFull . '_items_by_filter_' . serialize($aFilter);
+            $aFilterCache = $aFilter;
+            unset($aFilterCache['#with']);
+            $sCacheKey = $sEntityFull . '_items_by_filter_' . serialize($aFilterCache);
             $aCacheTags = array($sEntityFull . '_save', $sEntityFull . '_delete');
             $iCacheTime = 60 * 60 * 24; // скорее лучше хранить в свойстве сущности, для возможности выборочного переопределения
             // переопределяем из параметров
@@ -483,6 +485,14 @@ abstract class ModuleORM extends Module
                     continue;
                 }
                 /**
+                 * Если нужна дополнительная обработка через коллбек
+                 * Параметр в обработчике должен приниматься по ссылке
+                 */
+                if (isset($aRelationFilter['#callback-filter']) and $aRelationFilter['#callback-filter'] instanceof Closure) {
+                    $callback = $aRelationFilter['#callback-filter'];
+                    $callback($aEntities, $aRelationFilter);
+                }
+                /**
                  * Если необходимо, то выставляем сразу нужное значение и не делаем никаких запросов
                  */
                 if (isset($aRelationFilter['#value-set'])) {
@@ -491,6 +501,10 @@ abstract class ModuleORM extends Module
                     }
                     continue;
                 }
+                /**
+                 * Чистим фильтр от коллбека, иначе он может пройти дальше по цепочке вызовов
+                 */
+                unset($aRelationFilter['#callback-filter']);
 
                 $sRelType = $aRelations[$sRelationName][0];
                 $sRelEntity = $this->Plugin_GetRootDelegater('entity',
@@ -745,7 +759,9 @@ abstract class ModuleORM extends Module
         if (array_key_exists('#cache', $aFilter) && !$aFilter['#cache']) {
             $iCount = $this->oMapperORM->GetCountItemsByFilter($aFilter, $sEntityFull);
         } else {
-            $sCacheKey = $sEntityFull . '_count_items_by_filter_' . serialize($aFilter);
+            $aFilterCache = $aFilter;
+            unset($aFilterCache['#with']);
+            $sCacheKey = $sEntityFull . '_count_items_by_filter_' . serialize($aFilterCache);
             $aCacheTags = array($sEntityFull . '_save', $sEntityFull . '_delete');
             $iCacheTime = 60 * 60 * 24; // скорее лучше хранить в свойстве сущности, для возможности выборочного переопределения
             // переопределяем из параметров

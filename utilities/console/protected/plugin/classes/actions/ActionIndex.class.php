@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * Класс экшена
+ */
 class PluginExample_ActionIndex extends ActionPlugin
 {
 
@@ -20,9 +23,16 @@ class PluginExample_ActionIndex extends ActionPlugin
 
     }
 
+
+    /**
+     * Обработка евента index
+     */
     protected function EventIndex()
     {
-
+        /**
+         * Устанавливает шаблон вывода
+         */
+        $this->SetTemplateAction('index');
     }
 
     /**

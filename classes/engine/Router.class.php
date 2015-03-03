@@ -489,7 +489,7 @@ class Router extends LsObject
     static public function GetSecurePort()
     {
         if (is_null(self::$iHttpSecurePort)) {
-            self::$iHttpSecurePort = self::GetIsSecureConnection() && isset($_SERVER['SERVER_PORT']) ? (int)$_SERVER['SERVER_PORT'] : 443;
+            self::$iHttpSecurePort = (self::GetIsSecureConnection() && isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] != 80) ? (int)$_SERVER['SERVER_PORT'] : 443;
         }
         return self::$iHttpSecurePort;
     }

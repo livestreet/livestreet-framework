@@ -1,0 +1,21 @@
+{
+    "name": "details",
+    "version": "1.0.0",
+    "dependencies": {
+        "css-reset": "*",
+        "ls-vendor": "*",
+        "ls-core": "*"
+    },
+    "templates": {
+        "details": "details.tpl",
+        "group": "details-group.tpl"
+    },
+    "scripts": {
+        "details": "js/details.js",
+        "group": "js/details-group.js"
+    },
+    "styles": {
+        "details": "css/details.css",
+        "group": "css/details-group.css"
+    }
+}

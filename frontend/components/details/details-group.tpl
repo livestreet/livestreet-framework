@@ -1,5 +1,5 @@
 {**
- * Accordion
+ * Шаблон служит оберткой для списка сворачиваемых блоков <code>item</code>
  *
  * @param array  $items
  * @param string $mods
@@ -7,7 +7,7 @@
  * @param array  $attributes
  *}
 
-{$component = 'accordion'}
+{$component = 'details-group'}
 
 {* Генерируем копии локальных переменных, *}
 {* чтобы их можно было изменять в дочерних шаблонах *}
@@ -15,15 +15,15 @@
     {assign var="$param" value=$smarty.local.$param}
 {/foreach}
 
-{block 'accordion_options'}{/block}
+{block 'details_group_options'}{/block}
 
-{* Accordion *}
+{* Details *}
 <div class="{$component} {cmods name=$component mods=$mods} {$classes}" {cattr list=$attributes}>
     {if is_array( $items )}
         {foreach $items as $item}
             {if is_array( $item )}
-                {block 'accordion_item'}
-                    {component 'accordion' template='item' params=$item}
+                {block 'details_group_item'}
+                    {component 'details' classes='js-details-group-item' params=$item}
                 {/block}
             {else}
                 {$item}

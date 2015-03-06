@@ -231,7 +231,7 @@ class ModuleText extends Module
     }
 
     /**
-     * Парсит текст, применя все парсеры
+     * Парсит текст, применяя все парсеры
      *
      * @param string $sText Исходный текст
      * @return string
@@ -241,11 +241,29 @@ class ModuleText extends Module
         if (!is_string($sText)) {
             return '';
         }
-        $sResult = $this->FlashParamParser($sText);
+        $sResult = $this->MarkdownParser($sText);
+        $sResult = $this->FlashParamParser($sResult);
         $sResult = $this->JevixParser($sResult);
         $sResult = $this->VideoParser($sResult);
         $sResult = $this->CodeSourceParser($sResult);
         return $sResult;
+    }
+
+    /**
+     *  Обработка текста на помощью облегченного языка разметки Markdown
+     *
+     * @param string $sText Исходный текст
+     * @return string
+     */
+    public function MarkdownParser($sText)
+    {
+        if (Config::Get('module.text.use_markdown')) {
+            Engine::AddAutoloaderNamespace('League\CommonMark',
+                Config::Get('path.framework.libs_vendor.server') . '/commonmark/src');
+            $converter = new \League\CommonMark\CommonMarkConverter();
+            $sText = $converter->convertToHtml($sText);
+        }
+        return $sText;
     }
 
     /**

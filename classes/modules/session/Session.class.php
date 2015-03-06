@@ -275,6 +275,7 @@ class ModuleSession extends Module
      */
     public function SetCookie($sName, $sValue, $iTime = null, $bSecure = false, $bHttpOnly = false)
     {
+        $_COOKIE[$sName] = $sValue;
         setcookie($sName, $sValue, $iTime, Config::Get('sys.cookie.path'), Config::Get('sys.cookie.host'), $bSecure,
             $bHttpOnly);
     }

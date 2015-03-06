@@ -31,12 +31,12 @@
                     ],
                     [ 'text' => $aLang.common.create, 'url' => "{router page='content'}add/topic", 'attributes' => [ 'data-modal-target' => 'modal-write' ] ],
                     [ 'text' => $aLang.talk.title,   'url' => "{router page='talk'}", 'title' => $aLang.talk.new_messages, 'is_enabled' => $iUserCurrentCountTalkNew, 'count' => $iUserCurrentCountTalkNew ],
-                    [ 'text' => $aLang.auth.logout,  'url' => "{router page='login'}exit/?security_ls_key={$LIVESTREET_SECURITY_KEY}" ]
+                    [ 'text' => $aLang.auth.logout,  'url' => "{router page='auth'}logout/?security_ls_key={$LIVESTREET_SECURITY_KEY}" ]
                 ]}
             {else}
                 {$items = [
-                    [ 'text' => $aLang.auth.login.title,        'classes' => 'js-modal-toggle-login',        'url' => {router page='login'} ],
-                    [ 'text' => $aLang.auth.registration.title, 'classes' => 'js-modal-toggle-registration', 'url' => {router page='registration'} ]
+                    [ 'text' => $aLang.auth.login.title,        'classes' => 'js-modal-toggle-login',        'url' => {router page='auth/login'} ],
+                    [ 'text' => $aLang.auth.registration.title, 'classes' => 'js-modal-toggle-registration', 'url' => {router page='auth/register'} ]
                 ]}
             {/if}
 

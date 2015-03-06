@@ -489,7 +489,7 @@ class Router extends LsObject
     static public function GetSecurePort()
     {
         if (is_null(self::$iHttpSecurePort)) {
-            self::$iHttpSecurePort = self::GetIsSecureConnection() && isset($_SERVER['SERVER_PORT']) ? (int)$_SERVER['SERVER_PORT'] : 443;
+            self::$iHttpSecurePort = (self::GetIsSecureConnection() && isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] != 80) ? (int)$_SERVER['SERVER_PORT'] : 443;
         }
         return self::$iHttpSecurePort;
     }
@@ -755,7 +755,7 @@ class Router extends LsObject
     /**
      * Проверяет на соответствие текущего экшена/евента переданным
      *
-     * @param array $aActions Список экшенов с евентами в формате array('action1','action1','action3'=>array('event1','event2'))
+     * @param array $aActions Список экшенов с евентами в формате array('action1','action2','action3'=>array('event1','event2'))
      * @return bool
      */
     static public function CheckIsCurrentAction($aActions)
@@ -788,7 +788,7 @@ class Router extends LsObject
 
     /**
      * Try to find rewrite rule for given page.
-     * On success return rigth page, else return given param.
+     * On success return right page, else return given param.
      *
      * @param  string $sPage
      * @return string

@@ -13,3 +13,7 @@
     {$groups = $smarty.local.items}
     {$classes = "$classes actionbar"}
 {/block}
+
+{block 'button_toolbar_group'}
+    {component 'actionbar' template='group' params=$group}
+{/block}

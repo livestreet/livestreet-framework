@@ -12,10 +12,12 @@
         "crop": "crop.tpl"
     },
     "scripts": {
+        "vendor-jcrop": "vendor/jcrop/jquery.Jcrop.js",
         "modal": "js/crop-modal.js",
         "crop": "js/crop.js"
     },
     "styles": {
+        "vendor-jcrop": "vendor/jcrop/jquery.Jcrop.css",
         "crop": "css/crop.css"
     }
 }

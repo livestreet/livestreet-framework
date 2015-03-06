@@ -612,6 +612,38 @@ abstract class EntityORM extends Entity
      */
     public function _getRelations()
     {
+        /**
+         * Преобразуем связи к единому ассоциативному виду
+         */
+        foreach ($this->aRelations as $sName => $aParams) {
+            if (is_int($sName) or isset($aParams['type'])) {
+                continue;
+            }
+            $aParamsNew = array(
+                'type'       => $aParams[0],
+                'rel_entity' => $aParams[1],
+                'rel_key'    => $aParams[2],
+                'filter'     => array()
+            );
+            if ($aParamsNew['type'] == EntityORM::RELATION_TYPE_HAS_ONE) {
+                if (isset($aParams[3])) {
+                    $aParamsNew['filter'] = $aParams[3];
+                }
+            }
+            if ($aParamsNew['type'] == EntityORM::RELATION_TYPE_HAS_MANY) {
+                if (isset($aParams[3])) {
+                    $aParamsNew['filter'] = $aParams[3];
+                }
+            }
+            if ($aParamsNew['type'] == EntityORM::RELATION_TYPE_MANY_TO_MANY) {
+                $aParamsNew['join_entity'] = $aParams[3];
+                $aParamsNew['join_key'] = $aParams[4];
+                if (isset($aParams[5])) {
+                    $aParamsNew['filter'] = $aParams[5];
+                }
+            }
+            $this->aRelations[$sName] = $aParamsNew;
+        }
         return $this->aRelations;
     }
 
@@ -696,10 +728,11 @@ abstract class EntityORM extends Entity
                 /**
                  * Проверяем на связи
                  */
-                if (array_key_exists($sKey, $this->aRelations)) {
-                    $sEntityRel = $this->aRelations[$sKey][1];
-                    $sRelationType = $this->aRelations[$sKey][0];
-                    $sRelationKey = $this->aRelations[$sKey][2];
+                $aRelations = $this->_getRelations();
+                if (array_key_exists($sKey, $aRelations)) {
+                    $sEntityRel = $aRelations[$sKey]['rel_entity'];
+                    $sRelationType = $aRelations[$sKey]['type'];
+                    $sRelationKey = $aRelations[$sKey]['rel_key'];
 
                     $sRelModuleName = Engine::GetModuleName($sEntityRel);
                     $sRelEntityName = Engine::GetEntityName($sEntityRel);
@@ -719,21 +752,13 @@ abstract class EntityORM extends Entity
                             $mCmdArgs = array($this->_getDataOne($sRelationKey));
                             break;
                         case self::RELATION_TYPE_HAS_ONE :
-                            if (isset($this->aRelations[$sKey][3])) {
-                                $aFilterAdd = $this->aRelations[$sKey][3];
-                            } else {
-                                $aFilterAdd = array();
-                            }
+                            $aFilterAdd = $aRelations[$sKey]['filter'];
                             $sCmd = "{$sRelPluginPrefix}{$sRelModuleName}_get{$sRelEntityName}ByFilter";
                             $aFilterAdd = array_merge(array($sRelationKey => $iPrimaryKeyValue), $aFilterAdd);
                             $mCmdArgs = array($aFilterAdd);
                             break;
                         case self::RELATION_TYPE_HAS_MANY :
-                            if (isset($this->aRelations[$sKey][3])) {
-                                $aFilterAdd = $this->aRelations[$sKey][3];
-                            } else {
-                                $aFilterAdd = array();
-                            }
+                            $aFilterAdd = $aRelations[$sKey]['filter'];
                             $sCmd = "{$sRelPluginPrefix}{$sRelModuleName}_get{$sRelEntityName}ItemsByFilter";
                             $aFilterAdd = array_merge(array($sRelationKey => $iPrimaryKeyValue), $aFilterAdd);
                             if ($bUseFilter) {
@@ -742,13 +767,9 @@ abstract class EntityORM extends Entity
                             $mCmdArgs = array($aFilterAdd);
                             break;
                         case self::RELATION_TYPE_MANY_TO_MANY :
-                            $sEntityJoin = $this->aRelations[$sKey][3];
-                            $sKeyJoin = $this->aRelations[$sKey][4];
-                            if (isset($this->aRelations[$sKey][5])) {
-                                $aFilterAdd = $this->aRelations[$sKey][5];
-                            } else {
-                                $aFilterAdd = array();
-                            }
+                            $sEntityJoin = $aRelations[$sKey]['join_entity'];
+                            $sKeyJoin = $aRelations[$sKey]['join_key'];
+                            $aFilterAdd = $aRelations[$sKey]['filter'];
                             $sCmd = "{$sRelPluginPrefix}Module{$sRelModuleName}_get{$sRelEntityName}ItemsByJoinEntity";
                             if ($bUseFilter) {
                                 $aFilterAdd = array_merge($aFilterAdd, $aArgs[0]);

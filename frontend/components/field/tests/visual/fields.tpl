@@ -87,6 +87,7 @@
 		{test_heading sText='Captcha'}
 
 		{component 'field' template='captcha'
+				 type  = Config::Get('sys.captcha.type')
 				 name  = 'captcha'
 				 label = 'Captcha'
 				 note  = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Velit, libero.'

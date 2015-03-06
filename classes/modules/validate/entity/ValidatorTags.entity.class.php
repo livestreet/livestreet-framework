@@ -40,11 +40,17 @@ class ModuleValidate_EntityValidatorTags extends ModuleValidate_EntityValidator
      */
     public $min = 2;
     /**
+     * Максимальное количество тегов
+     *
+     * @var int
+     */
+    public $countMax = 15;
+    /**
      * Минимальное количество тегов
      *
      * @var int
      */
-    public $count = 15;
+    public $countMin = 1;
     /**
      * Разделитель тегов
      *
@@ -88,9 +94,9 @@ class ModuleValidate_EntityValidatorTags extends ModuleValidate_EntityValidator
             }
         }
         $iCount = count($aTagsNew);
-        if ($iCount > $this->count) {
-            return $this->getMessage($this->Lang_Get('validate.tags.count_more', null, false), 'msg',
-                array('count' => $this->count));
+        if ($iCount > $this->countMax or $iCount < $this->countMin) {
+            return $this->getMessage($this->Lang_Get('validate.tags.count', null, false), 'msg',
+                array('max' => $this->countMax, 'min' => $this->countMin));
         } elseif (!$iCount) {
             return $this->getMessage($this->Lang_Get('validate.tags.empty', null, false), 'msg',
                 array('min' => $this->min, 'max' => $this->max));

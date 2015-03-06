@@ -66,56 +66,77 @@
         },
 
         /**
-         * 
+         * Ajax запрос
          */
-        _load: function( url, params, callback ) {
+        _load: function( url, params, callback, more ) {
             if ( $.isFunction( params ) ) {
+                more = callback;
                 callback = params;
                 params = false;
             }
 
             if ( params ) $.extend( this.option( 'params' ), params );
 
-            if ( typeof callback === "string" ) callback = this[ callback ];
+            // Добавляем возможность указывать коллбэк в виде строки,
+            // в этом случае будет вызываться метод текущего виджета указанный в строке
+            if ( typeof callback === "string" ) {
+                callback = this[ callback ];
+            }
 
-            ls.ajax.load( this.options.urls[ url ], this.option( 'params' ), callback.bind( this ) );
+            if ( $.isFunction( callback ) ) {
+                callback = callback.bind( this );
+            }
+
+            ls.ajax.load( this.options.urls[ url ], this.option( 'params' ) || {}, callback, more );
         },
 
         /**
-         * 
+         * Отправка формы
          */
-        _submit: function( url, form, callback ) {
+        _submit: function( url, form, callback, more ) {
+            more = more || {};
+            more.lock = typeof more.lock === 'undefined' ? true : more.lock;
+
+            form.bind('form-submit-validate',function(){
+                // todo: это не сработает, т.к. в jquery.form.js есть принудительная установка disabled=false
+                if ( more.lock ) ls.utils.formLock( form );
+            });
+
             ls.ajax.submit( this.options.urls[ url ], form, callback.bind( this ), {
-                params: this.option( 'params' ) || {}
+                params: this.option( 'params' ) || {},
+                onResponse: function () {
+                    if ( more.lock ) ls.utils.formUnlock( form );
+                    if ( $.isFunction( more.onResponse ) ) more.onResponse.apply( this, arguments );
+                }
             });
         },
 
         /**
-         * 
+         * Устанавливает ajax параметр
          */
         _setParam: function( param, value ) {
             return this.option( 'params.' + param, value );
         },
 
         /**
-         * 
+         * Получает ajax параметр
          */
         _getParam: function( param ) {
             return this.option( 'params.' + param );
         }
 
         /**
-         * 
+         * Проверка наличия класса
          */
         // _hasClass: function( element, classes ) {},
 
         /**
-         * 
+         * Добавление класса
          */
         // _addClass: function( element, classes ) {},
 
         /**
-         * 
+         * Удаление класса
          */
         // _removeClass: function( element, classes ) {},
     });

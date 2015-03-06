@@ -4,42 +4,21 @@
     "scripts": {
         "jquery": "jquery-1.9.1.min.js",
         "jquery-ui": "jquery-ui/js/jquery-ui-1.10.2.custom.min.js",
-
         "jquery-ui-datepicker-ru": "jquery-ui/js/localization/jquery-ui-datepicker-ru.js",
-        "jquery-ui-timepicker-addon": "timepicker/jquery-ui-timepicker-addon.js",
 
-        "jquery.charcount": "jquery.charcount.js",
-        "jquery.browser": "jquery.browser.js",
-        "jquery.cookie": "jquery.cookie.js",
-        "jquery.fileupload": "jquery.fileupload.js",
-        "jquery.form": "jquery.form.js",
-        "jquery.hotkeys": "jquery.hotkeys.js",
-        "jquery.jqplugin": "jquery.jqplugin.js",
-        "jquery.livequery": "jquery.livequery.js",
-        "jquery.rich-array.min": "jquery.rich-array.min.js",
-        "jquery.scrollto": "jquery.scrollto.js",
-        "jquery.serializejson": "jquery.serializejson.js",
-        "jquery.timers": "jquery.timers.js",
-        "jquery.Jcrop": "jcrop/jquery.Jcrop.js",
-        "jquery.notifier": "notifier/jquery.notifier.js",
-        "jquery.colorbox": "colorbox/jquery.colorbox.js",
-        "jquery.chosen": "chosen/chosen.jquery.min.js",
-        "jquery.chosen-order": "chosen-order/chosen.order.jquery.js",
-
-        "nprogress": "nprogress/nprogress.js",
-        "fotorama": "fotorama/fotorama.js",
-
-        "parsley": "parsley/parsley.js",
-        "messages.ru": "parsley/i18n/messages.ru.js"
+        "browser": "jquery.browser.js",
+        "cookie": "jquery.cookie.js",
+        "fileupload": "jquery.fileupload.js",
+        "form": "jquery.form.js",
+        "hotkeys": "jquery.hotkeys.js",
+        "jqplugin": "jquery.jqplugin.js",
+        "livequery": "jquery.livequery.js",
+        "rich-array.min": "jquery.rich-array.min.js",
+        "scrollto": "jquery.scrollto.js",
+        "serializejson": "jquery.serializejson.js",
+        "timers": "jquery.timers.js"
     },
     "styles": {
-        "jquery-ui": "jquery-ui/css/smoothness/jquery-ui-1.10.2.custom.css",
-        "jquery-ui-timepicker-addon": "timepicker/jquery-ui-timepicker-addon.css",
-        "jquery.Jcrop": "jcrop/jquery.Jcrop.css",
-        "jquery.notifier": "notifier/jquery.notifier.css",
-        "fotorama": "fotorama/fotorama.css",
-        "nprogress": "nprogress/nprogress.css",
-        "colorbox": "colorbox/colorbox.css",
-        "chosen": "chosen/chosen.css"
+        "jquery-ui": "jquery-ui/css/smoothness/jquery-ui-1.10.2.custom.css"
     }
 }

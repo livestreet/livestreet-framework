@@ -17,8 +17,7 @@
 		data-media-height="{$file->getHeight()}"
 		data-media-dimensions="{$file->getWidth()}x{$file->getHeight()}"
 		data-media-preview="{$file->getFileWebPath('100crop')}"
-		data-media-image-sizes={json var=$file->getDataOne('image_sizes')}
-		data-media-relation-is-preview={json var=$file->getRelationTarget()->getIsPreview()}>
+		data-media-image-sizes={json var=$file->getDataOne('image_sizes')} >
 	{* Превью *}
 	<img src="{$file->getFileWebPath('100crop')}" alt="{$file->getFileName()|escape}" class="{$component}-image">
 

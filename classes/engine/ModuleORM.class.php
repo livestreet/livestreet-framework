@@ -438,7 +438,9 @@ abstract class ModuleORM extends Module
         if (array_key_exists('#cache', $aFilter) && !$aFilter['#cache']) {
             $aEntities = $this->oMapperORM->GetItemsByFilter($aFilter, $sEntityFull);
         } else {
-            $sCacheKey = $sEntityFull . '_items_by_filter_' . serialize($aFilter);
+            $aFilterCache = $aFilter;
+            unset($aFilterCache['#with']);
+            $sCacheKey = $sEntityFull . '_items_by_filter_' . serialize($aFilterCache);
             $aCacheTags = array($sEntityFull . '_save', $sEntityFull . '_delete');
             $iCacheTime = 60 * 60 * 24; // скорее лучше хранить в свойстве сущности, для возможности выборочного переопределения
             // переопределяем из параметров
@@ -483,6 +485,14 @@ abstract class ModuleORM extends Module
                     continue;
                 }
                 /**
+                 * Если нужна дополнительная обработка через коллбек
+                 * Параметр в обработчике должен приниматься по ссылке
+                 */
+                if (isset($aRelationFilter['#callback-filter']) and $aRelationFilter['#callback-filter'] instanceof Closure) {
+                    $callback = $aRelationFilter['#callback-filter'];
+                    $callback($aEntities, $aRelationFilter);
+                }
+                /**
                  * Если необходимо, то выставляем сразу нужное значение и не делаем никаких запросов
                  */
                 if (isset($aRelationFilter['#value-set'])) {
@@ -491,11 +501,15 @@ abstract class ModuleORM extends Module
                     }
                     continue;
                 }
+                /**
+                 * Чистим фильтр от коллбека, иначе он может пройти дальше по цепочке вызовов
+                 */
+                unset($aRelationFilter['#callback-filter']);
 
-                $sRelType = $aRelations[$sRelationName][0];
+                $sRelType = $aRelations[$sRelationName]['type'];
                 $sRelEntity = $this->Plugin_GetRootDelegater('entity',
-                    $aRelations[$sRelationName][1]); // получаем корневую сущность, без учета наследников
-                $sRelKey = $aRelations[$sRelationName][2];
+                    $aRelations[$sRelationName]['rel_entity']); // получаем корневую сущность, без учета наследников
+                $sRelKey = $aRelations[$sRelationName]['rel_key'];
 
                 if (!array_key_exists($sRelationName, $aRelations) or !in_array($sRelType, array(
                         EntityORM::RELATION_TYPE_BELONGS_TO,
@@ -533,28 +547,18 @@ abstract class ModuleORM extends Module
                         array($aFilterRel));
                 } elseif ($sRelType == EntityORM::RELATION_TYPE_HAS_ONE) {
                     $aFilterRel = array($sRelKey . ' in' => $aEntityPrimaryKeys, '#index-from' => $sRelKey);
-                    $aFilterRel = array_merge($aFilterRel, $aRelationFilter);
-                    if (isset($aRelations[$sRelationName][3])) {
-                        $aFilterRel = array_merge($aFilterRel, $aRelations[$sRelationName][3]);
-                    }
+                    $aFilterRel = array_merge($aFilterRel, $aRelationFilter, $aRelations[$sRelationName]['filter']);
                     $aRelData = Engine::GetInstance()->_CallModule("{$sRelPluginPrefix}{$sRelModuleName}_get{$sRelEntityName}ItemsByFilter",
                         array($aFilterRel));
                 } elseif ($sRelType == EntityORM::RELATION_TYPE_HAS_MANY) {
                     $aFilterRel = array($sRelKey . ' in' => $aEntityPrimaryKeys, '#index-group' => $sRelKey);
-                    $aFilterRel = array_merge($aFilterRel, $aRelationFilter);
-                    if (isset($aRelations[$sRelationName][3])) {
-                        $aFilterRel = array_merge($aFilterRel, $aRelations[$sRelationName][3]);
-                    }
+                    $aFilterRel = array_merge($aFilterRel, $aRelationFilter, $aRelations[$sRelationName]['filter']);
                     $aRelData = Engine::GetInstance()->_CallModule("{$sRelPluginPrefix}{$sRelModuleName}_get{$sRelEntityName}ItemsByFilter",
                         array($aFilterRel));
                 } elseif ($sRelType == EntityORM::RELATION_TYPE_MANY_TO_MANY) {
-                    $sEntityJoin = $aRelations[$sRelationName][3];
-                    $sKeyJoin = $aRelations[$sRelationName][4];
-                    if (isset($aRelations[$sRelationName][5])) {
-                        $aFilterAdd = $aRelations[$sRelationName][5];
-                    } else {
-                        $aFilterAdd = array();
-                    }
+                    $sEntityJoin = $aRelations[$sRelationName]['join_entity'];
+                    $sKeyJoin = $aRelations[$sRelationName]['join_key'];
+                    $aFilterAdd = $aRelations[$sRelationName]['filter'];
                     if (!array_key_exists('#value-default', $aRelationFilter)) {
                         $aRelationFilter['#value-default'] = array();
                     }
@@ -745,7 +749,9 @@ abstract class ModuleORM extends Module
         if (array_key_exists('#cache', $aFilter) && !$aFilter['#cache']) {
             $iCount = $this->oMapperORM->GetCountItemsByFilter($aFilter, $sEntityFull);
         } else {
-            $sCacheKey = $sEntityFull . '_count_items_by_filter_' . serialize($aFilter);
+            $aFilterCache = $aFilter;
+            unset($aFilterCache['#with']);
+            $sCacheKey = $sEntityFull . '_count_items_by_filter_' . serialize($aFilterCache);
             $aCacheTags = array($sEntityFull . '_save', $sEntityFull . '_delete');
             $iCacheTime = 60 * 60 * 24; // скорее лучше хранить в свойстве сущности, для возможности выборочного переопределения
             // переопределяем из параметров

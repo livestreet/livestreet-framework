@@ -9,6 +9,8 @@
     },
     "templates": {
         "item.select": "actionbar-item.select.tpl",
+        "group": "actionbar-group.tpl",
+        "button": "actionbar-button.tpl",
         "actionbar": "actionbar.tpl"
     },
     "scripts": {

@@ -83,7 +83,7 @@ abstract class ModuleAsset_EntityType extends Entity
     /**
      * Устанавливает исходный файл
      *
-     * @param string $sContent
+     * @param string $sFile
      */
     public function setFile($sFile)
     {

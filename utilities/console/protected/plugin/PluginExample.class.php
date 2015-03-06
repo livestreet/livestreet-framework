@@ -7,77 +7,124 @@ if (!class_exists('Plugin')) {
     die('Hacking attemp!');
 }
 
+/**
+ * Основной класс плагина
+ */
 class PluginExample extends Plugin
 {
-
-    // Объявление делегирований (нужны для того, чтобы назначить свои экшны и шаблоны)
-    public $aDelegates = array(/**
-     * 'action' => array('ActionIndex'=>'_ActionSomepage'),
-     * Замена экшна ActionIndex на ActionSomepage из папки плагина
+    /**
+     * Переопределение стандартных классов и шаблонов
+     * Сначала указывается класс (или шаблон), который нужно переопределить, а значением указывается переопределяющий класс плагина (рекомендуется называть его тем же именем).
+     * Символ "_" перед классом означается автоматическую подстановку вместо него класса текущего плагина (или пути до шаблона плагина).
      *
-     * 'template' => array('index.tpl'=>'_my_plugin_index.tpl'),
-     * Замена index.tpl из корня скина файлом /application/plugins/abcplugin/templates/skin/default/my_plugin_index.tpl
-     *
-     * 'template'=>array('actions/ActionIndex/index.tpl'=>'_actions/ActionTest/index.tpl'),
-     * Замена index.tpl из скина из папки actions/ActionIndex/ файлом /application/plugins/abcplugin/templates/skin/default/actions/ActionTest/index.tpl
+     * @var array
      */
-
-
+    protected $aInherits = array(/*
+        'module' => array(
+            'ModuleTopic'=>'_ModuleTopic',
+            'ModuleUser'=>'_ModuleUser'
+        ),
+        'mapper' => array(
+            'ModuleTopic_MapperTopic'=>'_ModuleTopic_MapperTopic',
+        ),
+        'entity' => array(
+            'ModuleTopic_EntityTopic' => '_ModuleTopic_EntityTopic'
+        ),
+        'action' => array(
+            'ActionIndex'=>'_ActionSomepage'
+        ),
+        'block' => array(
+            'BlockBlogs'=>'_BlockBlogs'
+        ),
+        'event' => array(
+            'ActionFoo_EventBar'=>'_ActionFoo_EventBar'
+        ),
+        'behavior' => array(
+            'ModuleCategory_BehaviorModule'=>'_ModuleCategory_BehaviorModule'
+        ),
+        'template' => array(
+            // Переопределяет шаблон экшена
+            'actions/ActionIndex/index.tpl'=>'_actions/ActionTest/index.tpl',
+            // Переопределяет шаблон 'login' компонента 'auth'
+            'component.auth.login' => '_components/auth/login.tpl',
+        ),
+        */
     );
 
-    // Объявление переопределений (модули, мапперы и сущности)
-    protected $aInherits = array(/**
-     * Переопределение модулей (функционал):
-     * 'module'  =>array('ModuleTopic'=>'_ModuleTopic'),
+    /**
+     * Выполняется в момент активации плагина
      *
-     * К классу ModuleTopic (/classes/modules/Topic.class.php) добавляются методы из
-     * PluginAbcplugin_ModuleTopic (/application/plugins/abcplugin/classes/modules/Topic.class.php) - новые или замена существующих
-     *
-     *
-     *
-     * Переопределение мапперов (запись/чтение объектов в/из БД):
-     * 'mapper'  =>array('ModuleTopic_MapperTopic' => '_ModuleTopic_MapperTopic'),
-     *
-     * К классу ModuleTopic_MapperTopic (/classes/modules/mapper/Topic.mapper.class.php) добавляются методы из
-     * PluginAbcplugin_ModuleTopic_EntityTopic (/application/plugins/abcplugin/classes/modules/mapper/Topic.mapper.class.php) - новые или замена существующих
-     *
-     *
-     *
-     * Переопределение сущностей (интерфейс между объектом и записью/записями в БД):
-     * 'entity'  =>array('ModuleTopic_EntityTopic' => '_ModuleTopic_EntityTopic'),
-     *
-     * К классу ModuleTopic_EntityTopic (/classes/modules/entity/Topic.entity.class.php) добавляются методы из
-     * PluginAbcplugin_ModuleTopic_EntityTopic (/application/plugins/abcplugin/classes/modules/entity/Topic.entity.class.php) - новые или замена существующих
-     *
+     * @return bool
      */
-    );
-
-    // Активация плагина
     public function Activate()
     {
+        /**
+         * Создаем новый тип для дополнительных полей. В итоге к сущности Some можно будет через интерфейс добавлять новые поля.
+         * Третий параметр true ознает перезапись параметров, если такой тип уже есть в БД
+         */
         /*
-        if (!$this->isTableExists('prefix_tablename')) {
-            $this->ExportSQL(dirname(__FILE__).'/install.sql'); // Если нам надо изменить БД, делаем это здесь.
+        if (!$this->Property_CreateTargetType('example_some', array('entity' => 'PluginExample_ModuleMain_EntitySome', 'name' => 'Нечто'), true)) {
+            return false;
         }
         */
+
+        /**
+         * Создаем новый тип для категорий. Позволяет прикрутить к сущности Some неограниченное дерево категорий управляемое из админки.
+         */
+        /*
+        if (!$this->Category_CreateTargetType('example_some', 'Нечто', array(), true)) {
+            return false;
+        }
+        */
+
         return true;
     }
 
-    // Деактивация плагина
+    /**
+     * Выполняется в момент деактивации плагина
+     *
+     * @return bool
+     */
     public function Deactivate()
     {
-        /*
-        $this->ExportSQL(dirname(__FILE__).'/deinstall.sql'); // Выполнить деактивационный sql, если надо.
-        */
+        /**
+         * Отключаем дополнительные поля
+         */
+        //$this->Property_RemoveTargetType('example_some', ModuleProperty::TARGET_STATE_NOT_ACTIVE);
+        /**
+         * Отключаем категории
+         */
+        //$this->Category_RemoveTargetType('example_some', ModuleCategory::TARGET_STATE_NOT_ACTIVE);
+
         return true;
     }
 
+    /**
+     * Выполняется при удалении плагина
+     *
+     * @return bool
+     */
+    public function Remove()
+    {
+        /**
+         * Удаляем тип дополнительных полей
+         */
+        //$this->Property_RemoveTargetType('example_some', ModuleProperty::TARGET_STATE_REMOVE);
+        /**
+         * Удаляем тип категорий
+         */
+        //$this->Category_RemoveTargetType('example_some', ModuleCategory::TARGET_STATE_REMOVE);
 
-    // Инициализация плагина
+        return true;
+    }
+
+    /**
+     * Выполняется каждый раз при загрузке сайта, если плагин активирован
+     */
     public function Init()
     {
-        $this->Viewer_AppendStyle(Plugin::GetTemplateWebPath(__CLASS__) . "css/style.css"); // Добавление своего CSS
-        $this->Viewer_AppendScript(Plugin::GetTemplateWebPath(__CLASS__) . "js/script.js"); // Добавление своего JS
+        $this->Viewer_AppendStyle(Plugin::GetTemplateWebPath(__CLASS__) . "assets/css/main.css"); // Добавление своего CSS
+        $this->Viewer_AppendScript(Plugin::GetTemplateWebPath(__CLASS__) . "assets/js/main.js"); // Добавление своего JS
 
         //$this->Viewer_AddMenu('blog',Plugin::GetTemplatePath(__CLASS__).'menu.blog.tpl'); // например, задаем свой вид меню
     }

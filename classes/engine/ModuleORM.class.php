@@ -506,10 +506,10 @@ abstract class ModuleORM extends Module
                  */
                 unset($aRelationFilter['#callback-filter']);
 
-                $sRelType = $aRelations[$sRelationName][0];
+                $sRelType = $aRelations[$sRelationName]['type'];
                 $sRelEntity = $this->Plugin_GetRootDelegater('entity',
-                    $aRelations[$sRelationName][1]); // получаем корневую сущность, без учета наследников
-                $sRelKey = $aRelations[$sRelationName][2];
+                    $aRelations[$sRelationName]['rel_entity']); // получаем корневую сущность, без учета наследников
+                $sRelKey = $aRelations[$sRelationName]['rel_key'];
 
                 if (!array_key_exists($sRelationName, $aRelations) or !in_array($sRelType, array(
                         EntityORM::RELATION_TYPE_BELONGS_TO,
@@ -547,28 +547,18 @@ abstract class ModuleORM extends Module
                         array($aFilterRel));
                 } elseif ($sRelType == EntityORM::RELATION_TYPE_HAS_ONE) {
                     $aFilterRel = array($sRelKey . ' in' => $aEntityPrimaryKeys, '#index-from' => $sRelKey);
-                    $aFilterRel = array_merge($aFilterRel, $aRelationFilter);
-                    if (isset($aRelations[$sRelationName][3])) {
-                        $aFilterRel = array_merge($aFilterRel, $aRelations[$sRelationName][3]);
-                    }
+                    $aFilterRel = array_merge($aFilterRel, $aRelationFilter, $aRelations[$sRelationName]['filter']);
                     $aRelData = Engine::GetInstance()->_CallModule("{$sRelPluginPrefix}{$sRelModuleName}_get{$sRelEntityName}ItemsByFilter",
                         array($aFilterRel));
                 } elseif ($sRelType == EntityORM::RELATION_TYPE_HAS_MANY) {
                     $aFilterRel = array($sRelKey . ' in' => $aEntityPrimaryKeys, '#index-group' => $sRelKey);
-                    $aFilterRel = array_merge($aFilterRel, $aRelationFilter);
-                    if (isset($aRelations[$sRelationName][3])) {
-                        $aFilterRel = array_merge($aFilterRel, $aRelations[$sRelationName][3]);
-                    }
+                    $aFilterRel = array_merge($aFilterRel, $aRelationFilter, $aRelations[$sRelationName]['filter']);
                     $aRelData = Engine::GetInstance()->_CallModule("{$sRelPluginPrefix}{$sRelModuleName}_get{$sRelEntityName}ItemsByFilter",
                         array($aFilterRel));
                 } elseif ($sRelType == EntityORM::RELATION_TYPE_MANY_TO_MANY) {
-                    $sEntityJoin = $aRelations[$sRelationName][3];
-                    $sKeyJoin = $aRelations[$sRelationName][4];
-                    if (isset($aRelations[$sRelationName][5])) {
-                        $aFilterAdd = $aRelations[$sRelationName][5];
-                    } else {
-                        $aFilterAdd = array();
-                    }
+                    $sEntityJoin = $aRelations[$sRelationName]['join_entity'];
+                    $sKeyJoin = $aRelations[$sRelationName]['join_key'];
+                    $aFilterAdd = $aRelations[$sRelationName]['filter'];
                     if (!array_key_exists('#value-default', $aRelationFilter)) {
                         $aRelationFilter['#value-default'] = array();
                     }

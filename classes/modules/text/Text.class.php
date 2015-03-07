@@ -241,8 +241,8 @@ class ModuleText extends Module
         if (!is_string($sText)) {
             return '';
         }
-        $sResult = $this->MarkdownParser($sText);
-        $sResult = $this->FlashParamParser($sResult);
+        $sResult = $this->FlashParamParser($sText);
+        $sResult = $this->MarkdownParser($sResult);
         $sResult = $this->JevixParser($sResult);
         $sResult = $this->VideoParser($sResult);
         $sResult = $this->CodeSourceParser($sResult);
@@ -258,10 +258,11 @@ class ModuleText extends Module
     public function MarkdownParser($sText)
     {
         if (Config::Get('module.text.use_markdown')) {
-            Engine::AddAutoloaderNamespace('League\CommonMark',
-                Config::Get('path.framework.libs_vendor.server') . '/commonmark/src');
-            $converter = new \League\CommonMark\CommonMarkConverter();
-            $sText = $converter->convertToHtml($sText);
+            Engine::AddAutoloaderNamespace('Michelf',
+                Config::Get('path.framework.libs_vendor.server') . '/php-markdown/Michelf');
+            $parser = new Michelf\MarkdownExtra();
+            // TODO: настройка парсера - https://michelf.ca/projects/php-markdown/configuration/
+            $sText = $parser->transform($sText);
         }
         return $sText;
     }

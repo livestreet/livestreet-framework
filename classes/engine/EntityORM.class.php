@@ -613,18 +613,44 @@ abstract class EntityORM extends Entity
     public function _getRelations()
     {
         /**
-         * Преобразуем связи к единому ассоциативному виду
+         * Преобразуем связи к единому ассоциативному виду и проставляем дефолтные значения
          */
         foreach ($this->aRelations as $sName => $aParams) {
-            if (is_int($sName) or isset($aParams['type'])) {
+            if (is_int($sName)) {
                 continue;
             }
+            if (isset($aParams['type'])) {
+                /**
+                 * Проставляем дефолтные значения
+                 */
+                if (!array_key_exists('filter', $aParams)) {
+                    $aParams['filter'] = array();
+                }
+                if ($aParams['type'] == EntityORM::RELATION_TYPE_BELONGS_TO) {
+                    if (!array_key_exists('rel_key_to', $aParams)) {
+                        $aParams['rel_key_to'] = null;
+                    }
+                }
+                if ($aParams['type'] == EntityORM::RELATION_TYPE_HAS_MANY) {
+                    if (!array_key_exists('key_from', $aParams)) {
+                        $aParams['key_from'] = null;
+                    }
+                }
+                $this->aRelations[$sName] = $aParams;
+                continue;
+            }
+            /**
+             * Преобразование от старой записи к новой
+             */
             $aParamsNew = array(
                 'type'       => $aParams[0],
                 'rel_entity' => $aParams[1],
                 'rel_key'    => $aParams[2],
                 'filter'     => array()
             );
+            if ($aParamsNew['type'] == EntityORM::RELATION_TYPE_BELONGS_TO) {
+                $aParams['rel_key_to'] = null;
+            }
             if ($aParamsNew['type'] == EntityORM::RELATION_TYPE_HAS_ONE) {
                 if (isset($aParams[3])) {
                     $aParamsNew['filter'] = $aParams[3];
@@ -634,6 +660,7 @@ abstract class EntityORM extends Entity
                 if (isset($aParams[3])) {
                     $aParamsNew['filter'] = $aParams[3];
                 }
+                $aParams['key_from'] = null;
             }
             if ($aParamsNew['type'] == EntityORM::RELATION_TYPE_MANY_TO_MANY) {
                 $aParamsNew['join_entity'] = $aParams[3];
@@ -748,7 +775,8 @@ abstract class EntityORM extends Entity
                     $mCmdArgs = array();
                     switch ($sRelationType) {
                         case self::RELATION_TYPE_BELONGS_TO :
-                            $sCmd = "{$sRelPluginPrefix}{$sRelModuleName}_get{$sRelEntityName}By" . func_camelize($sRelPrimaryKey);
+                            $sKeyTo = $aRelations[$sKey]['rel_key_to'] ?: $sRelPrimaryKey;
+                            $sCmd = "{$sRelPluginPrefix}{$sRelModuleName}_get{$sRelEntityName}By" . func_camelize($sKeyTo);
                             $mCmdArgs = array($this->_getDataOne($sRelationKey));
                             break;
                         case self::RELATION_TYPE_HAS_ONE :
@@ -758,9 +786,14 @@ abstract class EntityORM extends Entity
                             $mCmdArgs = array($aFilterAdd);
                             break;
                         case self::RELATION_TYPE_HAS_MANY :
+                            if ($aRelations[$sKey]['key_from']) {
+                                $sRelationKeyValue = $this->_getDataOne($aRelations[$sKey]['key_from']);
+                            } else {
+                                $sRelationKeyValue = $iPrimaryKeyValue;
+                            }
                             $aFilterAdd = $aRelations[$sKey]['filter'];
                             $sCmd = "{$sRelPluginPrefix}{$sRelModuleName}_get{$sRelEntityName}ItemsByFilter";
-                            $aFilterAdd = array_merge(array($sRelationKey => $iPrimaryKeyValue), $aFilterAdd);
+                            $aFilterAdd = array_merge(array($sRelationKey => $sRelationKeyValue), $aFilterAdd);
                             if ($bUseFilter) {
                                 $aFilterAdd = array_merge($aFilterAdd, $aArgs[0]);
                             }

@@ -479,7 +479,6 @@ abstract class ModuleORM extends Module
             }
             $oEntityEmpty = Engine::GetEntity($sEntityFull);
             $aRelations = $oEntityEmpty->_getRelations();
-            $aEntityKeys = array();
             foreach ($aFilter['#with'] as $sRelationName => $aRelationFilter) {
                 if (!isset($aRelations[$sRelationName])) {
                     continue;
@@ -522,13 +521,6 @@ abstract class ModuleORM extends Module
                 }
 
                 /**
-                 * Формируем список ключей
-                 */
-                foreach ($aEntities as $oEntity) {
-                    $aEntityKeys[$sRelKey][] = $oEntity->_getDataOne($sRelKey);
-                }
-                $aEntityKeys[$sRelKey] = array_unique($aEntityKeys[$sRelKey]);
-                /**
                  * Делаем общий запрос по всем ключам
                  */
                 $oRelEntityEmpty = Engine::GetEntity($sRelEntity);
@@ -536,11 +528,21 @@ abstract class ModuleORM extends Module
                 $sRelEntityName = Engine::GetEntityName($sRelEntity);
                 $sRelPluginPrefix = Engine::GetPluginPrefix($sRelEntity);
                 $sRelPrimaryKey = method_exists($oRelEntityEmpty,
-                    '_getPrimaryKey') ? func_camelize($oRelEntityEmpty->_getPrimaryKey()) : 'Id';
+                    '_getPrimaryKey') ? $oRelEntityEmpty->_getPrimaryKey() : 'id';
                 if ($sRelType == EntityORM::RELATION_TYPE_BELONGS_TO) {
+                    /**
+                     * Формируем список ключей
+                     */
+                    $aEntityKeyValues = array();
+                    foreach ($aEntities as $oEntity) {
+                        $aEntityKeyValues[] = $oEntity->_getDataOne($sRelKey);
+                    }
+                    $aEntityKeyValues = array_unique($aEntityKeyValues);
+
+                    $sKeyTo = $aRelations[$sRelationName]['rel_key_to'] ?: $sRelPrimaryKey;
                     $aFilterRel = array(
-                        func_underscore($sRelPrimaryKey) . ' in' => $aEntityKeys[$sRelKey],
-                        '#index-from-primary'
+                        $sKeyTo . ' in' => $aEntityKeyValues,
+                        '#index-from'   => $sKeyTo
                     );
                     $aFilterRel = array_merge($aFilterRel, $aRelationFilter);
                     $aRelData = Engine::GetInstance()->_CallModule("{$sRelPluginPrefix}{$sRelModuleName}_get{$sRelEntityName}ItemsByFilter",
@@ -551,7 +553,21 @@ abstract class ModuleORM extends Module
                     $aRelData = Engine::GetInstance()->_CallModule("{$sRelPluginPrefix}{$sRelModuleName}_get{$sRelEntityName}ItemsByFilter",
                         array($aFilterRel));
                 } elseif ($sRelType == EntityORM::RELATION_TYPE_HAS_MANY) {
-                    $aFilterRel = array($sRelKey . ' in' => $aEntityPrimaryKeys, '#index-group' => $sRelKey);
+                    if ($aRelations[$sRelationName]['key_from']) {
+                        /**
+                         * Формируем список ключей
+                         */
+                        $aEntityKeyValues = array();
+                        foreach ($aEntities as $oEntity) {
+                            $aEntityKeyValues[] = $oEntity->_getDataOne($aRelations[$sRelationName]['key_from']);
+                        }
+                        $aEntityKeyValues = array_unique($aEntityKeyValues);
+                    }
+
+                    $aFilterRel = array(
+                        $sRelKey . ' in' => $aRelations[$sRelationName]['key_from'] ? $aEntityKeyValues : $aEntityPrimaryKeys,
+                        '#index-group'   => $sRelKey
+                    );
                     $aFilterRel = array_merge($aFilterRel, $aRelationFilter, $aRelations[$sRelationName]['filter']);
                     $aRelData = Engine::GetInstance()->_CallModule("{$sRelPluginPrefix}{$sRelModuleName}_get{$sRelEntityName}ItemsByFilter",
                         array($aFilterRel));
@@ -581,6 +597,9 @@ abstract class ModuleORM extends Module
                         $sKeyData = $oEntity->_getPrimaryKeyValue();
                     } else {
                         break;
+                    }
+                    if ($sRelType == EntityORM::RELATION_TYPE_HAS_MANY and $aRelations[$sRelationName]['key_from']) {
+                        $sKeyData = $oEntity->_getDataOne($aRelations[$sRelationName]['key_from']);
                     }
                     if (isset($aRelData[$sKeyData])) {
                         $oEntity->_setData(array($sRelationName => $aRelData[$sKeyData]));

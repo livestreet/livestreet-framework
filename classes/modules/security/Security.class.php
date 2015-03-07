@@ -68,7 +68,7 @@ class ModuleSecurity extends Module
      *
      * @return bool
      */
-    public function ValidateReferal()
+    public function ValidateReferer()
     {
         if (isset($_SERVER['HTTP_REFERER'])) {
             $aUrl = parse_url($_SERVER['HTTP_REFERER']);

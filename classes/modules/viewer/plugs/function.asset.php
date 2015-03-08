@@ -57,8 +57,12 @@ function smarty_function_asset($aParams, &$oSmarty)
      */
     if (preg_match('#^Component@(.+)#i', $aParams['file'], $aMatch)) {
         $aPath = explode('.', $aMatch[1], 2);
-        $aParams['file'] = Engine::getInstance()->Component_GetAssetPath($aPath[0], $sTypeAsset, $aPath[1]);
-        $aParams['file'] = Engine::getInstance()->Fs_GetPathWebFromServer($aParams['file']);
+        $aParams['name'] = 'component.' . $aPath[0] . '.' . $aPath[1];
+        if ($aParams['file'] = Engine::getInstance()->Component_GetAssetPath($aPath[0], $sTypeAsset, $aPath[1])) {
+            $aParams['file'] = Engine::getInstance()->Fs_GetPathWebFromServer($aParams['file']);
+        } else {
+            return;
+        }
     }
     /**
      * Подготавливаем параметры

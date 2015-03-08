@@ -50,12 +50,12 @@
 {* Markup редактор *}
 {else}
 	{hookb run='editor_markup'}
-		{asset type='js' name='editor_markup' file="Component@editor.vendor/markitup/jquery.markitup"}
-		{asset type='js' name='editor_markup_options' file="Component@editor.markup"}
+		{asset type='js' file="Component@editor.vendor/markitup/jquery.markitup"}
+		{asset type='js' file="Component@editor.markup"}
 
-		{asset type='css' name='editor_markup' file="Component@editor.vendor/markitup/skins/livestreet/style"}
-		{asset type='css' name='editor_markup_set' file="Component@editor.vendor/markitup/sets/livestreet/style"}
-		{asset type='css' name='editor_markup_help' file="Component@editor.editor"}
+		{asset type='css' file="Component@editor.vendor/markitup/skins/livestreet/style"}
+		{asset type='css' file="Component@editor.vendor/markitup/sets/livestreet/style"}
+		{asset type='css' file="Component@editor.editor"}
 
 		{editor_textarea}
 

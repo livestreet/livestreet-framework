@@ -324,6 +324,9 @@ class ModuleComponent extends Module
         } else {
             $sAsset = "{$sAssetName}.{$sAssetExt}";
         }
+        if ($sAsset === false) {
+            return false;
+        }
         foreach ($aData['paths'] as $sPath) {
             $sFile = $sPath . '/' . $sAsset;
             if (file_exists($sFile)) {

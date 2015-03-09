@@ -104,19 +104,16 @@
             this.pane.empty().addClass( 'loading' );
 
             ls.ajax.load(this.options.url, this.options.params, function (response) {
-                this.pane.removeClass( 'loading' );
-
-                if ( response.bStateError ) {
-                    //this.pane.html('Error');
-                } else {
-                    this.pane.html( response[ this.options.result ] );
-                }
+                this.pane.html( response[ this.options.result ] );
 
                 this._trigger( 'activate', null, this );
             }.bind(this), {
-                error: function ( response ) {
+                onError: function ( response ) {
                     this.pane.removeClass( 'loading' );
                     //this.pane.html('Error');
+                }.bind( this ),
+                onComplete: function ( response ) {
+                    this.pane.removeClass( 'loading' );
                 }.bind( this )
             });
         }

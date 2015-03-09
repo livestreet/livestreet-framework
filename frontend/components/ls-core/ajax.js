@@ -57,11 +57,13 @@ ls.ajax = (function ($) {
 				ls.dev.debug.apply(ls.dev, arguments);
 			}.bind(this),
 			error: function(msg){
+				if ( $.isFunction( more.onError ) ) more.onError.apply( this, arguments );
 				ls.dev.debug("ajax error: ");
 				ls.dev.debug.apply(ls.dev, arguments);
 			}.bind(this),
 			complete: function(msg){
 				NProgress.done();
+				if ( $.isFunction( more.onComplete ) ) more.onComplete.apply( this, arguments );
 				ls.dev.debug("ajax complete: ");
 				ls.dev.debug.apply(ls.dev, arguments);
 			}.bind(this)

@@ -34,7 +34,7 @@
 
             this.elements = {
                 tabs: this.element.find( this.option( 'selectors.tab' ) ),
-                panes: this.element.find( this.option( 'selectors.pane' ) ),
+                panes: this.element.find( this.option( 'selectors.pane' ) )
             };
 
             this.elements.tabs.lsTab({

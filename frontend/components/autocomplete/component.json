@@ -8,6 +8,11 @@
         "css-reset": "*"
     },
     "scripts": {
-        "autocomplete": "js/autocomplete.js"
+        "vendor-tag-it": "vendor/tag-it/tag-it.js",
+        "autocomplete": "js/autocomplete.js",
+        "autocomplete-strict": "js/autocomplete-strict.js"
+    },
+    "styles": {
+        "vendor-tag-it": "vendor/tag-it/jquery.tagit.css"
     }
 }

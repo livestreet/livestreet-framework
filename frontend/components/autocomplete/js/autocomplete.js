@@ -94,6 +94,6 @@
          */
         _extractLast: function ( term ) {
             return this._split( term ).pop();
-        },
+        }
     });
 })(jQuery);

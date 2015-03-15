@@ -25,11 +25,26 @@
 <p>Параметр <code>close</code></p>
 
 {capture 'test_example_content'}
-    {component 'alert' close=true text='Lorem ipsum dolor sit amet, consectetur adipisicing elit. Vel, nisi.'}
+    <script>
+        jQuery(function($) {
+            $('.js-my-alert').lsAlert();
+        });
+    </script>
+
+    {component 'alert' close=true classes='js-my-alert' text='Lorem ipsum dolor sit amet, consectetur adipisicing elit. Vel, nisi.'}
 {/capture}
 
 {capture 'test_example_code'}
-{ldelim}component 'alert' close=true text='Lorem ipsum dolor sit amet ...'{rdelim}
+<script>
+    jQuery(function($) {
+        $('.js-my-alert').lsAlert();
+    });
+</script>
+
+{ldelim}component 'alert'
+    classes='js-my-alert'
+    dismissible=true
+    text='Lorem ipsum dolor sit amet ...'{rdelim}
 {/capture}
 
 {test_example content=$smarty.capture.test_example_content code=$smarty.capture.test_example_code}
@@ -43,11 +58,11 @@
 <p>Параметр <code>title</code></p>
 
 {capture 'test_example_content'}
-    {component 'alert' title='Внимание' close=true text='Lorem ipsum dolor sit amet, consectetur adipisicing elit. Vel, nisi.'}
+    {component 'alert' title='Внимание' text='Lorem ipsum dolor sit amet, consectetur adipisicing elit. Vel, nisi.'}
 {/capture}
 
 {capture 'test_example_code'}
-{ldelim}component 'alert' close=true text='Lorem ipsum dolor sit amet ...'{rdelim}
+{ldelim}component 'alert' title='Внимание' text='Lorem ipsum dolor sit amet ...'{rdelim}
 {/capture}
 
 {test_example content=$smarty.capture.test_example_content code=$smarty.capture.test_example_code}

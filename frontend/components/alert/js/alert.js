@@ -39,7 +39,7 @@ $.widget( "livestreet.lsAlert", $.livestreet.lsComponent, {
     _create: function() {
         this._super();
 
-        this._on( this.elements.close, { 'click': this.hide } );
+        this._on( this.elements.close, { click: 'hide' } );
     },
 
     /**

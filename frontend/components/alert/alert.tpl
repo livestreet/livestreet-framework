@@ -1,43 +1,45 @@
 {**
  * Уведомления
  *
- * @param string  $title            Заголовок
- * @param mixed   $text             Массив либо строка с текстом уведомления
- * @param string  $mods (success)   Модификаторы
- * @param string  $attributes       Дополнительные атрибуты основного блока
- * @param string  $classes          Дополнительные классы
- * @param bool    $visible (true)   Показывать или нет уведомление
- * @param bool    $close (false)    Показывать или нет кнопку закрытия
+ * @param string  $title       (null)        Заголовок
+ * @param mixed   $text        (null)        Массив либо строка с текстом уведомления. Массив должен быть в формате: `[ [ title, msg ], ... ]`
+ * @param bool    $visible     (true)        Показывать или нет уведомление
+ * @param bool    $dismissible (false)       Показывать или нет кнопку закрытия
+ * @param string  $mods        (success)     Список модификторов основного блока (через пробел)
+ * @param string  $classes     (null)        Список классов основного блока (через пробел)
+ * @param array   $attributes  (null)        Список атрибутов основного блока
  *}
 
 {* Название компонента *}
 {$component = 'alert'}
 
-{$visible = $smarty.local.visible|default:true}
-{$mods = $smarty.local.mods}
-{$uid = "{$component}{rand( 0, 10e10 )}"}
+{* Генерируем копии локальных переменных, *}
+{* чтобы их можно было изменять в дочерних шаблонах *}
+{foreach [ 'title', 'text', 'visible', 'dismissible', 'mods', 'classes', 'attributes' ] as $param}
+    {assign var="$param" value=$smarty.local.$param}
+{/foreach}
 
-{if $smarty.local.close}
+{* Дефолтные значения *}
+{$uid = "{$component}{rand( 0, 10e10 )}"}
+{$visible = $visible|default:true}
+
+{if $dismissible}
     {$mods = "$mods dismissible"}
 {/if}
 
 {* Уведомление *}
-<div class="{$component} {cmods name=$component mods=$mods} {$smarty.local.classes} js-alert"
-    {if ! $visible}hidden{/if}
-    {cattr list=$smarty.local.attributes}
-    role="alert">
-
+<div class="{$component} {cmods name=$component mods=$mods} {$classes}" role="alert" {if ! $visible}hidden{/if} {cattr list=$attributes}>
     {* Заголовок *}
-    {if $smarty.local.title}
-        <h4 class="{$component}-title">{$smarty.local.title}</h4>
+    {if $title}
+        <h4 class="{$component}-title">{$title}</h4>
     {/if}
 
     {* Контент *}
     <div class="{$component}-body">
         {block 'alert_body'}
-            {if is_array( $smarty.local.text )}
+            {if is_array( $text )}
                 <ul class="{$component}-list">
-                    {foreach $smarty.local.text as $alert}
+                    {foreach $text as $alert}
                         <li class="{$component}-list-item">
                             {if $alert.title}
                                 <strong>{$alert.title}</strong>:
@@ -48,13 +50,13 @@
                     {/foreach}
                 </ul>
             {else}
-                {$smarty.local.text}
+                {$text}
             {/if}
         {/block}
     </div>
 
     {* Кнопка закрытия *}
-    {if $smarty.local.close}
+    {if $dismissible}
         <button class="{$component}-close js-alert-close" aria-labelledby="{$uid}">
             <span class="icon-remove"></span>
             <span id="{$uid}" aria-hidden="true" hidden>{lang 'common.close'}</span>

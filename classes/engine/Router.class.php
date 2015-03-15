@@ -162,10 +162,15 @@ class Router extends LsObject
     {
         $this->ParseUrl();
         if (isset($aParams['callback_after_parse_url'])) {
+            if (!is_array($aParams['callback_after_parse_url'])) {
+                $aParams['callback_after_parse_url'] = array($aParams['callback_after_parse_url']);
+            }
             /**
              * Для возможности изменять результат парсинга URL, например, для учета поддоменов
              */
-            call_user_func($aParams['callback_after_parse_url']);
+            foreach ($aParams['callback_after_parse_url'] as $mCallback) {
+                call_user_func($mCallback);
+            }
         }
         $this->DefineActionClass(); // Для возможности ДО инициализации модулей определить какой action/event запрошен
         $this->oEngine = Engine::getInstance();

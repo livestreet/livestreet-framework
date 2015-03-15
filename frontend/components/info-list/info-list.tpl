@@ -1,19 +1,26 @@
 {**
  * Список с информацией
  *
- * @styles css/common.css
+ * @param array $list (null) Массив в формате [ label, content ]
+ * @param string $title (null) Заголовок
  *}
 
 {* Название компонента *}
 {$component = 'info-list'}
 
-{$list = $smarty.local.list}
+{* Генерируем копии локальных переменных, *}
+{* чтобы их можно было изменять в дочерних шаблонах *}
+{foreach [ 'title', 'list', 'mods', 'classes', 'attributes' ] as $param}
+    {assign var="$param" value=$smarty.local.$param}
+{/foreach}
+
+{block 'info_list_options'}{/block}
 
 {if $list}
-	<div class="{$component} {cmods name=$component mods=$smarty.local.mods} {$smarty.local.classes}" {cattr list=$smarty.local.attributes}>
+	<div class="{$component} {cmods name=$component mods=$mods} {$classes}" {cattr list=$attributes}>
 		{* Заголовок *}
-		{if $smarty.local.title}
-			<h2 class="{$component}-title">{$smarty.local.title}</h2>
+		{if $title}
+			<h2 class="{$component}-title">{$title}</h2>
 		{/if}
 
 		{* Список *}

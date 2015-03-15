@@ -18,8 +18,9 @@
         options: {
             // Селекторы
             selectors: {
+                // Блок с табами
                 tabs: '.js-tabs-block',
-                update: '.js-block-update-tabs',
+                // Блок-обертка содержимого табов
                 pane_container: '[data-type=tab-panes]'
             }
         },

@@ -1,51 +1,52 @@
 {**
- * Базовый шаблон блоков
+ * Блок
+ *
+ * @param string       $title       (null)        Заголовок
+ * @param string       $content     (null)
+ * @param boolean      $show        (true)
+ * @param array|string $list        (null)
+ * @param array|string $tabs        (null)
+ * @param string       $mods        (success)     Список модификторов основного блока (через пробел)
+ * @param string       $classes     (null)        Список классов основного блока (через пробел)
+ * @param array        $attributes  (null)        Список атрибутов основного блока
  *}
 
 {$component = 'block'}
 
-{block 'block_options'}
-    {$mods = $smarty.local.mods}
-    {$title = $smarty.local.title}
-    {$content = $smarty.local.content}
-    {$footer = $smarty.local.footer}
-    {$classes = $smarty.local.classes}
-    {$list = $smarty.local.list}
-    {$attributes = $smarty.local.attributes}
-    {$show = $smarty.local.show|default:true}
-{/block}
+{* Генерируем копии локальных переменных, *}
+{* чтобы их можно было изменять в дочерних шаблонах *}
+{foreach [ 'title', 'content', 'show', 'footer', 'list', 'tabs', 'mods', 'classes', 'attributes' ] as $param}
+    {assign var="$param" value=$smarty.local.$param}
+{/foreach}
+
+{block 'block_options'}{/block}
+
+{$show = $show|default:true}
 
 {if $show}
-    {block 'block_before'}{/block}
-
     <div class="{$component} {cmods name=$component mods=$mods} {$classes}" {cattr list=$attributes}>
         {* Шапка *}
         {if $title}
             <header class="{$component}-header">
-                <h3 class="{$component}-title">
-                    {$title}
-                </h3>
-
-                {block 'block_header_end'}{/block}
+                {block 'block_header_inner'}
+                    <h3 class="{$component}-title">
+                        {$title}
+                    </h3>
+                {/block}
             </header>
         {/if}
 
         {block 'block_header_after'}{/block}
 
-        {* Навигация *}
-        {block 'block_nav' hide}
-            <nav class="{$component}-nav">
-                {$smarty.block.child}
-            </nav>
-        {/block}
-
-        {block 'block_nav_after'}{/block}
-
         {* Содержимое *}
         {if $content}
-            <div class="{$component}-content">
-                {$content}
-            </div>
+            {block 'block_content'}
+                <div class="{$component}-content">
+                    {block 'block_content_inner'}
+                        {$content}
+                    {/block}
+                </div>
+            {/block}
         {/if}
 
         {block 'block_content_after'}{/block}
@@ -66,13 +67,15 @@
 
         {* Подвал *}
         {if $footer}
-            <div class="{$component}-footer">
-                {$footer}
-            </div>
+            {block 'block_footer'}
+                <div class="{$component}-footer">
+                    {block 'block_footer_inner'}
+                        {$footer}
+                    {/block}
+                </div>
+            {/block}
         {/if}
 
         {block 'block_footer_after'}{/block}
     </div>
-
-    {block 'block_after'}{/block}
 {/if}

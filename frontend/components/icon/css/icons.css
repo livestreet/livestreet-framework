@@ -3,14 +3,14 @@
  *
  * Иконки Glyphicons
  * http://glyphicons.com/
- * 
+ *
  * @license   GNU General Public License, version 2
  * @copyright 2013 OOO "ЛС-СОФТ" {@link http://livestreetcms.com}
  * @author    Denis Shakhov <denis.shakhov@gmail.com>
  */
 
 [class^="icon-"],
-[class*=" icon-"]  { 
+[class*=" icon-"]  {
 	display: inline-block;
 	vertical-align: text-top;
 	width: 14px;
@@ -19,7 +19,7 @@
 	background: url(../images/icons.png) no-repeat;
 }
 
-.icon-white { background-image: url(../images/icons-white.png); }
+.icon--white { background-image: url(../images/icons-white.png); }
 
 .icon-glass              { background-position: 0      0; }
 .icon-music              { background-position: -24px  0; }

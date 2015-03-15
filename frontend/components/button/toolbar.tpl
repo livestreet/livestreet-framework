@@ -1,7 +1,10 @@
 {**
  * Тулбар
  *
- * @param array $groups
+ * @param array   $groups     (null) Массив групп кнопок, либо строка с html кодом групп кнопок
+ * @param string  $mods       (null) Список модификторов основного блока (через пробел)
+ * @param string  $classes    (null) Список классов основного блока (через пробел)
+ * @param array   $attributes (null) Список атрибутов основного блока
  *}
 
 {* Название компонента *}

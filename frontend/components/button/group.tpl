@@ -1,9 +1,12 @@
 {**
  * Группировка кнопок
  *
- * @param string $role group|toolbar
- * @param array  $buttonParams
- * @param array  $buttons
+ * @param string        $role          (group) ARIA role (group|toolbar)
+ * @param array         $buttonParams  (null)  Общие параметры для всех кнопок в группе
+ * @param array|string  $buttons       (null)  Массив кнопок, либо строка с html кодом кнопок
+ * @param string        $mods          (null)  Список модификторов основного блока (через пробел)
+ * @param string        $classes       (null)  Список классов основного блока (через пробел)
+ * @param array         $attributes    (null)  Список атрибутов основного блока
  *}
 
 {* Название компонента *}

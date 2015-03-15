@@ -1,49 +1,56 @@
 {**
  * Кнопка
  *
- * @param type       string  (submit)   Тип кнопки (submit, reset, button)
- * @param text       string  (null)     Текст кнопки
- * @param url        string  (null)     Ссылка
- * @param id         string  (null)     Атрибут id
- * @param name       string  (null)     Атрибут name
- * @param isDisabled boolean (false)    Атрибут disabled
- * @param form       string  (null)     Селектор формы для сабмита
- * @param icon       string  (null)     Класс иконки
- * @param classes    string  (null)     Дополнительные классы (указываются через пробел)
- * @param mods       string  (null)     Список классов-модификаторов (указываются через пробел)
- * @param attributes array   (null)     Атрибуты
+ * @param string  $type       (submit)   Тип кнопки (submit, reset, button)
+ * @param string  $text       (null)     Текст кнопки
+ * @param string  $url        (null)     Ссылка
+ * @param string  $id         (null)     Атрибут id
+ * @param string  $name       (null)     Атрибут name
+ * @param boolean $isDisabled (false)    Атрибут disabled
+ * @param string  $form       (null)     ID формы для сабмита
+ * @param string  $icon       (null)     Название иконки
+ * @param string  $mods       (null)     Список модификторов основного блока (через пробел)
+ * @param string  $classes    (null)     Список классов основного блока (через пробел)
+ * @param array   $attributes (null)     Список атрибутов основного блока
  *}
 
 {* Название компонента *}
 {$component = 'button'}
 
-{$mods = $smarty.local.mods}
-{$icon = $smarty.local.icon}
+{* Генерируем копии локальных переменных, *}
+{* чтобы их можно было изменять в дочерних шаблонах *}
+{foreach [ 'type', 'text', 'url', 'id', 'name', 'isDisabled', 'form', 'icon', 'mods', 'classes', 'attributes' ] as $param}
+    {assign var="$param" value=$smarty.local.$param}
+{/foreach}
 
+{* Дефолтные значения *}
 {if $icon && ! $text}
     {$mods = "$mods icon"}
 {/if}
 
+{$tag = ( $url ) ? 'a' : 'button'}
+{$type = $type|default:'submit'}
+
 {* Если указана ссылка url то заменяем тег <button> на <a> *}
-<{( $smarty.local.url ) ? 'a' : 'button'}
-        {if ! $smarty.local.url}
-            type="{$smarty.local.type|default:'submit'}"
-            value="{if $smarty.local.value}{$smarty.local.value}{elseif isset( $_aRequest[ $smarty.local.name ] )}{$_aRequest[ $smarty.local.name ]}{/if}"
-            {if $smarty.local.isDisabled}disabled{/if}
-            {if $smarty.local.form}form="{$smarty.local.form}"{/if}
+<{$tag}
+        {if ! $url}
+            type="{$type}"
+            value="{if $value}{$value}{elseif isset( $_aRequest[ $name ] )}{$_aRequest[ $name ]}{/if}"
+            {if $isDisabled}disabled{/if}
+            {if $form}form="{$form}"{/if}
         {else}
-            href="{$smarty.local.url}"
+            href="{$url}"
             role="button"
         {/if}
-        {if $smarty.local.id}id="{$smarty.local.id}"{/if}
-        {if $smarty.local.name}name="{$smarty.local.name}"{/if}
-        class="{$component} {cmods name=$component mods=$mods} {$smarty.local.classes}"
-        {cattr list=$smarty.local.attributes}>
+        {if $id}id="{$id}"{/if}
+        {if $name}name="{$name}"{/if}
+        class="{$component} {cmods name=$component mods=$mods} {$classes}"
+        {cattr list=$attributes}>
     {* Иконка *}
     {if $icon}
         {component 'icon' icon=$icon attributes=[ 'aria-hidden' => 'true' ]}
     {/if}
 
     {* Текст *}
-    {$smarty.local.text}
-</{($smarty.local.url) ? 'a' : 'button'}>
+    {$text}
+</{$tag}>

@@ -7,7 +7,7 @@
         "css-reset": "*"
     },
     "styles": {
-        "vendor-notifier": "vendor/notifier/jquery.notifier.css"
+        "notification": "css/notification.css"
     },
     "scripts": {
         "vendor-notifier": "vendor/notifier/jquery.notifier.js",

@@ -1,0 +1,59 @@
+/**
+ * Notification
+ *
+ * @module ls/notification
+ *
+ * @license   GNU General Public License, version 2
+ * @copyright 2013 OOO "ЛС-СОФТ" {@link http://livestreetcms.com}
+ * @author    Denis Shakhov <denis.shakhov@gmail.com>
+ */
+
+#notifier {
+    width: 300px;
+    position: fixed;
+    bottom: 15px;
+    right: 15px;
+    z-index: 9999;
+}
+
+/* Notification */
+.notification {
+    position: relative;
+    padding: 15px;
+    margin-top: 10px;
+    background: #fff;
+    cursor: pointer;
+    box-shadow: 0 1px 3px rgba(0,0,0,.3)
+}
+.notification h3 {
+    font-weight: normal;
+    font-size: 16px;
+    margin-bottom: 8px;
+}
+.notification h3:last-child {
+    margin-bottom: 0;
+}
+.notification p {
+    font-size: 13px;
+    line-height: 18px;
+}
+
+/* Error */
+.notification.notification--error {
+    background: #f44336;
+    color: #ffcdd2;
+    color: rgba(255,255,255,.7);
+}
+.notification.notification--error h3 {
+    color: #fff;
+}
+
+/* Info */
+.notification.notification--info {
+    background: #2196F3;
+    color: #BBDEFB;
+    color: rgba(255,255,255,.7);
+}
+.notification.notification--info h3 {
+    color: #fff;
+}

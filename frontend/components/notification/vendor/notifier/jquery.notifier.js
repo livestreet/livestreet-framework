@@ -48,7 +48,7 @@
 		box: function(notice){
 			var box	= $("<div id=\"" + notice.id + "\" class=\"" + this.options.box_class + "\"></div>");				
 			if (notice.ttl != null) box.append($("<h3></h3>").append(notice.ttl));
-			box.append($("<p></p>").append(notice.msg));
+			if (notice.msg) box.append($("<p></p>").append(notice.msg));
 			box.hide().show();
 			this.life(box, notice.id);
 			this.events(box, notice.id);		

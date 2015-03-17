@@ -398,7 +398,7 @@ class Router extends LsObject
     /**
      * Функция переадресации на другой экшен
      * Если ею завершить евент в экшене то запуститься новый экшен
-     * Пример: <pre>return Router::Action('error');</pre>
+     * Пример: <pre>return Router::Action('blog','topic');</pre> или <pre>return Router::Action('blog/topic/1.html');</pre>
      *
      * @param string $sAction Экшен
      * @param string $sEvent Евент
@@ -407,6 +407,13 @@ class Router extends LsObject
      */
     static public function Action($sAction, $sEvent = null, $aParams = null)
     {
+        $sAction = trim($sAction, '/');
+        if ($sAction and $aPart = explode('/', $sAction, 3)) {
+            $sAction = $aPart[0];
+            $sEvent = isset($aPart[1]) ? $aPart[1] : null;
+            $aParams = isset($aPart[2]) ? explode('/', $aPart[2]) : null;
+        }
+
         self::$sAction = self::getInstance()->Rewrite($sAction);
         self::$sActionEvent = $sEvent;
         if (is_array($aParams)) {

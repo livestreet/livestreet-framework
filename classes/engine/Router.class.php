@@ -408,9 +408,9 @@ class Router extends LsObject
     static public function Action($sAction, $sEvent = null, $aParams = null)
     {
         $sAction = trim($sAction, '/');
-        if ($sAction and $aPart = explode('/', $sAction, 3)) {
+        if ($sAction and $aPart = explode('/', $sAction, 3) and count($aPart) > 1) {
             $sAction = $aPart[0];
-            $sEvent = isset($aPart[1]) ? $aPart[1] : null;
+            $sEvent = $aPart[1];
             $aParams = isset($aPart[2]) ? explode('/', $aPart[2]) : null;
         }
 

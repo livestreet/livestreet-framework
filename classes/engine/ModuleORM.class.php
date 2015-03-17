@@ -88,7 +88,7 @@ abstract class ModuleORM extends Module
              * Смотрим наличие связи many_to_many и добавляем их в бд
              */
             foreach ($oEntity->_getRelations() as $sRelName => $aRelation) {
-                if ($aRelation[0] == EntityORM::RELATION_TYPE_MANY_TO_MANY && $oEntity->$sRelName->isUpdated()) {
+                if ($aRelation['type'] == EntityORM::RELATION_TYPE_MANY_TO_MANY && $oEntity->$sRelName->isUpdated()) {
                     $this->_updateManyToManyRelation($oEntity, $sRelName);
                     $oEntity->resetRelationsData($sRelName);
                 }
@@ -110,7 +110,7 @@ abstract class ModuleORM extends Module
         if ($res === 0 or $res) { // запись не изменилась, либо изменилась
             // Обновление связей many_to_many
             foreach ($oEntity->_getRelations() as $sRelName => $aRelation) {
-                if ($aRelation[0] == EntityORM::RELATION_TYPE_MANY_TO_MANY && $oEntity->$sRelName->isUpdated()) {
+                if ($aRelation['type'] == EntityORM::RELATION_TYPE_MANY_TO_MANY && $oEntity->$sRelName->isUpdated()) {
                     $this->_updateManyToManyRelation($oEntity, $sRelName);
                     $oEntity->resetRelationsData($sRelName);
                 }
@@ -156,7 +156,7 @@ abstract class ModuleORM extends Module
 
             // Удаление связей many_to_many
             foreach ($oEntity->_getRelations() as $sRelName => $aRelation) {
-                if ($aRelation[0] == EntityORM::RELATION_TYPE_MANY_TO_MANY) {
+                if ($aRelation['type'] == EntityORM::RELATION_TYPE_MANY_TO_MANY) {
                     $this->_deleteManyToManyRelation($oEntity, $sRelName);
                 }
             }
@@ -1193,19 +1193,19 @@ abstract class ModuleORM extends Module
     protected function _updateManyToManyRelation($oEntity, $sRelationKey)
     {
         $aRelations = $oEntity->_getRelations();
-        if (!isset($aRelations[$sRelationKey][0]) or $aRelations[$sRelationKey][0] != EntityORM::RELATION_TYPE_MANY_TO_MANY) {
+        if (!isset($aRelations[$sRelationKey]['type']) or $aRelations[$sRelationKey]['type'] != EntityORM::RELATION_TYPE_MANY_TO_MANY) {
             return;
         }
-        $aFilterAdd = isset($aRelations[$sRelationKey][5]) ? $aRelations[$sRelationKey][5] : array();
-        $oEntityRelation = Engine::GetEntity($aRelations[$sRelationKey][3]);
+        $aFilterAdd = $aRelations[$sRelationKey]['filter'];
+        $oEntityRelation = Engine::GetEntity($aRelations[$sRelationKey]['join_entity']);
         /**
          * По сущности связи формируем запрос за получение списка сохраненых связей в БД
          */
-        $sCmd = Engine::GetPluginPrefix($aRelations[$sRelationKey][3]) . 'Module' . Engine::GetModuleName($aRelations[$sRelationKey][3]) . '_Get' . Engine::GetEntityName($aRelations[$sRelationKey][3]) . 'ItemsByFilter';
+        $sCmd = Engine::GetPluginPrefix($aRelations[$sRelationKey]['join_entity']) . 'Module' . Engine::GetModuleName($aRelations[$sRelationKey]['join_entity']) . '_Get' . Engine::GetEntityName($aRelations[$sRelationKey]['join_entity']) . 'ItemsByFilter';
         list($aFilter) = $this->oMapperORM->BuildFilter($aFilterAdd, $oEntityRelation);
         $aDataInsert = $aFilter;
-        $aFilter['#index-from'] = $aRelations[$sRelationKey][2];
-        $aFilter[$aRelations[$sRelationKey][4]] = $oEntity->_getPrimaryKeyValue();
+        $aFilter['#index-from'] = $aRelations[$sRelationKey]['rel_key'];
+        $aFilter[$aRelations[$sRelationKey]['join_key']] = $oEntity->_getPrimaryKeyValue();
         $aRelationItemsSaved = Engine::GetInstance()->_CallModule($sCmd, array($aFilter));
         /**
          * Получаем текущие связи из сущности
@@ -1224,9 +1224,9 @@ abstract class ModuleORM extends Module
          */
         foreach ($aTargetItemsCurrent as $k => $oTargetItem) {
             if (!isset($aRelationItemsSaved[$k])) {
-                $oRelationNew = Engine::GetEntity($aRelations[$sRelationKey][3]);
-                $aDataInsert[$aRelations[$sRelationKey][4]] = $oEntity->_getPrimaryKeyValue();
-                $aDataInsert[$aRelations[$sRelationKey][2]] = $oTargetItem->_getPrimaryKeyValue();
+                $oRelationNew = Engine::GetEntity($aRelations[$sRelationKey]['join_entity']);
+                $aDataInsert[$aRelations[$sRelationKey]['join_key']] = $oEntity->_getPrimaryKeyValue();
+                $aDataInsert[$aRelations[$sRelationKey]['rel_key']] = $oTargetItem->_getPrimaryKeyValue();
                 $oRelationNew->_setData($aDataInsert);
                 $oRelationNew->Add();
             }
@@ -1242,17 +1242,17 @@ abstract class ModuleORM extends Module
     protected function _deleteManyToManyRelation($oEntity, $sRelationKey)
     {
         $aRelations = $oEntity->_getRelations();
-        if (!isset($aRelations[$sRelationKey][0]) or $aRelations[$sRelationKey][0] != EntityORM::RELATION_TYPE_MANY_TO_MANY) {
+        if (!isset($aRelations[$sRelationKey]['type']) or $aRelations[$sRelationKey]['type'] != EntityORM::RELATION_TYPE_MANY_TO_MANY) {
             return;
         }
-        $aFilterAdd = isset($aRelations[$sRelationKey][5]) ? $aRelations[$sRelationKey][5] : array();
-        $oEntityRelation = Engine::GetEntity($aRelations[$sRelationKey][3]);
+        $aFilterAdd = $aRelations[$sRelationKey]['filter'];
+        $oEntityRelation = Engine::GetEntity($aRelations[$sRelationKey]['join_entity']);
         /**
          * По сущности связи формируем запрос за получение списка сохраненых связей в БД
          */
-        $sCmd = Engine::GetPluginPrefix($aRelations[$sRelationKey][3]) . 'Module' . Engine::GetModuleName($aRelations[$sRelationKey][3]) . '_Get' . Engine::GetEntityName($aRelations[$sRelationKey][3]) . 'ItemsByFilter';
+        $sCmd = Engine::GetPluginPrefix($aRelations[$sRelationKey]['join_entity']) . 'Module' . Engine::GetModuleName($aRelations[$sRelationKey]['join_entity']) . '_Get' . Engine::GetEntityName($aRelations[$sRelationKey]['join_entity']) . 'ItemsByFilter';
         list($aFilter) = $this->oMapperORM->BuildFilter($aFilterAdd, $oEntityRelation);
-        $aFilter[$aRelations[$sRelationKey][4]] = $oEntity->_getPrimaryKeyValue();
+        $aFilter[$aRelations[$sRelationKey]['join_key']] = $oEntity->_getPrimaryKeyValue();
         $aRelationItemsSaved = Engine::GetInstance()->_CallModule($sCmd, array($aFilter));
         foreach ($aRelationItemsSaved as $oRelation) {
             $oRelation->Delete();

@@ -5,7 +5,8 @@
         "css-reset": "*"
     },
     "templates": {
-        "nav": "nav.tpl"
+        "nav": "nav.tpl",
+        "item": "nav-item.tpl"
     },
     "styles": {
         "nav": "css/nav.css"

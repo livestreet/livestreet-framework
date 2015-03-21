@@ -57,7 +57,8 @@ class ModuleValidate_EntityValidatorCaptchaKcaptcha extends ModuleValidate_Entit
         }
 
         $sSessionName = 'captcha_keystring' . ($this->name ? '_' . $this->name : '');
-        if (!isset($_SESSION[$sSessionName]) or $_SESSION[$sSessionName] != strtolower($sValue)) {
+        $sSessionValue = $this->Session_Get($sSessionName);
+        if (!$sSessionValue or $sSessionValue != strtolower($sValue)) {
             return $this->getMessage($this->Lang_Get('validate.captcha.not_valid', null, false), 'msg');
         }
         return true;

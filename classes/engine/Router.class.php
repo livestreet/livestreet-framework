@@ -175,6 +175,7 @@ class Router extends LsObject
         $this->DefineActionClass(); // Для возможности ДО инициализации модулей определить какой action/event запрошен
         $this->oEngine = Engine::getInstance();
         $this->oEngine->Init();
+        $this->Hook_Run('start_action');
         $this->ExecAction();
         $this->Shutdown(false);
     }

@@ -248,7 +248,7 @@ class ModuleDatabase extends Module
      * @param array|null $aConfig Конфиг подключения к БД
      * @return bool
      */
-    public function isTableExists($sTableName, $aConfig = null)
+    public function IsTableExists($sTableName, $aConfig = null)
     {
         $sTableName = str_replace('prefix_', Config::Get('db.table.prefix'), $sTableName);
         $sQuery = "SHOW TABLES LIKE '{$sTableName}'";
@@ -266,7 +266,7 @@ class ModuleDatabase extends Module
      * @param array|null $aConfig Конфиг подключения к БД
      * @return bool
      */
-    public function isFieldExists($sTableName, $sFieldName, $aConfig = null)
+    public function IsFieldExists($sTableName, $sFieldName, $aConfig = null)
     {
         $sTableName = str_replace('prefix_', Config::Get('db.table.prefix'), $sTableName);
         $sQuery = "SHOW FIELDS FROM `{$sTableName}`";
@@ -281,14 +281,14 @@ class ModuleDatabase extends Module
     }
 
     /**
-     * Доавляет новый тип в поле таблицы с типом enum
+     * Добавляет новый тип в поле таблицы с типом enum
      *
      * @param string $sTableName Название таблицы, необходимо перед именем таблицы добавлять "prefix_", это позволит учитывать произвольный префикс таблиц у пользователя
      * @param string $sFieldName Название поля в таблице
      * @param string $sType Название типа
      * @param array|null $aConfig Конфиг подключения к БД
      */
-    public function addEnumType($sTableName, $sFieldName, $sType, $aConfig = null)
+    public function AddEnumType($sTableName, $sFieldName, $sType, $aConfig = null)
     {
         $sTableName = str_replace('prefix_', Config::Get('db.table.prefix'), $sTableName);
         $sQuery = "SHOW COLUMNS FROM  `{$sTableName}`";
@@ -307,6 +307,53 @@ class ModuleDatabase extends Module
                 $this->GetConnect($aConfig)->select($sQuery);
             }
         }
+    }
+
+    /**
+     * Удаляет тип в поле таблицы с типом enum
+     *
+     * @param string $sTableName Название таблицы, необходимо перед именем таблицы добавлять "prefix_", это позволит учитывать произвольный префикс таблиц у пользователя
+     * @param string $sFieldName Название поля в таблице
+     * @param string $sType Название типа
+     * @param array|null $aConfig Конфиг подключения к БД
+     * @return bool
+     */
+    public function RemoveEnumType($sTableName, $sFieldName, $sType, $aConfig = null)
+    {
+        $sTableName = str_replace('prefix_', Config::Get('db.table.prefix'), $sTableName);
+        $sQuery = "SHOW COLUMNS FROM  `{$sTableName}`";
+
+        if ($aRows = $this->GetConnect($aConfig)->select($sQuery)) {
+            foreach ($aRows as $aRow) {
+                if ($aRow['Field'] == $sFieldName) {
+                    break;
+                }
+            }
+            if (strpos($aRow['Type'], "'{$sType}'") !== false) {
+                $aRow['Type'] = preg_replace('#^enum\((.+)\)$#i', "\$1", $aRow['Type']);
+                $aTypePart = explode(',', $aRow['Type']);
+                foreach ($aTypePart as $k => $v) {
+                    if ($v == "'{$sType}'") {
+                        unset($aTypePart[$k]);
+                    }
+                }
+                if (!count($aTypePart)) {
+                    return false;
+                }
+                $aRow['Type'] = 'enum(' . join(',', $aTypePart) . ')';
+                $sQuery = "ALTER TABLE `{$sTableName}` MODIFY `{$sFieldName}` " . $aRow['Type'];
+                $sQuery .= ($aRow['Null'] == 'NO') ? ' NOT NULL ' : ' NULL ';
+                if (is_null($aRow['Default'])) {
+                    $sQuery .= ' DEFAULT NULL ';
+                } elseif ($aRow['Default'] != $sType) {
+                    $sQuery .= " DEFAULT '{$aRow['Default']}' ";
+                }
+
+                $this->GetConnect($aConfig)->select($sQuery);
+                return true;
+            }
+        }
+        return false;
     }
 
     /**

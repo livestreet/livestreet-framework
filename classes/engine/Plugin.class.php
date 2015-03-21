@@ -220,7 +220,7 @@ abstract class Plugin extends LsObject
 
     /**
      * Проверяет наличие таблицы в БД
-     * @see ModuleDatabase::isTableExists
+     * @see ModuleDatabase::IsTableExists
      *
      * @param string $sTableName Название таблицы, необходимо перед именем таблицы добавлять "prefix_", это позволит учитывать произвольный префикс таблиц у пользователя
      * <pre>
@@ -228,35 +228,48 @@ abstract class Plugin extends LsObject
      * </pre>
      * @return bool
      */
-    protected function isTableExists($sTableName)
+    protected function IsTableExists($sTableName)
     {
-        return $this->Database_isTableExists($sTableName);
+        return $this->Database_IsTableExists($sTableName);
     }
 
     /**
      * Проверяет наличие поля в таблице
-     * @see ModuleDatabase::isFieldExists
+     * @see ModuleDatabase::IsFieldExists
      *
      * @param string $sTableName Название таблицы, необходимо перед именем таблицы добавлять "prefix_", это позволит учитывать произвольный префикс таблиц у пользователя
      * @param string $sFieldName Название поля в таблице
      * @return bool
      */
-    protected function isFieldExists($sTableName, $sFieldName)
+    protected function IsFieldExists($sTableName, $sFieldName)
     {
-        return $this->Database_isFieldExists($sTableName, $sFieldName);
+        return $this->Database_IsFieldExists($sTableName, $sFieldName);
     }
 
     /**
      * Добавляет новый тип в поле enum(перечисление)
-     * @see ModuleDatabase::addEnumType
+     * @see ModuleDatabase::AddEnumType
      *
      * @param string $sTableName Название таблицы, необходимо перед именем таблицы добавлять "prefix_", это позволит учитывать произвольный префикс таблиц у пользователя
      * @param string $sFieldName Название поля в таблице
      * @param string $sType Название типа
      */
-    protected function addEnumType($sTableName, $sFieldName, $sType)
+    protected function AddEnumType($sTableName, $sFieldName, $sType)
     {
-        $this->Database_addEnumType($sTableName, $sFieldName, $sType);
+        $this->Database_AddEnumType($sTableName, $sFieldName, $sType);
+    }
+
+    /**
+     * Удаляет тип в поле таблицы с типом enum
+     * @see ModuleDatabase::RemoveEnumType
+     *
+     * @param string $sTableName Название таблицы, необходимо перед именем таблицы добавлять "prefix_", это позволит учитывать произвольный префикс таблиц у пользователя
+     * @param string $sFieldName Название поля в таблице
+     * @param string $sType Название типа
+     */
+    protected function RemoveEnumType($sTableName, $sFieldName, $sType)
+    {
+        $this->Database_RemoveEnumType($sTableName, $sFieldName, $sType);
     }
 
     /**

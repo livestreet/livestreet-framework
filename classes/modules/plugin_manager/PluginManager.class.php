@@ -444,6 +444,10 @@ class ModulePluginManager extends ModuleORM
              */
             $this->Cache_Clean();
             /**
+             * Сбрасываем отдельный кеш ORM
+             */
+            $this->Cache_Clean(Zend_Cache::CLEANING_MODE_ALL, array(), 'file_orm', true);
+            /**
              * Очищаем компиленые шаблоны от Smarty
              */
             $this->Viewer_ClearCompiledTemplates();

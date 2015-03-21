@@ -7,78 +7,18 @@
 
 <p>Параметры используемые большинством полей:</p>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>Параметр</th>
-            <th>Тип</th>
-            <th>По&nbsp;умолчанию</th>
-            <th>Описание</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td><code>name</code></td>
-            <td>string</td>
-            <td>null</td>
-            <td>Атрибут <code>name</code> input'а</td>
-        </tr>
-        <tr>
-            <td><code>label</code></td>
-            <td>string</td>
-            <td>null</td>
-            <td>Описание поля</td>
-        </tr>
-        <tr>
-            <td><code>note</code></td>
-            <td>string</td>
-            <td>null</td>
-            <td>Вспомогательный текст</td>
-        </tr>
-        <tr>
-            <td><code>value</code></td>
-            <td>string</td>
-            <td>null</td>
-            <td>Атрибут <code>value</code> input'а</td>
-        </tr>
-        <tr>
-            <td><code>placeholder</code></td>
-            <td>string</td>
-            <td>null</td>
-            <td>Атрибут <code>placeholder</code> input'а</td>
-        </tr>
-        <tr>
-            <td><code>useValue</code></td>
-            <td>boolean</td>
-            <td>true</td>
-            <td>Использовать атрибут value у input'а или нет</td>
-        </tr>
-        <tr>
-            <td><code>isDisabled</code></td>
-            <td>boolean</td>
-            <td>false</td>
-            <td>Атрибут <code>disabled</code> input'а</td>
-        </tr>
-        <tr>
-            <td><code>inputAttributes</code></td>
-            <td>array</td>
-            <td>null</td>
-            <td>Список атрибутов input'а</td>
-        </tr>
-        <tr>
-            <td><code>inputClasses</code></td>
-            <td>string</td>
-            <td>null</td>
-            <td>Список классов input'а</td>
-        </tr>
-        <tr>
-            <td><code>rules</code></td>
-            <td>array</td>
-            <td>null</td>
-            <td>Список правил валидации</td>
-        </tr>
-    </tbody>
-</table>
+{plugin_docs_params params=[
+    [ 'name',            'string',  'null',  'Атрибут <code>name</code> input\'а' ],
+    [ 'label',           'string',  'null',  'Описание поля' ],
+    [ 'note',            'string',  'null',  'Вспомогательный текст' ],
+    [ 'value',           'string',  'null',  'Атрибут <code>value</code> input\'а' ],
+    [ 'placeholder',     'string',  'null',  'Атрибут <code>placeholder</code> input\'а' ],
+    [ 'useValue',        'boolean', 'true',  'Использовать атрибут value у input\'а или нет' ],
+    [ 'isDisabled',      'boolean', 'false', 'Атрибут <code>disabled</code> input\'а' ],
+    [ 'inputAttributes', 'array',   'null',  'Список атрибутов input\'а' ],
+    [ 'inputClasses',    'string',  'null',  'Список классов input\'а' ],
+    [ 'rules',           'array',   'null',  'Список правил валидации' ]
+]}
 
 
 {**
@@ -123,22 +63,56 @@
 {**
  * Date
  *}
-{test_heading text='Date'}
+{test_heading text='Date & time'}
 
 {capture 'test_example_content'}
-    {component 'field'
-        template = 'date'
-        label  = 'Date'}
+    <script>
+        jQuery(function($) {
+            $('.js-my-datepicker').lsFieldDate();
+            $('.js-my-datetimepicker').lsFieldDatetime();
+            $('.js-my-timepicker').lsFieldTime();
+        });
+    </script>
 
     {component 'field'
         template = 'date'
-        useTime = true
-        label  = 'Date Time'}
+        label  = 'Date'
+        inputClasses = 'js-my-datepicker'}
+
+    {component 'field'
+        template = 'datetime'
+        label  = 'Date Time'
+        inputClasses = 'js-my-datetimepicker'}
+
+    {component 'field'
+        template = 'time'
+        label  = 'Time'
+        inputClasses = 'js-my-timepicker'}
 {/capture}
 
 {capture 'test_example_code'}
-{ldelim}component 'field' template='date' label='Date'{rdelim}
-{ldelim}component 'field' template='date' label='Date Time' useTime=true{rdelim}
+<script>
+    jQuery(function($) {
+        $('.js-my-datepicker').lsFieldDate();
+        $('.js-my-datetimepicker').lsFieldDatetime();
+        $('.js-my-timepicker').lsFieldTime();
+    });
+</script>
+
+{ldelim}component 'field'
+    template = 'date'
+    label  = 'Date'
+    inputClasses = 'js-my-datepicker'{rdelim}
+
+{ldelim}component 'field'
+    template = 'datetime'
+    label  = 'Date Time'
+    inputClasses = 'js-my-datetimepicker'{rdelim}
+
+{ldelim}component 'field'
+    template = 'time'
+    label  = 'Time'
+    inputClasses = 'js-my-timepicker'{rdelim}
 {/capture}
 
 {test_example content=$smarty.capture.test_example_content code=$smarty.capture.test_example_code}

@@ -128,3 +128,16 @@
 .invisible {
     visibility: hidden;
 }
+
+/* Caret */
+.caret {
+    display: inline-block;
+    height: 0;
+    width: 0;
+    border: 4px solid transparent;
+    border-top-color: #333;
+}
+.caret.caret--right {
+    border-top-color: transparent;
+    border-left-color: #333;
+}

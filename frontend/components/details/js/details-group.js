@@ -17,6 +17,7 @@
          */
         options: {
             // При открытии одного блока сворачивать все другие открытые
+            // TODO: Fix nested groups
             single: true,
 
             // Селекторы
@@ -24,6 +25,9 @@
                 // Селектор сворачиваемого блока
                 item: '> .js-details-group-item',
             },
+
+            // Опции каждого сворачиваемого блока в группе
+            itemOptions: {}
         },
 
         /**
@@ -35,7 +39,7 @@
         _create: function () {
             this._super();
 
-            this.getElement( 'item' ).lsDetails();
+            this.getElement( 'item' ).lsDetails( this.option( 'itemOptions' ) );
 
             // При открытии одного блока сворачиваем все другие открытые
             if ( this.option( 'single' ) ) {

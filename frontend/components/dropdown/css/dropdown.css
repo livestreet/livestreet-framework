@@ -49,11 +49,13 @@
  * Выпадающее меню
  */
 .dropdown-menu {
+    min-width: 150px;
     display: none;
     position: absolute;
     z-index: 900;
     border-radius: 3px;
     border: 1px solid #ccc;
+    background: #fff;
 }
 .dropdown-menu > li:last-child {
     border-radius: 0 0 3px 3px;

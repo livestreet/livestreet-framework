@@ -62,7 +62,8 @@
                 'content' => 'Опции виджета.',
                 'body' => {plugin_docs_params params=[
                     [ 'single',  'boolean',  'true',   'При открытии одного блока сворачивать все другие открытые' ],
-                    [ 'selectors.item',   'string',  '<code>> .js-details-group-item</code>',   'Селектор сворачиваемого блока' ]
+                    [ 'selectors.item',   'string',  '<code>> .js-details-group-item</code>',   'Селектор сворачиваемого блока' ],
+                    [ 'itemOptions',   'object',  '{}',   'Опции каждого сворачиваемого блока в группе' ]
                 ]}
             ],
             [

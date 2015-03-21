@@ -22,6 +22,9 @@ th {
     max-width: 100%;
     margin-bottom: 15px;
 }
+.table:last-child {
+    margin-bottom: 0;
+}
 .table td, .table th {
     padding: 14px;
     vertical-align: top;

@@ -28,7 +28,7 @@
 .details-title:active {
     background: #eee;
 }
-.details.is-open .details-title {
+.details.is-open > .details-title {
     background: #fafafa;
 }
 
@@ -44,7 +44,7 @@
     border: 4px solid transparent;
     border-left-color: #333;
 }
-.details.is-open .details-title:before {
+.details.is-open > .details-title:before {
     top: 19px;
     left: 13px;
     border-left-color: transparent;
@@ -55,7 +55,7 @@
 .details-body {
     display: none;
 }
-.details.is-open .details-body {
+.details.is-open > .details-body {
     display: block;
 }
 

@@ -64,6 +64,8 @@
          * Развернуть
          */
         show: function () {
+            if ( this.isOpen() ) return;
+
             this._addClass( 'open' );
             this._trigger("aftershow", null, this);
         },
@@ -72,6 +74,8 @@
          * Свернуть
          */
         hide: function () {
+            if ( ! this.isOpen() ) return;
+
             this._removeClass( 'open' );
             this._trigger("afterhide", null, this);
         },

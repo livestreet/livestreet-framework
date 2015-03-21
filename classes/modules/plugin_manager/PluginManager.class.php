@@ -55,7 +55,7 @@ class ModulePluginManager extends ModuleORM
     {
         if (!$this->CheckPluginsFileWritable()) {
             $this->Message_AddError($this->Lang_Get('admin.plugins.notices.activation_file_write_error'),
-                $this->Lang_Get('error'), true);
+                $this->Lang_Get('common.error.error'), true);
             return false;
         }
         $sPlugin = strtolower($sPlugin);
@@ -74,7 +74,7 @@ class ModulePluginManager extends ModuleORM
 
         if (in_array($sPlugin, $aPluginItemsActive)) {
             $this->Message_AddError($this->Lang_Get('admin.plugins.notices.activation_already_error'),
-                $this->Lang_Get('error'), true);
+                $this->Lang_Get('common.error.error'), true);
             return false;
         }
         /**
@@ -86,7 +86,7 @@ class ModulePluginManager extends ModuleORM
             $this->Message_AddError(
                 $this->Lang_Get('admin.plugins.notices.activation_version_error',
                     array('version' => $oXml->requires->livestreet)),
-                $this->Lang_Get('error'), true
+                $this->Lang_Get('common.error.error'), true
             );
             return false;
         }
@@ -101,7 +101,7 @@ class ModulePluginManager extends ModuleORM
                     $this->Message_AddError(
                         $this->Lang_Get('admin.plugins.notices.activation_requires_error',
                             array('plugin' => func_camelize($sReqPlugin))),
-                        $this->Lang_Get('error'), true
+                        $this->Lang_Get('common.error.error'), true
                     );
                 }
             }
@@ -134,7 +134,7 @@ class ModulePluginManager extends ModuleORM
                             'resource' => $sResource,
                             'delegate' => $aConflict['delegate'],
                             'plugin'   => $aConflict['sign']
-                        )), $this->Lang_Get('error'), true
+                        )), $this->Lang_Get('common.error.error'), true
                     );
                 }
             }
@@ -149,7 +149,7 @@ class ModulePluginManager extends ModuleORM
                             'resource' => $sResource,
                             'delegate' => $aConflict['delegate'],
                             'plugin'   => $aConflict['sign']
-                        )), $this->Lang_Get('error'), true
+                        )), $this->Lang_Get('common.error.error'), true
                     );
                 }
             }
@@ -171,7 +171,7 @@ class ModulePluginManager extends ModuleORM
                                 'resource' => $sResource,
                                 'plugin'   => $aItem['sign']
                             )),
-                            $this->Lang_Get('error'), true
+                            $this->Lang_Get('common.error.error'), true
                         );
                     }
                 }
@@ -210,7 +210,7 @@ class ModulePluginManager extends ModuleORM
     {
         if (!$this->CheckPluginsFileWritable()) {
             $this->Message_AddError($this->Lang_Get('admin.plugins.notices.activation_file_write_error'),
-                $this->Lang_Get('error'), true);
+                $this->Lang_Get('common.error.error'), true);
             return false;
         }
         $sPlugin = strtolower($sPlugin);
@@ -229,7 +229,7 @@ class ModulePluginManager extends ModuleORM
 
         if (!in_array($sPlugin, $aPluginItemsActive)) {
             $this->Message_AddError($this->Lang_Get('admin.plugins.notices.deactivation_already_error'),
-                $this->Lang_Get('error'), true);
+                $this->Lang_Get('common.error.error'), true);
             return false;
         }
         /**
@@ -243,7 +243,7 @@ class ModulePluginManager extends ModuleORM
                     $this->Message_AddError(
                         $this->Lang_Get('admin.plugins.notices.deactivation_requires_error',
                             array('plugin' => func_camelize($sPlugnCheck))),
-                        $this->Lang_Get('error'), true
+                        $this->Lang_Get('common.error.error'), true
                     );
                 }
             }

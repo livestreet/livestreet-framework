@@ -23,7 +23,7 @@
  * Модуль системных сообщений
  * Позволяет показывать пользователю сообщения двух видов - об ошибке и об успешном действии.
  * <pre>
- * $this->Message_AddErrorSingle($this->Lang_Get('not_access'),$this->Lang_Get('error'));
+ * $this->Message_AddErrorSingle($this->Lang_Get('common.error.not_access'),$this->Lang_Get('common.error.error'));
  * </pre>
  *
  * @package framework.modules

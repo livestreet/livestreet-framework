@@ -652,14 +652,7 @@ class MapperORM extends Mapper
             $sTable = func_underscore($sModuleName) . '_' . func_underscore($sEntityName);
         }
         if ($sPluginName) {
-            $sTablePlugin = $sPluginName . '_' . $sTable;
-            /**
-             * Для обратной совместимости с 1.0.1
-             * Если такая таблица определена в конфиге, то ок, если нет, то используем старый вариант без имени плагина
-             */
-            if (Config::Get('db.table.' . $sTablePlugin)) {
-                $sTable = $sTablePlugin;
-            }
+            $sTable = $sPluginName . '_' . $sTable;
         }
         /**
          * Если название таблиц переопределено в конфиге, то возвращаем его

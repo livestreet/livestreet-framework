@@ -524,8 +524,12 @@ class MapperORM extends Mapper
                 $aFilter['#group'] = array($aFilter['#group']);
             }
             foreach ($aFilter['#group'] as $sField) {
-                $sField = $this->oDb->escape($oEntitySample->_getField($sField), true);
-                $sGroup .= " t.{$sField},";
+                if (substr($sField, 0, 1) == '#') {
+                    $sGroup .= ltrim($sField, '#') . ',';
+                } else {
+                    $sField = $this->oDb->escape($oEntitySample->_getField($sField), true);
+                    $sGroup .= " t.{$sField},";
+                }
             }
             $sGroup = trim($sGroup, ',');
             if ($sGroup != '') {

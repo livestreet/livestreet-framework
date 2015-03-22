@@ -18,7 +18,7 @@ $.widget( "livestreet.lsDropdown", $.livestreet.lsComponent, {
         },
         selectors: {
             toggle: '.js-dropdown-toggle',
-            menu: '.js-dropdown-menu',
+            menu: '.js-dropdown-menu'
         },
         // Позиционирование
         // Для позиционирования используется модуль position библиотеки jQuery UI

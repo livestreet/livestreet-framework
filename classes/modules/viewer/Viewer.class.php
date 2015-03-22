@@ -1269,7 +1269,7 @@ class ModuleViewer extends Module
          */
         $_this = $this;
         $this->Hook_AddExecFunction('template_html_head_end', function () use ($_this) {
-            return $_this->oOpenGraph->render();
+            return $_this->GetOpenGraph()->render();
         }, 10000);
     }
 }

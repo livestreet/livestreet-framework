@@ -65,3 +65,38 @@ CREATE TABLE IF NOT EXISTS `prefix_plugin_version` (
   KEY `code` (`code`),
   KEY `version` (`version`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
+
+
+--
+-- Структура таблицы `prefix_notify_task`
+--
+
+CREATE TABLE IF NOT EXISTS `prefix_notify_task` (
+  `notify_task_id` int(10) unsigned NOT NULL,
+  `user_login` varchar(30) DEFAULT NULL,
+  `user_mail` varchar(50) DEFAULT NULL,
+  `notify_subject` varchar(200) DEFAULT NULL,
+  `notify_text` text,
+  `date_created` datetime DEFAULT NULL,
+  `notify_task_status` tinyint(2) unsigned DEFAULT NULL
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `prefix_notify_task`
+--
+ALTER TABLE `prefix_notify_task`
+ADD PRIMARY KEY (`notify_task_id`), ADD KEY `date_created` (`date_created`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `prefix_notify_task`
+--
+ALTER TABLE `prefix_notify_task`
+MODIFY `notify_task_id` int(10) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=1;

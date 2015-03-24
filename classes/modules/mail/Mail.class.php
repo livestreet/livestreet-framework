@@ -19,7 +19,7 @@
  *
  */
 
-require_once(Config::Get('path.framework.libs_vendor.server') . '/phpMailer/class.phpmailer.php');
+require_once(Config::Get('path.framework.libs_vendor.server') . '/phpMailer/PHPMailerAutoload.php');
 
 /**
  * Модуль для отправки почты(e-mail) через phpMailer

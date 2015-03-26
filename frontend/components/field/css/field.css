@@ -167,3 +167,23 @@ select[multiple].field-input { max-width: 300px; }
 	top: 5px;
 	opacity: .4;
 }
+
+/**
+ * Validation
+ */
+.field-input.parsley-error {
+	border-color: #F79F98;
+	background-color: #FFDFDD;
+	box-shadow: 0 0 3px #FABFBB;
+}
+.parsley-errors-list {
+	display: none;
+	padding: 10px 13px;
+	margin-top: 10px;
+    background: #f44336;
+    color: #ffcdd2;
+    color: rgba(255,255,255,.7);
+}
+.parsley-errors-list.filled {
+	display: block;
+}

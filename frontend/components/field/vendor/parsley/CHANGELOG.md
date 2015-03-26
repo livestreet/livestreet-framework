@@ -1,142 +1,126 @@
-#Changelog
+# Parsley 2.x changelog
 
-**1.1.16 (current stable)**
+## 2.0.7
 
-  - fixed IE7 bug with checkboxes / radio buttons that were always required.
-  - html error messages could be used (#220)
-  - fixed show / remove error with data-remote validator (#200)
-  - added option to silence errors `data-show-errors="false"`
-  - added / modified some i18n localizations
-  - Override value by using data-value attribute
-  - added americanDate validator in parsley.extend
+- support of html5 `maxlength` and `minlength` (#731)
+- various doc updates
+- improved test suite
+- various small code simplifications
+- updated TLD range for URL validator (#829)
 
-**1.1.15**
+## 2.0.6
 
-  - **BC Break** removed `.parsley('isFieldValid');` in favor of `.parsley('isValid');`
-    (#177)
-  - added type="phone" validator
-  - this.constraints is now an object instead of an array. **BC Break** with onFieldError
-    listener.
-  - removed default 'i' flag with data-regex validator. Added data-regex-flag attribute
-    (#168)
-  - specific behavior when field have required constraint. Do not show required error
-    along another errors, and reciprocally (#142)
+- removed buggy special char in remote.js plugin (#755)
+- fixed bug where isValid returned old errors on field with no constraints
+  anymore (#776)
+- fix a lot of tests
 
-**1.1.14**
+## 2.0.5
 
-  - added luhn validator in parsley.extra (#150)
-  - added inlist validator in parsley.extra (#153)
-  - added _messages.en.js template in localization folder
-  - fixed "Uncaught RangeError: Maximum call stack size exceeded" on jQuery `.off()`
-    Refs #136
-  - added $('#form').parsley('isValid') to know if form constraints fails, without
-    adding DOM errors. Refs #94
+  - fixed AMD
 
-**1.1.13**
+## 2.0.4
 
-  - added jquery plugin manifest
+  - added ParsleyField context to asyncValidator callback functions (#702)
+  - fixed AMD loading of Validator.js (#691, #693)
+  - added extra/words.js validators (#700)
+  - added support of multiple groups (#706)
 
-**1.1.12**
+## 2.0.3
 
-  - added some more localizations
-  - `reset()` action now totaly reset field behavior, since never validated before
-  - added `data-error-container` data-attribute to easily specify where to put errors
+  - fix not AMD loading for Wordpress case (#685)
 
-**1.1.11**
+## 2.0.2
 
-  - fixed `fadeIn()` undefined function with standalone version. Had to update Zepto
-    with fx_module and fx loaded (#137)
-  - fixed bug "Uncaught RangeError: Maximum call stack size exceeded" on
-    bindEventValidation (#138)
-  - fixed remote validator method (#130)
-  - added `change` auto binded event for select inputs to have same behavior w/ fields
-  - fixed bug on radio buttons and required constraint
-  - added afterDate and beforeDate validators in parsley.extend
+  - proper version number in `dist/` files
 
-**1.1.10**
+## 2.0.1
 
-  - **BC Break** changed errors.classHandler and errors.container
-  - animating errors show / hide now
-  - fixed radio/checkboxes data-trigger behavior (#115)
-  - added `change` event to quickly remove radio/checkboxes errors (#115)
-  - added ability to group radio / checkboxes by `data-group` attribute intead of name
+  - fixed "attr.specified is deprecated." console warning (#608)
+  - fixed package.json config with main dep (#617)
+  - fixed `addValidator()` method
+  - added support for `requirementsTransformer` for custom validators
+  - updated jQuery needed version from README and doc
+  - fixed case when a multiple item were dynamically removed from DOM (#634)
+  - added proper `type="range"` support (#668)
 
-**1.1.9**
+## 2.0.0
 
-  - added `addItem` and `removeItem` functions to validate dynamically created fields
-  - added addConstraint, updateConstraint and removeConstraint API to dynamically
-    update fields constraints (#52)
-  - `.delete()` method removes now all parsley related classes (#102)
-  - added validateIfUnchanged option to force fields validation even if value is
-    unchanged since last validation (#104)
-  - fixed equalTo, lessThan and greaterThan validators (#78)
+  - fixed remote re-entering already validated value (#576)
+  - added `stopImmediatePropagation()` un `onSubmit()` method to avoid conflicts
+    with other libraries (#561)
+  - fixed parsleyFieldMultiple behavior that tried to bind non radio or checkbox
+    fields as a multiple field (#589)
+  - `input[type=hidden]` are now excluded by default (#589)
+  - fixed constraints unicity on fields belonging to same multiple group
+  - added `data-parsley-remote-validator` feature (#587)
+  - now support custom messages placeholders (#602)
+  - fix exception when ParsleyField or ParsleyFieldMultiple value is null or
+    undefined (#598)
+  - fixed `destroy()` method + added test (#555)
+  - added requirejs AMD support for `dist/parsley.js` and `dist/parsley.min.js`
+    versions (#606)
+  - fixed custom namespace -multiple that didn't re-evaluated correctly (#595)
+  - added `ParsleyUI.getErrorsMessages()` (Closes #607)
 
-**1.1.8**
+## 2.0.0-rc5
 
-  - ParsleyForm.items are now ParsleyField instances!!
-  - fixed needsValidation function if element is reseted (#77)
-  - fixed addListener for onFormSubmit (#72)
-  - fixed focus 'none' bug (#73)
+  - totally reworked multiple fields (#542):
+    - created a new Class: `ParsleyFieldMultiple`
+    - multiple fields returns now same `ParsleyFieldMultiple` instance
+  - `dist/parsley+remote.js` and `dist/parsley+remote.min.js` have been renamed
+    to `dist/parsley.remote.js` and `dist/parsley.remote.min.js`
+  - changed the way `asyncValidate` handle events
+  - fix warning if parsley called on a page without elements to validate (#562)
+  - fixed `ParsleyUtils.attr()` attribute checking (#564)
+  - updated `ParsleyUtils.get()` method. Do not support anymore placeholder
+    feature since `ParsleyUtils.get() || placeholder` writing is more readable
+  - select and select multiple elements both handle the `parsley-success` and
+    `parsley-error` classes directly and not their parent.
+  - added pattern flags support (#566, #550)
+  - fixed ParsleyFieldMultiple optional fields if not explicitely required
+  - fixed ParsleyFieldMultiple trigger
+  - fixed select UI auto-bind change on error (#537)
+  - fixed `asyncIsValid()` and `asyncValidate()` API to support `force` option
 
-**1.1.7**
+## 2.0.0-rc4
 
-  - fixed a lot of typos
-  - added .parsley( 'destroy' ) method
+  - fixed js error if wrong data-parsley-errors-container is given
+  - fixed js error if `name=""` or `id=""` for parlsey multiple fields (#533)
+  - fixed dynamically added fields form inheritance (#532)
+  - fixed parsley-remote.js remote validator registration that overrided
+    other extra validators.
+  - added multiple xhr queries aborting in parsley.remote to avoid unneeded
+    server overload with keyup trigger
+  - fixed excluded fields option and added some doc for it (#546)
+  - fixed `range` validator with `0` value (#543)
+  - added `data-parsley-trim-value` option
+  - updated validator.js
+  - added `this.submitEvent.preventDefault()` support for parsley.remote
+    call twice form / field tests with parsley.remote for better support (#552)
+  - fixed global leaks shown by test suite
+  - new $ Parsley API behavior:
+    - returns `undefined` if called on non existing DOM element
+      + console warn (#548)
+    - returns an array of instances if called on selector with multiple
+      elements (#547)
+  - fixed `min`, `max`, `range` validators (#556)
 
-**1.1.6**
+## 2.0.0-rc3
 
-  - fixed custom error message bug (displayed once by validator that failed)
-  - fixed error messages validators overrinding on multiple forms
-  - added data-API error message customization
-  - corrected lot of typo / mistakes on doc
+  - fixed $ conflict (#525)
+  - added `force` validation for `isValid()` and `validate()`
+  - added doc events example
+  - added doc Help section
+  - added `data-parsley-errors-messages-disabled` option
 
-**1.1.5**
+## 2.0.0-rc2
 
-  - added data-error-message="message" customization ability
-  - fixed inheritence problem with ParsleyField and ParsleyFieldMultiple
+  - added `data-parsley-validate-if-empty` field option (#489)
+  - fixed select multiple bug (#522)
+  - allowed checkbox, radio and select multiple inputs to have either a `name`
+    or an `id` to be binded (instead of just a name)
 
-**1.1.4**
+## 2.0.0-rc1
 
-  - passed now ParsleyForm and ParsleyField when appropriated to listeners
-  - fixed bug on select multiple and required constraint
-
-**1.1.3**
-
-  - fixed bug on onFieldValidate listener that do not reseted Parsley validation
-    on return = false;
-
-**1.1.2**
-
-  - added html5 types supports for existing validators
-
-**1.1.1**
-
-  - two new parsley.extra validators: greaterthan & lowerthen
-
-**1.1.0**
-
-  - added localization and extra validator configuration in external files.
-
-**1.0.0**
-
-  - added ajax remote validator and go live !
-
-**0.2.0**
-
-  - heavy radio / checkbox refacto. Now dedicated class `ParsleyFieldMultiple`
-  - added 3 custom checkbox validators: mincheck, maxcheck and rangecheck
-
-**0.1.4**
-
-  - added html5 api required="required" support
-  - added radio and checkbox required (only) validation support. For now, to display
-    nice errors, checkbox and radio with same name must be wrapped in a dedicated
-    DOM parent on which parsley-error class would be binded and ul errors apend
-
-**0.1.3**
-
-  - fixed bug on addListener when added after Parsley initialisation. @gmajoulet
-
-**0.1.2**
-
-  - renamed listeners and added a public API to add / override these listeners
+  - initial 2.x public release

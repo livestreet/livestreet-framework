@@ -1,9 +1,12 @@
 language: node_js
 
 node_js:
-  - 0.6
+  - 0.10
 
 before_script:
-  - npm install mocha-phantomjs
+  - npm install -g bower
+  - npm install -g browserify
+  - bower install
+  - browserify test/env/browserify.js > test/env/browserify_bundle.js
 
-script: ./bin/test-suite.sh
+script: npm run-script test-all

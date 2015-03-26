@@ -58,7 +58,7 @@
 			{continue}
 		{/if}
 
-		data-{$rule@key}="{$rule@value}"
+		data-parsley-{$rule@key}="{$rule@value}"
 	{/foreach}
 	{cattr list=$_inputAttributes}
 {/function}

@@ -1,77 +1,70 @@
-#Parsley.js
+# Parsley
 
-[![Build Status](https://travis-ci.org/guillaumepotier/Parsley.js.png?branch=master)](https://travis-ci.org/guillaumepotier/Parsley.js)
+[![Build Status](https://travis-ci.org/guillaumepotier/Parsley.js.svg?branch=master)](https://travis-ci.org/guillaumepotier/Parsley.js)
 
-Javascript form validation, without actually writing a single line of javascript!
+JavaScript form validation, without actually writing a single line of JavaScript!
 
-#TODOs
+## Version
 
-See TODO.md
+2.0.7
 
-#Curent Stable Version
+## Doc
 
-1.1.16
+See `index.html` and `doc/`
 
-# Browser compatibility
+## Requirements
 
-  - IE 7/8 with jQuery < 1.9 and parsley.min, not parsley.standalone
-  - IE 9+
-  - FF 14+
-  - Chrome
+jQuery >= 1.8
 
-# Requirements
+## Contributing
 
-jQuery 1.6+
+See `CONTRIBUTING.md` file
 
-#Install dependencies for documentation and tests
+## Integrations
 
-`bower install jquery`
-`bower install bootstrap`
-
-#Run tests
-
-* In your browser: go to `tests/index.html`
-* Headless tests: install mocha-phantomjs with npm: `npm install -g mocha-phantomjs` and then run `./bin/test-suite.sh`
-
-#Make production minified versions
-
-You'll need ruby, and Google Closure compiler: `gem install closure-compiler`. Then, just call:
-
-* Linux/Mac: `./bin/build.sh version` where version is the build release. eg: `./bin/build.sh 1.1.2`
-* Windows: `./bin/build.ps1 version` where version is the build release. eg: `./bin/build.ps1 1.1.2`
-
-They'll be created and dumped in the dist/ directory
-
-#Contribute!
-
-##Validators
-
-Add new validators in `parsley.extend.js` and minify it. No validators will be allowed directly into parsley.js
-(but great validators could move from extra to parsley ;))
-
-##Localization
-
-If file does not exist, create it into `ì18n/` directory with same syntax as others.  
-Reference file is _messages.en.fr
-
-##Integrations
-
-Create integration with other framework as a separate Github repo and send a pull request for including here.  
+Create integration with other framework as a separate Github repo and send a pull request for including here.
 Some integrations are
 
+* [CakePHP](https://github.com/Codaxis/parsley-helper)
 * [Django](https://github.com/agiliq/django-parsley)
 * [Rails](https://github.com/mekishizufu/parsley-rails)
-* [Wicket](https://github.com/code-troopers/wicket-jsr303-parsley)
+* [OSSCDN by MaxCDN](http://osscdn.com/#/parsleyjs)
 
-## Global
+## Install dev environment
 
-* fork repository
-* add your changes to parsley.js
-* add / update tests to test suite (tests/index.html / tests/tests.js)
-* run tests (see above)
-* create new minified versions with minify script (see above) (use next tag-dev as version. Ie: if 1.1.1, use 1.1.2-dev)
-* make a Pull Request!
+```
+npm install
+npm install -g grunt-cli
+npm install -g bower
+grunt configure
+```
 
-#Licence
+## Build `dist/`
 
-See LICENCE.md
+```
+grunt build
+grunt build-all
+```
+
+## Generate annotated documentation
+
+First time:
+```
+npm install -g docco
+```
+
+then
+```
+grunt build-annotated-source
+```
+
+## Run tests
+
+In the browser: open `test/index.html`
+
+In the terminal: `npm test`
+
+## License
+
+Released under the MIT License. See the bundled `LICENSE` file for
+details.

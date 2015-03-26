@@ -9,8 +9,9 @@
 /**
  * Атрибут form
  * https://developer.mozilla.org/en-US/docs/Web/HTML/Element/button#attr-form
+ * TODO: Fix IE
  */
-if ( ! document.createElement( 'button' ).hasOwnProperty( 'form' ) ) {
+if ( ! 'form' in document.createElement( 'button' ) ) {
 	jQuery( document ).on( 'click', 'button[form]', function () {
 		jQuery( '#' + $( this ).attr( 'form' ) ).submit();
 	});

@@ -40,9 +40,9 @@
 {* Визуальный редактор *}
 {if $type == 'visual'}
 	{hookb run='editor_visual'}
-		{asset type='js' name='editor_visual' file="{Config::Get('path.skin.web')}/components/ls-vendor/tinymce/js/tinymce/tinymce.min.js"}
-		{asset type='js' name='editor_visual_1' file="{Config::Get('path.skin.web')}/components/ls-vendor/tinymce/js/tinymce/jquery.tinymce.min.js"}
-		{asset type='js' name='editor_visual_2' file="{Config::Get('path.skin.web')}/components/editor/js/editor.visual.js"}
+		{asset type='js' file="Component@editor.vendor/tinymce/js/tinymce/tinymce.min"}
+		{asset type='js' file="Component@editor.vendor/tinymce/js/tinymce/jquery.tinymce.min"}
+		{asset type='js' file="Component@editor.visual"}
 
 		{editor_textarea}
 	{/hookb}

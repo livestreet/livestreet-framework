@@ -37,7 +37,9 @@
             // Сохраняем высоту блока при переключении табов
             this.elements.tabs.lsTabs().lsTabs( 'getTabs' ).lsTab( 'option', {
                 beforeactivate: function ( e, data ) {
-                    this.elements.pane_container.css( 'height', this.elements.pane_container.height() );
+                    var h = this.elements.pane_container.height();
+
+                    this.elements.pane_container.css( 'height', h > 150 ? h : 150 );
                 }.bind( this ),
                 activate: function ( e, data ) {
                     this.elements.pane_container.css( 'height', 'auto' );

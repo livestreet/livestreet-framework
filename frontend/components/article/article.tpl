@@ -48,8 +48,8 @@
 				<ul class="{$component}-info">
 					{block 'article_header_info'}
 						<li class="{$component}-info-item {$component}-info-item--date">
-							<time datetime="{date_format date=$article->getDateAdd() format='c'}" title="{date_format date=$article->getDateAdd() format='j F Y, H:i'}">
-								{date_format date=$article->getDateAdd() format="j F Y, H:i"}
+							<time datetime="{date_format date=$article->getDatePublish() format='c'}" title="{date_format date=$article->getDatePublish() format='j F Y, H:i'}">
+								{date_format date=$article->getDatePublish() format="j F Y, H:i"}
 							</time>
 						</li>
 					{/block}

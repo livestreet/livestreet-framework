@@ -19,7 +19,7 @@
 
 {* Генерируем копии локальных переменных, *}
 {* чтобы их можно было изменять в дочерних шаблонах *}
-{foreach [ 'type', 'text', 'url', 'id', 'name', 'isDisabled', 'form', 'icon', 'mods', 'classes', 'attributes' ] as $param}
+{foreach [ 'type', 'text', 'value', 'url', 'id', 'name', 'isDisabled', 'form', 'icon', 'mods', 'classes', 'attributes' ] as $param}
     {assign var="$param" value=$smarty.local.$param}
 {/foreach}
 

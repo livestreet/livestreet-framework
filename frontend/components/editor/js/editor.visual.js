@@ -27,16 +27,16 @@
 					// skin_url: PATH_SKIN + '/components/editor/js/tinymce/skins/livestreet/',
 					menubar: false,
 					statusbar: false,
-					pagebreak_separator: '<cut>',
+					pagebreak_separator: '<cut>'
 					// extended_valid_elements: 'user',
 					// custom_elements: '~user'
 				},
 				default: {
-					toolbar: 'undo redo | styleselect bold italic strikethrough underline blockquote table | bullist numlist | link unlink emoticons media | lsuser removeformat pagebreak code fullscreen',
+					toolbar: 'undo redo | styleselect bold italic strikethrough underline blockquote table | bullist numlist | link unlink emoticons media | lsuser removeformat pagebreak code fullscreen'
 				},
 				light: {
-					toolbar: 'undo redo | bold italic strikethrough underline blockquote | bullist numlist | removeformat pagebreak code',
-				},
+					toolbar: 'undo redo | bold italic strikethrough underline blockquote | bullist numlist | removeformat pagebreak code'
+				}
 			}
 		},
 

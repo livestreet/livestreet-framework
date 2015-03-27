@@ -61,6 +61,6 @@
             $( this.option( 'selectors.target_item' ) + ' input[type=checkbox]' ).on( 'click' + this.eventNamespace, function () {
                 $( this ).closest( _this.option( 'selectors.target_item' ) ).toggleClass( _this.option( 'classes.target_selected' ) );
             });
-        },
+        }
     });
 })(jQuery);

@@ -32,8 +32,8 @@
 				// Свойство
 				property: '.js-uploader-info-property',
 				// Кнопка удаления
-				remove: '.js-uploader-info-remove',
-			},
+				remove: '.js-uploader-info-remove'
+			}
 		},
 
 		/**
@@ -52,7 +52,7 @@
 					image:    this.element.find( this.option( 'selectors.property' ) + '[data-name=image]' ),
 					name:     this.element.find( this.option( 'selectors.property' ) + '[data-name=name]' ),
 					filesize: this.element.find( this.option( 'selectors.property' ) + '[data-name=size]' ),
-					date:     this.element.find( this.option( 'selectors.property' ) + '[data-name=date]' ),
+					date:     this.element.find( this.option( 'selectors.property' ) + '[data-name=date]' )
 				}
 			};
 

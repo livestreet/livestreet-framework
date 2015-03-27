@@ -24,7 +24,7 @@
             selectors: {
                 image: '.js-crop-image',
                 preview: '.js-crop-preview-image'
-            },
+            }
         },
 
         /**

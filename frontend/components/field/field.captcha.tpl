@@ -1,9 +1,8 @@
 {**
  * Каптча
  *}
-{$type=$smarty.local.type}
-{include "Component@field.captcha-{$type}"
-	captchaName=$smarty.local.captchaName
-	name=$smarty.local.name
-	label=$smarty.local.label
-}
+
+{component 'field' template="captcha-{$smarty.local.type}"
+    captchaName=$smarty.local.captchaName
+    name=$smarty.local.name
+    label=$smarty.local.label}

@@ -46,5 +46,5 @@
     {/if}
 
     {* Меню *}
-    {include './dropdown-menu.tpl' activeItem=$activeItem items=$menu}
+    {component 'dropdown' template='menu' activeItem=$activeItem items=$menu}
 </div>

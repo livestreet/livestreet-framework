@@ -54,7 +54,7 @@ function smarty_function_field_make_rule($params, &$smarty)
              */
             if ($sType == 'string') {
                 if (!is_null($oValidator->min) and !is_null($oValidator->max)) {
-                    $aResult['rangelength'] = '[' . $oValidator->min . ',' . $oValidator->max . ']';
+                    $aResult['length'] = '[' . $oValidator->min . ',' . $oValidator->max . ']';
                 } elseif (!is_null($oValidator->min)) {
                     $aResult['minlength'] = $oValidator->min;
                 } else {

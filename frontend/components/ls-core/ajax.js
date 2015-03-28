@@ -114,6 +114,12 @@ ls.ajax = (function ($) {
 				return true;
 			},
 			success: typeof callback == 'function' ? function (result, status, xhr, form) {
+				if ( result.aErrors ) {
+					$.each(result.aErrors, function(key, field) {
+						ls.notification.error(null, field);
+					});
+				}
+
 				if (result.bStateError) {
 					ls.msg.error(null, result.sMsg);
 

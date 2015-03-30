@@ -37,7 +37,6 @@
     "scripts": {
         "vendor-chosen": "vendor/chosen/chosen.jquery.min.js",
         "vendor-chosen-order": "vendor/chosen-order/chosen.order.jquery.js",
-        "vendor-parsley": "vendor/parsley/dist/parsley.js",
         "vendor-parsley": "vendor/parsley/dist/parsley.remote.js",
         "vendor-parsley-ru": "vendor/parsley/i18n/ru.js",
         "jquery-ui-timepicker-addon": "vendor/timepicker/jquery-ui-timepicker-addon.js",

@@ -58,6 +58,21 @@
 			{continue}
 		{/if}
 
+		{if $rule@key === 'remote'}
+			{* Default remote options *}
+			{$json = [ 'type' => 'post', 'data' => [ 'security_ls_key' => $LIVESTREET_SECURITY_KEY ] ]}
+
+			{if array_key_exists('remote-options', $_rules)}
+				{$json = array_merge_recursive($json, $_rules['remote-options'])}
+			{/if}
+
+			data-parsley-remote-options='{json_encode($json)}'
+		{/if}
+
+		{if $rule@key === 'remote-options'}
+			{continue}
+		{/if}
+
 		data-parsley-{$rule@key}="{$rule@value}"
 	{/foreach}
 	{cattr list=$_inputAttributes}

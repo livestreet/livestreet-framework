@@ -10,10 +10,9 @@
 	<span data-type="captcha" data-lscaptcha-name="{$smarty.local.captchaName}" class="field--captcha-image"></span>
 
 	{$_rules = [
-		'required'          => true,
-		'remote'            => {router page='ajax/captcha/validate'},
-		'remote-method'     => 'POST',
-		'remote-param-name' => $smarty.local.captchaName
+		'required'      => true,
+		'remote'        => {router page='ajax/captcha/validate'},
+		'remote-options' => [ 'data' => [ 'name' => $smarty.local.captchaName ] ]
 	]}
 
 	{$_inputClasses = "$_inputClasses width-100"}

@@ -41,17 +41,25 @@
         },
 
         init: function () {
-            this.grecaptcha=grecaptcha.render(this.element.get(0), {
+            var el = this.element.get(0);
+            this.grecaptcha = grecaptcha.render(el, {
                 'sitekey': this.options.key,
-                'callback': function(response) {
-                    this.callbackResponse.call(this,response);
+                'callback': function (response) {
+                    this.callbackResponse.call(this, response);
                 }.bind(this)
             });
+
+            var reset = $('#' + $(el).attr('id') + '-reset');
+            if (reset.length) {
+                reset.click(function (e) {
+                    this.reset();
+                }.bind(this));
+            }
         },
 
-        callbackResponse: function(response) {
+        callbackResponse: function (response) {
             if (!this.input) {
-                this.input=$('<input>').attr({
+                this.input = $('<input>').attr({
                     name: this.options.name,
                     type: 'hidden'
                 });
@@ -67,6 +75,10 @@
                 });
                 $.livestreet.lsReCaptcha.prototype.notReadyItems = [];
             }
+        },
+
+        reset: function () {
+            grecaptcha.reset(this.grecaptcha);
         }
     });
 })(jQuery);

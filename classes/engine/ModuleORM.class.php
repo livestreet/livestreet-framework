@@ -219,7 +219,7 @@ abstract class ModuleORM extends Module
      */
     protected function _GetChildrenOfEntity($oEntity)
     {
-        if (in_array(EntityORM::RELATION_TYPE_TREE, $oEntity->_getRelations())) {
+        if ($oEntity->_isUsedRelationType(EntityORM::RELATION_TYPE_TREE)) {
             $aRelationsData = $oEntity->_getRelationsData();
             if (array_key_exists('children', $aRelationsData)) {
                 $aChildren = $aRelationsData['children'];
@@ -248,7 +248,7 @@ abstract class ModuleORM extends Module
      */
     protected function _GetParentOfEntity($oEntity)
     {
-        if (in_array(EntityORM::RELATION_TYPE_TREE, $oEntity->_getRelations())) {
+        if ($oEntity->_isUsedRelationType(EntityORM::RELATION_TYPE_TREE)) {
             $aRelationsData = $oEntity->_getRelationsData();
             if (array_key_exists('parent', $aRelationsData)) {
                 $oParent = $aRelationsData['parent'];
@@ -275,7 +275,7 @@ abstract class ModuleORM extends Module
      */
     protected function _GetAncestorsOfEntity($oEntity)
     {
-        if (in_array(EntityORM::RELATION_TYPE_TREE, $oEntity->_getRelations())) {
+        if ($oEntity->_isUsedRelationType(EntityORM::RELATION_TYPE_TREE)) {
             $aRelationsData = $oEntity->_getRelationsData();
             if (array_key_exists('ancestors', $aRelationsData)) {
                 $aAncestors = $aRelationsData['ancestors'];
@@ -303,7 +303,7 @@ abstract class ModuleORM extends Module
      */
     protected function _GetDescendantsOfEntity($oEntity)
     {
-        if (in_array(EntityORM::RELATION_TYPE_TREE, $oEntity->_getRelations())) {
+        if ($oEntity->_isUsedRelationType(EntityORM::RELATION_TYPE_TREE)) {
             $aRelationsData = $oEntity->_getRelationsData();
             if (array_key_exists('descendants', $aRelationsData)) {
                 $aDescendants = $aRelationsData['descendants'];
@@ -339,7 +339,7 @@ abstract class ModuleORM extends Module
             $sEntityFull = Engine::GetPluginPrefix($this) . 'Module' . Engine::GetModuleName($this) . '_Entity' . $sEntityFull;
         }
         if ($oEntityDefault = Engine::GetEntity($sEntityFull)) {
-            if (in_array(EntityORM::RELATION_TYPE_TREE, $oEntityDefault->_getRelations())) {
+            if ($oEntityDefault->_isUsedRelationType(EntityORM::RELATION_TYPE_TREE)) {
                 if ($sPrimaryKey = $oEntityDefault->_getPrimaryKey()) {
                     if ($aItems = $this->GetItemsByFilter($aFilter, $sEntityFull)) {
                         $aItemsById = array();

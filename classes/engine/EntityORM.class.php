@@ -341,7 +341,7 @@ abstract class EntityORM extends Entity
      */
     public function getChildren()
     {
-        if (in_array(self::RELATION_TYPE_TREE, $this->aRelations)) {
+        if ($this->_isUsedRelationType(self::RELATION_TYPE_TREE)) {
             return $this->_Method(__FUNCTION__ . 'Of');
         }
         return $this->__call(__FUNCTION__, array());
@@ -354,7 +354,7 @@ abstract class EntityORM extends Entity
      */
     public function getDescendants()
     {
-        if (in_array(self::RELATION_TYPE_TREE, $this->aRelations)) {
+        if ($this->_isUsedRelationType(self::RELATION_TYPE_TREE)) {
             return $this->_Method(__FUNCTION__ . 'Of');
         }
         return $this->__call(__FUNCTION__, array());
@@ -367,7 +367,7 @@ abstract class EntityORM extends Entity
      */
     public function getParent()
     {
-        if (in_array(self::RELATION_TYPE_TREE, $this->aRelations)) {
+        if ($this->_isUsedRelationType(self::RELATION_TYPE_TREE)) {
             return $this->_Method(__FUNCTION__ . 'Of');
         }
         return $this->__call(__FUNCTION__, array());
@@ -380,7 +380,7 @@ abstract class EntityORM extends Entity
      */
     public function getAncestors()
     {
-        if (in_array(self::RELATION_TYPE_TREE, $this->aRelations)) {
+        if ($this->_isUsedRelationType(self::RELATION_TYPE_TREE)) {
             return $this->_Method(__FUNCTION__ . 'Of');
         }
         return $this->__call(__FUNCTION__, array());
@@ -393,7 +393,7 @@ abstract class EntityORM extends Entity
      */
     public function setChildren($aChildren = array())
     {
-        if (in_array(self::RELATION_TYPE_TREE, $this->aRelations)) {
+        if ($this->_isUsedRelationType(self::RELATION_TYPE_TREE)) {
             $this->aRelationsData['children'] = $aChildren;
         } else {
             $aArgs = func_get_args();
@@ -408,7 +408,7 @@ abstract class EntityORM extends Entity
      */
     public function setDescendants($aDescendants = array())
     {
-        if (in_array(self::RELATION_TYPE_TREE, $this->aRelations)) {
+        if ($this->_isUsedRelationType(self::RELATION_TYPE_TREE)) {
             $this->aRelationsData['descendants'] = $aDescendants;
         } else {
             $aArgs = func_get_args();
@@ -423,7 +423,7 @@ abstract class EntityORM extends Entity
      */
     public function setParent($oParent = null)
     {
-        if (in_array(self::RELATION_TYPE_TREE, $this->aRelations)) {
+        if ($this->_isUsedRelationType(self::RELATION_TYPE_TREE)) {
             $this->aRelationsData['parent'] = $oParent;
         } else {
             $aArgs = func_get_args();
@@ -438,7 +438,7 @@ abstract class EntityORM extends Entity
      */
     public function setAncestors($oParent = null)
     {
-        if (in_array(self::RELATION_TYPE_TREE, $this->aRelations)) {
+        if ($this->_isUsedRelationType(self::RELATION_TYPE_TREE)) {
             $this->aRelationsData['ancestors'] = $oParent;
         } else {
             $aArgs = func_get_args();
@@ -617,6 +617,12 @@ abstract class EntityORM extends Entity
          */
         foreach ($this->aRelations as $sName => $aParams) {
             if (is_int($sName)) {
+                /**
+                 * Старый вариант использования связи RELATION_TYPE_TREE
+                 */
+                $this->aRelations[$sName] = array(
+                    'type' => self::RELATION_TYPE_TREE
+                );
                 continue;
             }
             if (isset($aParams['type'])) {
@@ -672,6 +678,23 @@ abstract class EntityORM extends Entity
             $this->aRelations[$sName] = $aParamsNew;
         }
         return $this->aRelations;
+    }
+
+    /**
+     * Проверяет факт использования сущностью определенного типа связи
+     *
+     * @param $sType
+     * @return bool
+     */
+    public function _isUsedRelationType($sType)
+    {
+        $aRelations = $this->_getRelations();
+        foreach ($aRelations as $sName => $aParams) {
+            if (isset($aParams['type']) and $aParams['type'] == $sType) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**

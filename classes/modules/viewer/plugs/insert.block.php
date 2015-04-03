@@ -43,7 +43,7 @@ function smarty_insert_block($aParams, &$oSmarty)
      */
     if (isset($aParams['params']) and isset($aParams['params']['plugin'])) {
         $sBlockTemplate = Plugin::GetTemplatePath($aParams['params']['plugin']) . 'blocks/block.' . $aParams['block'] . '.tpl';
-        $sBlock = 'Plugin' . ucfirst($aParams['params']['plugin']) . '_Block' . $sBlock;
+        $sBlock = 'Plugin' . func_camelize($aParams['params']['plugin']) . '_Block' . $sBlock;
     } else {
         $sBlockTemplate = 'blocks/block.' . $aParams['block'] . '.tpl';
         $sBlock = 'Block' . $sBlock;

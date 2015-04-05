@@ -189,6 +189,12 @@ window.ParsleyExtend = $.extend(window.ParsleyExtend, {
     // Merge options passed in from the function with the ones in the attribute
     this.options.remoteOptions = $.extend(true, this.options.remoteOptions || {} , this.asyncValidators[validator].options);
 
+    /* @livestreet fix begin */
+    if ('function' === typeof this.asyncValidators[validator].prepare) {
+      this.asyncValidators[validator].prepare.call(this);
+    }
+    /* @livestreet fix end */
+
     // All `$.ajax(options)` could be overridden or extended directly from DOM in `data-parsley-remote-options`
     ajaxOptions = $.extend(true, {}, {
       url: this.asyncValidators[validator].url || this.options.remote,

@@ -59,6 +59,9 @@
 		{/if}
 
 		{if $rule@key === 'remote'}
+			data-parsley-remote-validator="{$_rules['remote-validator']|default:'fields'}"
+			data-parsley-trigger="focusout"
+
 			{* Default remote options *}
 			{$json = [ 'type' => 'post', 'data' => [ 'security_ls_key' => $LIVESTREET_SECURITY_KEY ] ]}
 

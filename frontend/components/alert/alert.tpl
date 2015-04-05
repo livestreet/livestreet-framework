@@ -28,7 +28,7 @@
 {/if}
 
 {* Уведомление *}
-<div class="{$component} {cmods name=$component mods=$mods} {$classes}" role="alert" {if ! $visible}hidden{/if} {cattr list=$attributes}>
+<div class="{$component} js-alert {cmods name=$component mods=$mods} {$classes}" role="alert" {if ! $visible}hidden{/if} {cattr list=$attributes}>
     {* Заголовок *}
     {if $title}
         <h4 class="{$component}-title">{$title}</h4>

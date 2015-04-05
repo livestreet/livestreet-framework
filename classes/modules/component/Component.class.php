@@ -206,6 +206,25 @@ class ModuleComponent extends Module
     }
 
     /**
+     * Удаляет компонент из списка загрузки
+     *
+     * @param $sName
+     */
+    public function Remove($sName)
+    {
+        $sName = strtolower($sName);
+        unset($this->aComponentsList[$sName]);
+    }
+
+    /**
+     * Удаляет все компоненты из загрузки
+     */
+    public function RemoveAll()
+    {
+        $this->aComponentsList = array();
+    }
+
+    /**
      * Возвращает полные серверные пути до компонента
      *
      * @param string $sName Имя компонента. Может содержать название плагина, например, "page:alert" - компонент alert плагина page

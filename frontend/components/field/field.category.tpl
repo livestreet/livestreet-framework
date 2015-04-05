@@ -31,4 +31,4 @@
 
 {* Селект *}
 {* TODO: i18n *}
-{component 'field' template='select' name="{$params.form_field}[]" items=$items label={lang 'field.category.label'} selectedValue=$selected}
+{component 'field' template='select' name="{$params.form_field}[]" items=$items label={lang 'field.category.label'} selectedValue=$selected isMultiple=$params.multiple}

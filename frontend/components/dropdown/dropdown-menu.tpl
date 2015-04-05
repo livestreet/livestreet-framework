@@ -13,6 +13,7 @@
 	name       = ( $smarty.local.name ) ? "{$smarty.local.name}_menu" : ''
 	activeItem = $smarty.local.activeItem
 	mods       = 'stacked dropdown'
+	showSingle = true
 	classes    = "dropdown-menu js-dropdown-menu {$smarty.local.classes}"
 	attributes = array_merge( $smarty.local.attributes|default:[], [
         'role' => 'menu',

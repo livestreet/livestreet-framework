@@ -1,0 +1,39 @@
+/**
+ * Blankslate
+ *
+ * @module ls/blankslate
+ *
+ * @license   GNU General Public License, version 2
+ * @copyright 2013 OOO "ЛС-СОФТ" {@link http://livestreetcms.com}
+ * @author    Denis Shakhov <denis.shakhov@gmail.com>
+ */
+
+.blankslate {
+    margin-bottom: 15px;
+    padding: 30px;
+    text-align: center;
+    border: 1px solid #eee;
+    background: #fafafa;
+    color: #555;
+}
+.blankslate:last-child {
+    margin-bottom: 0;
+}
+
+/* Заголовок */
+.blankslate-title {
+    margin-bottom: 15px;
+    font-size: 18px;
+    font-weight: bold;
+}
+.blankslate-title:last-child {
+    margin-bottom: 0;
+}
+
+/**
+ * @modifier no-background
+ */
+.blankslate--no-background {
+    border: none;
+    background: transparent;
+}

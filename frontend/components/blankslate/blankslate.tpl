@@ -1,0 +1,39 @@
+{**
+ * blankslate
+ *
+ * @param string $title
+ * @param string $text
+ * @param boolean $visible
+ * @param string $mods
+ * @param string $classes
+ * @param array  $attributes
+ *}
+
+{* Название компонента *}
+{$component = 'blankslate'}
+
+{* Генерируем копии локальных переменных, *}
+{* чтобы их можно было изменять в дочерних шаблонах *}
+{foreach [ 'title', 'text', 'visible', 'mods', 'classes', 'attributes' ] as $param}
+    {assign var="$param" value=$smarty.local.$param}
+{/foreach}
+
+{$visible = $visible|default:true}
+
+{block 'blankslate_options'}{/block}
+
+<div class="{$component} {cmods name=$component mods=$mods} {$classes}" {cattr list=$attributes}>
+    {* Заголовок *}
+    {if $title}
+        <h3 class="{$component}-title">
+            {$title}
+        </h3>
+    {/if}
+
+    {* Подзаголовок *}
+    {if $text}
+        <div class="{$component}-text">
+            {$text}
+        </div>
+    {/if}
+</div>

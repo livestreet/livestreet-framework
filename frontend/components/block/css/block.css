@@ -11,6 +11,7 @@
     margin-bottom: 30px;
     border: 1px solid #e5e5e5;
     border-radius: 3px;
+    overflow: hidden;
 }
 .block:last-child {
     margin-bottom: 0;
@@ -30,7 +31,6 @@
     padding: 15px 15px;
     position: relative;
     background: #fafafa;
-    border-radius: 3px 3px 0 0;
 }
 .block-header .block-title {
     margin-bottom: 0;

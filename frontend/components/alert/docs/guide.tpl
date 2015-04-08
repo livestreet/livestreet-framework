@@ -80,7 +80,6 @@
     {component 'alert' text='Success' mods='success'}
     {component 'alert' text='Info' mods='info'}
     {component 'alert' text='Error' mods='error'}
-    {component 'alert' text='Empty' mods='empty'}
 {/capture}
 
 {capture 'test_example_code'}
@@ -88,7 +87,6 @@
 {ldelim}component 'alert' text='Success' mods='success'{rdelim}
 {ldelim}component 'alert' text='Info' mods='info'{rdelim}
 {ldelim}component 'alert' text='Error' mods='error'{rdelim}
-{ldelim}component 'alert' text='Empty' mods='empty'{rdelim}
 {/capture}
 
 {test_example content=$smarty.capture.test_example_content code=$smarty.capture.test_example_code}

@@ -28,6 +28,9 @@
     font-size: 14px;
     font-weight: bold;
 }
+.alert-title:last-child {
+    margin-bottom: 0;
+}
 
 /* Кнопка закрывающая уведомление */
 .alert-close {

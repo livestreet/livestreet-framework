@@ -30,8 +30,7 @@
 			{* Сайдбар *}
 			<div class="{$component}-aside js-uploader-aside is-empty">
 				{* Блок отображаемый когда нет активного файла *}
-				{component 'alert'
-					mods    = 'empty'
+				{component 'blankslate'
 					text    = {lang name='uploader.info.empty'}
 					classes = "{$component}-aside-empty js-{$component}-aside-empty"}
 

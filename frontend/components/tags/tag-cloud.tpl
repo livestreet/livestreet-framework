@@ -24,5 +24,5 @@
 		{/foreach}
 	</ul>
 {else}
-	{component 'alert' text=$aLang.common.empty mods='empty'}
+	{component 'blankslate' text=$aLang.common.empty}
 {/if}

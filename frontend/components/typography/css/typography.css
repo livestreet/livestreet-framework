@@ -190,6 +190,8 @@ code {
     border-radius: 3px;
     background: #f1f1f1;
     color: #555;
+    word-break: break-all;
+    word-wrap: break-word;
 }
 
 /* Блок кода */
@@ -201,7 +203,7 @@ pre {
     word-break: break-all;
     word-wrap: break-word;
     color: #333;
-    background-color: #fafafa;
+    background-color: #f8f8f8;
     border: 1px solid #eee;
     border-radius: 3px;
     direction: ltr !important;

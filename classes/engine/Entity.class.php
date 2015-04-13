@@ -170,7 +170,7 @@ abstract class Entity extends LsObject
      */
     public function _getDataOne($sKey)
     {
-        if (array_key_exists($sKey, $this->_aData)) {
+        if (!is_array($sKey) && array_key_exists($sKey, $this->_aData)) {
             return $this->_aData[$sKey];
         }
         return null;

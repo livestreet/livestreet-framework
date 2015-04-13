@@ -400,6 +400,7 @@ abstract class ModuleORM extends Module
     public function GetByFilter($aFilter = array(), $sEntityFull = null)
     {
         $sEntityFull = $this->_NormalizeEntityRootName($sEntityFull);
+        $aFilter = $this->_applyScopes($sEntityFull, $aFilter);
         /**
          * Хук для возможности изменения фильтра
          */
@@ -428,6 +429,7 @@ abstract class ModuleORM extends Module
         }
 
         $sEntityFull = $this->_NormalizeEntityRootName($sEntityFull);
+        $aFilter = $this->_applyScopes($sEntityFull, $aFilter);
         /**
          * Хук для возможности изменения фильтра
          */
@@ -711,6 +713,33 @@ abstract class ModuleORM extends Module
             }
         }
         return $aIndexedEntities;
+    }
+
+    /**
+     * Применяет дополнительные фильтры scope
+     *
+     * @param $sEntityFull
+     * @param $aFilter
+     * @return array
+     */
+    protected function _applyScopes($sEntityFull, $aFilter)
+    {
+        if (isset($aFilter['#scope'])) {
+            $aScopes = $aFilter['#scope'];
+            if (!is_array($aScopes)) {
+                $aScopes = array($aScopes);
+            }
+            $oEntityEmpty = Engine::GetEntity($sEntityFull);
+            foreach ($aScopes as $sScope) {
+                $sMethod = 'getScope' . func_camelize($sScope);
+                if (method_exists($oEntityEmpty, $sMethod)) {
+                    if ($aFilterAdd = call_user_func(array($oEntityEmpty, $sMethod)) and is_array($aFilterAdd)) {
+                        $aFilter = array_merge($aFilterAdd, $aFilter);
+                    }
+                }
+            }
+        }
+        return $aFilter;
     }
 
     /**

@@ -22,7 +22,9 @@
 
 {block 'blankslate_options'}{/block}
 
-<div class="{$component} {cmods name=$component mods=$mods} {$classes}" {cattr list=$attributes}>
+<div class="{$component} {cmods name=$component mods=$mods} {$classes}" {cattr list=$attributes}
+    {if ! $visible}style="display: none;"{/if}>
+
     {* Заголовок *}
     {if $title}
         <h3 class="{$component}-title">

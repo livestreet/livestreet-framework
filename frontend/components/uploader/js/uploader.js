@@ -166,10 +166,14 @@
 		 * 
 		 */
 		onUploadDone: function( file, response ) {
+			if ( ! this.elements.list.lsUploaderFileList( 'option', 'multiselect' ) ) {
+				this.elements.list.lsUploaderFileList( 'clearSelected' );
+			}
+
 			file.lsUploaderFile( 'destroy' );
 			file.replaceWith(
-				$( $.trim( response.sTemplateFile ) )
-					.lsUploaderFile( $.extend( {}, this.option( 'file_options' ), { uploader: this.element } ) )
+				// TODO: Fix
+				this.elements.list.lsUploaderFileList( 'initFiles', $( $.trim( response.sTemplateFile ) ) )
 					.lsUploaderFile( 'uploaded' )
 					.lsUploaderFile( 'activate' )
 			);

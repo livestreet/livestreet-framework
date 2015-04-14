@@ -11,14 +11,11 @@
 (function($) {
 	"use strict";
 
-	$.widget( "livestreet.lsUploaderFile", {
+	$.widget( "livestreet.lsUploaderFile", $.livestreet.lsComponent, {
 		/**
 		 * Дефолтные опции
 		 */
 		options: {
-			// Основной блок загрузчика
-			uploader: $(),
-
 			// Ссылки
 			urls: {
 				// Удаление
@@ -27,10 +24,8 @@
 
 			// Селекторы
 			selectors: {
-				progress: {
-					value: '.js-uploader-file-progress-value',
-					label: '.js-uploader-file-progress-label'
-				}
+				progress_value: '.js-uploader-file-progress-value',
+				progress_label: '.js-uploader-file-progress-label'
 			},
 
 			// Классы
@@ -43,7 +38,9 @@
 				uploading: 'is-uploading',
 				// Файл выделен
 				selected: 'is-selected'
-			}
+			},
+
+			params: {}
 		},
 
 		/**
@@ -53,35 +50,38 @@
 		 * @private
 		 */
 		_create: function () {
+			this._super();
+
 			// Информация о файле
-			this.info = this.getInfo();
+			this._info = this.getInfo();
 
 			// Состояния файла
-			this.states = {
+			this._states = {
 				active: false,
 				selected: false,
 				uploading: false,
 				error: false
 			};
 
-			this._on({ click: this.onClick.bind( this ) });
+			this._on({ click: 'onClick' });
 		},
 
 		/**
 		 * Коллбэк вызываемый при клике по файлу
 		 */
 		onClick: function( event ) {
-			var multiselect      = this._getComponent( 'list' ).lsUploaderFileList( 'option', 'multiselect' ),
-				multiselect_ctrl = this._getComponent( 'list' ).lsUploaderFileList( 'option', 'multiselect_ctrl' );
+			this._trigger( 'beforeclick', event, this );
 
-			this.toggleActive( ! multiselect || ( multiselect && multiselect_ctrl && ! ( event.ctrlKey || event.metaKey ) ) );
+			this.toggleActive();
+
+			this._trigger( 'afterclick', event, this );
 		},
 
 		/**
 		 * Изменение состояния файла активен/не активен
 		 */
-		toggleActive: function( clearSelected ) {
-			this[ this.getState( 'active' ) ? 'unselect' : 'activate' ]( clearSelected );
+		toggleActive: function() {
+			this[ this.getState( 'active' ) ? 'unselect' : 'activate' ]();
 		},
 
 		/**
@@ -105,14 +105,14 @@
 		 * Устанавливает свойство файла
 		 */
 		setProperty: function( name, value ) {
-			this.info[ name ] = value;
+			this._info[ name ] = value;
 		},
 
 		/**
 		 * Получает свойство файла
 		 */
 		getProperty: function( name ) {
-			return this.info[ name ];
+			return this._info[ name ];
 		},
 
 		/**
@@ -121,15 +121,7 @@
 		remove: function() {
 			this.unselect();
 
-			ls.ajax.load( this.option( 'urls.remove' ), {
-				id: this.info.id
-			}, function( response ) {
-				if ( response.bStateError ) {
-					ls.msg.error( null, response.sMsg );
-				} else {
-					this.removeDom();
-				}
-			}.bind( this ));
+			this._load( 'remove', { id: this._info.id }, 'removeDom' );
 		},
 
 		/**
@@ -143,38 +135,23 @@
 		 * Коллбэк вызываемый после удаления
 		 */
 		onRemoveDom: function() {
-			this.destroy();
-			this.element.remove();
-			this.element = null;
-
-			this.option( 'uploader' ).lsUploader( 'checkEmpty' );
+			this._trigger( 'afterremove', null, this );
 		},
 
 		/**
 		 * Помечает файл как активный
-		 *
-		 * @param {Boolean} clearSelected Убрать выделение со всех файлов
 		 */
-		activate: function( clearSelected ) {
+		activate: function() {
+			// Не активируем незагруженный файл
+			if ( this.getState( 'active' ) || this.getState( 'error' ) || this.getState( 'uploading' ) ) return;
+
 			this._trigger( 'beforeactivate', null, this );
 
-			// Не активируем незагруженный файл
-			if ( this.getState( 'error' ) || this.getState( 'uploading' ) ) return;
-
-			if ( clearSelected ) {
-				this._getComponent( 'list' ).lsUploaderFileList( 'clearSelected' );
-			}
-
+			// При активации, также выделяем файл
 			this.select();
 
-			this._getComponent( 'list' ).lsUploaderFileList( 'getActiveFile' ).lsUploaderFile( 'deactivate' );
-
 			this.setState( 'active', true );
-			this.element.addClass( this.option( 'classes.active' ) );
-
-			this.option( 'uploader' ).lsUploader( 'showBlocks' );
-			this._getComponent( 'info' ).lsUploaderInfo( 'setFile', this.element );
-			this._getComponent( 'list' ).lsUploaderFileList( 'resizeHeight' );
+			this._addClass( 'active' );
 
 			this._trigger( 'afteractivate', null, this );
 		},
@@ -183,14 +160,12 @@
 		 * Помечает файл как неактивный
 		 */
 		deactivate: function() {
-			this._trigger( 'beforeadectivate', null, this );
+			if ( ! this.getState( 'active' ) ) return;
+
+			this._trigger( 'beforedeactivate', null, this );
 
 			this.setState( 'active', false );
 			this.element.removeClass( this.option( 'classes.active' ) );
-
-			this.option( 'uploader' ).lsUploader( 'hideBlocks' );
-			this._getComponent( 'info' ).lsUploaderInfo( 'empty' );
-			this._getComponent( 'list' ).lsUploaderFileList( 'resizeHeight' );
 
 			this._trigger( 'afterdeactivate', null, this );
 		},
@@ -199,21 +174,31 @@
 		 * Выделяет файл
 		 */
 		select: function() {
+			if ( this.getState( 'selected' ) ) return;
+
+			this._trigger( 'beforeselect', null, this );
+
 			this.setState( 'selected', true );
-			this.element.addClass( this.option( 'classes.selected' ) );
+			this._addClass( 'selected' );
+
+			this._trigger( 'afterselect', null, this );
 		},
 
 		/**
 		 * Убирает выделение с файла
 		 */
 		unselect: function() {
+			if ( ! this.getState( 'selected' ) ) return;
+
+			this._trigger( 'beforeunselect', null, this );
+
 			this.setState( 'selected', false );
 			this.element.removeClass( this.option( 'classes.selected' ) );
 
-			if ( this.getState( 'active' ) ) {
-				this.deactivate();
-				this._getComponent( 'list' ).lsUploaderFileList( 'activateNextFile' );
-			}
+			// Также деактивируем файл
+			if ( this.getState( 'active' ) ) this.deactivate();
+
+			this._trigger( 'afterunselect', null, this );
 		},
 
 		/**
@@ -221,10 +206,10 @@
 		 */
 		error: function() {
 			this.setState( 'error', true );
-			this.element.addClass( this.option( 'classes.error' ) );
+			this._addClass( 'error' );
 
-			this.element.find( this.option( 'selectors.progress.value' ) ).height( 0 );
-			this.element.find( this.option( 'selectors.progress.label' ) ).text( 'ERROR' );
+			this.getElement( 'progress_value' ).height( 0 );
+			this.getElement( 'progress_label' ).text( 'ERROR' );
 		},
 
 		/**
@@ -232,7 +217,7 @@
 		 */
 		uploading: function() {
 			this.setState( 'uploading', true );
-			this.element.addClass( this.option( 'classes.uploading' ) );
+			this._addClass( 'uploading' );
 		},
 
 		/**
@@ -249,8 +234,8 @@
 		 * @param {Number} percent Процент загрузки
 		 */
 		setProgress: function( percent ) {
-			this.element.find( this.option( 'selectors.progress.value' ) ).height( percent + '%' );
-			this.element.find( this.option( 'selectors.progress.label' ) ).text( percent + '%' );
+			this.getElement( 'progress_value' ).height( percent + '%' );
+			this.getElement( 'progress_label' ).text( percent + '%' );
 		},
 
 		/**
@@ -259,7 +244,7 @@
 		 * @param {String} state Название состояния
 		 */
 		getState: function( state ) {
-			return this.states[ state ];
+			return this._states[ state ];
 		},
 
 		/**
@@ -269,16 +254,7 @@
 		 * @param {Boolean} value Значение состояния
 		 */
 		setState: function( state, value ) {
-			this.states[ state ] = value;
-		},
-
-		/**
-		 * Вспомогательный метод
-		 *
-		 * @private
-		 */
-		_getComponent: function( name ) {
-			return this.option( 'uploader' ).lsUploader( 'getElement', name );
-		},
+			this._states[ state ] = value;
+		}
 	});
 })(jQuery);

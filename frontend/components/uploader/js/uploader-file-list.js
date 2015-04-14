@@ -11,7 +11,7 @@
 (function($) {
 	"use strict";
 
-	$.widget( "livestreet.lsUploaderFileList", {
+	$.widget( "livestreet.lsUploaderFileList", $.livestreet.lsComponent, {
 		/**
 		 * Дефолтные опции
 		 */
@@ -37,6 +37,11 @@
 				file: '.js-uploader-file'
 			},
 
+			// Классы
+			classes : {
+				loading: 'loading'
+			},
+
 			// HTML
 			// TODO: Move to template
 			html: {
@@ -59,6 +64,7 @@
 		 * @private
 		 */
 		_create: function () {
+			this._super();
 			this.resizeHeight();
 		},
 
@@ -68,11 +74,7 @@
 		load: function() {
 			this.empty();
 
-			ls.ajax.load(
-				this.option( 'urls.load' ),
-				this.option( 'uploader' ).lsUploader( 'option', 'params' ),
-				this.onLoad.bind( this )
-			);
+			this._load( 'load', this.option( 'uploader' ).lsUploader( 'option', 'params' ), 'onLoad' );
 		},
 
 		/**
@@ -80,7 +82,8 @@
 		 */
 		empty: function() {
 			this.getFiles().lsUploaderFile( 'destroy' ).remove();
-			this.element.empty().addClass( ls.options.classes.states.loading );
+			this.element.empty();
+			this._addClass( 'loading' );
 		},
 
 		/**
@@ -94,21 +97,34 @@
 		 * Коллбэк вызываемый после подгрузки списка файлов
 		 */
 		onLoad: function( respone ) {
-			this.element.removeClass( ls.options.classes.states.loading ).html( $.trim( respone.html ) );
+			this._removeClass( 'loading' ).html( $.trim( respone.html ) );
 			this.option( 'uploader' ).lsUploader( 'checkEmpty' );
-			this.getFiles().lsUploaderFile( $.extend( {}, this.option( 'file_options' ), { uploader: this.option( 'uploader' ) } ) )
+			this.initFiles( this.getFiles() );
 		},
 
 		/**
 		 * Добавляет файл в список
 		 */
 		addFile: function( data ) {
-			data.context = $( this.option( 'html.file' ) )
-				.lsUploaderFile( $.extend( {}, this.option( 'file_options' ), { uploader: this.option( 'uploader' ) } ) )
-				.lsUploaderFile( 'uploading' );
+			data.context = $( this.option( 'html.file' ) );
 
+			this.initFiles( data.context ).lsUploaderFile( 'uploading' );
 			this.option( 'uploader' ).lsUploader( 'markAsNotEmpty' );
 			this.element.prepend( data.context );
+		},
+
+		/**
+		 * Иниц-ия файлов
+		 */
+		initFiles: function( files ) {
+			return files.lsUploaderFile( $.extend( {}, this.option( 'file_options' ), {
+				beforeactivate: this.onFileBeforeActivate.bind( this ),
+				afteractivate: this.onFileAfterActivate.bind( this ),
+				afterdeactivate: this.onFileAfterDeactivate.bind( this ),
+				afterunselect: this.onFileAfterUnselect.bind( this ),
+				afterremove: this.onFileAfterRemove.bind( this ),
+				beforeclick: this.onFileBeforeClick.bind( this )
+			}));
 		},
 
 		/**
@@ -141,6 +157,61 @@
 		 */
 		clearSelected: function() {
 			this.getFiles().lsUploaderFile( 'unselect' );
+		},
+
+		/**
+		 * 
+		 */
+		onFileBeforeClick: function( event, data ) {
+			var multiselect      = this.option( 'multiselect' ),
+				multiselect_ctrl = this.option( 'multiselect_ctrl' );
+
+			if ( ! multiselect || ( multiselect && multiselect_ctrl && ! ( event.ctrlKey || event.metaKey ) ) ) {
+				this.clearSelected();
+			}
+		},
+
+		/**
+		 * 
+		 */
+		onFileBeforeActivate: function( event, data ) {
+			this.getActiveFile().lsUploaderFile( 'deactivate' );
+		},
+
+		/**
+		 * 
+		 */
+		onFileAfterActivate: function( event, data ) {
+			this.option( 'uploader' ).lsUploader( 'showBlocks' );
+			this.option( 'uploader' ).lsUploader( 'getElement', 'info' ).lsUploaderInfo( 'setFile', data.element );
+			this.resizeHeight();
+
+			this._trigger( 'fileactivate', null, data );
+		},
+
+		/**
+		 * 
+		 */
+		onFileAfterDeactivate: function( event, data ) {
+			this.option( 'uploader' ).lsUploader( 'hideBlocks' );
+			this.option( 'uploader' ).lsUploader( 'getElement', 'info' ).lsUploaderInfo( 'empty' );
+			this.resizeHeight();
+		},
+
+		/**
+		 * 
+		 */
+		onFileAfterUnselect: function( event, data ) {
+			this.activateNextFile();
+		},
+
+		/**
+		 * 
+		 */
+		onFileAfterRemove: function( event, data ) {
+			data.element.lsUploaderFile( 'destroy' );
+			data.element.remove();
+			this.option( 'uploader' ).lsUploader( 'checkEmpty' );
 		},
 
 		/**

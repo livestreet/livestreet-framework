@@ -52,20 +52,13 @@ ls.ajax = (function ($) {
 				}
 
 				if ( $.isFunction( more.onResponse ) ) more.onResponse.apply( this, arguments );
-
-				ls.dev.debug("ajax success: ");
-				ls.dev.debug.apply(ls.dev, arguments);
 			}.bind(this),
 			error: function(msg){
 				if ( $.isFunction( more.onError ) ) more.onError.apply( this, arguments );
-				ls.dev.debug("ajax error: ");
-				ls.dev.debug.apply(ls.dev, arguments);
 			}.bind(this),
 			complete: function(msg){
 				NProgress.done();
 				if ( $.isFunction( more.onComplete ) ) more.onComplete.apply( this, arguments );
-				ls.dev.debug("ajax complete: ");
-				ls.dev.debug.apply(ls.dev, arguments);
 			}.bind(this)
 		}, more);
 
@@ -113,7 +106,7 @@ ls.ajax = (function ($) {
 
 				return true;
 			},
-			success: typeof callback == 'function' ? function (result, status, xhr, form) {
+			success: function (result, status, xhr, form) {
 				if ( result.aErrors ) {
 					$.each(result.aErrors, function(key, field) {
 						ls.notification.error(null, field);
@@ -128,23 +121,18 @@ ls.ajax = (function ($) {
 					if (result.sMsg) {
 						ls.msg.notice(null, result.sMsg);
 					}
-					callback(result, status, xhr, form);
+
+					if (typeof callback === 'function') {
+						callback(result, status, xhr, form);
+					}
 				}
 
 				if ( $.isFunction( more.onResponse ) ) more.onResponse.apply( this, arguments );
-			} : function () {
-				ls.dev.debug("ajax success: ");
-				ls.dev.debug.apply(ls.dev, arguments);
-			}.bind(this),
-			error: more.error || function(){
-				ls.dev.debug("ajax error: ");
-				ls.dev.debug.apply(ls.dev, arguments);
-			}.bind(this),
+			},
+			error: more.error,
 			complete: function(){
 				NProgress.done();
 				button.prop('disabled', false).removeClass('loading');
-				ls.dev.debug("ajax complete: ");
-				ls.dev.debug.apply(ls.dev, arguments);
 
 				if (more.complete) {
 					more.complete.apply(ls.dev,arguments);

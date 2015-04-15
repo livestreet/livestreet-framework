@@ -1,0 +1,35 @@
+/**
+ * Аватар
+ *
+ * @module ls/avatar
+ *
+ * @license   GNU General Public License, version 2
+ * @copyright 2013 OOO "ЛС-СОФТ" {@link http://livestreetcms.com}
+ * @author    Denis Shakhov <denis.shakhov@gmail.com>
+ */
+
+.avatar {
+    display: inline-block;
+}
+
+.avatar-image {
+    display: block;
+    border-radius: 3px;
+    width: 100px;
+    height: 100px;
+}
+
+.avatar--size-small .avatar-image {
+    width: 64px;
+    height: 64px;
+}
+
+.avatar--size-xsmall .avatar-image {
+    width: 48px;
+    height: 48px;
+}
+
+.avatar--size-inline .avatar-image {
+    width: 18px;
+    height: 18px;
+}

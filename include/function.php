@@ -119,11 +119,14 @@ function getRequestStr($sName, $default = null, $sType = null)
 /**
  * Определяет был ли передан указанный параметр методом POST
  *
- * @param  string $sName
+ * @param  string|null $sName
  * @return bool
  */
-function isPost($sName)
+function isPost($sName=null)
 {
+    if (is_null($sName)) {
+        return $_SERVER['REQUEST_METHOD'] == 'POST';
+    }
     return (getRequest($sName, null, 'post') !== null);
 }
 

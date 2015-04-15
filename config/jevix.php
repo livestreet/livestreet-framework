@@ -339,7 +339,7 @@ return array(
         // Теги, после которых необходимо пропускать одну пробельную строку
         'cfgSetTagBlockType'        => array(
             array(
-                array('h4', 'h5', 'h6', 'ol', 'ul', 'blockquote', 'pre', 'table', 'iframe')
+                array('h4', 'h5', 'h6', 'ol', 'ul', 'blockquote', 'pre', 'table', 'iframe', 'code')
             )
         ),
     ),

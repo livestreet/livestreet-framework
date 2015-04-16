@@ -50,11 +50,12 @@ class ModuleCron extends ModuleORM
         }
 
         if (Config::Get('module.cron.use_fork')) {
-            $aResult = \iFixit\Forker\Forker::map($aTasksReady, function ($iIndex, $oTask) {
+            $that = $this;
+            $aResult = \iFixit\Forker\Forker::map($aTasksReady, function ($iIndex, $oTask) use ($that) {
                 /**
                  * Производим переподключение к основной БД
                  */
-                $this->Database_ReConnect();
+                $that->Database_ReConnect();
                 $oTask->beforeRun(true);
                 return $oTask->run();
             });

@@ -39,7 +39,10 @@ ls.msg = ls.notification = (function ($) {
      * Отображение информационного сообщения
      */
     this.show = function( title, message, type ) {
-        if ( ! title && ! message ) throw new Error("Необходимо указать заголовок или текст уведомления");
+        if ( ! title && ! message ) {
+            ls.dev.log('Необходимо указать заголовок или текст уведомления');
+            return;
+        }
 
         type = typeof type === 'undefined' ? 'notice' : type;
 

@@ -108,7 +108,7 @@ abstract class Cron extends LsObject
      * Основной метод крон-процесса.
      * Реализует логику работы крон процесса с последующей передачей управления на пользовательскую функцию
      *
-     * @return string
+     * @return string|bool
      */
     public function Exec()
     {
@@ -117,7 +117,7 @@ abstract class Cron extends LsObject
          */
         if ($this->isLock()) {
             $this->Log('Try to exec already run process');
-            return;
+            return false;
         }
         /**
          * Здесь мы реализуем дополнительную логику:

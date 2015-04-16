@@ -112,18 +112,15 @@ class ModuleNotify extends Module
          * то добавляем задание в массив. В противном случае,
          * сразу отсылаем на email
          */
+        $oNotifyTask = Engine::GetEntity('Notify_Task');
+        $oNotifyTask->setUserMail($sMail);
+        $oNotifyTask->setUserLogin($sName);
+        $oNotifyTask->setNotifyText($sBody);
+        $oNotifyTask->setNotifySubject($sSubject);
+        $oNotifyTask->setDateCreated(date("Y-m-d H:i:s"));
+        $oNotifyTask->setNotifyTaskStatus(self::NOTIFY_TASK_STATUS_NULL);
+
         if (Config::Get('module.notify.delayed') and !$bForceSend) {
-            $oNotifyTask = Engine::GetEntity(
-                'Notify_Task',
-                array(
-                    'user_mail'          => $sMail,
-                    'user_login'         => $sName,
-                    'notify_text'        => $sBody,
-                    'notify_subject'     => $sSubject,
-                    'date_created'       => date("Y-m-d H:i:s"),
-                    'notify_task_status' => self::NOTIFY_TASK_STATUS_NULL,
-                )
-            );
             if (Config::Get('module.notify.insert_single')) {
                 $this->aTask[] = $oNotifyTask;
             } else {
@@ -133,11 +130,7 @@ class ModuleNotify extends Module
             /**
              * Отправляем мыло
              */
-            $this->Mail_SetAdress($sMail, $sName);
-            $this->Mail_SetSubject($sSubject);
-            $this->Mail_SetBody($sBody);
-            $this->Mail_setHTML();
-            $this->Mail_Send();
+            $this->SendTask($oNotifyTask);
         }
     }
 

@@ -19,6 +19,11 @@
     height: 100px;
 }
 
+.avatar-image-link {
+    display: inline-block;
+    text-decoration: none;
+}
+
 .avatar--size-small .avatar-image {
     width: 64px;
     height: 64px;
@@ -29,7 +34,46 @@
     height: 48px;
 }
 
-.avatar--size-inline .avatar-image {
+.avatar--size-xxsmall .avatar-image {
+    width: 24px;
+    height: 24px;
+}
+
+.avatar--size-text .avatar-image {
     width: 18px;
     height: 18px;
+}
+
+/**
+ * @modifier has-name
+ */
+.avatar--has-name {
+    max-width: 150px;
+    text-align: center;
+}
+
+.avatar--has-name .avatar-image {
+    margin: 0 auto 3px;
+}
+
+.avatar--has-name .avatar-name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/**
+ * @modifier inline
+ */
+.avatar--has-name.avatar--inline {
+    max-width: none;
+}
+
+.avatar--has-name.avatar--inline .avatar-image,
+.avatar--has-name.avatar--inline .avatar-name {
+    display: inline-block;
+    vertical-align: middle;
+}
+.avatar--has-name.avatar--inline .avatar-image {
+    margin: 0 2px 0 0;
 }

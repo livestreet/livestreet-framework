@@ -15,7 +15,7 @@
     {foreach $items as $avatar}
         {if is_array( $avatar )}
             {block 'avatar_loop_avatar'}
-                {component 'avatar' template='name' params=$avatar}
+                {component 'avatar' params=$avatar}
             {/block}
         {else}
             {$avatar}

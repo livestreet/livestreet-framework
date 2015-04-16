@@ -12,7 +12,7 @@
 	{$_rules = [
 		'required'      => true,
 		'remote'        => {router page='ajax/captcha/validate'},
-		'remote-options' => [ 'data' => [ 'name' => $smarty.local.captchaName ] ]
+		'remote-options' => [ 'data' => [ 'params' => [ 'name' => $smarty.local.captchaName ] ] ]
 	]}
 
 	{$_inputClasses = "$_inputClasses width-100"}

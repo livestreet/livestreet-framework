@@ -128,6 +128,11 @@
                         }
                     }
 
+                    // Номер страницы
+                    if (response.next_page) {
+                        this.options.params.next_page = response.next_page;
+                    }
+
                     // Обновляем параметры
                     $.each( this.options.proxy, function( k, v ) {
                         if ( response[ v ] ) this._setParam( v, response[ v ] );

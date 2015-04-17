@@ -6,13 +6,11 @@
     },
     "templates": {
         "avatar": "avatar.tpl",
-        "name": "avatar-name.tpl",
         "list": "avatar-list.tpl",
         "loop": "avatar-loop.tpl"
     },
     "styles": {
         "avatar": "css/avatar.css",
-        "name": "css/avatar-name.css",
         "list": "css/avatar-list.css"
     }
 }

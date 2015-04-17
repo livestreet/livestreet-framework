@@ -77,7 +77,7 @@
 
             params = params || {};
             if (this.option( 'params' )) {
-                $.extend( params, this.option( 'params' ) );
+                params = $.extend({}, this.option( 'params' ), params);
             }
 
             // Добавляем возможность указывать коллбэк в виде строки,

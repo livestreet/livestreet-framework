@@ -72,10 +72,13 @@
             if ( $.isFunction( params ) ) {
                 more = callback;
                 callback = params;
-                params = false;
+                params = {};
             }
 
-            if ( params ) $.extend( this.option( 'params' ), params );
+            params = params || {};
+            if (this.option( 'params' )) {
+                $.extend( params, this.option( 'params' ) );
+            }
 
             // Добавляем возможность указывать коллбэк в виде строки,
             // в этом случае будет вызываться метод текущего виджета указанный в строке
@@ -87,7 +90,7 @@
                 callback = callback.bind( this );
             }
 
-            ls.ajax.load( this.options.urls[ url ], this.option( 'params' ) || {}, callback, more );
+            ls.ajax.load( this.options.urls[ url ], params || {}, callback, more );
         },
 
         /**

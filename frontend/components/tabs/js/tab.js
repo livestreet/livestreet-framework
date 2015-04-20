@@ -11,7 +11,7 @@
 (function($) {
     "use strict";
 
-    $.widget( "livestreet.lsTab", {
+    $.widget( "livestreet.lsTab", $.livestreet.lsComponent, {
         /**
          * Дефолтные опции
          */
@@ -21,10 +21,18 @@
             // Контейнер с табами
             tabs: $(),
 
+            // Классы
+            classes: {
+                active: 'active',
+                loading: 'loading'
+            },
+
             // Настройки аякса
 
             // Ссылка
-            url: null,
+            urls: {
+                load: null
+            },
             // Название переменной с результатом
             result: 'sText',
             // Параметры запроса
@@ -45,10 +53,9 @@
          * @private
          */
         _create: function() {
-            this.options.params = ls.utils.getDataOptions( this.element, 'param' );
-            this.options = $.extend( {}, this.options, ls.utils.getDataOptions( this.element, 'tab' ) );
+            this._super();
 
-            this.pane = $( '#' + this.option( 'target' ) );
+            this._pane = $( '#' + this.option( 'target' ) );
 
             this._on({
                 click: function (e) {
@@ -61,38 +68,53 @@
             // Активируем таб с классом active
             if ( this.options.target == location.hash.substring(1)
                 || (
-                    this.options.url
-                    && this.element.hasClass( ls.options.classes.states.active )
-                    && ! this.pane.text()
+                    this.options.urls.load
+                    && this._hasClass( 'active' )
+                    && ! this._pane.text()
                 )
             ) this.activate();
         },
 
+        /**
+         * Проверяет активирован таб или нет
+         *
+         * @return {Boolean}
+         */
+        isActive: function () {
+            return this._hasClass( 'active' );
+        },
 
         /**
          * Активация таба
          */
         activate: function () {
-            this._trigger("beforeactivate", null, this);
+            this._trigger( 'beforeactivate', null, this );
 
             // Активируем таб
-            this.option( 'tabs' ).lsTabs( 'getTabs' ).removeClass( 'active' );
-            this.element.addClass( 'active' );
-
-            // Показываем блок с контентом таба
-            this.option( 'tabs' ).lsTabs( 'getPanes' ).hide();
-            this.pane.show();
-
-            // Поддержка дропдаунов
-            // var dropdown = this.element.closest('ul').parent('li');
-            // if (dropdown.length > 0) dropdown.addClass('active');
+            this._addClass( 'active' );
+            this._pane.show();
 
             // Загрузка содержимого таба через аякс
-            if ( this.options.url ) {
-                this._load();
+            if ( this.options.urls.load ) {
+                this._loadContent();
             } else {
                 this._trigger( 'activate', null, this );
             }
+        },
+
+        /**
+         * Деактивирует таб
+         */
+        deactivate: function () {
+            this._removeClass( 'active' );
+            this._pane.hide();
+        },
+
+        /**
+         * Получает блок с контентом
+         */
+        getPane: function () {
+            return this._pane;
         },
 
         /**
@@ -100,20 +122,20 @@
          *
          * @private
          */
-        _load: function () {
-            this.pane.empty().addClass( 'loading' );
+        _loadContent: function () {
+            this._addClass( this._pane.empty(), 'loading' );
 
-            ls.ajax.load(this.options.url, this.options.params, function (response) {
-                this.pane.html( response[ this.options.result ] );
+            this._load( 'load', function ( response ) {
+                this._pane.html( response[ this.options.result ] );
 
                 this._trigger( 'activate', null, this );
             }.bind(this), {
                 onError: function ( response ) {
-                    this.pane.removeClass( 'loading' );
-                    //this.pane.html('Error');
+                    this._removeClass( this._pane, 'loading' );
+                    //this._pane.html('Error');
                 }.bind( this ),
                 onComplete: function ( response ) {
-                    this.pane.removeClass( 'loading' );
+                    this._removeClass( this._pane, 'loading' );
                 }.bind( this )
             });
         }

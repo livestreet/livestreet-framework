@@ -11,15 +11,15 @@
 (function($) {
     "use strict";
 
-    $.widget( "livestreet.lsTabs", {
+    $.widget( "livestreet.lsTabs", $.livestreet.lsComponent, {
         /**
          * Дефолтные опции
          */
         options: {
             // Селекторы
             selectors: {
-                tab: '[data-tab-type=tab]',
-                pane: '[data-tab-type=tab-pane]'
+                tab: '[data-tab]',
+                pane: '[data-tab-pane]'
             }
         },
 
@@ -30,15 +30,17 @@
          * @private
          */
         _create: function () {
-            var _this = this;
+            this._super();
 
-            this.elements = {
-                tabs: this.element.find( this.option( 'selectors.tab' ) ),
-                panes: this.element.find( this.option( 'selectors.pane' ) )
-            };
-
-            this.elements.tabs.lsTab({
-                tabs: this.element
+            this.elements.tab.lsTab({
+                tabs: this.element,
+                beforeactivate: function ( event, data ) {
+                    this._trigger( 'tabbeforeactivate', event, data );
+                    this.getTabs().not( data.element ).lsTab( 'deactivate' );
+                }.bind(this),
+                activate: function ( event, data ) {
+                    this._trigger( 'tabactivate', event, data );
+                }.bind(this)
             });
         },
 
@@ -46,21 +48,23 @@
          * Get tabs
          */
         getTabs: function() {
-            return this.elements.tabs;
+            return this.elements.tab;
         },
 
         /**
          * Get panes
          */
         getPanes: function() {
-            return this.elements.panes;
+            return this.elements.pane;
         },
 
         /**
          * Get active tab
          */
         getActiveTab: function() {
-            return this.elements.tabs.filter( '.active' );
+            return this.getTabs().filter(function() {
+                return $( this ).lsTab( 'isActive' );
+            });
         }
     });
 })(jQuery);

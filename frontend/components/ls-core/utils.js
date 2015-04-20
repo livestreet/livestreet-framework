@@ -87,6 +87,8 @@ ls.utils = (function ($) {
 			dataOptions = typeof element === 'string' ? $(element).data() : element.data();
 
 		for (var option in dataOptions) {
+			if ( option === 'options' ) continue;
+
 			// Remove 'option' prefix
 			if (option.substring(0, prefix.length) == prefix) {
 				var str = option.substring(prefix.length);

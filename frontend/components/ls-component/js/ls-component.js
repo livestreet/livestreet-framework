@@ -23,6 +23,9 @@
             // Получаем опции из data атрибутов
             $.extend( this.options, ls.utils.getDataOptions( this.element, this.widgetName.toLowerCase() ) );
 
+            // Получаем опции в формате JSON
+            $.extend( this.options, this.element.data( this.widgetName.toLowerCase() + '-options' ) );
+
             // Получаем параметры отправляемые при каждом аякс запросе
             this._getParamsFromData();
 

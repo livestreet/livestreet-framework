@@ -20,7 +20,7 @@
 }
 
 .avatar-image-link {
-    display: inline-block;
+    display: block;
     text-decoration: none;
 }
 
@@ -70,6 +70,7 @@
 }
 
 .avatar--has-name.avatar--inline .avatar-image,
+.avatar--has-name.avatar--inline .avatar-image-link,
 .avatar--has-name.avatar--inline .avatar-name {
     display: inline-block;
     vertical-align: middle;

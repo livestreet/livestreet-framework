@@ -21,7 +21,7 @@
                 // Блок с табами
                 tabs: '.js-tabs-block',
                 // Блок-обертка содержимого табов
-                pane_container: '[data-type=tab-panes]'
+                pane_container: '[data-tab-panes]'
             }
         },
 
@@ -35,13 +35,13 @@
             this._super();
 
             // Сохраняем высоту блока при переключении табов
-            this.elements.tabs.lsTabs().lsTabs( 'getTabs' ).lsTab( 'option', {
-                beforeactivate: function ( e, data ) {
+            this.elements.tabs.lsTabs({
+                tabbeforeactivate: function () {
                     var h = this.elements.pane_container.height();
 
                     this.elements.pane_container.css( 'height', h > 150 ? h : 150 );
                 }.bind( this ),
-                activate: function ( e, data ) {
+                tabactivate: function () {
                     this.elements.pane_container.css( 'height', 'auto' );
                 }.bind( this )
             });

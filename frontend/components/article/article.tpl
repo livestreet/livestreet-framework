@@ -107,7 +107,7 @@
 						{block 'article_footer_info_items'}
 							{* Автор топика *}
 							<li class="{$component}-info-item {$component}-info-item--author">
-								{component 'user' template='item' user=$user avatarSize=48 mods='rounded'}
+								{component 'user' template='avatar' user=$user size='xsmall' mods='inline'}
 							</li>
 
 							{* Ссылка на комментарии *}

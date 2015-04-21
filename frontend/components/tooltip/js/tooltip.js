@@ -200,6 +200,7 @@ $.widget( "livestreet.lsTooltip", {
     _onHide: function () {
         this._target.detach();
         this.state = this._state.HIDDEN;
+        this.element.removeClass( ls.options.classes.states.open );
 
         this._trigger("hide", null, this);
     },

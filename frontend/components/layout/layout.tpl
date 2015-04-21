@@ -57,6 +57,7 @@
         <link rel="search" type="application/opensearchdescription+xml" href="{router page='search'}opensearch/" title="{Config::Get('view.name')}" />
 
         <script>
+            {strip}
             var PATH_ROOT                   = '{router page='/'}',
                 PATH_SKIN                   = '{Config::Get('path.skin.web')}',
                 PATH_FRAMEWORK_FRONTEND     = '{Config::Get('path.framework.frontend.web')}',
@@ -70,6 +71,7 @@
             {foreach $aRouter as $sPage => $sPath}
                 aRouter['{$sPage}'] = '{$sPath}';
             {/foreach}
+            {/strip}
         </script>
 
         {**

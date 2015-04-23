@@ -201,6 +201,76 @@
 
 
 {**
+ * Autocomplete
+ *}
+{test_heading text='Autocomplete'}
+
+{capture 'test_example_content'}
+    <script>
+        $(function ($) {
+            $(".js-field-autocomplete-ajax").lsFieldAutocomplete({
+                max_selected_options: 3,
+                urls: {
+                    load: aRouter.ajax + 'autocompleter/user/'
+                },
+                params: {
+                    extended: true
+                }
+            });
+
+            $(".js-field-autocomplete").lsFieldAutocomplete();
+        });
+    </script>
+
+    {component 'field'
+        template = 'autocomplete'
+        label = 'Ajax'
+        isMultiple = true
+        placeholder = 'Выберите получателей'
+        inputClasses='js-field-autocomplete-ajax'
+        note = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit'}
+
+    {component 'field'
+        template = 'autocomplete'
+        label = 'Label'
+        isMultiple = true
+        placeholder = 'Выберите получателей'
+        items = [
+            [ 'value' => '1', 'text' => 'Item 1' ],
+            [ 'value' => '2', 'text' => 'Item 2' ],
+            [ 'value' => '3', 'text' => 'Item 3' ]
+        ]
+        inputClasses='js-field-autocomplete'
+        note = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit'}
+{/capture}
+
+{capture 'test_example_code'}
+<script>
+    $(function ($) {
+        $(".js-field-autocomplete").lsFieldAutocomplete({
+            max_selected_options: 3,
+            urls: {
+                load: aRouter.ajax + 'autocompleter/user/'
+            },
+            params: {
+                extended: true
+            }
+        });
+    })
+</script>
+
+{ldelim}component 'field' template = 'autocomplete'
+    label = 'Ajax'
+    isMultiple = true
+    placeholder = 'Выберите получателей'
+    inputClasses = 'js-field-autocomplete-ajax'
+    note = 'Lorem ipsum...'{rdelim}
+{/capture}
+
+{test_example content=$smarty.capture.test_example_content code=$smarty.capture.test_example_code}
+
+
+{**
  * Radio / Checkbox
  *}
 {test_heading text='Radio / Checkbox'}

@@ -21,6 +21,7 @@
         "time": "field.time.tpl",
 
         "email": "field.email.tpl",
+        "autocomplete": "field.autocomplete.tpl",
         "file": "field.file.tpl",
         "geo": "field.geo.tpl",
         "hidden": "field.hidden.tpl",
@@ -37,8 +38,9 @@
     "scripts": {
         "validation": "js/validation.js",
 
-        "vendor-chosen": "vendor/chosen/chosen.jquery.min.js",
+        "vendor-chosen": "vendor/chosen/chosen.jquery.js",
         "vendor-chosen-order": "vendor/chosen-order/chosen.order.jquery.js",
+        "vendor-chosen-ajax": "vendor/ajax-chosen/lib/ajax-chosen.js",
         "vendor-parsley": "vendor/parsley/dist/parsley.remote.js",
         "vendor-parsley-ru": "vendor/parsley/i18n/ru.js",
         "jquery-ui-timepicker-addon": "vendor/timepicker/jquery-ui-timepicker-addon.js",
@@ -50,6 +52,7 @@
         "captcha": "js/field.captcha.js",
         "recaptcha": "js/field.recaptcha.js",
 
+        "autocomplete": "js/field.autocomplete.js",
         "geo": "js/field.geo.js",
         "image-ajax": "js/field.image-ajax.js"
     },

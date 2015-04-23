@@ -271,6 +271,10 @@ class Engine
          */
         $this->LoadPlugins();
         /**
+         * Выполняет специальный метод BeforeInitEngine плагинов на самой ранней стадии инициализации ядра
+         */
+        $this->PreInitPlugins();
+        /**
          * Инициализируем хуки
          */
         $this->InitHooks();
@@ -522,6 +526,17 @@ class Engine
     {
         foreach ($this->aPlugins as $oPlugin) {
             $oPlugin->Init();
+        }
+    }
+
+    /**
+     * Выполняет самую раннюю преинициализацию плагинов
+     *
+     */
+    protected function PreInitPlugins()
+    {
+        foreach ($this->aPlugins as $oPlugin) {
+            $oPlugin->BeforeInitEngine();
         }
     }
 

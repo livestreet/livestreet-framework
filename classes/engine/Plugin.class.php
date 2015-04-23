@@ -62,6 +62,14 @@ abstract class Plugin extends LsObject
     }
 
     /**
+     * Метод, который вызывается перед самой инициализацией ядра
+     */
+    public function BeforeInitEngine()
+    {
+
+    }
+
+    /**
      * Передает информацию о делегатах в модуль ModulePlugin
      * Вызывается Engine перед инициализацией плагина
      * @see Engine::LoadPlugins

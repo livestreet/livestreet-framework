@@ -113,7 +113,7 @@
 
 {$mods = "$mods template-{Config::Get('view.skin')} {Config::Get('view.grid.type')}"}
 
-<body class="{$component} {cmods name=$component mods=$mods} {$smarty.local.classes}" {cattr list=$attributes}>
+<body class="{$component} {cmods name=$component mods=$mods} {$classes}" {cattr list=$attributes}>
     {block 'layout_body'}{/block}
 
     {hook run='body_end'}

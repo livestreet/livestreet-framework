@@ -72,7 +72,7 @@
          * Ajax запрос
          */
         _load: function( url, params, callback, more ) {
-            if ( $.isFunction( params ) ) {
+            if ( $.isFunction( params ) || typeof params === "string" ) {
                 more = callback;
                 callback = params;
                 params = {};

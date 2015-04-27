@@ -11,14 +11,11 @@
 (function($) {
 	"use strict";
 
-	$.widget( "livestreet.lsUploaderInfo", {
+	$.widget( "livestreet.lsUploaderInfo", $.livestreet.lsComponent, {
 		/**
 		 * Дефолтные опции
 		 */
 		options: {
-			// Основной блок загрузчика
-			uploader: $(),
-
 			// Ссылки
 			urls: {
 				// Обновление св-ва
@@ -43,6 +40,8 @@
 		 * @private
 		 */
 		_create: function () {
+			this._super();
+
 			var _this = this;
 
 			this.elements = {
@@ -64,7 +63,7 @@
 				this.file.lsUploaderFile( 'remove' );
 			}.bind( this ));
 
-			// Удаление файла
+			// Сохранение свойств файла
 			this.element.on( 'blur' + this.eventNamespace, '.js-uploader-info-property[type=text]', function () {
 				var input = $( this );
 
@@ -152,17 +151,13 @@
 			// Кэшируем файл, т.к. он может измениться к концу ajax запроса
 			var file = this.getFile();
 
-			ls.ajax.load( this.option( 'urls.update_property' ), {
+			this._load( 'update_property', {
 				name:  name,
 				value: value,
 				id:    file.lsUploaderFile( 'getProperty', 'id' )
 			}, function( response ) {
-				if ( response.bStateError ) {
-					ls.msg.error( response.sMsgTitle, response.sMsg );
-				} else {
-					file.lsUploaderFile( 'setProperty', name, value );
-				}
-			}.bind( this ));
+				file.lsUploaderFile( 'setProperty', name, value );
+			});
 		},
 
 		/**

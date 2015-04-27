@@ -1,0 +1,14 @@
+/**
+ * Список файлов
+ */
+.uploader-file-list {
+    min-height: 30px;
+    overflow: auto;
+}
+
+/* Responsive */
+@media (max-width: 999px)  {
+    .uploader-file-list {
+        margin: 15px 0 0;
+    }
+}

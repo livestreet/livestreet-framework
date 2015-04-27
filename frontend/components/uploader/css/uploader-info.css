@@ -1,0 +1,49 @@
+/**
+ * Info
+ */
+.block.uploader-block.uploader-info .block-content {
+    padding: 0;
+}
+.uploader-info-actions {
+    padding: 10px 20px;
+    border-bottom: 1px solid #eee;
+}
+.uploader-info-list-item {
+    background: #fafafa;
+    padding: 10px 20px;
+    line-height: 1em;
+    border-bottom: 1px solid #fff;
+}
+.uploader-info-list-item-label {
+    color: #aaa;
+}
+.uploader-info-list-item:nth-child(even) {
+    background: #F5F5F5;
+}
+.uploader-info-list-item:last-child {
+    border: none;
+}
+.uploader-info-fields {
+    border-top: 1px solid #eee;
+    padding: 20px 20px;
+}
+.uploader-info-base {
+    padding: 20px 20px 20px 135px;
+    position: relative;
+    min-height: 100px;
+    border-bottom: 1px solid #eee;
+}
+.uploader-info-base-image {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+}
+.uploader-info-property-name {
+    display: block;
+    margin-bottom: 5px;
+}
+.uploader-info-property-date,
+.uploader-info-property-size {
+    color: #aaa;
+    font-size: 11px;
+}

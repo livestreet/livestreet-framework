@@ -16,8 +16,6 @@
 		 * Дефолтные опции
 		 */
 		options: {
-			uploader: $(),
-
 			// Множественный выбор
 			multiselect: true,
 
@@ -54,7 +52,7 @@
 					'</li>'
 			},
 
-			file_options: {}
+			params: {}
 		},
 
 		/**
@@ -65,16 +63,16 @@
 		 */
 		_create: function () {
 			this._super();
-			this.resizeHeight();
 		},
 
 		/**
 		 * Подгрузка списка файлов
 		 */
 		load: function() {
-			this.empty();
+			this._trigger( 'beforeload', null, this );
 
-			this._load( 'load', this.option( 'uploader' ).lsUploader( 'option', 'params' ), 'onLoad' );
+			this.empty();
+			this._load( 'load', 'onLoad' );
 		},
 
 		/**
@@ -98,8 +96,9 @@
 		 */
 		onLoad: function( respone ) {
 			this._removeClass( 'loading' ).html( $.trim( respone.html ) );
-			this.option( 'uploader' ).lsUploader( 'checkEmpty' );
 			this.initFiles( this.getFiles() );
+
+			this._trigger( 'afterload', null, this );
 		},
 
 		/**
@@ -109,7 +108,6 @@
 			data.context = $( this.option( 'html.file' ) );
 
 			this.initFiles( data.context ).lsUploaderFile( 'uploading' );
-			this.option( 'uploader' ).lsUploader( 'markAsNotEmpty' );
 			this.element.prepend( data.context );
 		},
 
@@ -117,14 +115,21 @@
 		 * Иниц-ия файлов
 		 */
 		initFiles: function( files ) {
-			return files.lsUploaderFile( $.extend( {}, this.option( 'file_options' ), {
-				beforeactivate: this.onFileBeforeActivate.bind( this ),
-				afteractivate: this.onFileAfterActivate.bind( this ),
-				afterdeactivate: this.onFileAfterDeactivate.bind( this ),
-				afterunselect: this.onFileAfterUnselect.bind( this ),
-				afterremove: this.onFileAfterRemove.bind( this ),
-				beforeclick: this.onFileBeforeClick.bind( this )
-			}));
+			return files.lsUploaderFile({
+				beforeactivate: this._onFileBeforeActivate.bind( this ),
+				afteractivate: this._onFileAfterActivate.bind( this ),
+				afterdeactivate: this._onFileAfterDeactivate.bind( this ),
+				afterunselect: this._onFileAfterUnselect.bind( this ),
+				afterremove: this._onFileAfterRemove.bind( this ),
+				beforeclick: this._onFileBeforeClick.bind( this )
+			});
+		},
+
+		/**
+		 * Иниц-ия текущих файлов в списке
+		 */
+		reinitFiles: function() {
+			this.initFiles( this.getFiles().not( ":data( 'livestreet-lsUploaderFile' )" ) );
 		},
 
 		/**
@@ -153,95 +158,6 @@
 		},
 
 		/**
-		 * Убирает выделение со всех файлов
-		 */
-		clearSelected: function() {
-			this.getFiles().lsUploaderFile( 'unselect' );
-		},
-
-		/**
-		 * 
-		 */
-		onFileBeforeClick: function( event, data ) {
-			var multiselect      = this.option( 'multiselect' ),
-				multiselect_ctrl = this.option( 'multiselect_ctrl' );
-
-			if ( ! multiselect || ( multiselect && multiselect_ctrl && ! ( event.ctrlKey || event.metaKey ) ) ) {
-				this.clearSelected();
-			}
-		},
-
-		/**
-		 * 
-		 */
-		onFileBeforeActivate: function( event, data ) {
-			this.getActiveFile().lsUploaderFile( 'deactivate' );
-		},
-
-		/**
-		 * 
-		 */
-		onFileAfterActivate: function( event, data ) {
-			this.option( 'uploader' ).lsUploader( 'showBlocks' );
-			this.option( 'uploader' ).lsUploader( 'getElement', 'info' ).lsUploaderInfo( 'setFile', data.element );
-			this.resizeHeight();
-
-			this._trigger( 'fileactivate', null, data );
-		},
-
-		/**
-		 * 
-		 */
-		onFileAfterDeactivate: function( event, data ) {
-			this.option( 'uploader' ).lsUploader( 'hideBlocks' );
-			this.option( 'uploader' ).lsUploader( 'getElement', 'info' ).lsUploaderInfo( 'empty' );
-			this.resizeHeight();
-		},
-
-		/**
-		 * 
-		 */
-		onFileAfterUnselect: function( event, data ) {
-			this.activateNextFile();
-		},
-
-		/**
-		 * 
-		 */
-		onFileAfterRemove: function( event, data ) {
-			data.element.lsUploaderFile( 'destroy' );
-			data.element.remove();
-			this.option( 'uploader' ).lsUploader( 'checkEmpty' );
-		},
-
-		/**
-		 * Делает активным последний выделенный файл
-		 */
-		activateNextFile: function() {
-			var last = this.getSelectedFiles().last();
-
-			if ( last.length ) {
-				last.lsUploaderFile( 'activate' );
-			} else {
-				this.option( 'uploader' ).lsUploader( 'getElement', 'info' ).lsUploaderInfo( 'empty' );
-			}
-		},
-
-		/**
-		 * Изменяет высоту списка так, чтобы она была равна высоте сайдбара
-		 */
-		resizeHeight: function() {
-			var aside = this.option( 'uploader' ).lsUploader( 'getElement', 'aside' ),
-				asideHeight = aside.outerHeight();
-
-			if ( ! aside.hasClass( 'is-empty' ) && asideHeight > this.option( 'max_height' ) ) {
-				this.element.css( 'max-height', asideHeight );
-			} else {
-				this.element.css( 'max-height', this.option( 'max_height' ) );
-			}
-		},
-
-		/**
 		 * Получает файлы
 		 */
 		getFiles: function() {
@@ -249,10 +165,19 @@
 		},
 
 		/**
+		 * Убирает выделение со всех файлов
+		 */
+		unselectAll: function() {
+			this.getFiles().lsUploaderFile( 'unselect' );
+		},
+
+		/**
 		 * Показывает файлы только определенного типа, файлы других типов скрываются
+		 *
+		 * @param {Array} types Массив типов файлов которые необходимо показать
 		 */
 		filterFilesByType: function( types ) {
-			this.clearSelected();
+			this.unselectAll();
 			this.getFiles().each(function () {
 				var file = $( this );
 
@@ -267,6 +192,75 @@
 		 */
 		resetFilter: function() {
 			this.getFiles().show();
-		}
+		},
+
+		/**
+		 * Делает активным последний выделенный файл
+		 */
+		_activateNextFile: function() {
+			this.getSelectedFiles().last().lsUploaderFile( 'activate' );
+		},
+
+		/**
+		 * 
+		 */
+		_onFileBeforeClick: function( event, data ) {
+			var multiselect      = this.option( 'multiselect' ),
+				multiselect_ctrl = this.option( 'multiselect_ctrl' );
+
+			if ( ! multiselect || ( multiselect && multiselect_ctrl && ! ( event.ctrlKey || event.metaKey ) ) ) {
+				this.unselectAll();
+			}
+		},
+
+		/**
+		 * 
+		 */
+		_onFileBeforeActivate: function( event, data ) {
+			this.getActiveFile().lsUploaderFile( 'deactivate' );
+		},
+
+		/**
+		 * 
+		 */
+		_onFileAfterActivate: function( event, data ) {
+			// TODO: Move
+			this._trigger( 'filebeforeactivate', event, data );
+
+			//this.resizeHeight();
+
+			this._trigger( 'fileactivate', event, data );
+		},
+
+		/**
+		 * 
+		 */
+		_onFileAfterDeactivate: function( event, data ) {
+			// TODO: Move
+			this._trigger( 'filebeforedeactivate', event, data );
+
+			//this.resizeHeight();
+
+			this._trigger( 'filedeactivate', event, data );
+		},
+
+		/**
+		 * 
+		 */
+		_onFileAfterUnselect: function( event, data ) {
+			this._activateNextFile();
+		},
+
+		/**
+		 * 
+		 */
+		_onFileAfterRemove: function( event, data ) {
+			this._trigger( 'filebeforeremove', event, data );
+
+			data.element.lsUploaderFile( 'destroy' );
+			data.element.remove();
+
+			this._trigger( 'fileafterremove', event, data );
+		},
 	});
 })(jQuery);

@@ -26,6 +26,9 @@
         "uploader-info": "js/uploader-info.js"
     },
     "styles": {
+        "file": "css/uploader-file.css",
+        "list": "css/uploader-list.css",
+        "info": "css/uploader-info.css",
         "uploader": "css/uploader.css"
     }
 }

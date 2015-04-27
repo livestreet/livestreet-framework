@@ -57,12 +57,7 @@
 
             this._pane = $( '#' + this.option( 'target' ) );
 
-            this._on({
-                click: function (e) {
-                    this.activate();
-                    e.preventDefault();
-                }
-            });
+            this._on({ click: 'onClick' });
 
             // Поддержка активации табов с помощью хэшей
             // Активируем таб с классом active
@@ -73,6 +68,14 @@
                     && ! this._pane.text()
                 )
             ) this.activate();
+        },
+
+        /**
+         * 
+         */
+        onClick: function ( event ) {
+            this.activate();
+            event.preventDefault();
         },
 
         /**
@@ -118,6 +121,13 @@
         },
 
         /**
+         * Установливает текст блока с контентом
+         */
+        setPaneContent: function ( html ) {
+            return this.getPane().html( html );
+        },
+
+        /**
          * Загрузка содержимого таба через аякс
          *
          * @private
@@ -126,16 +136,15 @@
             this._addClass( this._pane.empty(), 'loading' );
 
             this._load( 'load', function ( response ) {
-                this._pane.html( response[ this.options.result ] );
-
-                this._trigger( 'activate', null, this );
-            }.bind(this), {
+                this.setPaneContent( response[ this.options.result ] );
+            }, {
                 onError: function ( response ) {
                     this._removeClass( this._pane, 'loading' );
                     //this._pane.html('Error');
                 }.bind( this ),
                 onComplete: function ( response ) {
                     this._removeClass( this._pane, 'loading' );
+                    this._trigger( 'activate', null, this );
                 }.bind( this )
             });
         }

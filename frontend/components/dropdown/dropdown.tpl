@@ -39,6 +39,7 @@
             classes    = "{$component}-toggle js-{$component}-toggle"
             mods       = $mods
             text       = $smarty.local.text
+            icon       = $icon
             attributes = array_merge( $attributes|default:[], [
                 'aria-haspopup' => 'true',
                 'aria-expanded' => 'false'

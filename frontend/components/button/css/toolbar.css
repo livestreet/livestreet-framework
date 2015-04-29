@@ -6,26 +6,26 @@
  * @author    Denis Shakhov <denis.shakhov@gmail.com>
  */
 
-.button-toolbar > .button-group {
+.ls-button-toolbar > .ls-button-group {
     float: left;
     margin-left: 10px;
 }
-.button-toolbar > .button-group:first-child {
+.ls-button-toolbar > .ls-button-group:first-child {
     margin-left: 0;
 }
 
 /**
  * @modifier vertical Вертикальная группировка
  */
-.button-toolbar--vertical {
+.ls-button-toolbar--vertical {
     display: inline-block;
 }
-.button-toolbar--vertical > .button-group {
+.ls-button-toolbar--vertical > .ls-button-group {
     float: none;
     display: block;
     margin-left: 0;
     margin-top: 10px;
 }
-.button-toolbar--vertical > .button-group:first-child {
+.ls-button-toolbar--vertical > .ls-button-group:first-child {
     margin-top: 0;
 }

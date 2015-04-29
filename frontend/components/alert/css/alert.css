@@ -1,14 +1,14 @@
 /**
  * Уведомления
  *
- * @module ls/alerts
+ * @module ls/alert
  *
  * @license   GNU General Public License, version 2
  * @copyright 2013 OOO "ЛС-СОФТ" {@link http://livestreetcms.com}
  * @author    Denis Shakhov <denis.shakhov@gmail.com>
  */
 
-.alert {
+.ls-alert {
     position: relative;
     border: 1px solid #bce8f1;
     background-color: #d9edf7;
@@ -19,21 +19,21 @@
        -moz-border-radius: 3px;
             border-radius: 3px;
 }
-.alert:last-child {
+.ls-alert:last-child {
     margin-bottom: 0;
 }
 
 /* Заголовок */
-.alert-title {
+.ls-alert-title {
     font-size: 14px;
     font-weight: bold;
 }
-.alert-title:last-child {
+.ls-alert-title:last-child {
     margin-bottom: 0;
 }
 
 /* Кнопка закрывающая уведомление */
-.alert-close {
+.ls-alert-close {
     border: none;
     background-color: transparent;
     padding: 0;
@@ -46,21 +46,21 @@
     cursor: pointer;
     opacity: .6;
 }
-.alert-close:hover {
+.ls-alert-close:hover {
     opacity: 1;
 }
 
 /**
  * @modifier dismissible
  */
-.alert.alert--dismissible {
+.ls-alert.ls-alert--dismissible {
     padding-right: 35px;
 }
 
 /**
  * @modifier error Ошибка
  */
-.alert.alert--error {
+.ls-alert.ls-alert--error {
     background-color: #f2dede;
     color: #b94a48;
     border-color: #eed3d7;
@@ -69,7 +69,7 @@
 /**
  * @modifier success Успешно завершено
  */
-.alert.alert--success {
+.ls-alert.ls-alert--success {
     background-color: #dff0d8;
     color: #468847;
     border-color: #d6e9c6;
@@ -78,7 +78,7 @@
 /**
  * @modifier info Информация
  */
-.alert.alert--info {
+.ls-alert.ls-alert--info {
     background-color: #d9edf7;
     color: #3a87ad;
     border-color: #bce8f1;
@@ -87,7 +87,7 @@
 /**
  * @modifier empty Пусто
  */
-.alert.alert--empty {
+.ls-alert.ls-alert--empty {
     background-color: #fafafa;
     color: #777;
     border-color: #eee;

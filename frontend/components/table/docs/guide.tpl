@@ -4,7 +4,7 @@
 {test_heading text='Таблица'}
 
 {capture 'test_example_content'}
-    <table class="table">
+    <table class="ls-table">
         <thead>
             <tr>
                 <th>#</th>
@@ -24,7 +24,7 @@
 {/capture}
 
 {capture 'test_example_code'}
-<table class="table">
+<table class="ls-table">
     <thead>
         <tr>
             <th>#</th>
@@ -55,7 +55,7 @@
 <p>Для компактных таблиц используется модификатор <code>condensed</code></p>
 
 {capture 'test_example_content'}
-    <table class="table {cmods name='table' mods='condensed'}">
+    <table class="ls-table {cmods name='table' mods='condensed'}">
         <thead>
             <tr>
                 <th>#</th>
@@ -75,7 +75,7 @@
 {/capture}
 
 {capture 'test_example_code'}
-<table class="table table--condensed">
+<table class="ls-table table--condensed">
     ...
 </table>
 {/capture}
@@ -91,7 +91,7 @@
 <p>Для таблиц с рядами, которые изменяют фон при наведении, используется модификатор <code>hover</code></p>
 
 {capture 'test_example_content'}
-    <table class="table {cmods name='table' mods='hover'}">
+    <table class="ls-table {cmods name='table' mods='hover'}">
         <thead>
             <tr>
                 <th>#</th>
@@ -111,7 +111,7 @@
 {/capture}
 
 {capture 'test_example_code'}
-<table class="table table--hover">
+<table class="ls-table table--hover">
     ...
 </table>
 {/capture}
@@ -127,7 +127,7 @@
 <p>Для зебры используется модификатор <code>striped</code></p>
 
 {capture 'test_example_content'}
-    <table class="table {cmods name='table' mods='striped'}">
+    <table class="ls-table {cmods name='table' mods='striped'}">
         <thead>
             <tr>
                 <th>#</th>
@@ -147,7 +147,7 @@
 {/capture}
 
 {capture 'test_example_code'}
-<table class="table table--striped">
+<table class="ls-table table--striped">
     ...
 </table>
 {/capture}

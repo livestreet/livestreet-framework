@@ -63,19 +63,19 @@
 /**
  * Block
  */
-.block.uploader-block {
+.ls-block.uploader-block {
 	border: 1px solid #eee;
 	border-radius: 5px;
 	margin-top: 15px;
 	margin-bottom: 0;
 }
-.block.uploader-block:first-child {
+.ls-block.uploader-block:first-child {
 	margin-top: 0;
 }
 
 /**
  * Modal
  */
-.modal--uploader {
+.ls-modal--uploader {
 	max-width: 850px;
 }

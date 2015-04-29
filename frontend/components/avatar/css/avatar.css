@@ -8,38 +8,38 @@
  * @author    Denis Shakhov <denis.shakhov@gmail.com>
  */
 
-.avatar {
+.ls-avatar {
     display: inline-block;
 }
 
-.avatar-image {
+.ls-avatar-image {
     display: block;
     border-radius: 3px;
     width: 100px;
     height: 100px;
 }
 
-.avatar-image-link {
+.ls-avatar-image-link {
     display: block;
     text-decoration: none;
 }
 
-.avatar--size-small .avatar-image {
+.ls-avatar--size-small .ls-avatar-image {
     width: 64px;
     height: 64px;
 }
 
-.avatar--size-xsmall .avatar-image {
+.ls-avatar--size-xsmall .ls-avatar-image {
     width: 48px;
     height: 48px;
 }
 
-.avatar--size-xxsmall .avatar-image {
+.ls-avatar--size-xxsmall .ls-avatar-image {
     width: 24px;
     height: 24px;
 }
 
-.avatar--size-text .avatar-image {
+.ls-avatar--size-text .ls-avatar-image {
     width: 18px;
     height: 18px;
 }
@@ -47,16 +47,16 @@
 /**
  * @modifier has-name
  */
-.avatar--has-name {
+.ls-avatar--has-name {
     max-width: 150px;
     text-align: center;
 }
 
-.avatar--has-name .avatar-image {
+.ls-avatar--has-name .ls-avatar-image {
     margin: 0 auto 3px;
 }
 
-.avatar--has-name .avatar-name {
+.ls-avatar--has-name .ls-avatar-name {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -65,16 +65,16 @@
 /**
  * @modifier inline
  */
-.avatar--has-name.avatar--inline {
+.ls-avatar--has-name.ls-avatar--inline {
     max-width: none;
 }
 
-.avatar--has-name.avatar--inline .avatar-image,
-.avatar--has-name.avatar--inline .avatar-image-link,
-.avatar--has-name.avatar--inline .avatar-name {
+.ls-avatar--has-name.ls-avatar--inline .ls-avatar-image,
+.ls-avatar--has-name.ls-avatar--inline .ls-avatar-image-link,
+.ls-avatar--has-name.ls-avatar--inline .ls-avatar-name {
     display: inline-block;
     vertical-align: middle;
 }
-.avatar--has-name.avatar--inline .avatar-image {
+.ls-avatar--has-name.ls-avatar--inline .ls-avatar-image {
     margin: 0 2px 0 0;
 }

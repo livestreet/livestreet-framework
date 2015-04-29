@@ -19,7 +19,7 @@ var ls = ls || {};
 	// ----------
 
 	var _overlay = (function ($) {
-		this.element = $('<div class="modal-overlay js-modal-overlay" />');
+		this.element = $('<div class="ls-modal-overlay js-ls-modal-overlay" />');
 
 		/**
 		 * Init
@@ -113,7 +113,7 @@ var ls = ls || {};
 	// ----------
 
 	var _loader = (function ($) {
-		this.element = $('<div class="modal-loader loading js-modal-loader" />');
+		this.element = $('<div class="ls-modal-loader loading js-ls-modal-loader" />');
 
 		/**
 		 * Init
@@ -152,7 +152,7 @@ var ls = ls || {};
 				// Кнопка закрытия модального
 				close: '[data-type=modal-close]',
 				// Табы
-				tabs: '.js-modal-tabs'
+				tabs: '.js-ls-modal-tabs'
 			},
 			// Анимация при показе
 			show: {

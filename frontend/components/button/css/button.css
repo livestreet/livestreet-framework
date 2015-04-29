@@ -9,7 +9,7 @@
  * @author    Denis Shakhov <denis.shakhov@gmail.com>
  */
 
-.button {
+.ls-button {
     display: inline-block;
     margin: 0;
     border: 1px solid transparent;
@@ -32,16 +32,16 @@
        -moz-transition: background .1s, color .1s;
             transition: background .1s, color .1s;
 }
-.button:active,
-.button.active {
+.ls-button:active,
+.ls-button.active {
     outline: none;
     -webkit-box-shadow: inset 0 0px 7px rgba(0,0,0,.2);
     box-shadow: inset 0 0 7px rgba(0,0,0,.2);
 }
 
 /* Icon */
-.button [class^="icon-"],
-.button [class*=" icon-"] {
+.ls-button [class^="icon-"],
+.ls-button [class*=" icon-"] {
     float: left;
     position: relative;
     margin: 0px 5px 1px 0;
@@ -50,79 +50,79 @@
 /**
  * Colors
  */
-.button {
+.ls-button {
     color: #333;
     background-color: #fff;
     border-color: #ccc;
 }
-.button:active,
-.button.active,
-.button:hover {
+.ls-button:active,
+.ls-button.active,
+.ls-button:hover {
     color: #333;
     background-color: #e6e6e6;
     border-color: #adadad;
 }
 
-.button--primary {
+.ls-button--primary {
     color: #fff;
     background-color: #337ab7;
     border-color: #2e6da4;
 }
-.button--primary:active,
-.button--primary.active,
-.button--primary:hover {
+.ls-button--primary:active,
+.ls-button--primary.active,
+.ls-button--primary:hover {
     color: #fff;
     background-color: #286090;
     border-color: #204d74;
 }
 
-.button--success {
+.ls-button--success {
     color: #fff;
     background-color: #5cb85c;
     border-color: #4cae4c;
 }
-.button--success:active,
-.button--success.active,
-.button--success:hover {
+.ls-button--success:active,
+.ls-button--success.active,
+.ls-button--success:hover {
     color: #fff;
     background-color: #449d44;
     border-color: #398439;
 }
 
-.button--info {
+.ls-button--info {
     color: #fff;
     background-color: #5bc0de;
     border-color: #46b8da;
 }
-.button--info:active,
-.button--info.active,
-.button--info:hover {
+.ls-button--info:active,
+.ls-button--info.active,
+.ls-button--info:hover {
     color: #fff;
     background-color: #31b0d5;
     border-color: #269abc;
 }
 
-.button--warning {
+.ls-button--warning {
     color: #fff;
     background-color: #f0ad4e;
     border-color: #eea236;
 }
-.button--warning:active,
-.button--warning.active,
-.button--warning:hover {
+.ls-button--warning:active,
+.ls-button--warning.active,
+.ls-button--warning:hover {
     color: #fff;
     background-color: #ec971f;
     border-color: #d58512;
 }
 
-.button--danger {
+.ls-button--danger {
     color: #fff;
     background-color: #d9534f;
     border-color: #d43f3a;
 }
-.button--danger:active,
-.button--danger.active,
-.button--danger:hover {
+.ls-button--danger:active,
+.ls-button--danger.active,
+.ls-button--danger:hover {
     color: #fff;
     background-color: #c9302c;
     border-color: #ac2925;
@@ -132,17 +132,17 @@
 /**
  * Disabled
  */
-.button.disabled,
-.button.disabled:hover,
-.button[disabled],
-.button[disabled]:hover {
+.ls-button.disabled,
+.ls-button.disabled:hover,
+.ls-button[disabled],
+.ls-button[disabled]:hover {
     border-color: #ccc;
     background: #eee;
     color: #999;
 }
 
-.button.disabled:active,
-.button[disabled]:active {
+.ls-button.disabled:active,
+.ls-button[disabled]:active {
     -webkit-box-shadow: none;
        -moz-box-shadow: none;
             box-shadow: none;
@@ -151,47 +151,47 @@
 /**
  * Icon
  */
-.button.button--icon { padding-left: 8px; padding-right: 8px; }
-.button.button--icon [class^="icon-"],
-.button.button--icon [class*=" icon-"] { margin-right: 0; float: none; }
+.ls-button.ls-button--icon { padding-left: 8px; padding-right: 8px; }
+.ls-button.ls-button--icon [class^="icon-"],
+.ls-button.ls-button--icon [class*=" icon-"] { margin-right: 0; float: none; }
 
 /**
  * Sizes
  */
-.button {
+.ls-button {
     padding: 7px 12px;
     font-size: 13px;
 }
-.button--large {
+.ls-button--large {
     padding: 10px 16px;
     font-size: 18px;
 }
-.button--small {
+.ls-button--small {
     padding: 5px 10px;
     font-size: 12px;
 }
-.button--xsmall {
+.ls-button--xsmall {
     padding: 1px 5px;
     font-size: 12px;
 }
-.button--block {
+.ls-button--block {
     display: block;
     width: 100%;
 }
-.button--block + .button--block {
+.ls-button--block + .ls-button--block {
     margin-top: 5px;
 }
-input[type="submit"].button--block,
-input[type="reset"].button--block,
-input[type="button"].button--block {
+input[type="submit"].ls-button--block,
+input[type="reset"].ls-button--block,
+input[type="button"].ls-button--block {
     width: 100%;
 }
 
 /**
  * Loading
  */
-.button[disabled].loading,
-.button.loading {
+.ls-button[disabled].loading,
+.ls-button.loading {
     color: transparent;
     background-repeat: no-repeat;
     background-position: 50% 50%;

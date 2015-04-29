@@ -10,7 +10,7 @@
 
 
 /* Base class */
-.modal {
+.ls-modal {
     display: none;
     margin: 50px auto;
     position: relative;
@@ -27,7 +27,7 @@
 
 
 /* Close button */
-.modal .modal-close {
+.ls-modal .ls-modal-close {
     position: absolute;
     top: 17px;
     right: 15px;
@@ -40,14 +40,14 @@
     border: none;
     background-color: transparent;
 }
-.modal .modal-close:hover {
+.ls-modal .ls-modal-close:hover {
     opacity: .7;
     filter: alpha(opacity=70);
 }
 
 
 /* Header */
-.modal-header {
+.ls-modal-header {
     background: #fafafa;
     border-bottom: 1px solid #eee;
     border-radius: 4px 4px 0 0;
@@ -55,7 +55,7 @@
     position: relative;
     min-height: 10px;
 }
-.modal-title {
+.ls-modal-title {
 	font-size: 17px;
 	margin: 0 30px 0 0;
 	color: #000;
@@ -63,7 +63,7 @@
 
 
 /* Табы */
-.modal .tabs.modal-tabs .tab-list {
+.ls-modal .ls-tabs.ls-modal-tabs .ls-tab-list {
     padding: 15px;
     margin-bottom: 0;
     border-bottom: 1px solid #eee;
@@ -71,13 +71,13 @@
 
 
 /* Content */
-.modal .modal-body {
+.ls-modal .ls-modal-body {
 	padding: 20px;
 }
 
 
 /* Lock */
-.modal .modal-lock {
+.ls-modal .ls-modal-lock {
     position: absolute; 
     top: 0;
     bottom: 0;
@@ -93,7 +93,7 @@
 
 
 /* Footer */
-.modal .modal-footer {
+.ls-modal .ls-modal-footer {
     background: #fafafa;
     border-top: 1px solid #eee;
     border-radius: 0 0 4px 4px;
@@ -103,7 +103,7 @@
 
 
 /* Loader */
-.modal-loader {
+.ls-modal-loader {
     display: none;
     width: 100px;
     height: 50px;
@@ -116,7 +116,7 @@
     background-color: rgba(0,0,0,.8);
     z-index: 1001;
 }
-.modal-loader.modal-loader-text {
+.ls-modal-loader.ls-modal-loader-text {
     background-image: none;
     color: #eee;
     text-align: center;
@@ -130,7 +130,7 @@
 
 
 /* Overlay */
-.modal-overlay {
+.ls-modal-overlay {
     display: none;
     position: fixed;
     top: 0;

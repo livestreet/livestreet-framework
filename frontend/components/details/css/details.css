@@ -6,34 +6,34 @@
  * @author    Denis Shakhov <denis.shakhov@gmail.com>
  */
 
-.details {
+.ls-details {
     margin-bottom: 3px;
     border: 1px solid #eee;
 }
-.details:last-child {
+.ls-details:last-child {
     margin-bottom: 0;
 }
 
 /* Заголовок */
-.details-title {
+.ls-details-title {
     position: relative;
     padding: 10px 15px 10px 32px;
     margin-bottom: 0;
     font-size: 16px;
 }
-.details-title:hover {
+.ls-details-title:hover {
     background: #fafafa;
     cursor: pointer;
 }
-.details-title:active {
+.ls-details-title:active {
     background: #eee;
 }
-.details.is-open > .details-title {
+.ls-details.is-open > .ls-details-title {
     background: #fafafa;
 }
 
 /* Стрелка */
-.details-title:before {
+.ls-details-title:before {
     content: "";
     position: absolute;
     top: 17px;
@@ -44,7 +44,7 @@
     border: 4px solid transparent;
     border-left-color: #333;
 }
-.details.is-open > .details-title:before {
+.ls-details.is-open > .ls-details-title:before {
     top: 19px;
     left: 13px;
     border-left-color: transparent;
@@ -52,14 +52,14 @@
 }
 
 /* Основной контейнер */
-.details-body {
+.ls-details-body {
     display: none;
 }
-.details.is-open > .details-body {
+.ls-details.is-open > .ls-details-body {
     display: block;
 }
 
 /* Содержимое */
-.details-content {
+.ls-details-content {
     padding: 15px;
 }

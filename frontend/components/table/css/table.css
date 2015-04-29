@@ -17,59 +17,59 @@ th {
 }
 
 
-.table {
+.ls-table {
     width: 100%;
     max-width: 100%;
     margin-bottom: 15px;
 }
-.table:last-child {
+.ls-table:last-child {
     margin-bottom: 0;
 }
-.table td, .table th {
+.ls-table td, .ls-table th {
     padding: 14px;
     vertical-align: top;
     line-height: 18px;
     border-top: 1px solid #eee;
 }
-.table th {
+.ls-table th {
     vertical-align: bottom;
     border-bottom: 2px solid #eee;
 }
-.table caption + thead th,
-.table colgroup + thead th,
-.table thead:first-child tr:first-child th,
-.table thead:first-child tr:first-child td {
+.ls-table caption + thead th,
+.ls-table colgroup + thead th,
+.ls-table thead:first-child tr:first-child th,
+.ls-table thead:first-child tr:first-child td {
     border-top: 0;
 }
 
-.table tr.active td {
+.ls-table tr.active td {
     background: #F6F6FA;
 }
-.table .table-sort-asc:after {
+.ls-table .ls-table-sort-asc:after {
     content: "▲";
 }
-.table .table-sort-desc:after {
+.ls-table .ls-table-sort-desc:after {
     content: "▼";
 }
 
 /**
  * Condensed
  */
-.table--condensed td,
-.table--condensed th {
+.ls-table--condensed td,
+.ls-table--condensed th {
     padding: 7px;
 }
 
 /**
  * Striped
  */
-.table--striped tbody tr:nth-child(odd) td {
+.ls-table--striped tbody tr:nth-child(odd) td {
     background: #fafafa;
 }
 
 /**
  * Hover
  */
-.table--hover tbody tr:hover td {
+.ls-table--hover tbody tr:hover td {
     background: #f7f7f7;
 }

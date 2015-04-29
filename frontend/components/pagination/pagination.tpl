@@ -14,7 +14,7 @@
  *}
 
 {* Название компонента *}
-{$component = 'pagination'}
+{$component = 'ls-pagination'}
 
 
 {**

@@ -8,34 +8,34 @@
  * @author    Denis Shakhov <denis.shakhov@gmail.com>
  */
 
-.jumbotron {
+.ls-jumbotron {
     padding: 65px 50px;
     background-color: #3F51B5;
     -webkit-background-size: cover;
     background-size: cover;
 }
-.jumbotron-inner {
+.ls-jumbotron-inner {
     margin: 0 auto;
 }
-.jumbotron a {
+.ls-jumbotron a {
     text-decoration: none;
     color: #fff;
 }
 
 /* Заголовок */
-.jumbotron-title {
+.ls-jumbotron-title {
     margin: 0 0 15px;
     font-size: 65px;
     line-height: 1em;
     font-weight: 300;
 }
-.jumbotron-title a:hover {
+.ls-jumbotron-title a:hover {
     color: #fff;
     opacity: .9;
 }
 
 /* Подзаголовок */
-.jumbotron-subtitle {
+.ls-jumbotron-subtitle {
     max-width: 600px;
     margin-bottom: 0;
     color: #fff;
@@ -48,10 +48,10 @@
  * Отзывчивые стили
  */
 @media (max-width: 480px) {
-    .jumbotron {
+    .ls-jumbotron {
         padding: 30px 20px;
     }
-    .jumbotron-title {
+    .ls-jumbotron-title {
         margin: 0 0 10px;
         font-size: 35px;
     }

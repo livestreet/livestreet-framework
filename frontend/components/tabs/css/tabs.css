@@ -7,13 +7,13 @@
  */
 
 
-.tab-list {
+.ls-tab-list {
     padding: 0;
     margin-bottom: 20px;
 }
 
 /* Tab */
-.tab {
+.ls-tab {
     list-style: none;
     float: left;
     padding: 7px 12px;
@@ -22,20 +22,20 @@
     cursor: pointer;
     border-radius: 2px;
 }
-.tab.active {
+.ls-tab.active {
     background: #2891d3;
     color: #fff;
 }
 
 /* Content */
-.tab-pane {
+.ls-tab-pane {
     display: none;
 }
-.tab-pane.loading {
+.ls-tab-pane.loading {
     min-height: 150px;
     background-position: 50% 45px;
 }
-.tab-pane-content {
+.ls-tab-pane-content {
     padding: 20px;
 }
 
@@ -44,15 +44,15 @@
  *
  * @modifier align-left
  */
-.tabs--align-left .tab-list {
+.ls-tabs--align-left .ls-tab-list {
     float: left;
     width: 150px;
     padding-top: 15px;
 }
-.tabs--align-left .tab {
+.ls-tabs--align-left .ls-tab {
     float: none;
 }
-.tabs--align-left .tabs-panes {
+.ls-tabs--align-left .ls-tabs-panes {
     overflow: hidden;
     margin-left: 160px;
 }

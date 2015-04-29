@@ -38,9 +38,9 @@ $.widget( "livestreet.lsTooltip", {
         //
         classes: null,
         //
-        template: '<div class="tooltip">' +
-                      '<div class="tooltip-title js-tooltip-title"></div>' +
-                      '<div class="tooltip-content js-tooltip-content"></div>' +
+        template: '<div class="ls-tooltip">' +
+                      '<div class="ls-tooltip-title js-tooltip-title"></div>' +
+                      '<div class="ls-tooltip-content js-tooltip-content"></div>' +
                   '</div>',
         // Коллбэк вызываемый при изменении положения меню
         reposition: null,

@@ -7,7 +7,7 @@
 
 <script>
     jQuery(function ($) {
-        $('.js-modal-tabs').lsTabs();
+        $('.js-ls-modal-tabs').lsTabs();
     });
 </script>
 

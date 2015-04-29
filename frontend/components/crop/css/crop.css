@@ -21,12 +21,12 @@
 /**
  * Модальное окно
  */
-.modal--crop {
+.ls-modal--crop {
     max-width: 550px;
 }
-.modal--crop .modal-footer {
+.ls-modal--crop .ls-modal-footer {
     text-align: center;
 }
-.modal--crop .crop-desc {
+.ls-modal--crop .crop-desc {
     margin-bottom: 20px;
 }

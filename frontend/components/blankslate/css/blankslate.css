@@ -8,7 +8,7 @@
  * @author    Denis Shakhov <denis.shakhov@gmail.com>
  */
 
-.blankslate {
+.ls-blankslate {
     margin-bottom: 15px;
     padding: 30px;
     text-align: center;
@@ -16,24 +16,24 @@
     background: #fafafa;
     color: #555;
 }
-.blankslate:last-child {
+.ls-blankslate:last-child {
     margin-bottom: 0;
 }
 
 /* Заголовок */
-.blankslate-title {
+.ls-blankslate-title {
     margin-bottom: 15px;
     font-size: 18px;
     font-weight: bold;
 }
-.blankslate-title:last-child {
+.ls-blankslate-title:last-child {
     margin-bottom: 0;
 }
 
 /**
  * @modifier no-background
  */
-.blankslate--no-background {
+.ls-blankslate--no-background {
     border: none;
     background: transparent;
 }

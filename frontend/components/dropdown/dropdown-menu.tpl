@@ -14,7 +14,7 @@
 	activeItem = $smarty.local.activeItem
 	mods       = 'stacked dropdown'
 	showSingle = true
-	classes    = "dropdown-menu js-dropdown-menu {$smarty.local.classes}"
+	classes    = "ls-dropdown-menu js-ls-dropdown-menu {$smarty.local.classes}"
 	attributes = array_merge( $smarty.local.attributes|default:[], [
         'role' => 'menu',
         'aria-hidden' => 'true'

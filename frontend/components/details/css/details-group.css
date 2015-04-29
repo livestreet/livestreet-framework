@@ -6,9 +6,9 @@
  * @author    Denis Shakhov <denis.shakhov@gmail.com>
  */
 
-.details-group {
+.ls-details-group {
     margin-bottom: 15px;
 }
-.details-group:last-child {
+.ls-details-group:last-child {
     margin-bottom: 0;
 }

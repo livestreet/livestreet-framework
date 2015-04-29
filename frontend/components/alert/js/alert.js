@@ -16,7 +16,7 @@ $.widget( "livestreet.lsAlert", $.livestreet.lsComponent, {
         // Селекторы
         selectors: {
             // Кнопка закрывающая уведомление
-            close: '.js-alert-close'
+            close: '.js-ls-alert-close'
         },
         // Анимация при скрытии
         hide: {

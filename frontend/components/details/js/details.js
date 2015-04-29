@@ -18,9 +18,9 @@
         options: {
             selectors: {
                 // Заголовок
-                title: '> .js-details-title',
+                title: '> .js-ls-details-title',
                 // Основной блок с содержимым
-                body: '> .js-details-body'
+                body: '> .js-ls-details-body'
             },
 
             // Классы

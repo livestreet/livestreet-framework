@@ -4,20 +4,20 @@
  * @param array $tabs Табы. Структура: [ 'text', 'content' ]
  *}
 
-{$component = 'tabs'}
+{$component = 'ls-tabs'}
 
 {$tabs = $smarty.local.tabs}
 
 <div class="{$component} {$smarty.local.classes} {cmods name=$component mods=$smarty.local.mods}">
     {* Табы *}
-    <ul class="tab-list clearfix" data-tab-list>
+    <ul class="ls-tab-list clearfix" data-tab-list>
         {foreach $tabs as $tab}
             {* Уникальный ID для привязки таба к его содержимому *}
             {$uid = "tab{rand( 0, 10e10 )}"}
             {$tabs[ $tab@index ][ 'uid' ] = $uid}
 
             {if $tab[ 'is_enabled' ]|default:true}
-                <li class="tab {$tab[ 'classes' ]}
+                <li class="ls-tab {$tab[ 'classes' ]}
                     {if $tab@first}active{/if}"
                     data-tab
                     data-lstab-options='{
@@ -35,12 +35,12 @@
     </ul>
 
     {* Содержимое табов *}
-    <div class="tabs-panes" data-tab-panes>
+    <div class="ls-tabs-panes" data-tab-panes>
         {foreach $tabs as $tab}
             {if $tab[ 'is_enabled' ]|default:true}
-                <div class="tab-pane" {if $tab@first}style="display: block"{/if} data-tab-pane id="{$tab[ 'uid' ]}">
+                <div class="ls-tab-pane" {if $tab@first}style="display: block"{/if} data-tab-pane id="{$tab[ 'uid' ]}">
                     {if $tab[ 'content' ]}
-                        <div class="tab-pane-content">
+                        <div class="ls-tab-pane-content">
                             {$tab[ 'content' ]}
                         </div>
                     {/if}

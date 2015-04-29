@@ -7,15 +7,15 @@
  */
 
 
-.nav {
+.ls-nav {
     list-style: none;
     padding: 0;
 }
-.nav-item {
+.ls-nav-item {
     float: left;
     position: relative;
 }
-.nav-item-link {
+.ls-nav-item-link {
     display: block;
     text-decoration: none;
     white-space: nowrap;
@@ -28,7 +28,7 @@
 /**
  * Stacked
  */
-.nav--stacked > .nav-item {
+.ls-nav--stacked > .ls-nav-item {
     float: none;
     margin: 0;
 }
@@ -37,20 +37,20 @@
 /**
  * Поддержка счетчиков
  */
-.nav-item .nav-item-badge {
+.ls-nav-item .ls-nav-item-badge {
     position: absolute;
     top: 50%;
     right: 6px;
     margin-top: -10px;
     line-height: 20px;
 }
-.nav > .nav-item.nav-item--has-badge > .nav-item-link {
+.ls-nav > .ls-nav-item.ls-nav-item--has-badge > .ls-nav-item-link {
     padding-right: 45px;
 }
-.nav > .nav-item.nav-item--has-badge.nav-item--has-children > .nav-item-link {
+.ls-nav > .ls-nav-item.ls-nav-item--has-badge.ls-nav-item--has-children > .ls-nav-item-link {
     padding-right: 65px;
 }
-.nav > .nav-item.nav-item--has-badge.nav-item--has-children > .nav-item-link > .nav-item-badge {
+.ls-nav > .ls-nav-item.ls-nav-item--has-badge.ls-nav-item--has-children > .ls-nav-item-link > .ls-nav-item-badge {
     right: 26px;
 }
 
@@ -58,17 +58,17 @@
 /**
  * Стрелки
  */
-.nav > .nav-item.nav-item--has-children > .nav-item-link {
+.ls-nav > .ls-nav-item.ls-nav-item--has-children > .ls-nav-item-link {
     position: relative;
     padding-right: 25px;
 }
-.nav-item-link > .nav-item-caret {
+.ls-nav-item-link > .ls-nav-item-caret {
     position: absolute;
     top: 50%;
     right: 9px;
     margin-top: -2px;
 }
-.nav-item-link > .nav-item-caret.caret--right {
+.ls-nav-item-link > .ls-nav-item-caret.caret--right {
     right: 7px;
     margin-top: -4px;
 }
@@ -77,14 +77,14 @@
 /**
  * Pills
  */
-.nav--pills {
+.ls-nav--pills {
     margin-bottom: 15px;
 }
 
-.nav--pills > .nav-item {
+.ls-nav--pills > .ls-nav-item {
     margin-right: 3px;
 }
-.nav--pills > .nav-item > .nav-item-link {
+.ls-nav--pills > .ls-nav-item > .ls-nav-item-link {
     padding: 0 12px;
     line-height: 32px;
     background: #8DCAFA;
@@ -95,35 +95,35 @@
 }
 
 /* Hover */
-.nav--pills > .nav-item > .nav-item-link:hover,
-.nav--pills > .nav-item:hover > .nav-item-link {
+.ls-nav--pills > .ls-nav-item > .ls-nav-item-link:hover,
+.ls-nav--pills > .ls-nav-item:hover > .ls-nav-item-link {
     background: #2196F3;
     color: #fff;
 }
 
 /* Active */
-.nav--pills > .nav-item.active > .nav-item-link {
+.ls-nav--pills > .ls-nav-item.active > .ls-nav-item-link {
     background: #2196F3;
     color: #fff;
 }
-.nav--pills > .nav-item.active > .nav-item-link:hover {
+.ls-nav--pills > .ls-nav-item.active > .ls-nav-item-link:hover {
     background: #2196F3;
     color: #fff;
 }
 
 /* Stacked */
-.nav.nav--pills.nav--stacked {
+.ls-nav.ls-nav--pills.ls-nav--stacked {
     margin-bottom: 15px;
 }
-.nav.nav--pills.nav--stacked:last-child {
+.ls-nav.ls-nav--pills.ls-nav--stacked:last-child {
     margin-bottom: 0;
 }
-.nav.nav--pills.nav--stacked > .nav-item {
+.ls-nav.ls-nav--pills.ls-nav--stacked > .ls-nav-item {
     float: none;
     margin-bottom: 3px;
     margin-right: 0;
 }
-.nav.nav--pills.nav--stacked > .nav-item > .nav-item-link {
+.ls-nav.ls-nav--pills.ls-nav--stacked > .ls-nav-item > .ls-nav-item-link {
     float: none;
     display: block;
 }
@@ -132,7 +132,7 @@
 /**
  * Вложенная навигация (уровень вложенности > 1)
  */
-.nav--sub {
+.ls-nav--sub {
     position: absolute;
     display: none;
     min-width: 150px;
@@ -140,25 +140,25 @@
     background: #fff;
     box-shadow: 0 5px 15px rgba(0, 0, 0, .3);
 }
-.nav.nav--sub > .nav-item > .nav-item-link {
+.ls-nav.ls-nav--sub > .ls-nav-item > .ls-nav-item-link {
     padding: 0 12px;
     line-height: 32px;
 }
-.nav--sub > .nav-item:hover {
+.ls-nav--sub > .ls-nav-item:hover {
     background: #2196F3;
     color: #fff;
 }
-.nav--sub > .nav-item:hover > .nav-item-link {
+.ls-nav--sub > .ls-nav-item:hover > .ls-nav-item-link {
     color: #fff;
 }
-.nav--sub > .nav-item.active {
+.ls-nav--sub > .ls-nav-item.active {
     background: #2196F3;
     color: #48a4d5;
 }
-.nav--sub > .nav-item.active > .nav-item-link {
+.ls-nav--sub > .ls-nav-item.active > .ls-nav-item-link {
     color: #48a4d5;
 }
-.nav--sub .nav-separator {
+.ls-nav--sub .ls-nav-separator {
     height: 0;
     border-top: 1px solid #eee;
     margin: 5px 0;
@@ -168,18 +168,18 @@
 /**
  * Sub
  */
-.nav--sub .nav--sub {
+.ls-nav--sub .ls-nav--sub {
     left: 100%;
     top: 0;
 }
-.nav > .nav-item--has-children {
+.ls-nav > .ls-nav-item--has-children {
     position: relative;
 }
-.nav:not(.nav--sub) > .nav-item > .nav--sub {
+.ls-nav:not(.ls-nav--sub) > .ls-nav-item > .ls-nav--sub {
     top: 100%;
     left: 0;
 }
-.nav-item:hover > .nav--sub {
+.ls-nav-item:hover > .ls-nav--sub {
     display: block;
 }
 
@@ -187,17 +187,17 @@
 /**
  * Основное меню
  */
-.nav--main {
+.ls-nav--main {
     background: #222;
 }
-.nav--main > .nav-item > .nav-item-link {
+.ls-nav--main > .ls-nav-item > .ls-nav-item-link {
     color: #ddd;
     padding: 15px 20px;
 }
-.nav--main > .nav-item > .nav-item-link:hover {
+.ls-nav--main > .ls-nav-item > .ls-nav-item-link:hover {
     background: #333;
 }
-.nav--main > .nav-item.active > .nav-item-link {
+.ls-nav--main > .ls-nav-item.active > .ls-nav-item-link {
     background: #3a3a3a;
     color: #bbb;
 }
@@ -206,13 +206,13 @@
 /**
  * Group
  */
-.nav-group {
+.ls-nav-group {
     position: relative;
     margin-bottom: 40px;
 }
-.nav-group .nav, .nav-group .nav.nav-pills {
+.ls-nav-group .ls-nav, .ls-nav-group .ls-nav.ls-nav-pills {
     margin-bottom: 10px;
 }
-.nav-group > *:last-child {
+.ls-nav-group > *:last-child {
     margin-bottom: 0;
 }

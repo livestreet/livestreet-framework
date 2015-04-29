@@ -17,8 +17,8 @@ $.widget( "livestreet.lsDropdown", $.livestreet.lsComponent, {
             'open': 'active'
         },
         selectors: {
-            toggle: '.js-dropdown-toggle',
-            menu: '.js-dropdown-menu'
+            toggle: '.js-ls-dropdown-toggle',
+            menu: '.js-ls-dropdown-menu'
         },
         // Позиционирование
         // Для позиционирования используется модуль position библиотеки jQuery UI
@@ -65,7 +65,7 @@ $.widget( "livestreet.lsDropdown", $.livestreet.lsComponent, {
         if ( this.options.body ) this.elements.menu.appendTo('body');
 
         // Пункты меню
-        this._menuItems = this.elements.menu.find('li:not(.dropdown-separator)');
+        this._menuItems = this.elements.menu.find('li:not(.ls-dropdown-separator)');
         this._menuLinks = this._menuItems.find('a');
         this._menuFocusedItem = null;
 

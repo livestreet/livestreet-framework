@@ -3,7 +3,7 @@
  *}
 
 {* Название компонента *}
-{$component = 'modal'}
+{$component = 'ls-modal'}
 
 {* Генерируем копии локальных переменных, *}
 {* чтобы их можно было изменять в дочерних шаблонах *}
@@ -24,12 +24,12 @@
 
     {* Шапка *}
     {block 'modal_title'}
-        <header class="modal-header">
+        <header class="{$component}-header">
             {* Заголовок *}
-            <h3 class="modal-title">{$title}</h3>
+            <h3 class="{$component}-title">{$title}</h3>
 
             {* Кнопка закрытия *}
-            <button class="modal-close" data-type="modal-close">
+            <button class="{$component}-close" data-type="modal-close">
                 {component 'icon' icon='remove' attributes=[ 'aria-hidden' => 'true' ]}
             </button>
         </header>
@@ -40,21 +40,21 @@
     {* Содержимое *}
     {block 'modal_content'}
         {if $content}
-            <div class="modal-body">
+            <div class="{$component}-body">
                 {$content}{$smarty.block.child}
             </div>
         {/if}
     {/block}
 
     {* Tabs *}
-    {( is_array( $tabs ) ) ? {component 'tabs' classes='modal-tabs js-modal-tabs' params=$tabs} : $tabs}
+    {( is_array( $tabs ) ) ? {component 'tabs' classes="{$component}-tabs js-{$component}-tabs" params=$tabs} : $tabs}
 
     {$body}
 
     {* Подвал *}
     {block 'modal_footer'}
         {if $showFooter}
-            <div class="modal-footer">
+            <div class="{$component}-footer">
                 {block 'modal_footer_inner'}
                     {* Кнопка закрытия окна *}
                     {component 'button' type='button' text={lang 'common.cancel'} attributes=[ 'data-type' => 'modal-close' ]}

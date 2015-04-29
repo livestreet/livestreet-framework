@@ -7,7 +7,7 @@
  *}
 
 {* Название компонента *}
-{$component = 'dropdown'}
+{$component = 'ls-dropdown'}
 
 {foreach [ 'text', 'activeItem', 'activeItem', 'menu', 'classes', 'attributes' ] as $param}
     {assign var="$param" value=$smarty.local.$param}
@@ -26,7 +26,7 @@
             [ 'text' => $smarty.local.text, 'mods' => $mods, 'attributes' => [ 'tabindex' => -1 ] ],
             {component 'button'
                 type       = 'button'
-                classes    = "{$component}-toggle js-dropdown-toggle"
+                classes    = "{$component}-toggle js-{$component}-toggle"
                 mods       = "{$mods} no-text"
                 attributes = array_merge( $attributes|default:[], [
                     'aria-haspopup' => 'true',
@@ -36,7 +36,7 @@
     {else}
         {component 'button'
             type       = 'button'
-            classes    = "{$component}-toggle js-dropdown-toggle"
+            classes    = "{$component}-toggle js-{$component}-toggle"
             mods       = $mods
             text       = $smarty.local.text
             attributes = array_merge( $attributes|default:[], [

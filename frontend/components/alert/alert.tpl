@@ -11,7 +11,7 @@
  *}
 
 {* Название компонента *}
-{$component = 'alert'}
+{$component = 'ls-alert'}
 
 {* Генерируем копии локальных переменных, *}
 {* чтобы их можно было изменять в дочерних шаблонах *}
@@ -61,7 +61,7 @@
 
     {* Кнопка закрытия *}
     {if $dismissible}
-        <button class="{$component}-close js-alert-close" aria-labelledby="{$uid}">
+        <button class="{$component}-close js-{$component}-close" aria-labelledby="{$uid}">
             <span class="icon-remove"></span>
             <span id="{$uid}" aria-hidden="true" hidden>{lang 'common.close'}</span>
         </button>

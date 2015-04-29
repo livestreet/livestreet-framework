@@ -23,7 +23,7 @@
             // Селекторы
             selectors: {
                 // Селектор сворачиваемого блока
-                item: '> .js-details-group-item'
+                item: '> .js-ls-details-group-item'
             },
 
             // Опции каждого сворачиваемого блока в группе

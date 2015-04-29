@@ -8,21 +8,21 @@
  * @author    Denis Shakhov <denis.shakhov@gmail.com>
  */
 
-.dropdown {
+.ls-dropdown {
     display: inline-block;
 }
-.dropdown > .button-group {
+.ls-dropdown > .ls-button-group {
     display: block;
 }
 
 
  /* Dropdown toggle */
-.dropdown-toggle {
+.ls-dropdown-toggle {
     position: relative;
     cursor: pointer;
     padding-right: 26px !important;
 }
-.dropdown-toggle:after {
+.ls-dropdown-toggle:after {
     content: "";
     position: absolute;
     top: 50%;
@@ -33,13 +33,13 @@
     border: 4px solid transparent;
     border-top-color: #333;
 }
-.button--success.dropdown-toggle:after,
-.button--info.dropdown-toggle:after,
-.button--warning.dropdown-toggle:after,
-.button--danger.dropdown-toggle:after,
-.button--primary.dropdown-toggle:after { border-top-color: #fff; opacity: .9; }
+.ls-button--success.ls-dropdown-toggle:after,
+.ls-button--info.ls-dropdown-toggle:after,
+.ls-button--warning.ls-dropdown-toggle:after,
+.ls-button--danger.ls-dropdown-toggle:after,
+.ls-button--primary.ls-dropdown-toggle:after { border-top-color: #fff; opacity: .9; }
 
-.button--no-text.dropdown-toggle {
+.ls-button--no-text.ls-dropdown-toggle {
     padding: 0;
     min-height: 31px;
 }
@@ -48,7 +48,7 @@
 /**
  * Выпадающее меню
  */
-.dropdown-menu {
+.ls-dropdown-menu {
     min-width: 150px;
     display: none;
     position: absolute;
@@ -57,17 +57,17 @@
     border: 1px solid #ccc;
     background: #fff;
 }
-.dropdown-menu > li:last-child {
+.ls-dropdown-menu > li:last-child {
     border-radius: 0 0 3px 3px;
 }
-.dropdown-menu > li:first-child {
+.ls-dropdown-menu > li:first-child {
     border-radius: 3px 3px 0 0;
 }
-.nav.dropdown-menu > li > a {
+.ls-nav.ls-dropdown-menu > li > a {
     color: #333;
     padding: 7px 10px;
 }
-.nav.dropdown-menu li a:hover {
+.ls-nav.ls-dropdown-menu li a:hover {
     background: #f7f7f7;
     color: #333;
 }

@@ -3,17 +3,18 @@
  *
  * @param string text
  * @param string activeItem
+ * @param boolean isSplit
  * @param array  menu
  *}
 
 {* Название компонента *}
 {$component = 'ls-dropdown'}
 
-{foreach [ 'text', 'activeItem', 'activeItem', 'menu', 'classes', 'attributes' ] as $param}
+{foreach [ 'text', 'icon', 'activeItem', 'isSplit', 'menu', 'mods', 'classes', 'attributes' ] as $param}
     {assign var="$param" value=$smarty.local.$param}
 {/foreach}
 
-{if ! $smarty.local.text}
+{if ! $text}
     {$mods = "$mods no-text"}
 {/if}
 
@@ -21,9 +22,9 @@
 
 <div class="{$component} {cmods name=$component mods=$mods} {$classes}" {cattr list=$attributes}>
     {* Кнопка *}
-    {if $smarty.local.isSplit}
+    {if $isSplit}
         {component 'button' template='group' buttons=[
-            [ 'text' => $smarty.local.text, 'mods' => $mods, 'attributes' => [ 'tabindex' => -1 ] ],
+            [ 'text' => $text, 'mods' => $mods, 'attributes' => [ 'tabindex' => -1 ] ],
             {component 'button'
                 type       = 'button'
                 classes    = "{$component}-toggle js-{$component}-toggle"
@@ -38,7 +39,7 @@
             type       = 'button'
             classes    = "{$component}-toggle js-{$component}-toggle"
             mods       = $mods
-            text       = $smarty.local.text
+            text       = $text
             icon       = $icon
             attributes = array_merge( $attributes|default:[], [
                 'aria-haspopup' => 'true',

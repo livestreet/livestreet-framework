@@ -124,6 +124,7 @@
 {capture 'test_example_content'}
     {component 'dropdown' classes='js-mydropdown' menu=$menu}
     {component 'dropdown' classes='js-mydropdown' mods='info' menu=$menu}
+    {component 'dropdown' classes='js-mydropdown' text='Dropdown' icon='star' menu=$menu}
     <br>
     <br>
     {component 'button' template='group' buttons=[
@@ -131,6 +132,7 @@
         {component 'dropdown' classes='js-mydropdown' text='Dropdown' menu=$menu},
         {component 'dropdown' classes='js-mydropdown' text='Dropdown' icon='ok' menu=$menu},
         {component 'dropdown' classes='js-mydropdown' icon='ok' menu=$menu},
+        {component 'dropdown' classes='js-mydropdown' menu=$menu},
         [ 'text' => 'Hello' ],
         [ 'text' => 'Hello' ]
     ]}

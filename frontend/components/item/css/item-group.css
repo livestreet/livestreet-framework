@@ -8,13 +8,13 @@
  * @author    Denis Shakhov <denis.shakhov@gmail.com>
  */
 
-.item-group {
+.ls-item-group {
     border: 1px solid #eee;
 }
-.item-group .item {
+.ls-item-group .ls-item {
     padding: 15px;
     border-bottom: 1px solid #eee;
 }
-.item-group .item:last-child {
+.ls-item-group .ls-item:last-child {
     border-bottom: none;
 }

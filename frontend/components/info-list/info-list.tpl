@@ -6,7 +6,7 @@
  *}
 
 {* Название компонента *}
-{$component = 'info-list'}
+{$component = 'ls-info-list'}
 
 {* Генерируем копии локальных переменных, *}
 {* чтобы их можно было изменять в дочерних шаблонах *}
@@ -24,13 +24,13 @@
 		{/if}
 
 		{* Список *}
-		<ul class="info-list">
+		<ul class="{$component}-list">
 			{foreach $list as $item}
-				<li class="info-list-item">
-					<div class="info-list-item-label">
+				<li class="{$component}-item">
+					<div class="{$component}-item-label">
 						{$item['label']}
 					</div>
-					<strong class="info-list-item-content">{$item['content']}</strong>
+					<strong class="{$component}-item-content">{$item['content']}</strong>
 				</li>
 			{/foreach}
 		</ul>

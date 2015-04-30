@@ -9,11 +9,13 @@
  * @styles css/common.css
  *}
 
+{$component = 'ls-tag-cloud'}
+
 {if $smarty.local.tags}
-	<ul class="tag-cloud word-wrap">
+	<ul class="{$component} word-wrap">
 		{foreach $smarty.local.tags as $tag}
-			<li class="tag-cloud-item {if $tag->getText() && $smarty.local.active == $tag->getText()}active{/if}">
-				<a class="tag-size-{$tag->getSize()}" href="{eval var=$smarty.local.url}" title="{$tag->getCount()}">
+			<li class="{$component}-item {if $tag->getText() && $smarty.local.active == $tag->getText()}active{/if}">
+				<a class="ls-tag-size-{$tag->getSize()}" href="{eval var=$smarty.local.url}" title="{$tag->getCount()}">
 					{if $smarty.local.text}
 						{eval var=$smarty.local.text}
 					{else}

@@ -5,7 +5,7 @@
 {if $bIsShowStatsPerformance}
     {$stats = $smarty.local.stats}
 
-    <div class="alert alert--info performance">
+    <div class="alert alert--info ls-performance">
         {hook run='statistics_performance_begin'}
 
         <table>

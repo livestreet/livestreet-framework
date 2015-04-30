@@ -7,41 +7,41 @@
  */
 
 
-.item {
+.ls-item {
     position: relative;
 }
 
 /*  */
-.item > * {
+.ls-item > * {
     vertical-align: top;
     display: table-cell;
     padding-right: 15px;
 }
-.item > *:last-child {
+.ls-item > *:last-child {
     padding-right: 0;
 }
 
 /* Делаем так, чтобы блок body занимал максимальное */
 /* пространство по ширине */
-.item-body {
+.ls-item-body {
     width: 100%;
 }
 
-.item-image {
+.ls-item-image {
     vertical-align: top;
 }
-.item-title {
+.ls-item-title {
     font-size: 24px;
     line-height: 1.1em;
     margin-bottom: 15px;
 }
-.item-description {
+.ls-item-description {
     margin-bottom: 15px;
 }
-.item-description:last-child {
+.ls-item-description:last-child {
     margin-bottom: 0;
 }
-.item-actions {
+.ls-item-actions {
     position: absolute;
     top: 15px;
     right: 0;
@@ -52,13 +52,13 @@
 /**
  * @modifier has-image
  */
-.item--has-image {
+.ls-item--has-image {
     
 }
 
 /**
  * @modifier image-rounded
  */
-.item--image-rounded .item-image {
+.ls-item--image-rounded .ls-item-image {
     border-radius: 50%;
 }

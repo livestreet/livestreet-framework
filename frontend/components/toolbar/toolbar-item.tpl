@@ -5,7 +5,7 @@
 {extends 'component@button.group'}
 
 {block 'button_group_options' append}
-    {$classes = "$classes toolbar-item"}
+    {$classes = "$classes ls-toolbar-item"}
     {$mods = "$mods vertical"}
     {$groups = $smarty.local.items}
 {/block}

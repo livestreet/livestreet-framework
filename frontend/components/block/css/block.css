@@ -16,7 +16,7 @@
 .ls-block:last-child {
     margin-bottom: 0;
 }
-.ls-block .text {
+.ls-block .ls-text {
     font-size: 13px;
     line-height: 18px;
 }
@@ -65,10 +65,10 @@
 /**
  * Поддержка списков
  */
-.ls-block .item-group {
+.ls-block .ls-item-group {
     border: none;
 }
-.ls-block .ls-block-content + .item-group {
+.ls-block .ls-block-content + .ls-item-group {
     border-top: 1px solid #eee;
 }
 

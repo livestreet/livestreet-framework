@@ -5,6 +5,6 @@
 {extends 'component@button.button'}
 
 {block 'button_options' append}
-    {$classes = "$classes toolbar-button"}
+    {$classes = "$classes ls-toolbar-button"}
     {$mods = "$mods icon"}
 {/block}

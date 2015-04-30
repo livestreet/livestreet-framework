@@ -75,7 +75,7 @@
 		 *}
 		{block 'article_body'}
 			<div class="{$component}-content">
-				<div class="{$component}-text text">
+				<div class="{$component}-text ls-text">
 					{block 'article_content_text'}
                         {if $isList and $article->getTextShort()}
                             {$article->getTextShort()}

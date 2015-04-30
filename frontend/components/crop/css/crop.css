@@ -2,18 +2,18 @@
  * Кроп изображений
  */
 
-.crop {
+.ls-crop {
     text-align: center;
 }
 
-.crop-image-holder {
+.ls-crop-image-holder {
     margin-right: 10px;
 }
-.crop-image-holder, .crop-previews {
+.ls-crop-image-holder, .ls-crop-previews {
     display: inline-block;
     vertical-align: top;
 }
-.crop-preview {
+.ls-crop-preview {
     overflow: hidden;
     margin-bottom: 15px;
 }
@@ -27,6 +27,6 @@
 .ls-modal--crop .ls-modal-footer {
     text-align: center;
 }
-.ls-modal--crop .crop-desc {
+.ls-modal--crop .ls-crop-desc {
     margin-bottom: 20px;
 }

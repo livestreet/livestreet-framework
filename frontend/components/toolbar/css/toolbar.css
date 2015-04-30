@@ -6,7 +6,7 @@
  * @author    Denis Shakhov <denis.shakhov@gmail.com>
  */
 
-.toolbar {
+.ls-toolbar {
     position: fixed;
     z-index: 100;
     display: inline-block;

@@ -2,17 +2,17 @@
  * Информация о производительности
  */
 
-.performance {
+.ls-performance {
 	margin: 20px;
 	padding: 20px;
 }
-.performance table {
+.ls-performance table {
 	width: 100%;
 }
-.performance td {
+.ls-performance td {
 	vertical-align: top;
 }
-.performance h4 {
+.ls-performance h4 {
 	font-weight: bold;
 	font-size: 14px;
 }

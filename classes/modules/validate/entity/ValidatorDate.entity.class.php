@@ -70,8 +70,7 @@ class ModuleValidate_EntityValidatorDate extends ModuleValidate_EntityValidator
         $aFormats = is_string($this->format) ? array($this->format) : $this->format;
         $bValid = false;
         foreach ($aFormats as $sFormat) {
-            $iTimestamp = DateTimeParser::parse($sValue, $sFormat,
-                array('month' => 1, 'day' => 1, 'hour' => 0, 'minute' => 0, 'second' => 0));
+            $iTimestamp = DateTimeParser::parse($sValue, $sFormat);
             if ($iTimestamp !== false) {
                 $bValid = true;
                 break;

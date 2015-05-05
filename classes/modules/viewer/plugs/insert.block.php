@@ -66,7 +66,7 @@ function smarty_insert_block($aParams, &$oSmarty)
      * Запускаем обработчик
      */
     $mResult = $oBlock->Exec();
-    if (is_string($mResult)) {
+    if (is_string($mResult) or $mResult === false) {
         /**
          * Если метод возвращает строку - выводим ее вместо рендеринга шаблона
          */

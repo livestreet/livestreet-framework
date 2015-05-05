@@ -329,14 +329,6 @@ class Router extends LsObject
             }
         }
         self::$sActionClass = $sActionClass;
-        /**
-         * Если класс экешна начинается с Plugin*_, значит необходимо загрузить объект из указанного плагина
-         */
-        if (!preg_match('/^Plugin([\w]+)_Action([\w]+)$/i', $sActionClass, $aMatches)) {
-            //require_once(Config::Get('path.root.application').'/classes/actions/'.$sActionClass.'.class.php');
-        } else {
-            //require_once(Config::Get('path.root.application').'/plugins/'.func_underscore($aMatches[1]).'/classes/actions/Action'.ucfirst($aMatches[2]).'.class.php');
-        }
 
         $sClassName = $sActionClass;
         $this->oAction = new $sClassName(self::$sAction);
@@ -350,14 +342,14 @@ class Router extends LsObject
         if ($sInitResult === 'next') {
             $this->ExecAction();
         } else {
-            $res = $this->oAction->ExecEvent();
+            $mRes = $this->oAction->ExecEvent();
             self::$sActionEventName = $this->oAction->GetCurrentEventName();
 
             $this->Hook_Run("action_shutdown_" . strtolower($sActionClass) . "_before");
             $this->oAction->EventShutdown();
             $this->Hook_Run("action_shutdown_" . strtolower($sActionClass) . "_after");
 
-            if ($res === 'next') {
+            if ($mRes === 'next') {
                 $this->ExecAction();
             }
         }

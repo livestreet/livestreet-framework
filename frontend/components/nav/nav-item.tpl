@@ -22,7 +22,7 @@
 
 {* Генерируем копии локальных переменных, *}
 {* чтобы их можно было изменять в дочерних шаблонах *}
-{foreach [ 'menu', 'url', 'text', 'showZeroCounter', 'activeItem', 'count', 'isRoot', 'isActive', 'show', 'data', 'mods', 'classes', 'attributes' ] as $param}
+{foreach [ 'menu', 'url', 'text', 'showZeroCounter', 'activeItem', 'count', 'isRoot', 'isActive', 'show', 'data', 'mods', 'classes', 'attributes', 'target' ] as $param}
     {assign var="$param" value=$smarty.local.$param}
 {/foreach}
 
@@ -34,6 +34,7 @@
 {$mods = ($menu) ? "$mods has-children" : $mods}
 {$mods = ($count) ? "$mods has-badge" : $mods}
 {$classes = ($isActive) ? "$classes active" : $classes}
+{$target = ($target) ? "target= $target" : ''}
 
 {* Smarty-блок для изменения опций *}
 {block 'nav_item_options'}{/block}
@@ -46,7 +47,7 @@
         {/foreach}>
 
         {* Ссылка *}
-        <a href="{$url}" class="{$component}-link">
+        <a href="{$url}" class="{$component}-link" {$target}>
             {$text}
 
             {* Счетчик *}

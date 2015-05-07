@@ -1,4 +1,4 @@
-<p>Навигация.</p>
+        <p>Навигация.</p>
 
 
 {**
@@ -16,6 +16,15 @@
             [ 'name' => 'item1', 'url' => "/", 'text' => 'Item 1' ],
             [ 'name' => 'item2', 'url' => "/", 'text' => 'Item 2' ],
             [ 'name' => 'item3', 'url' => "/", 'text' => 'Item 3' ]
+        ]}
+
+    {component 'nav'
+        activeItem = 'item2'
+        mods='pills'
+        items=[
+            [ 'name' => 'item1', 'url' => "/", 'text' => 'Item 1', 'icon' => 'star' ],
+            [ 'name' => 'item2', 'url' => "/", 'text' => 'Item 2', 'icon' => [ 'icon' => 'star', 'mods' => 'white' ] ],
+            [ 'name' => 'item3', 'url' => "/", 'text' => 'Item 3', 'icon' => [ 'icon' => 'star', 'mods' => 'white' ] ]
         ]}
 {/capture}
 

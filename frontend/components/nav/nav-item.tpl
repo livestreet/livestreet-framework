@@ -22,7 +22,7 @@
 
 {* Генерируем копии локальных переменных, *}
 {* чтобы их можно было изменять в дочерних шаблонах *}
-{foreach [ 'menu', 'url', 'text', 'showZeroCounter', 'activeItem', 'count', 'isRoot', 'isActive', 'show', 'data', 'mods', 'classes', 'attributes' ] as $param}
+{foreach [ 'menu', 'url', 'text', 'icon', 'showZeroCounter', 'activeItem', 'count', 'isRoot', 'isActive', 'show', 'data', 'mods', 'classes', 'attributes' ] as $param}
     {assign var="$param" value=$smarty.local.$param}
 {/foreach}
 
@@ -47,6 +47,14 @@
 
         {* Ссылка *}
         <a href="{$url}" class="{$component}-link">
+            {* Иконка *}
+            {if is_array($icon)}
+                {component 'icon' attributes=[ 'aria-hidden' => 'true' ] params=$icon}
+            {elseif $icon}
+                {component 'icon' icon=$icon attributes=[ 'aria-hidden' => 'true' ]}
+            {/if}
+
+            {* Текст *}
             {$text}
 
             {* Счетчик *}

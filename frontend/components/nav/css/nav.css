@@ -68,7 +68,7 @@
     right: 9px;
     margin-top: -2px;
 }
-.ls-nav-item-link > .ls-nav-item-caret.caret--right {
+.ls-nav-item-link > .ls-nav-item-caret.ls-caret--right {
     right: 7px;
     margin-top: -4px;
 }

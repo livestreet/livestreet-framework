@@ -3,7 +3,7 @@
  *}
 
 
-{$component = 'field-image-ajax'}
+{$component = 'ls-field-image-ajax'}
 
 <div class="{$component} {cmods name=$component mods=$mods} {$smarty.local.classes} fieldset" {cattr list=$smarty.local.attributes}
     data-param-target_type="{$smarty.local.targetType}"
@@ -15,7 +15,7 @@
     </div>
 
     <div class="fieldset-body">
-        <div class="field-image-ajax-image js-field-image-ajax-image" {( ! $imagePreviewItems ) ? 'style="display: none"' : false}>
+        <div class="{$component}-image js-field-image-ajax-image" {( ! $imagePreviewItems ) ? 'style="display: none"' : false}>
             {include './field.image-ajax-items.tpl' imagePreviewItems=$imagePreviewItems}
         </div>
 

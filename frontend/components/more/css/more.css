@@ -6,7 +6,7 @@
  * @author    Denis Shakhov <denis.shakhov@gmail.com>
  */
 
-.more {
+.ls-more {
     display: block;
     overflow: hidden;
     padding: 12px;
@@ -20,14 +20,14 @@
     -webkit-transition: background-color .2s;
             transition: background-color .2s;
 }
-.more:hover {
+.ls-more:hover {
     background-color: #9575CD;
 }
 
-.more.loading {
+.ls-more.loading {
     text-indent: -9999px;
 }
-.more.more--locked {
+.ls-more.ls-more--locked {
     background-color: #D1C4E9;
     cursor: not-allowed;
 }

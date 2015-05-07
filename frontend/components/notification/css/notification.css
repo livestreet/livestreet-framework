@@ -8,7 +8,7 @@
  * @author    Denis Shakhov <denis.shakhov@gmail.com>
  */
 
-#notifier {
+#ls-notifier {
     width: 300px;
     position: fixed;
     bottom: 15px;
@@ -17,7 +17,7 @@
 }
 
 /* Notification */
-.notification {
+.ls-notification {
     position: relative;
     padding: 15px;
     margin-top: 10px;
@@ -25,35 +25,35 @@
     cursor: pointer;
     box-shadow: 0 1px 3px rgba(0,0,0,.3)
 }
-.notification h3 {
+.ls-notification h3 {
     font-weight: normal;
     font-size: 16px;
     margin-bottom: 8px;
 }
-.notification h3:last-child {
+.ls-notification h3:last-child {
     margin-bottom: 0;
 }
-.notification p {
+.ls-notification p {
     font-size: 13px;
     line-height: 18px;
 }
 
 /* Error */
-.notification.notification--error {
+.ls-notification.ls-notification--error {
     background: #f44336;
     color: #ffcdd2;
     color: rgba(255,255,255,.7);
 }
-.notification.notification--error h3 {
+.ls-notification.ls-notification--error h3 {
     color: #fff;
 }
 
 /* Info */
-.notification.notification--info {
+.ls-notification.ls-notification--info {
     background: #2196F3;
     color: #BBDEFB;
     color: rgba(255,255,255,.7);
 }
-.notification.notification--info h3 {
+.ls-notification.ls-notification--info h3 {
     color: #fff;
 }

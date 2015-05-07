@@ -2,11 +2,11 @@
  * Файл
  *}
 
-{$component = 'uploader-file'}
+{$component = 'ls-uploader-file'}
 
 {$file = $oMediaItem}
 
-<li class="{$component} js-{$component}"
+<li class="{$component} js-uploader-file"
 		data-media-id="{$file->getId()}"
 		data-media-type="{$file->getType()}"
 		data-media-date-add="{date_format date=$file->getDateAdd() format='j F Y, H:i'}"

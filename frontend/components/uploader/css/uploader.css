@@ -2,17 +2,11 @@
  * Загрузка и управление файлами
  */
 
-/* Пустой список */
-
-.uploader.is-empty .uploader-wrapper {
-	
-}
-
 
 /**
  * Обертка
  */
-.uploader-wrapper {
+.ls-uploader-wrapper {
 	min-height: 150px;
 }
 
@@ -20,7 +14,7 @@
 /**
  * Содержимое
  */
-.uploader-content {
+.ls-uploader-content {
 	margin-right: 320px;
 }
 
@@ -28,12 +22,12 @@
 /**
  * Фильтр
  */
-.actionbar.uploader-filter {
+.ls-actionbar.ls-uploader-filter {
 	background: transparent;
 	padding: 0;
 	overflow: hidden;
 }
-.actionbar.uploader-filter:after {
+.ls-actionbar.ls-uploader-filter:after {
 	clear: none;
 }
 
@@ -41,20 +35,20 @@
 /**
  * Сайдбар
  */
-.uploader-aside {
+.ls-uploader-aside {
 	width: 300px;
 	float: right;
 }
-.uploader-aside-empty {
+.ls-uploader-aside-empty {
 	display: none;
 }
 
-.uploader-aside.is-empty .uploader-aside-empty { display: block; }
-.uploader-aside.is-empty .uploader-aside-blocks { display: none; }
+.ls-uploader-aside.is-empty .ls-uploader-aside-empty { display: block; }
+.ls-uploader-aside.is-empty .ls-uploader-aside-blocks { display: none; }
 
 /* Responsive */
 @media (max-width: 999px)  {
-	.uploader-aside {
+	.ls-uploader-aside {
 		width: auto;
 		float: none;
 	}
@@ -63,13 +57,13 @@
 /**
  * Block
  */
-.ls-block.uploader-block {
+.ls-block.ls-uploader-block {
 	border: 1px solid #eee;
 	border-radius: 5px;
 	margin-top: 15px;
 	margin-bottom: 0;
 }
-.ls-block.uploader-block:first-child {
+.ls-block.ls-uploader-block:first-child {
 	margin-top: 0;
 }
 

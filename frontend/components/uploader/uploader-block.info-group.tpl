@@ -2,12 +2,12 @@
  * Уникальные настройки определенного типа файла
  *}
 
-{$component_info = 'uploader-info'}
+{$component_info = 'ls-uploader-info'}
 
-<div class="{$component_info}-group js-{$component_info}-group" data-type="{$smarty.local.type}">
+<div class="{$component_info}-group js-uploader-info-group" data-type="{$smarty.local.type}">
 	{* Действия *}
 	<ul class="{$component_info}-actions">
-		<li><a href="#" class="link-dotted js-{$component_info}-remove">{lang name='uploader.actions.remove'}</a></li>
+		<li><a href="#" class="link-dotted js-uploader-info-remove">{lang name='uploader.actions.remove'}</a></li>
 	</ul>
 
 	{* Уникальные св-ва для каждого типа *}
@@ -17,7 +17,7 @@
 			{foreach $smarty.local.properties as $property}
 				<li class="{$component_info}-list-item">
 					<span class="{$component_info}-list-item-label">{$property['label']}:</span>
-					<span class="js-{$component_info}-property" data-name="{$property['name']}"></span>
+					<span class="js-uploader-info-property" data-name="{$property['name']}"></span>
 				</li>
 			{/foreach}
 		</ul>
@@ -27,7 +27,7 @@
 			{foreach $smarty.local.propertiesFields as $property}
 				{component 'field' template='text'
 					name            = $property['name']
-					inputClasses    = "js-{$component_info}-property"
+					inputClasses    = "js-uploader-info-property"
 					inputAttributes = [ 'data-name' => $property['name'] ]
 					label           = $property['label']}
 			{/foreach}

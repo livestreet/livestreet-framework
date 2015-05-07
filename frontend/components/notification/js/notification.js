@@ -15,11 +15,12 @@ ls.msg = ls.notification = (function ($) {
      * Опции
      */
     this.options = {
+        container_id: 'ls-notifier',
         classes: {
-            notification: 'notification',
-            notice: 'notification--success',
-            info: 'notification--info',
-            error: 'notification--error'
+            notification: 'ls-notification',
+            notice: 'ls-notification--success',
+            info: 'ls-notification--info',
+            error: 'ls-notification--error'
         },
         duration: 4000
     };
@@ -28,6 +29,7 @@ ls.msg = ls.notification = (function ($) {
         $.extend(this.options, options || {});
 
         $.extend($.notifier.options, {
+            core:    this.options.container_id,
             box_class:    this.options.classes.notification,
             notice_class: this.options.classes.success,
             error_class:  this.options.classes.error,

@@ -8,7 +8,7 @@
  *}
 
 {* Название компонента *}
-{$component = 'field'}
+{$component = 'ls-field'}
 
 {block 'field_options'}
 	{* Уникальный ID *}

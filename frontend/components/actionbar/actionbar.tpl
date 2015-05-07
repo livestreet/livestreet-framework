@@ -11,7 +11,7 @@
 
 {block 'button_toolbar_options' append}
     {$groups = $smarty.local.items}
-    {$classes = "$classes actionbar"}
+    {$classes = "$classes ls-actionbar"}
 {/block}
 
 {block 'button_toolbar_group'}

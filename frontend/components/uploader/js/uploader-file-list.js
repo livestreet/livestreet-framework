@@ -44,7 +44,7 @@
 			// TODO: Move to template
 			html: {
 				file:
-					'<li class="uploader-file js-uploader-file">' +
+					'<li class="ls-uploader-file js-uploader-file">' +
 						'<div class="progress">' +
 							'<div class="progress-value js-uploader-file-progress-value"></div>' +
 							'<span class="progress-info js-uploader-file-progress-label">0%</span>' +

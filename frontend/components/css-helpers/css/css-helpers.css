@@ -98,13 +98,13 @@
 .link-dotted { text-decoration: none; border-bottom: 1px dotted; }
 
 /* Images */
-.img-responsive {
+.ls-img-responsive {
     min-width: 100%;
     height: auto;
 }
-.img-rounded { border-radius: 5px; }
-.img-circle { border-radius: 50%; }
-.img-thumbnail {
+.ls-img-rounded { border-radius: 5px; }
+.ls-img-circle { border-radius: 50%; }
+.ls-img-thumbnail {
     display: inline-block;
     max-width: 100%;
     height: auto;
@@ -130,14 +130,14 @@
 }
 
 /* Caret */
-.caret {
+.ls-caret {
     display: inline-block;
     height: 0;
     width: 0;
     border: 4px solid transparent;
     border-top-color: #333;
 }
-.caret.caret--right {
+.ls-caret.ls-caret--right {
     border-top-color: transparent;
     border-left-color: #333;
 }

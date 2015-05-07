@@ -116,17 +116,3 @@ fieldset legend {
     top: 0;
     left: -200%;
 }
-
-/**
- * Validation
- */
-.parsley-error-list {
-    background: #ffe4e4;
-    color: #ff0000;
-    margin-top: 5px;
-    padding: 5px 10px;
-}
-.parsley-validated.parsley-error {
-    border-color: #FF9B9B;
-    background: #ffe4e4;
-}

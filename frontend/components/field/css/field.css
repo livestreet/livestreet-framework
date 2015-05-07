@@ -2,55 +2,55 @@
  * Field
  */
 
-.field            { margin-bottom: 25px; }
-.field:last-child { margin-bottom: 0; }
+.ls-field            { margin-bottom: 25px; }
+.ls-field:last-child { margin-bottom: 0; }
 
 /* Лэйбл */
-.field-label       { display: block; margin-bottom: 3px; }
-.field-label:after { content: ":"; }
+.ls-field-label       { display: block; margin-bottom: 3px; }
+.ls-field-label:after { content: ":"; }
 
 /* Заметка */
-.field-note { display: block; padding-top: 5px; font-size: 13px; color: #999; }
+.ls-field-note { display: block; padding-top: 5px; font-size: 13px; color: #999; }
 
-.field-input { width: 100%; }
-select[multiple].field-input { max-width: 300px; }
+.ls-field-input { width: 100%; }
+select[multiple].ls-field-input { max-width: 300px; }
 
 
 /**
  * Horizontal
  */
-.field--horizontal .field-label  { float: left; width: 135px; padding-top: 5px; text-align: right; }
-.field--horizontal .field-holder,
-.field--horizontal .field-note { padding-left: 150px; min-width: 200px; }
+.ls-field--horizontal .ls-field-label  { float: left; width: 135px; padding-top: 5px; text-align: right; }
+.ls-field--horizontal .ls-field-holder,
+.ls-field--horizontal .ls-field-note { padding-left: 150px; min-width: 200px; }
 
 /**
  * Inline
  */
-.field--inline { display: inline-block; }
+.ls-field--inline { display: inline-block; }
 
 /**
  * Checkbox
  */
-.field--checkbox                                { position: relative; }
-.field--checkbox .field-note,
-.field--checkbox .field-label                   { padding-left: 20px; }
-.field--checkbox .field-label.field-label:after { content: ""; }
-.field--checkbox .field-holder                  { position: absolute; top: 1px; left: 0; }
-.field--checkbox .field-input                   { width: auto; }
+.ls-field--checkbox                                { position: relative; }
+.ls-field--checkbox .ls-field-note,
+.ls-field--checkbox .ls-field-label                   { padding-left: 20px; }
+.ls-field--checkbox .ls-field-label.ls-field-label:after { content: ""; }
+.ls-field--checkbox .ls-field-holder                  { position: absolute; top: 1px; left: 0; }
+.ls-field--checkbox .ls-field-input                   { width: auto; }
 
 
 /**
  * File
  */
-.field--file .field-input { width: auto; }
-.field-file-info {
+.ls-field--file .ls-field-input { width: auto; }
+.ls-field-file-info {
 	display: block;
 	border-radius: 5px;
 	background: #D9F0D2;
 	padding: 15px;
 	margin-top: 10px;
 }
-.field-file-info p {
+.ls-field-file-info p {
 	margin-bottom: 7px;
 }
 
@@ -58,7 +58,7 @@ select[multiple].field-input { max-width: 300px; }
 /**
  * Upload area
  */
-.field-upload-area {
+.ls-field-upload-area {
 	position: relative;
 	overflow: hidden;
 	cursor: pointer;
@@ -69,7 +69,7 @@ select[multiple].field-input { max-width: 300px; }
 	margin-bottom: 20px;
 	text-align: center;
 }
-.field-upload-area input[type=file] {
+.ls-field-upload-area input[type=file] {
 	position: absolute;
 	top: -999px;
 	left: -999px;
@@ -78,7 +78,7 @@ select[multiple].field-input { max-width: 300px; }
 /**
  * Captcha
  */
-.field--captcha-image {
+.ls-field--captcha-image {
 	width: 80px;
 	height: 60px;
 	display: inline-block;
@@ -91,13 +91,13 @@ select[multiple].field-input { max-width: 300px; }
 /**
  * Geo
  */
-.field--geo select {
+.ls-field--geo select {
 	width: 100%;
 	max-width: 250px;
 	display: block;
 	margin-top: 10px;
 }
-.field--geo select:first-child {
+.ls-field--geo select:first-child {
 	margin-top: 0;
 }
 
@@ -105,22 +105,22 @@ select[multiple].field-input { max-width: 300px; }
 /**
  * Group
  */
-.field-checkbox-group { margin-bottom: 25px; }
-.field-checkbox-group .field { margin-bottom: 12px; }
-.field-checkbox-group:last-child,
-.field-checkbox-group .field:last-child { margin-bottom: 0; }
+.ls-field-checkbox-group { margin-bottom: 25px; }
+.ls-field-checkbox-group .ls-field { margin-bottom: 12px; }
+.ls-field-checkbox-group:last-child,
+.ls-field-checkbox-group .ls-field:last-child { margin-bottom: 0; }
 
 
 /**
  * Image Ajax
  */
-.field-image-ajax img {
+.ls-field-image-ajax img {
 	max-width: 100%;
 }
-.field-image-ajax-image {
+.ls-field-image-ajax-image {
 	margin-bottom: 15px;
 }
-.field-image-ajax-image.loading {
+.ls-field-image-ajax-image.loading {
 	min-height: 100px;
 	margin-bottom: 15px;
 	background-color: #fafafa;
@@ -171,7 +171,7 @@ select[multiple].field-input { max-width: 300px; }
 /**
  * Validation
  */
-.field-input.parsley-error {
+.ls-field-input.parsley-error {
 	border-color: #F79F98;
 	background-color: #FFDFDD;
 	box-shadow: 0 0 3px #FABFBB;

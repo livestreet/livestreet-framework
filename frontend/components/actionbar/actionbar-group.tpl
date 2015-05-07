@@ -5,7 +5,7 @@
 {extends 'component@button.group'}
 
 {block 'button_group_options' append}
-    {$classes = "$classes actionbar-group"}
+    {$classes = "$classes ls-actionbar-group"}
 {/block}
 
 {block 'button_group_button'}

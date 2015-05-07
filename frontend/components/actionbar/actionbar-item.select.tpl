@@ -27,7 +27,7 @@
 
 {* Выпадающее меню *}
 {component 'dropdown'
-    classes = "actionbar-item-link {$smarty.local.classes}"
+    classes = "ls-actionbar-item-link {$smarty.local.classes}"
     text    = {lang 'actionbar.select.title'}
     menu    = $menu
     params  = $smarty.local.params}

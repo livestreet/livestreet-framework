@@ -2,21 +2,22 @@
  * Информация об активном файле
  *}
 
-{capture 'block_content'}
-	{$component_info = 'uploader-info'}
+{$component_info = 'ls-uploader-info'}
+{$property_bind = 'js-uploader-info-property'}
 
+{capture 'block_content'}
 	{* Информация о файле *}
 	<div class="{$component_info}-block">
 		{* Основная информация о файле *}
 		<div class="{$component_info}-base">
 			{* Превью *}
-			<img src="" alt="" class="{$component_info}-base-image js-{$component_info}-property" data-name="image" width="100" height="100">
+			<img src="" alt="" class="{$component_info}-base-image {$property_bind}" data-name="image" width="100" height="100">
 
 			{* Информация *}
 			<ul class="{$component_info}-base-properties">
-				<li><strong class="{$component_info}-property-name word-wrap js-{$component_info}-property" data-name="name"></strong></li>
-				<li class="{$component_info}-property-date js-{$component_info}-property" data-name="date"></li>
-				<li><span class="{$component_info}-property-size js-{$component_info}-property" data-name="size"></span></li>
+				<li><strong class="{$component_info}-property-name word-wrap {$property_bind}" data-name="name"></strong></li>
+				<li class="{$component_info}-property-date {$property_bind}" data-name="date"></li>
+				<li><span class="{$component_info}-property-size {$property_bind}" data-name="size"></span></li>
 			</ul>
 		</div>
 
@@ -32,5 +33,5 @@
 {/capture}
 
 {component 'uploader' template='block'
-	classes='uploader-info js-uploader-info'
+	classes="{$component_info} js-uploader-info"
 	content=$smarty.capture.block_content}

@@ -24,7 +24,7 @@
             },
             classes: {
                 loading: 'loading',
-                locked: 'more--locked'
+                locked: 'ls-more--locked'
             },
             // Селектор блока с содержимым
             target: null,

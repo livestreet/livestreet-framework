@@ -2,7 +2,7 @@
  * Загрузка и управление файлами
  *}
 
-{$component = 'uploader'}
+{$component = 'ls-uploader'}
 
 {block 'uploader_options'}
     {$mods = $smarty.local.mods}
@@ -32,7 +32,7 @@
                 {* Блок отображаемый когда нет активного файла *}
                 {component 'blankslate'
                     text    = {lang name='uploader.info.empty'}
-                    classes = "{$component}-aside-empty js-{$component}-aside-empty"}
+                    classes = "{$component}-aside-empty js-uploader-aside-empty"}
 
                 {* Блоки *}
                 <div class="{$component}-aside-blocks js-uploader-blocks">
@@ -43,12 +43,12 @@
             </div>
 
             {* Основное содержимое *}
-            <div class="{$component}-content js-{$component}-content clearfix">
+            <div class="{$component}-content js-uploader-content clearfix">
                 {* @hook Начало контента *}
                 {hook run='uploader_content_begin'}
 
                 {* Фильтр *}
-                {component 'actionbar' classes="{$component}-filter js-{$component}-filter" items=[
+                {component 'actionbar' classes="{$component}-filter js-uploader-filter" items=[
                     [
                         'buttons' => [
                             [
@@ -70,7 +70,7 @@
                     visible=false
                     text='Нет загруженных файлов'
                     mods='no-background'
-                    classes="{$component}-list-blankslate js-{$component}-list-blankslate"}
+                    classes="{$component}-list-blankslate js-uploader-list-blankslate"}
 
                 {* Список файлов *}
                 <ul class="{$component}-file-list js-uploader-list"></ul>

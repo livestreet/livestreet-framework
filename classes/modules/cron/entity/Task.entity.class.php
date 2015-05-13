@@ -36,7 +36,7 @@ class ModuleCron_EntityTask extends EntityORM
     protected $aValidateRules = array(
         array('title', 'string', 'max' => 200, 'min' => 1, 'allowEmpty' => false, 'label' => 'Название'),
         array('method', 'string', 'max' => 300, 'min' => 1, 'allowEmpty' => false, 'label' => 'Метод'),
-        array('period_run', 'number', 'integerOnly' => true, 'min' => 5, 'allowEmpty' => false, 'label' => 'Период'),
+        array('period_run', 'number', 'integerOnly' => true, 'min' => 2, 'allowEmpty' => false, 'label' => 'Период'),
         array('title', 'title_check'),
         array('method', 'method_check'),
         array('plugin', 'plugin_check'),

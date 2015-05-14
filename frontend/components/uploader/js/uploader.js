@@ -71,8 +71,7 @@
 			autoload: true,
 
 			info_options: {},
-			list_options: {},
-			list_options: {},
+			list_options: {}
 		},
 
 		/**

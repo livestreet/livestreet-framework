@@ -62,7 +62,7 @@
     {* Кнопка закрытия *}
     {if $dismissible}
         <button class="{$component}-close js-{$component}-close" aria-labelledby="{$uid}">
-            <span class="icon-remove"></span>
+            {component 'icon' icon='remove'}
             <span id="{$uid}" aria-hidden="true" hidden>{lang 'common.close'}</span>
         </button>
     {/if}

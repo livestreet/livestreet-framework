@@ -22,7 +22,7 @@
  *}
 {test_heading text='Закрываемое сообщение'}
 
-<p>Параметр <code>close</code></p>
+<p>Параметр <code>dismissible</code></p>
 
 {capture 'test_example_content'}
     <script>
@@ -31,7 +31,7 @@
         });
     </script>
 
-    {component 'alert' close=true classes='js-my-alert' text='Lorem ipsum dolor sit amet, consectetur adipisicing elit. Vel, nisi.'}
+    {component 'alert' dismissible=true classes='js-my-alert' text='Lorem ipsum dolor sit amet, consectetur adipisicing elit. Vel, nisi.'}
 {/capture}
 
 {capture 'test_example_code'}

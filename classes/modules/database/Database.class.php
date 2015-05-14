@@ -212,7 +212,7 @@ class ModuleDatabase extends Module
          * Массивы запросов и пустой контейнер для сбора ошибок
          */
         $aErrors = array();
-        $aQuery = preg_split("#;\n|\r#", $sFileQuery, null, PREG_SPLIT_NO_EMPTY);
+        $aQuery = preg_split("#;(\n|\r)+#", $sFileQuery, null, PREG_SPLIT_NO_EMPTY);
         /**
          * Выполняем запросы по очереди
          */

@@ -14,7 +14,7 @@
             {else}
                 {$isSelected = ( is_array( $selectedValue ) ) ? in_array( $item.value, $selectedValue ) : ( $item.value == $selectedValue )}
 
-                <option value="{$item.value}" {if $isSelected}selected{/if} {cattr list=$item.attributes}>
+                <option value="{$item.value}" {if $isSelected}selected{/if} {cattr list=$item.attributes} {cdata name=$component data=$item.data}>
                     {$item.text|indent:( $item.level * 5 ):'&nbsp;'}
                 </option>
             {/if}
@@ -22,7 +22,7 @@
     {/function}
 
     {* data-placeholder нужен для плагина chosen *}
-    <select {field_input_attr_common useValue=false} {if $smarty.local.placeholder}data-placeholder="{$smarty.local.placeholder}"{/if} {if $smarty.local.isMultiple}multiple{/if}>
+    <select {field_input_attr_common useValue=false} {cdata name=$component list=$inputData} {if $smarty.local.placeholder}data-placeholder="{$smarty.local.placeholder}"{/if} {if $smarty.local.isMultiple}multiple{/if}>
         {field_select_loop items=$smarty.local.items}
     </select>
 {/block}

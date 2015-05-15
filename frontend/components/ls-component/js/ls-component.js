@@ -62,6 +62,18 @@
         },
 
         /**
+         * Получает список атрибутов с префиксом равным названию виджета
+         *
+         * @param {jQuery} element Элемент (опционально), по умолчанию = this.element
+         * @param {String} prefix Префикс (опционально), по умолчанию равняется названию виджета
+         */
+        getData: function( element, prefix ) {
+            if (typeof element === 'string') prefix = element;
+
+            return ls.utils.getDataOptions(element || this.element, prefix || this.widgetName.toLowerCase());
+        },
+
+        /**
          * Получает параметры отправляемые при каждом аякс запросе
          */
         _getParamsFromData: function( url, params, callback ) {

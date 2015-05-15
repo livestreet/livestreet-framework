@@ -23,6 +23,8 @@
 	{$_rules = $smarty.local.rules|default:[]}
 	{$name = $smarty.local.name}
 	{$label = $smarty.local.label}
+	{$data = $smarty.local.data}
+	{$inputData = $smarty.local.inputData}
 {/block}
 
 {* Правила валидации *}
@@ -79,6 +81,7 @@
 		data-parsley-{$rule@key}="{$rule@value}"
 	{/foreach}
 	{cattr list=$_inputAttributes}
+	{cdata name=$component list=$data}
 {/function}
 
 

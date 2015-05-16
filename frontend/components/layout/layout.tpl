@@ -23,7 +23,7 @@
 <!--[if IE 8]>    <html class="no-js ie8 oldie" lang="{$lang}" {$rtl}> <![endif]-->
 <!--[if gt IE 8]><!--> <html class="no-js" lang="{$lang}" {$rtl}> <!--<![endif]-->
 
-<head prefix="og: http://ogp.me/ns# article: http://ogp.me/ns/article#">
+<head prefix="og: https://ogp.me/ns# article: https://ogp.me/ns/article#">
     {block 'layout_head'}
         <meta charset="utf-8">
 

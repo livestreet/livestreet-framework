@@ -190,8 +190,6 @@ var ls = ls || {};
 		_create: function() {
 			this._super();
 
-			this._toggle = $( '[data-modal-target=' + this.element.attr('id') + ']' );
-
 			// Переносим все модальные в оверлей
 			if ( this.options.url ) {
 				_overlay.element.append(this.element);
@@ -207,16 +205,8 @@ var ls = ls || {};
 			// События
 			// ----------
 
-			// Триггер при клике по которому появляется модальное окно
-			this._on( this._toggle, {
-				click: function (e) {
-					this.toggle();
-					e.preventDefault();
-				}
-			});
-
 			// Кнопки закрытия модального окна
-			this._on( this.getElement( 'close' ), { click: this.hide });
+			this._on( this.getElement( 'close' ), { click: 'hide' });
 
 			this._trigger("create", null, this);
 		},
@@ -363,7 +353,6 @@ var ls = ls || {};
 		_overlay.init();
 		_loader.init();
 
-		// Ajax
 		$(document).on('click', '[data-type=modal-toggle][data-modal-url]', function (e) {
 			var options = ls.utils.getDataOptions($(this), 'modal');
 			var params = ls.utils.getDataOptions($(this), 'param') || {};

@@ -13,7 +13,8 @@
         "modal": "modal.tpl"
     },
     "scripts": {
-        "modal": "js/modal.js"
+        "modal": "js/modal.js",
+        "toggle": "js/modal-toggle.js"
     },
     "styles": {
         "modal": "css/modal.css"

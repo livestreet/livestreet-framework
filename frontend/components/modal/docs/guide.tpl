@@ -50,7 +50,7 @@ jQuery(function ($) {
 
 {test_code code=$smarty.capture.test_code}
 
-<p>Теперь можно добавить например кнопку, которая будет открывать наше модальное окно, для этого нужно использовать атрибут <code>data-modal-target</code> в котором указать <code>id</code> окна, в нашем случае это <code>my_modal</code></p>
+<p>Теперь можно добавить например кнопку, которая будет открывать наше модальное окно, для этого нужно использовать атрибут <code>data-lsmodaltoggle-modal</code> в котором указать <code>id</code> окна, в нашем случае это <code>my_modal</code></p>
 
 {capture 'test_example_content'}
     <script>
@@ -59,7 +59,7 @@ jQuery(function ($) {
         });
     </script>
 
-    {component 'button' type='button' text='Показать окно' attributes=[ 'data-modal-target' => 'my_modal' ]}
+    {component 'button' type='button' text='Показать окно' classes='js-modal-toggle-default' attributes=[ 'data-lsmodaltoggle-modal' => 'my_modal' ]}
 
     {component 'modal'
         classes='js-mymodal'
@@ -72,13 +72,17 @@ jQuery(function ($) {
 <script>
     jQuery(function ($) {
         $('.js-mymodal').lsModal();
+
+        // Иниц-ия кнопки которая показывает окно
+        $('.js-my-modal-toggle').lsModalToggle();
     });
 </script>
 
 {ldelim}component 'button'
     type='button'
     text='Показать окно'
-    attributes=[ 'data-modal-target' => 'my_modal' ]{rdelim}
+    classes='js-my-modal-toggle'
+    attributes=[ 'data-lsmodaltoggle-modal' => 'my_modal' ]{rdelim}
 
 {ldelim}component 'modal'
     classes='js-mymodal'
@@ -88,6 +92,36 @@ jQuery(function ($) {
 {/capture}
 
 {test_example content=$smarty.capture.test_example_content code=$smarty.capture.test_example_code}
+
+
+{**
+ * Вложенные модальные окна
+ *}
+{test_heading text='Вложенные модальные окна'}
+
+<p>TODO</p>
+
+{capture 'test_example_content'}
+    {component 'button' type='button' text='Показать окно' classes='js-modal-toggle-default' attributes=[ 'data-lsmodaltoggle-modal' => 'my-modal' ]}
+
+    {capture 'modal_content'}
+        {component 'button' type='button' text='Показать окно' classes='js-modal-toggle-default' attributes=[ 'data-lsmodaltoggle-modal' => 'my-modal-nested' ]}
+    {/capture}
+
+    {component 'modal'
+        classes='js-mymodal'
+        id='my-modal'
+        title='Modal'
+        content=$smarty.capture.modal_content}
+
+    {component 'modal'
+        classes='js-mymodal'
+        id='my-modal-nested'
+        title='Modal'
+        content='Lorem ipsum dolor sit amet, consectetur adipisicing elit. Vitae, vero, distinctio. Sit veniam cupiditate sunt, reprehenderit officiis, voluptates nesciunt odio?'}
+{/capture}
+
+{test_example content=$smarty.capture.test_example_content code='...'}
 
 
 {**

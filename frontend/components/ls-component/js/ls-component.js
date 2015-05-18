@@ -21,7 +21,7 @@
          */
         _create: function () {
             // Получаем опции из data атрибутов
-            $.extend( this.options, ls.utils.getDataOptions( this.element, this.widgetName.toLowerCase() ) );
+            $.extend( this.options, this.getData() );
 
             // Получаем опции в формате JSON
             $.extend( this.options, this.element.data( this.widgetName.toLowerCase() + '-options' ) );
@@ -77,7 +77,7 @@
          * Получает параметры отправляемые при каждом аякс запросе
          */
         _getParamsFromData: function( url, params, callback ) {
-            $.extend( this.options.params, ls.utils.getDataOptions( this.element, 'param' ) );
+            $.extend( this.options.params, this.getData( 'param' ) );
         },
 
         /**

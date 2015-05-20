@@ -68,7 +68,10 @@
          * @param {String} prefix Префикс (опционально), по умолчанию равняется названию виджета
          */
         getData: function( element, prefix ) {
-            if (typeof element === 'string') prefix = element;
+            if (typeof element === 'string') {
+                prefix = element;
+                element = this.element;
+            }
 
             return ls.utils.getDataOptions(element || this.element, prefix || this.widgetName.toLowerCase());
         },

@@ -148,7 +148,7 @@ class ModuleViewer_EntityOpenGraph extends Entity
         return array(
             'og:title'     => $this->Viewer_GetHtmlTitle(),
             'og:type'      => 'website',
-            'og:image'     => $sImage,
+            'og:image'     => Router::GetFixPathWeb($sImage),
             'og:url'       => Router::GetPathWebCurrent(),
             'og:site_name' => Config::Get('view.name'),
         );

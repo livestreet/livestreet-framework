@@ -5,6 +5,7 @@
  * @param string  label     Текст лэйбла
  * @param string  note      Подсказка (отображается под полем)
  * @param string  rules     Правила валидации
+ * @param boolean  escape   Экранировать параметр value или нет
  *}
 
 {* Название компонента *}
@@ -25,6 +26,7 @@
 	{$label = $smarty.local.label}
 	{$data = $smarty.local.data}
 	{$inputData = $smarty.local.inputData}
+	{$escape = $smarty.local.escape|default:true}
 {/block}
 
 {* Правила валидации *}
@@ -38,7 +40,7 @@
 {function field_input_attr_value}
 {strip}
 	{if $_value}
-		{$_value}
+		{($escape) ? htmlspecialchars($_value) : $_value}
 	{elseif isset($_aRequest[ $name ])}
 		{$_aRequest[ $name ]}
 	{/if}

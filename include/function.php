@@ -567,3 +567,21 @@ function func_ini_return_bytes($sSizeStr)
             return $sSizeStr;
     }
 }
+
+/**
+ * Позволяет получить значение объекта в многомерном массиве задав путь до него
+ *
+ * @param  array $aArr  Массив с данными, например: [ "user" => [ "name" => "John", "id" => 15 ] ]
+ * @param  array $aKeys Путь до объекта, например: [ "user", "name" ]
+ * @return mixed        Значение параметра, путь до которого указан в $aKeys
+ */
+function func_array_multisearch($aArr, $aKeys)
+{
+    $mTemp = $aArr;
+
+    foreach ($aKeys as $mKey) {
+        $mTemp = $mTemp[$mKey];
+    }
+
+    return $mTemp;
+}

@@ -580,6 +580,8 @@ function func_array_multisearch($aArr, $aKeys)
     $mTemp = $aArr;
 
     foreach ($aKeys as $mKey) {
+        if (!isset($mTemp[$mKey])) return false;
+        
         $mTemp = $mTemp[$mKey];
     }
 

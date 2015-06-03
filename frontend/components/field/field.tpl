@@ -41,7 +41,7 @@
 {strip}
 	{if $_value}
 		{($escape) ? htmlspecialchars($_value) : $_value}
-	{elseif $name}
+	{elseif $name and $_aRequest}
 		{field_get_value form=$_aRequest name=$name}
 	{/if}
 {/strip}

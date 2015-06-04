@@ -92,13 +92,13 @@
 <p>Параметр <code>icon</code></p>
 
 {capture 'test_example_content'}
-    <p>{component 'button' text='Save' icon='ok'}</p>
-    {component 'button' mods='icon' icon='ok'}
+    <p>{component 'button' text='Save' icon='check'}</p>
+    {component 'button' mods='icon' icon='check'}
 {/capture}
 
 {capture 'test_example_code'}
-{ldelim}component 'button' text='Save' icon='ok'{rdelim}
-{ldelim}component 'button' icon='ok' mods='icon'{rdelim}
+{ldelim}component 'button' text='Save' icon='check'{rdelim}
+{ldelim}component 'button' icon='check' mods='icon'{rdelim}
 {/capture}
 
 {test_example content=$smarty.capture.test_example_content code=$smarty.capture.test_example_code}
@@ -228,10 +228,10 @@
     {component 'button' template='toolbar' groups=[
         [
             'buttons' => [
-                [ 'icon' => 'ok' ],
+                [ 'icon' => 'check' ],
                 [ 'icon' => 'remove' ],
-                [ 'icon' => 'zoom-in' ],
-                [ 'icon' => 'zoom-out' ]
+                [ 'icon' => 'search-plus' ],
+                [ 'icon' => 'search-minus' ]
             ]
         ],
         [
@@ -252,10 +252,10 @@
     {component 'button' template='toolbar' mods='vertical' groups=[
         [
             'buttons' => [
-                [ 'icon' => 'ok' ],
+                [ 'icon' => 'check' ],
                 [ 'icon' => 'remove' ],
-                [ 'icon' => 'zoom-in' ],
-                [ 'icon' => 'zoom-out' ]
+                [ 'icon' => 'search-plus' ],
+                [ 'icon' => 'search-minus' ]
             ]
         ],
         [
@@ -278,10 +278,10 @@
 {ldelim}component 'button' template='toolbar' groups=[
     [
         'buttons' => [
-            [ 'icon' => 'ok' ],
+            [ 'icon' => 'check' ],
             [ 'icon' => 'remove' ],
-            [ 'icon' => 'zoom-in' ],
-            [ 'icon' => 'zoom-out' ]
+            [ 'icon' => 'search-plus' ],
+            [ 'icon' => 'search-minus' ]
         ]
     ],
     [

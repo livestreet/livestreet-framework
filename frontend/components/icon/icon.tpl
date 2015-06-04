@@ -9,4 +9,4 @@
 
 {$component = 'ls-icon'}
 
-<i class="{$component} {$component}-{$smarty.local.icon} {cmods name=$component mods=$mods} {$smarty.local.classes}" {cattr list=$smarty.local.attributes}></i>
+<i class="fa fa-{$smarty.local.icon} {cmods name=$component mods=$smarty.local.mods} {$smarty.local.classes}" {cattr list=$smarty.local.attributes}></i>

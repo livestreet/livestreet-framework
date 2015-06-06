@@ -13,7 +13,6 @@
         "hotkeys": "jquery.hotkeys.js",
         "jqplugin": "jquery.jqplugin.js",
         "livequery": "jquery.livequery.js",
-        "rich-array.min": "jquery.rich-array.min.js",
         "scrollto": "jquery.scrollto.js",
         "serializejson": "jquery.serializejson.js",
         "timers": "jquery.timers.js"

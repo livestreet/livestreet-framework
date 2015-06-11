@@ -1,6 +1,7 @@
 {**
  * Тулбар
  *
+ * @param string  $hook
  * @param array   $groups     (null) Массив групп кнопок, либо строка с html кодом групп кнопок
  * @param string  $mods       (null) Список модификторов основного блока (через пробел)
  * @param string  $classes    (null) Список классов основного блока (через пробел)
@@ -12,9 +13,15 @@
 
 {* Генерируем копии локальных переменных, *}
 {* чтобы их можно было изменять в дочерних шаблонах *}
-{foreach [ 'groups', 'classes', 'mods', 'attributes' ] as $param}
+{foreach [ 'groups', 'hook', 'classes', 'mods', 'attributes' ] as $param}
     {assign var="$param" value=$smarty.local.$param}
 {/foreach}
+
+{* Получаем пункты установленные плагинами *}
+{if $hook}
+    {hook run=$hook assign='hookGroups' params=$smarty.local.params items=$groups array=true}
+    {$groups = ( $hookGroups ) ? $hookGroups : $groups}
+{/if}
 
 {block 'button_toolbar_options'}{/block}
 

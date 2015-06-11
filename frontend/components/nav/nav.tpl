@@ -2,6 +2,7 @@
  * Навигация
  *
  * @param string  $name
+ * @param string  $hook
  * @param array   $items
  * @param string  $activeItem
  * @param integer $hookParams
@@ -25,9 +26,10 @@
 {$name = ( $name ) ? $name : rand(0, 10e10)}
 
 {* Получаем пункты установленные плагинами *}
-{hook run="{$component}_{$name}" assign='itemsHook' params=$hookParams items=$items array=true}
-
-{$items = ( $itemsHook ) ? $itemsHook : $items}
+{if $hook}
+    {hook run=$hook assign='hookItems' params=$smarty.local.params items=$items array=true}
+    {$items = ( $hookItems ) ? $hookItems : $items}
+{/if}
 
 {* Считаем кол-во неактивных пунктов *}
 {$disabledItemsCounter = 0}

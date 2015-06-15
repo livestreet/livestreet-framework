@@ -333,8 +333,8 @@ class ModuleHook extends Module
     {
         $result = array();
         $sName = strtolower($sName);
-        $bTemplateHook = strpos($sName, 'template_') === 0 ? true : false;
         if (isset($this->aHooks[$sName])) {
+            $bTemplateHook = strpos($sName, 'template_') === 0 ? true : false;
             $aHookNum = array();
             $aHookNumDelegate = array();
             /**

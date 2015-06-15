@@ -96,12 +96,19 @@ class ModuleAsset_EntityTypeCss extends ModuleAsset_EntityType
                 }
                 /**
                  * Обрабатываем относительный путь
+                 * ../foo.jpg
+                 * ../foo.jpg?query
+                 * ../foo.jpg#hash
+                 * ../foo.jpg?#hash
                  */
                 $aPath = explode('?', $sFilePathAbsolute, 2);
                 $sFilePathAbsolute = $aPath[0];
+                $aPartHash = explode('#', $sFilePathAbsolute, 2);
+                $sFilePathAbsolute = $aPartHash[0];
                 $sGetParams = isset($aPath[1]) ? $aPath[1] : '';
+                $sHashParams = isset($aPartHash[1]) ? $aPartHash[1] : '';
                 $sFilePathAbsolute = $this->Asset_GetRealpath($sDir . $sFilePathAbsolute);
-                $sFilePathAbsolute = $this->Fs_GetPathWebFromServer($sFilePathAbsolute) . ($sGetParams ? "?{$sGetParams}" : '');
+                $sFilePathAbsolute = $this->Fs_GetPathWebFromServer($sFilePathAbsolute) . ($sGetParams ? "?{$sGetParams}" : '') . ($sHashParams ? "#{$sHashParams}" : '');
                 /**
                  * Заменяем относительные пути в файле на абсолютные
                  */

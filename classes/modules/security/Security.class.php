@@ -48,12 +48,13 @@ class ModuleSecurity extends Module
      * Производит валидацию отправки формы/запроса от пользователя, позволяет избежать атаки CSRF
      *
      * @param bool $bDie Определяет завершать работу скрипта или нет
+     * @param string|null $sCode Код для проверки в ValidateSecurityKey, если нет то берется из реквеста
      *
      * @return bool
      */
-    public function ValidateSendForm($bDie = true)
+    public function ValidateSendForm($bDie = true, $sCode = null)
     {
-        if (!$this->ValidateSecurityKey()) {
+        if (!$this->ValidateSecurityKey($sCode)) {
             if ($bDie) {
                 die("Hacking attemp!");
             } else {

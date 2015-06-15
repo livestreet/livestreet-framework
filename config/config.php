@@ -90,7 +90,6 @@ $config['path']['uploads']['root'] = '___path.uploads.base___';                 
  */
 $config['path']['smarty']['template'] = '___path.application.server___/frontend/skin/___view.skin___';
 $config['path']['smarty']['compiled'] = '___path.tmp.server___/templates/compiled';
-$config['path']['smarty']['cache'] = '___path.tmp.server___/templates/cache';
 $config['path']['smarty']['plug'] = '___path.framework.server___/classes/modules/viewer/plugs';
 $config['smarty']['compile_check'] = true; // Проверять или нет файлы шаблона на изменения перед компиляцией, false может значительно увеличить быстродействие, но потребует ручного удаления кеша при изменения шаблона
 $config['smarty']['force_compile'] = false; // Принудительно компилировать шаблоны при каждом запросе, true - существенно снижает производительность

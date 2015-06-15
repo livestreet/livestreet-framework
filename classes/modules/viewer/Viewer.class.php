@@ -195,11 +195,6 @@ class ModuleViewer extends Module
             @mkdir($sCompilePath, 0777, true);
         }
         $this->oSmarty->setCompileDir($sCompilePath);
-        $sCachePath = Config::Get('path.smarty.cache');
-        if (!is_dir($sCachePath)) {
-            @mkdir($sCachePath, 0777, true);
-        }
-        $this->oSmarty->setCacheDir($sCachePath);
         $this->oSmarty->addPluginsDir(array(Config::Get('path.smarty.plug'), 'plugins'));
         $this->oSmarty->default_template_handler_func = array($this, 'SmartyDefaultTemplateHandler');
     }

@@ -9,4 +9,4 @@
 		classes      = 'js-tag-search-form'
 		inputClasses = 'autocomplete-tags js-tag-search'
 		inputName    = 'tag'
-		value        = $tag|escape}
+		value        = $tag}

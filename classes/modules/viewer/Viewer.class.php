@@ -183,8 +183,7 @@ class ModuleViewer extends Module
          */
         $this->oSmarty = $this->CreateSmartyObject();
         $this->oSmarty->error_reporting = error_reporting() & ~E_NOTICE; // подавляем NOTICE ошибки - в этом вся прелесть смарти )
-        $this->oSmarty->setTemplateDir(array_merge((array)Config::Get('path.smarty.template'),
-            array(Config::Get('path.application.plugins.server') . '/')));
+        $this->oSmarty->setTemplateDir(Config::Get('path.smarty.template'));
         $this->oSmarty->compile_check = Config::Get('smarty.compile_check');
         $this->oSmarty->force_compile = Config::Get('smarty.force_compile');
         /**
@@ -195,7 +194,7 @@ class ModuleViewer extends Module
             @mkdir($sCompilePath, 0777, true);
         }
         $this->oSmarty->setCompileDir($sCompilePath);
-        $this->oSmarty->addPluginsDir(array(Config::Get('path.smarty.plug'), 'plugins'));
+        $this->oSmarty->addPluginsDir(Config::Get('path.smarty.plug'));
         $this->oSmarty->default_template_handler_func = array($this, 'SmartyDefaultTemplateHandler');
     }
 

@@ -181,6 +181,14 @@ class ModuleMail extends Module
         $this->oMailer->From = $this->sFrom;
         $this->oMailer->Sender = $this->sFrom;
         $this->oMailer->FromName = $this->sFromName;
+        /**
+         * Настройки DKIM
+         */
+        $this->oMailer->DKIM_selector = Config::Get('sys.mail.dkim.selector');
+        $this->oMailer->DKIM_identity = Config::Get('sys.mail.dkim.identity') ?: $this->sFrom;
+        $this->oMailer->DKIM_passphrase = Config::Get('sys.mail.dkim.passphrase');
+        $this->oMailer->DKIM_domain = Config::Get('sys.mail.dkim.domain');
+        $this->oMailer->DKIM_private = Config::Get('sys.mail.dkim.private');
     }
 
     /**

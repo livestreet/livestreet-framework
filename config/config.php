@@ -130,6 +130,13 @@ $config['sys']['mail']['smtp']['user'] = '';                     // Настро
 $config['sys']['mail']['smtp']['password'] = '';                     // Настройки SMTP - пароль
 $config['sys']['mail']['smtp']['secure'] = '';                     // Настройки SMTP - протокол шифрования: tls, ssl
 $config['sys']['mail']['smtp']['auth'] = true;                   // Использовать авторизацию при отправке
+$config['sys']['mail']['dkim'] = array(
+    'selector'   => '', // DKIM selector
+    'identity'   => '', // DKIM Identity, обычно емайл адрес с которого отправляются письма
+    'passphrase' => '', // DKIM passphrase, пароль для приватного ключа (если задан)
+    'domain'     => '', // DKIM signing domain name
+    'private'    => '', // DKIM private key file path, полный серверный путь до файла с приватным ключом
+);
 $config['sys']['mail']['include_comment'] = true;                   // Включает в уведомление о новых комментах текст коммента
 $config['sys']['mail']['include_talk'] = true;                   // Включает в уведомление о новых личных сообщениях текст сообщения
 /**

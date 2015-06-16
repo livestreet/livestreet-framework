@@ -53,15 +53,19 @@
         {foreach $items as $item}
             {$isEnabled = $item[ 'is_enabled' ]}
 
-            {if $isEnabled|default:true}
-                {if $item['name'] != '-'}
-                    {component 'nav' template='item'
-                        isRoot   = !$isSubnav
-                        isActive = ($smarty.local.activeItem == $item['name'])
-                        params   = $item}
-                {else}
-                    {* Разделитель *}
-                    <li class="{$component}-separator"></li>
+            {if $item['html']}
+                {$item['html']}
+            {else}
+                {if $isEnabled|default:true}
+                    {if $item['name'] != '-'}
+                        {component 'nav' template='item'
+                            isRoot   = !$isSubnav
+                            isActive = ($smarty.local.activeItem == $item['name'])
+                            params   = $item}
+                    {else}
+                        {* Разделитель *}
+                        <li class="{$component}-separator"></li>
+                    {/if}
                 {/if}
             {/if}
         {/foreach}

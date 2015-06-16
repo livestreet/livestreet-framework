@@ -541,4 +541,19 @@ class ModuleComponent extends Module
         $aPaths = array_reverse($aPathsNew);
         return $aJson;
     }
+
+    /**
+     * Возвращает отрендеренный шаблон компонента
+     *
+     * @param string $sComponent Имя компонента
+     * @param string|null $sTemplate Название шаблона, если null то будет использоваться шаблон по имени компонента
+     * @param array $aParams Список параметров, которые необходимо прогрузить в шаблон. Параметры прогружаются как локальные.
+     * @return string
+     */
+    public function Fetch($sComponent, $sTemplate = null, $aParams = array())
+    {
+        $oViewer = $this->Viewer_GetLocalViewer();
+        $oViewer->Assign($aParams, null, true);
+        return $oViewer->Fetch('component@' . $sComponent . ($sTemplate ? '.' . $sTemplate : ''));
+    }
 }

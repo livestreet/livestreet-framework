@@ -62,7 +62,7 @@ class Smarty_Internal_Template_LS extends Smarty_Internal_Template
          */
         if (preg_match('#^Component@(.+)#i', $template_resource, $aMatch)) {
             $aPath = explode('.', $aMatch[1], 2);
-            $template_resource = Engine::getInstance()->Component_GetTemplatePath($aPath[0], $aPath[1], true);
+            $template_resource = Engine::getInstance()->Component_GetTemplatePath($aPath[0], isset($aPath[1]) ? $aPath[1] : null, true);
             $bSkipDelegate = true;
         }
 

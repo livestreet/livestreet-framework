@@ -47,7 +47,11 @@ class ModuleValidate_EntityValidatorDefault extends ModuleValidate_EntityValidat
          * Выставляем дефолтное значение
          */
         if ($this->isEmpty($sValue)) {
-            $this->setValueOfCurrentEntity($this->sFieldCurrent, $this->value);
+            $mValue = $this->value;
+            if (is_callable($this->value)) {
+                $mValue = call_user_func($this->value, $this->sFieldCurrent, $this->oEntityCurrent);
+            }
+            $this->setValueOfCurrentEntity($this->sFieldCurrent, $mValue);
         }
         return true;
     }

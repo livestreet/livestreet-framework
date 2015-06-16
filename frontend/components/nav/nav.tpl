@@ -1,7 +1,6 @@
 {**
  * Навигация
  *
- * @param string  $name
  * @param string  $hook
  * @param array   $items
  * @param string  $activeItem
@@ -18,12 +17,9 @@
 
 {* Генерируем копии локальных переменных, *}
 {* чтобы их можно было изменять в дочерних шаблонах *}
-{foreach [ 'name', 'items', 'activeItem', 'showSingle', 'isSubnav', 'items', 'mods', 'classes', 'attributes' ] as $param}
+{foreach [ 'hook', 'items', 'activeItem', 'showSingle', 'isSubnav', 'items', 'mods', 'classes', 'attributes' ] as $param}
     {assign var="$param" value=$smarty.local.$param}
 {/foreach}
-
-{* Уникальное имя меню *}
-{$name = ( $name ) ? $name : rand(0, 10e10)}
 
 {* Получаем пункты установленные плагинами *}
 {if $hook}

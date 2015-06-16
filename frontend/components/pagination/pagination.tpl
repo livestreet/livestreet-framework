@@ -47,10 +47,6 @@
 
 {block 'pagination_options'}{/block}
 
-{if ! $showSingle && $total == 1}
-
-{/if}
-
 {if ( $showSingle && $total && $current ) || ( ! $showSingle && $total > 1 && $current )}
     {* Вычисляем следующую страницу *}
     {$next = ( $current == $total ) ? 0 : $current + 1}

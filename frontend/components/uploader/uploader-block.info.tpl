@@ -22,7 +22,7 @@
 		</div>
 
 		{* Информация о изображении *}
-		{include './uploader-block.info-group.tpl'
+		{component 'uploader' template='block.info-group'
 			type             = '1'
 			properties       = [[ 'name' => 'dimensions', 'label' => {lang name='uploader.info.types.image.dimensions'} ]]
 			propertiesFields = [[ 'name' => 'title', 'label' => {lang name='uploader.info.types.image.title'} ]]}

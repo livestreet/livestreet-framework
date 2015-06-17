@@ -2,31 +2,33 @@
  * Справка по разметке редактора
  *}
 
+{$component = 'editor-help'}
+
 {function editor_help_item}
 {strip}
-	{foreach $items as $aItem}
-		<dl class="editor-help-item">
-			{foreach $aItem['tags'] as $aTag}
+	{foreach $items as $item}
+		<dl class="{$component}-item">
+			{foreach $item['tags'] as $tag}
 				<dt>
-					<a href="#" class="link-dotted js-tags-help-link" {if $aTag['insert']}data-insert="{$aTag['insert']}"{/if}>
-						{$aTag['text']}
+					<a href="#" class="link-dotted js-tags-help-link" {if $tag['insert']}data-insert="{$tag['insert']}"{/if}>
+						{$tag['text']}
 					</a>
 				</dt>
 			{/foreach}
 
-			<dd>{$aItem['def']}</dd>
+			<dd>{$item['def']}</dd>
 		</dl>
 	{/foreach}
 {/strip}
 {/function}
 
 
-<div class="editor-help js-editor-help" data-form-id="{$smarty.local.targetId}">
-	<header class="editor-help-header clearfix">
+<div class="{$component} js-editor-help" data-form-id="{$smarty.local.targetId}">
+	<header class="{$component}-header clearfix">
 		<a href="#" class="link-dotted help-link js-editor-help-toggle">{$aLang.editor.markup.help.link_show}</a>
 	</header>
 
-	<div class="editor-help-body js-editor-help-body">
+	<div class="{$component}-body js-editor-help-body">
 		<h3 class="h3">{$aLang.editor.markup.help.special}</h3>
 
 		<div class="mb-30">
@@ -41,7 +43,7 @@
 		<h3 class="h3">{$aLang.editor.markup.help.standart}</h3>
 
 		<div class="clearfix">
-			<ul class="editor-help-col">
+			<ul class="{$component}-col">
 				{editor_help_item items=[
 					[ 'tags' => [
 						[ 'text' => '&lt;h4&gt;&lt;/h4&gt;' ],
@@ -59,7 +61,7 @@
 				]}
 			</ul>
 
-			<ul class="editor-help-col">
+			<ul class="{$component}-col">
 				{editor_help_item items=[
 					[ 'tags' => [ [ 'text' => "&lt;hr /&gt;" ] ], 'def' => $aLang.editor.markup.help.standart_hr ],
 					[ 'tags' => [ [ 'text' => "&lt;blockquote&gt;&lt;/blockquote&gt;" ] ], 'def' => $aLang.editor.markup.help.standart_blockquote ],

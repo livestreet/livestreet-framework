@@ -16,7 +16,7 @@
 
     <div class="fieldset-body">
         <div class="{$component}-image js-field-image-ajax-image" {( ! $imagePreviewItems ) ? 'style="display: none"' : false}>
-            {include './field.image-ajax-items.tpl' imagePreviewItems=$imagePreviewItems}
+            {component 'field' template='image-ajax-items' imagePreviewItems=$imagePreviewItems}
         </div>
 
         {component 'button'

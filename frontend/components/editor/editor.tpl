@@ -65,7 +65,7 @@
 		{editor_textarea}
 
 		{if $smarty.local.help|default:true}
-			{include './editor.markup.help.tpl' targetId=$_uid}
+			{component 'editor' template='markup-help' targetId=$_uid}
 		{/if}
 	{/hookb}
 {/if}

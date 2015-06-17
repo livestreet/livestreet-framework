@@ -37,7 +37,7 @@
                 {* Блоки *}
                 <div class="{$component}-aside-blocks js-uploader-blocks">
                     {block 'uploader_aside'}
-                        {include './uploader-block.info.tpl'}
+                        {component 'uploader' template='block.info'}
                     {/block}
                 </div>
             </div>

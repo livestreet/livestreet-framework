@@ -231,7 +231,7 @@ class ModuleText extends Module
     }
 
     /**
-     * Парсит текст, применя все парсеры
+     * Парсит текст, применяя все парсеры
      *
      * @param string $sText Исходный текст
      * @return string
@@ -242,10 +242,29 @@ class ModuleText extends Module
             return '';
         }
         $sResult = $this->FlashParamParser($sText);
+        $sResult = $this->MarkdownParser($sResult);
         $sResult = $this->JevixParser($sResult);
         $sResult = $this->VideoParser($sResult);
         $sResult = $this->CodeSourceParser($sResult);
         return $sResult;
+    }
+
+    /**
+     *  Обработка текста на помощью облегченного языка разметки Markdown
+     *
+     * @param string $sText Исходный текст
+     * @return string
+     */
+    public function MarkdownParser($sText)
+    {
+        if (Config::Get('module.text.use_markdown')) {
+            Engine::AddAutoloaderNamespace('Michelf',
+                Config::Get('path.framework.libs_vendor.server') . '/php-markdown/Michelf');
+            $parser = new Michelf\MarkdownExtra();
+            // TODO: настройка парсера - https://michelf.ca/projects/php-markdown/configuration/
+            $sText = $parser->transform($sText);
+        }
+        return $sText;
     }
 
     /**

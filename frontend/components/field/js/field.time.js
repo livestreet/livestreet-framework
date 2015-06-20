@@ -16,7 +16,7 @@
          * Дефолтные опции
          */
         options: {
-            // Опции теже что и у плагина datetimepicker
+            timeFormat: 'G:i'
         },
 
         /**
@@ -28,9 +28,7 @@
         _create: function() {
             this._super();
 
-            $.extend( this.options, { timeOnly: true } );
-
-            this.element.datetimepicker( this.options );
+            this.element.timepicker( this.options );
         }
     });
 })(jQuery);

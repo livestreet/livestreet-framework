@@ -69,7 +69,6 @@
     <script>
         jQuery(function($) {
             $('.js-my-datepicker').lsFieldDate();
-            $('.js-my-datetimepicker').lsFieldDatetime();
             $('.js-my-timepicker').lsFieldTime();
         });
     </script>
@@ -78,11 +77,6 @@
         template = 'date'
         label  = 'Date'
         inputClasses = 'js-my-datepicker'}
-
-    {component 'field'
-        template = 'datetime'
-        label  = 'Date Time'
-        inputClasses = 'js-my-datetimepicker'}
 
     {component 'field'
         template = 'time'

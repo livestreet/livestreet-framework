@@ -19,6 +19,8 @@
  *
  */
 
+require_once(Config::Get('path.framework.libs_vendor.server') . '/cssmin/CssMin.php');
+
 /**
  * Модуль управления статическими файлами css стилей и js сриптов
  * Позволяет сжимать и объединять файлы для более быстрой загрузки

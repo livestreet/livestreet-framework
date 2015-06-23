@@ -45,7 +45,8 @@ class ModuleAsset_EntityTypeCss extends ModuleAsset_EntityType
      */
     public function compress()
     {
-
+        $oCssMinifier = new CssMinifier($this->getContent());
+        $this->setContent($oCssMinifier->getMinified());
     }
 
     /**

@@ -45,11 +45,13 @@ class ModuleAsset_EntityTypeJs extends ModuleAsset_EntityType
      */
     public function compress()
     {
-        try {
-            $this->setContent(\JShrink\Minifier::minify($this->getContent()));
-        } catch (Exception $e) {
-            $this->Logger_Warning('Asset js compress: ' . $e->getMessage());
-        }
+        $oJSqueeze = new \Patchwork\JSqueeze();
+        $this->setContent($oJSqueeze->squeeze(
+            $this->getContent(),
+            true,   // $singleLine
+            false,  // $keepImportantComments
+            false   // $specialVarRx
+        ));
     }
 
     /**

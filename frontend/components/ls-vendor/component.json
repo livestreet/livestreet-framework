@@ -15,7 +15,8 @@
         "livequery": "jquery.livequery.js",
         "scrollto": "jquery.scrollto.js",
         "serializejson": "jquery.serializejson.js",
-        "timers": "jquery.timers.js"
+        "timers": "jquery.timers.js",
+        "moment": "moment.js"
     },
     "styles": {
         "jquery-ui": "jquery-ui/css/smoothness/jquery-ui-1.10.2.custom.css"

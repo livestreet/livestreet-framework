@@ -8,23 +8,6 @@
  * @author    Denis Shakhov <denis.shakhov@gmail.com>
  */
 
-/**
- * Временный хак для форматирования даты.
- * Метод изменен так, чтобы в качестве формата даты можно было указывать функцию.
- * По дефолту форматирование в либе не поддерживается (надо подключать доп. либу momentjs)
- *
- * TODO: Использовать jquery globalize
- */
-Pikaday.prototype.toString = function() {
-    if (!this._d) {
-        return ''
-    } else if (typeof this._o.format === "function") {
-        return this._o.format(this._d);
-    } else {
-        return hasMoment ? moment(this._d).format(format || this._o.format) : this._d.toDateString();
-    }
-};
-
 (function($) {
     "use strict";
 
@@ -33,9 +16,7 @@ Pikaday.prototype.toString = function() {
          * Дефолтные опции
          */
         options: {
-            format: function (date) {
-                return date.getDate() + '.' + (date.getMonth() + 1) + '.' + date.getFullYear();
-            },
+            format: 'DD.MM.YYYY',
             yearRange: 100,
             firstDay: 1,
             i18n: {

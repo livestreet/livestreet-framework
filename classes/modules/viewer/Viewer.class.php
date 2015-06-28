@@ -1227,6 +1227,170 @@ class ModuleViewer extends Module
     }
 
     /**
+     * Возвращает форматированную дату
+     *
+     * @param int|string|null $mDate
+     * @param string $sFormat
+     * @param array $aParams Список параметров
+     * <pre>
+     * array(
+     *  'declination'   => 1,
+     *  'now' => 60,   // Количество секунд, в течении которых событие имеет статус "Только что"
+     *  'day' => 'day в H:i', // Указывает на необходимость замены "Сегодня", "Вчера", "Завтра".
+     *                        // В указанном формате 'day' будет заменено на соответствующее значение.
+     *  'minutes_back'  => 59, // Количество минут, в течении которых событие имеет статус "... минут назад"
+     *  'hours_back'    => 23, // Количество часов, в течении которых событие имеет статус "... часов назад"
+     *  'tz'    => 4, // Временная зона
+     *  'notz'  => false, // Не учитывать зон
+     * )
+     * </pre>
+     * @return bool|string
+     */
+    public function GetDateFormat($mDate = null, $sFormat = 'd F Y, H:i', $aParams = array())
+    {
+        $aParamsDefault = array(
+            'declination'  => 1,
+            'now'          => null,
+            'day'          => null,
+            'minutes_back' => null,
+            'hours_back'   => null,
+            'tz'           => null,
+            'notz'         => false,
+        );
+        $aParams = array_merge($aParamsDefault, $aParams);
+
+        /**
+         * Текущая дата и сдвиг времени для пользователя
+         */
+        $iTz = false;
+        if (!$aParams['notz']) {
+            if ($aParams['tz']) {
+                $iTz = $aParams['tz'];
+            }
+            if ($iTz === false) {
+                try {
+                    /**
+                     * Хардкодная проверка на модуль user
+                     */
+                    if ($oUserCurrent = $this->User_GetUserCurrent() and $oUserCurrent->getSettingsTimezone()) {
+                        $oNow = new DateTime(null, new DateTimeZone($oUserCurrent->getSettingsTimezone()));
+                        $iTz = $oNow->getOffset() / 3600;
+                    }
+                } catch (Exception $e) {
+
+                }
+            }
+        }
+        if ($iTz !== false) {
+            $iDiff = (date('I') + $iTz - (strtotime(date("Y-m-d H:i:s")) - strtotime(gmdate("Y-m-d H:i:s"))) / 3600) * 3600;
+        } else {
+            $iDiff = 0; // пользователю показываем время от зоны из основного конфига
+        }
+        $iNow = time() + $iDiff;
+        /**
+         * Определяем дату
+         */
+        if ($mDate) {
+            $iDate = is_numeric($mDate) ? $mDate : strtotime($mDate);
+        } else {
+            $iDate = time();
+        }
+        $iDate += $iDiff;
+
+        /**
+         * Если указана необходимость выполнять проверку на NOW
+         */
+        if ($aParams['now']) {
+            if ($iDate + $aParams['now'] > $iNow) {
+                return $this->Lang_Get('date.now');
+            }
+        }
+        /**
+         * Если указана необходимость на проверку minutes back
+         */
+        if ($aParams['minutes_back']) {
+            $iTimeDelta = round(($iNow - $iDate) / 60);
+            if ($iTimeDelta < $aParams['minutes_back']) {
+                return ($iTimeDelta != 0)
+                    ? $this->Lang_Pluralize(
+                        $iTimeDelta,
+                        $this->Lang_Get('date.minutes_back', array('minutes' => $iTimeDelta))
+                    )
+                    : $this->Lang_Get('date.minutes_back_less');
+            }
+        }
+
+        /**
+         * Если указана необходимость на проверку hours back
+         */
+        if ($aParams['hours_back']) {
+            $iTimeDelta = round(($iNow - $iDate) / (60 * 60));
+            if ($iTimeDelta < $aParams['hours_back']) {
+                return ($iTimeDelta != 0)
+                    ? $this->Lang_Pluralize(
+                        $iTimeDelta,
+                        $this->Lang_Get('date.hours_back', array('hours' => $iTimeDelta))
+                    )
+                    : $this->Lang_Get('date.hours_back_less');
+            }
+        }
+        /**
+         * Если указана необходимость автоподстановки "Сегодня", "Вчера", "Завтра".
+         */
+        if ($aParams['day']) {
+            switch (date('Y-m-d', $iDate)) {
+                /**
+                 * Если дата совпадает с сегодняшней
+                 */
+                case date('Y-m-d'):
+                    $sDay = $this->Lang_Get('date.today_at');
+                    break;
+                /**
+                 * Если дата совпадает со вчерашней
+                 */
+                case date('Y-m-d', mktime(0, 0, 0, date("m"), date("d") - 1, date("Y"))):
+                    $sDay = $this->Lang_Get('date.yesterday_at');
+                    break;
+                /**
+                 * Если дата совпадает с завтрашней
+                 */
+                case date('Y-m-d', mktime(0, 0, 0, date("m"), date("d") + 1, date("Y"))):
+                    $sDay = $this->Lang_Get('date.tomorrow_at');
+                    break;
+
+                default:
+                    $sDay = null;
+            }
+            if ($sDay) {
+                $sFormat = str_replace("day", preg_replace("#(\w{1})#", '\\\${1}', $sDay), $aParams['day']);
+                return date($sFormat, $iDate);
+            }
+        }
+        /**
+         * Определяем нужное текстовое значение названия месяца
+         */
+        $aMonth = $this->Lang_Get('date.month_array');
+        $iMonth = date("n", $iDate);
+        $sMonth = isset($aMonth[$iMonth])
+            ? $aMonth[$iMonth]
+            : "";
+
+        /**
+         * Если не найден индекс склонения, берем склонене по умолчанию.
+         * Если индекс по умолчанию также не определен, берем первое значение в массиве.
+         */
+        if (is_array($sMonth)) {
+            $iDeclination = $aParams['declination'];
+            $sMonth = isset($sMonth[$iDeclination])
+                ? $sMonth[$iDeclination]
+                : $sMonth[1];
+        }
+
+        $sFormat = preg_replace("~(?<!\\\\)F~U", preg_replace('~(\w{1})~u', '\\\${1}', $sMonth), $sFormat);
+        return date($sFormat, $iDate);
+    }
+
+    /**
      * Загружаем переменные в шаблон при завершении модуля
      *
      */

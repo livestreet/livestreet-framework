@@ -9,11 +9,11 @@
 {block 'field_input' prepend}
 	<span data-type="captcha" data-lscaptcha-name="{$smarty.local.captchaName}" class="ls-field--captcha-image"></span>
 
-	{$_rules = [
+	{$rules = [
 		'required'      => true,
 		'remote'        => {router page='ajax/captcha/validate'},
 		'remote-options' => [ 'data' => [ 'params' => [ 'name' => $smarty.local.captchaName ] ] ]
 	]}
 
-	{$_inputClasses = "$_inputClasses width-100"}
+	{$inputClasses = "$inputClasses width-100"}
 {/block}

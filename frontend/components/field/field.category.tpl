@@ -2,13 +2,16 @@
  * Вывод категорий на странице создания нового объекта
  *}
 
+{* TODO: Конфликт со спец параметром params компонентов *}
 {$params = $smarty.local.params}
 {$categoriesSelected = $smarty.local.categoriesSelected}
 {$categories = $smarty.local.categories}
 
 {* Получаем id выделеных категорий *}
-{if $params.form_fill_current_from_request && $_aRequest[ $params.form_field ]}
-	{$selected = $_aRequest[ $params.form_field ]}
+{$formField = {field_get_value form=$_aRequest name=$params.form_field}}
+
+{if $params.form_fill_current_from_request && $formField}
+    {$selected = $formField}
 {elseif $categoriesSelected}
 	{$selected = []}
 

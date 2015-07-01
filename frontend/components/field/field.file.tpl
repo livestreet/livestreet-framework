@@ -5,7 +5,7 @@
 {extends './field.tpl'}
 
 {block 'field' prepend}
-    {$_mods = "$_mods file"}
+    {$mods = "$mods file"}
     {$uploadedFiles = $smarty.local.uploadedFiles}
 {/block}
 

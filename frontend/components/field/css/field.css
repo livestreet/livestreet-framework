@@ -31,12 +31,30 @@ select[multiple].ls-field-input { max-width: 300px; }
 /**
  * Checkbox
  */
-.ls-field--checkbox                                { position: relative; }
-.ls-field--checkbox .ls-field-note,
-.ls-field--checkbox .ls-field-label                   { padding-left: 20px; }
-.ls-field--checkbox .ls-field-label.ls-field-label:after { content: ""; }
-.ls-field--checkbox .ls-field-holder                  { position: absolute; top: 1px; left: 0; }
-.ls-field--checkbox .ls-field-input                   { width: auto; }
+.ls-field--checkbox {
+	position: relative;
+}
+.ls-field--checkbox .ls-field-note, .ls-field--checkbox .ls-field-label {
+	padding-left: 20px;
+}
+.ls-field--checkbox .ls-field-label.ls-field-label:after {
+	content: "";
+}
+.ls-field--checkbox .ls-field-holder {
+	position: absolute;
+	top: 1px;
+	left: 0;
+}
+.ls-field--checkbox .ls-field-input {
+	width: auto;
+}
+
+/**
+ * Date
+ */
+.ls-field--date {
+	width: 150px;
+}
 
 
 /**

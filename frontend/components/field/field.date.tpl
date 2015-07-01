@@ -5,5 +5,5 @@
 {extends './field.text.tpl'}
 
 {block 'field_options' append}
-    {$_inputClasses = "{$_inputClasses} width-150"}
+    {$mods = "$mods date"}
 {/block}

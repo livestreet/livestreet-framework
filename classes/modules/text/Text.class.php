@@ -193,7 +193,6 @@ class ModuleText extends Module
         }
         $sResult = $this->FlashParamParser($sText);
         $sResult = $this->JevixParser($sResult);
-        $sResult = $this->CodeSourceParser($sResult);
         return $sResult;
     }
 
@@ -237,21 +236,6 @@ class ModuleText extends Module
                     $sText);
             }
         }
-        return $sText;
-    }
-
-    /**
-     * Подсветка исходного кода
-     *
-     * @param string $sText Исходный текст
-     * @return mixed
-     */
-    public function CodeSourceParser($sText)
-    {
-        $sText = str_replace("<code>", '<pre><code>', $sText);
-        $sText = str_replace("</code>", '</code></pre>', $sText);
-        $sText = str_replace("<codeline>", '<code>', $sText);
-        $sText = str_replace("</codeline>", '</code>', $sText);
         return $sText;
     }
 

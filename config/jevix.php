@@ -342,6 +342,20 @@ return array(
                 array('h4', 'h5', 'h6', 'ol', 'ul', 'blockquote', 'pre', 'table', 'iframe', 'code')
             )
         ),
+        'cfgSetTagCallbackFull' => array(
+            array(
+                'video',
+                array('_this_', 'Text_CallbackParserTag'),
+            ),
+            array(
+                'code',
+                array('_this_', 'Text_CallbackParserTag'),
+            ),
+            array(
+                'codeline',
+                array('_this_', 'Text_CallbackParserTag'),
+            ),
+        )
     ),
     // настройки для обработки текста в результатах поиска
     'search'  => array(

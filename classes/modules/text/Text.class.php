@@ -181,56 +181,6 @@ class ModuleText extends Module
     }
 
     /**
-     * Парсинг текста на предмет видео
-     * Находит теги <pre><video></video></pre> и реобразовываетих в видео
-     *
-     * @param string $sText Исходный текст
-     * @return string
-     */
-    public function VideoParser($sText)
-    {
-        /**
-         * youtu.be
-         */
-        $sText = preg_replace('/<video>http:\/\/(?:www\.|)youtu.be\/([a-zA-Z0-9_\-]+)(&.+)?<\/video>/Ui',
-            '<iframe width="560" height="315" src="http://www.youtube.com/embed/$1?rel=0" frameborder="0" allowfullscreen></iframe>',
-            $sText);
-        /**
-         * youtube.com
-         */
-        $sText = preg_replace('/<video>http:\/\/(?:www\.|)youtube\.com\/watch\?v=([a-zA-Z0-9_\-]+)(&.+)?<\/video>/Ui',
-            '<iframe width="560" height="315" src="http://www.youtube.com/embed/$1" frameborder="0" allowfullscreen></iframe>',
-            $sText);
-        /**
-         * vimeo.com
-         */
-        $sText = preg_replace('/<video>http:\/\/(?:www\.|)vimeo\.com\/(\d+).*<\/video>/i',
-            '<iframe src="http://player.vimeo.com/video/$1" width="500" height="281" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>',
-            $sText);
-        /**
-         * rutube.ru
-         */
-        $sText = preg_replace('/<video>http:\/\/(?:www\.|)rutube\.ru\/tracks\/(\d+)\.html.*<\/video>/Ui',
-            '<iframe width="720" height="405" src="//rutube.ru/play/embed/$1" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowfullscreen></iframe>',
-            $sText);
-        $sText = preg_replace('/<video>http:\/\/(?:www\.|)rutube\.ru\/video\/([a-zA-Z0-9_\-]+)\/?<\/video>/Ui',
-            '<iframe width="720" height="405" src="//rutube.ru/play/embed/$1" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowfullscreen></iframe>',
-            $sText);
-        /**
-         * video.yandex.ru
-         */
-        $sText = preg_replace('/<video>http:\/\/video\.yandex\.ru\/users\/([a-zA-Z0-9_\-]+)\/view\/(\d+).*<\/video>/i',
-            '<object width="467" height="345"><param name="video" value="http://video.yandex.ru/users/$1/view/$2/get-object-by-url/redirect"></param><param name="allowFullScreen" value="true"></param><param name="scale" value="noscale"></param><embed src="http://video.yandex.ru/users/$1/view/$2/get-object-by-url/redirect" type="application/x-shockwave-flash" width="467" height="345" allowFullScreen="true" scale="noscale" ></embed></object>',
-            $sText);
-        /**
-         * vk.com
-         */
-        $sText = preg_replace('/<video>(http:\/\/(?:www\.|)vk\.com\/video_ext\.php.*)<\/video>/i',
-            '<iframe src="$1" width="607" height="360" frameborder="0"></iframe>', $sText);
-        return $sText;
-    }
-
-    /**
      * Парсит текст, применя все парсеры
      *
      * @param string $sText Исходный текст
@@ -243,7 +193,6 @@ class ModuleText extends Module
         }
         $sResult = $this->FlashParamParser($sText);
         $sResult = $this->JevixParser($sResult);
-        $sResult = $this->VideoParser($sResult);
         $sResult = $this->CodeSourceParser($sResult);
         return $sResult;
     }
@@ -357,5 +306,15 @@ class ModuleText extends Module
             $sRes = strtolower($sRes);
         }
         return $sRes;
+    }
+
+    public function CallbackParserTag($sTag, $aParams, $sContent)
+    {
+        $sParserClass = 'ModuleText_EntityParserTag' . func_camelize($sTag);
+        if (class_exists($sParserClass)) {
+            $oParser = Engine::GetEntity($sParserClass);
+            return $oParser->parse($sContent, $aParams);
+        }
+        return '';
     }
 }

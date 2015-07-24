@@ -19,12 +19,11 @@
 			set: 'default',
 			sets: {
 				common: {
-					language: LANGUAGE,
 					plugins: 'media table fullscreen autolink link pagebreak code autoresize emoticons',
 					external_plugins: {
 						// 'lsuser': PATH_SKIN + '/components/editor/js/tinymce/plugins/lsuser/plugin.js'
 					},
-					// skin_url: PATH_SKIN + '/components/editor/js/tinymce/skins/livestreet/',
+					skin: 'livestreet',
 					menubar: false,
 					statusbar: false,
 					pagebreak_separator: '<cut>'

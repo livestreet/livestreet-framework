@@ -19,10 +19,7 @@
 			set: 'default',
 			sets: {
 				common: {
-					plugins: 'media table fullscreen autolink link pagebreak code autoresize emoticons',
-					external_plugins: {
-						// 'lsuser': PATH_SKIN + '/components/editor/js/tinymce/plugins/lsuser/plugin.js'
-					},
+					plugins: 'media table fullscreen autolink link pagebreak code autoresize livestreet',
 					skin: 'livestreet',
 					menubar: false,
 					statusbar: false,
@@ -31,10 +28,10 @@
 					// custom_elements: '~user'
 				},
 				default: {
-					toolbar: 'undo redo | styleselect bold italic strikethrough underline blockquote table | bullist numlist | link unlink emoticons media | lsuser removeformat pagebreak code fullscreen'
+					toolbar: 'ls-h4 ls-h5 ls-h6 | bold italic strikethrough underline blockquote table | bullist numlist | link unlink media | lsuser removeformat pagebreak code fullscreen'
 				},
 				light: {
-					toolbar: 'undo redo | bold italic strikethrough underline blockquote | bullist numlist | removeformat pagebreak code'
+					toolbar: 'ls-h4 ls-h5 ls-h6 | bold italic strikethrough underline blockquote | bullist numlist | removeformat pagebreak code'
 				}
 			}
 		},

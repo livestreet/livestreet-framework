@@ -353,7 +353,10 @@ table {
  * Основные стили
  */
 body {
-  padding: 15px !important;
+  padding: 20px !important;
+  background: #fff;
+  background: linear-gradient(#f9f9f9, white 10px);
+  background-repeat: no-repeat;
   font-size: 14px;
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   line-height: 20px;
@@ -657,6 +660,9 @@ img[align="left"] {
 img.image-center {
   display: block;
   margin: 0 auto;
+}
+img {
+  vertical-align: top;
 }
 /* Responsive */
 object,

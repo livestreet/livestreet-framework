@@ -95,7 +95,7 @@ div.mce-edit-area {
 }
 .mce-charmap td {
   cursor: default;
-  border: 1px solid rgba(0, 0, 0, 0.2);
+  border: 1px solid #eeeeee;
   width: 20px;
   height: 20px;
   line-height: 20px;
@@ -162,7 +162,7 @@ div.mce-tinymce-inline {
   color: #707070;
 }
 .mce-toolbar-grp {
-  padding: 2px 0;
+  padding: 2px 2px 4px;
 }
 .mce-toolbar-grp .mce-flow-layout-item {
   margin-bottom: 0;
@@ -288,8 +288,8 @@ div.mce-tinymce-inline {
   position: relative;
 }
 .mce-panel {
-  border: 0 solid rgba(0, 0, 0, 0.2);
-  background-color: #f0f0f0;
+  border: 0 solid #eeeeee;
+  background-color: #ffffff;
 }
 .mce-floatpanel {
   position: absolute;
@@ -319,7 +319,7 @@ div.mce-tinymce-inline {
   top: 0;
   left: 0;
   background: #ffffff;
-  border: 1px solid rgba(0, 0, 0, 0.2);
+  border: 1px solid #eeeeee;
   border: 1px solid rgba(0, 0, 0, 0.25);
 }
 .mce-floatpanel.mce-popover.mce-bottom {
@@ -330,7 +330,7 @@ div.mce-tinymce-inline {
   left: 50%;
   margin-left: -11px;
   border-top-width: 0;
-  border-bottom-color: rgba(0, 0, 0, 0.2);
+  border-bottom-color: #eeeeee;
   border-bottom-color: rgba(0, 0, 0, 0.25);
   top: -11px;
 }
@@ -583,14 +583,14 @@ body .mce-abs-layout-item,
   border-bottom-color: transparent;
 }
 .mce-btn {
-  border: 1px solid #b1b1b1;
+  border: 1px solid #b3b3b3;
   border-color: transparent transparent transparent transparent;
   position: relative;
   text-shadow: 0 1px 1px rgba(255, 255, 255, 0.75);
   display: inline-block;
   *display: inline;
   *zoom: 1;
-  background-color: #f0f0f0;
+  background-color: white;
 }
 .mce-btn:hover,
 .mce-btn:focus {
@@ -731,7 +731,7 @@ body .mce-abs-layout-item,
   margin-left: 2px;
 }
 .mce-btn-group:not(:first-child) {
-  border-left: 1px solid #d9d9d9;
+  border-left: 1px solid #eee;
   padding-left: 3px;
   margin-left: 3px;
 }
@@ -750,7 +750,7 @@ body .mce-abs-layout-item,
 }
 .mce-rtl .mce-btn-group:not(:first-child) {
   border-left: none;
-  border-right: 1px solid #d9d9d9;
+  border-right: 1px solid #eee;
   padding-right: 4px;
   margin-right: 4px;
 }
@@ -779,7 +779,7 @@ i.mce-i-checkbox {
 }
 .mce-checkbox.mce-disabled .mce-label,
 .mce-checkbox.mce-disabled i.mce-i-checkbox {
-  color: #acacac;
+  color: #adadad;
 }
 .mce-checkbox .mce-label {
   vertical-align: middle;
@@ -1036,7 +1036,7 @@ i.mce-i-checkbox {
   margin-left: 2px;
 }
 .mce-iframe {
-  border: 0 solid rgba(0, 0, 0, 0.2);
+  border: 0 solid #eeeeee;
   width: 100%;
   height: 100%;
 }
@@ -1070,7 +1070,7 @@ i.mce-i-checkbox {
   filter: none;
 }
 .mce-menubar {
-  border: 1px solid rgba(217, 217, 217, 0.52);
+  border: 1px solid #f5f5f5;
 }
 .mce-menubar .mce-menubtn button span {
   color: #333333;
@@ -1256,7 +1256,7 @@ div.mce-menu .mce-menu-item-sep,
   margin: -1px 0 0;
   min-width: 160px;
   background: #ffffff;
-  border: 1px solid #989898;
+  border: 1px solid #999999;
   border: 1px solid rgba(0, 0, 0, 0.2);
   z-index: 1002;
   max-height: 400px;

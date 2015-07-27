@@ -23,15 +23,18 @@
 					skin: 'livestreet',
 					menubar: false,
 					statusbar: false,
-					pagebreak_separator: '<cut>'
-					// extended_valid_elements: 'user',
-					// custom_elements: '~user'
+					pagebreak_separator: '<cut>',
+					forced_root_block: false,
+					extended_valid_elements: 'lsuser',
+					custom_elements: '~lsuser',
+					relative_urls: false,
+    				remove_script_host: false
 				},
 				default: {
-					toolbar: 'ls-h4 ls-h5 ls-h6 | bold italic strikethrough underline blockquote table | bullist numlist | link unlink media | lsuser removeformat pagebreak code fullscreen'
+					toolbar: 'styleselect ls-h4 ls-h5 ls-h6 ls-pre ls-code | bold italic strikethrough underline blockquote table | bullist numlist | link media ls-media ls-user | lsuser removeformat pagebreak code fullscreen'
 				},
 				light: {
-					toolbar: 'ls-h4 ls-h5 ls-h6 | bold italic strikethrough underline blockquote | bullist numlist | removeformat pagebreak code'
+					toolbar: 'styleselect ls-h4 ls-h5 ls-h6 ls-pre ls-code | bold italic strikethrough underline blockquote | bullist numlist | removeformat pagebreak code'
 				}
 			}
 		},
@@ -53,6 +56,13 @@
 		 */
 		insert: function ( text ) {
 			this.element.tinymce().insertContent( text );
+		},
+
+		/**
+		 * 
+		 */
+		showMedia: function ( text ) {
+			this.option( 'media' ).lsMedia( 'show' );
 		}
 	});
 })(jQuery);

@@ -29,7 +29,7 @@
 					custom_elements: '~lsuser',
 					relative_urls: false,
     				remove_script_host: false
-				},
+    			},
 				default: {
 					toolbar: 'styleselect ls-h4 ls-h5 ls-h6 ls-pre ls-code | bold italic strikethrough underline blockquote table | bullist numlist | link media ls-media ls-user | lsuser removeformat pagebreak code fullscreen'
 				},
@@ -56,6 +56,27 @@
 		 */
 		insert: function ( text ) {
 			this.element.tinymce().insertContent( text );
+		},
+
+		/**
+		 * 
+		 */
+		getText: function () {
+			this.element.tinymce().getContent();
+		},
+
+		/**
+		 * 
+		 */
+		setText: function ( text ) {
+			this.element.tinymce().getContent( text );
+		},
+
+		/**
+		 * 
+		 */
+		focus: function () {
+			this.element.tinymce().focus();
 		},
 
 		/**

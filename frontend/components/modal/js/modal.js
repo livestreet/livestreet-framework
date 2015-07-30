@@ -285,6 +285,7 @@ var ls = ls || {};
 		 * @param  {Object} options Options
 		 */
 		this.load = function (url, params, options) {
+			options = options || {};
 			if ( ! _overlay.isVisible() ) _overlay.show();
 			_overlay.getActiveModal().lsModal('hide', false);
 			_loader.show();

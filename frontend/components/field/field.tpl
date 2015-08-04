@@ -24,7 +24,7 @@
 {* Генерируем копии локальных переменных, *}
 {* чтобы их можно было изменять в дочерних шаблонах *}
 {foreach [ 'form', 'placeholder', 'isDisabled', 'entity', 'entityScenario', 'escape', 'inputData', 'data', 'label', 'name',
-	'rules', 'useValue', 'value', 'id', 'inputClasses', 'inputAttributes', 'mods', 'classes', 'attributes' ] as $param}
+	'rules', 'useValue', 'value', 'id', 'inputClasses', 'inputAttributes', 'mods', 'classes', 'attributes', 'note' ] as $param}
     {assign var="$param" value=$smarty.local.$param}
 {/foreach}
 

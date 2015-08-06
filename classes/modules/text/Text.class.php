@@ -280,7 +280,7 @@ class ModuleText extends Module
     public function Transliteration($sText, $bLower = true)
     {
         $aConverter = (array)Config::Get('module.text.transliteration_map');
-        $sRes = strtr($sText, $aConverter);
+        $sRes = strtr(trim($sText), $aConverter);
         if ($sResIconv = @iconv("UTF-8", "ISO-8859-1//IGNORE//TRANSLIT", $sRes)) {
             $sRes = $sResIconv;
         }

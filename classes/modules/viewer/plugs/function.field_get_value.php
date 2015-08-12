@@ -28,7 +28,7 @@
  *
  * @author  Denis Shakhov
  */
-function smarty_function_field_get_value($aParams)
+function smarty_function_field_get_value($aParams, &$oSmarty)
 {
     if (empty($aParams['name']) || empty($aParams['form'])) {
         trigger_error("Parameter 'name' or 'form' cannot be empty", E_USER_WARNING);
@@ -38,13 +38,19 @@ function smarty_function_field_get_value($aParams)
     $aForm = $aParams['form'];
     $sName = $aParams['name'];
 
+    $sName = str_replace("[]", "", $sName);
     $mPos = strpos($sName, "[");
 
     if ($mPos !== false) {
         $aKeys = explode("][", substr_replace(substr($sName, 0, -1), "]", $mPos, 0));
-
-        return func_array_multisearch($aForm, $aKeys);
+        $mResult = func_array_multisearch($aForm, $aKeys);
+    } else {
+        $mResult = $aForm[$sName];
     }
 
-    return $aForm[$sName];
+    if (!empty($aParams['assign'])) {
+        $oSmarty->assign($aParams['assign'], $mResult);
+    } else {
+        return $mResult;
+    }
 }

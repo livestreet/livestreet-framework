@@ -30,22 +30,21 @@
  */
 function smarty_function_field_get_value($aParams, &$oSmarty)
 {
-    if (empty($aParams['name']) || empty($aParams['form'])) {
-        trigger_error("Parameter 'name' or 'form' cannot be empty", E_USER_WARNING);
-        return;
-    }
+    $mResult = null;
 
-    $aForm = $aParams['form'];
-    $sName = $aParams['name'];
+    if (!empty($aParams['name']) && !empty($aParams['form'])) {
+        $aForm = $aParams['form'];
+        $sName = $aParams['name'];
 
-    $sName = str_replace("[]", "", $sName);
-    $mPos = strpos($sName, "[");
+        $sName = str_replace("[]", "", $sName);
+        $mPos = strpos($sName, "[");
 
-    if ($mPos !== false) {
-        $aKeys = explode("][", substr_replace(substr($sName, 0, -1), "]", $mPos, 0));
-        $mResult = func_array_multisearch($aForm, $aKeys);
-    } else {
-        $mResult = $aForm[$sName];
+        if ($mPos !== false) {
+            $aKeys = explode("][", substr_replace(substr($sName, 0, -1), "]", $mPos, 0));
+            $mResult = func_array_multisearch($aForm, $aKeys);
+        } elseif (isset($aForm[$sName])) {
+            $mResult = $aForm[$sName];
+        }
     }
 
     if (!empty($aParams['assign'])) {

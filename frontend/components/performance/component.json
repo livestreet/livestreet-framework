@@ -2,7 +2,7 @@
     "name": "performance",
     "version": "1.0.0",
     "dependencies": {
-        "alert": "*",
+        "alert": "*"
     },
     "templates": {
         "performance": "performance.tpl"

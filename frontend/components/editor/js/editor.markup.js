@@ -96,6 +96,13 @@ $.widget( "livestreet.lsEditorMarkup", {
 	},
 
 	/**
+	 * 
+	 */
+	onShow: function () {
+		return;
+	},
+
+	/**
 	 * Вставка текста
 	 *
 	 * @param {String} text Текст для вставки

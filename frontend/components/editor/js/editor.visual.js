@@ -46,7 +46,22 @@
 		 * @private
 		 */
 		_create: function () {
+			this.__init();
+		},
+
+		/**
+		 * 
+		 */
+		__init: function () {
 			this.element.tinymce( $.extend( {}, this.option( 'sets.common' ), this.option( 'sets.' + this.option( 'set' ) ) ) );
+		},
+
+		/**
+		 * 
+		 */
+		onShow: function () {
+			this.element.tinymce().destroy();
+			this.__init();
 		},
 
 		/**

@@ -620,7 +620,7 @@ abstract class ModuleORM extends Module
         /**
          * Returns assotiative array, indexed by PRIMARY KEY or another field.
          */
-        if (in_array('#index-from-primary', $aFilter) || !empty($aFilter['#index-from'])) {
+        if (in_array('#index-from-primary', $aFilter, true) || !empty($aFilter['#index-from'])) {
             $aEntities = $this->_setIndexesFromField($aEntities, $aFilter);
         }
         /**
@@ -663,7 +663,7 @@ abstract class ModuleORM extends Module
         $aIndexedEntities = array();
         foreach ($aEntities as $oEntity) {
             $sKey = in_array('#index-from-primary',
-                $aFilter) || (!empty($aFilter['#index-from']) && $aFilter['#index-from'] == '#primary') ?
+                $aFilter, true) || (!empty($aFilter['#index-from']) && $aFilter['#index-from'] == '#primary') ?
                 $oEntity->_getPrimaryKey() :
                 $oEntity->_getField($aFilter['#index-from']);
             if (is_array($sKey)) {

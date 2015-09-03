@@ -3,10 +3,8 @@
     "version": "1.0.0",
     "scripts": {
         "jquery": "jquery.js",
-        "jquery-ui": "jquery-ui/js/jquery-ui-1.10.2.custom.min.js",
-        "jquery-ui-datepicker-ru": "jquery-ui/js/localization/jquery-ui-datepicker-ru.js",
-
         "browser": "jquery.browser.js",
+        "widget": "widget.js",
         "cookie": "jquery.cookie.js",
         "fileupload": "jquery.fileupload.js",
         "form": "jquery.form.js",
@@ -17,8 +15,5 @@
         "serializejson": "jquery.serializejson.js",
         "timers": "jquery.timers.js",
         "moment": "moment.js"
-    },
-    "styles": {
-        "jquery-ui": "jquery-ui/css/smoothness/jquery-ui-1.10.2.custom.css"
     }
 }

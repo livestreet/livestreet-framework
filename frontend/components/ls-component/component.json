@@ -6,7 +6,6 @@
         "ls-core": "*"
     },
     "scripts": {
-        "vendor-widget": "vendor/widget.js",
         "ls-component": "js/ls-component.js"
     }
 }

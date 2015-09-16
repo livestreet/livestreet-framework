@@ -5,10 +5,10 @@
 {extends './field.tpl'}
 
 {block 'field_input'}
-    {$items = $smarty.local.items}
+    {$items = (array) $smarty.local.items}
     {$isMultiple = $smarty.local.isMultiple}
     {$selectedValue = $smarty.local.selectedValue}
-    {$hasItems = isset($items)}
+    {$hasItems = (bool) $items}
 
     {if $name && $form}
         {field_get_value form=$form name=$name assign=selectedValue}

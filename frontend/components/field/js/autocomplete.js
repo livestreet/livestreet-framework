@@ -43,9 +43,7 @@
                         suggestions: response[ this.option( 'responseName' ) ]
                     };
                 }.bind(this),
-                params: {
-                    security_ls_key: LIVESTREET_SECURITY_KEY
-                }
+                params: $.extend( {}, { security_ls_key: LIVESTREET_SECURITY_KEY }, this.option( 'params' ) )
             });
         }
     });

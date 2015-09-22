@@ -82,6 +82,7 @@
                 this.load();
                 this.elements.show_modal.hide();
                 this.elements.remove.show();
+                this.options.params['id']=id;
             });
         },
 

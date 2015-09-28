@@ -300,17 +300,18 @@ class ModuleImage_EntityImage extends Entity
      * Сохраняет изображение в файл
      *
      * @param string $sFile Полный путь до файла сохранения
+     * @param array $aParamsSave Дополнительные опции сохранения, например, не делать вотермарк
      *
      * @return bool | string    При успешном сохранении возвращает полный путь до файла
      */
-    public function save($sFile)
+    public function save($sFile, $aParamsSave = array())
     {
         $_this = $this;
-        return $this->callExceptionMethod(function ($oImage) use ($_this, $sFile) {
+        return $this->callExceptionMethod(function ($oImage) use ($_this, $sFile, $aParamsSave) {
 
             $sFormat = ($_this->getParam('format_auto') && $_this->getFormat()) ? $_this->getFormat() : $_this->getParam('format');
             $sFileTmp = Config::Get('path.tmp.server') . DIRECTORY_SEPARATOR . func_generator(20);
-            $_this->internalSave($sFileTmp, $sFormat);
+            $_this->internalSave($sFileTmp, $sFormat, $aParamsSave);
 
             return $_this->Image_SaveFile($sFileTmp, $sFile, 0666, true);
 
@@ -333,7 +334,7 @@ class ModuleImage_EntityImage extends Entity
             }
             $sFormat = ($_this->getParam('format_auto') && $_this->getFormat()) ? $_this->getFormat() : $_this->getParam('format');
             $sFileTmp = $sDirTmp . DIRECTORY_SEPARATOR . func_generator(20);
-            $_this->internalSave($sFileTmp, $sFormat);
+            $_this->internalSave($sFileTmp, $sFormat, array('skip_watermark' => true));
             return $sFileTmp;
 
         });
@@ -344,17 +345,18 @@ class ModuleImage_EntityImage extends Entity
      *
      * @param string $sDir Директория куда нужно сохранить изображение относительно корня сайта (path.root.server)
      * @param string $sFile Имя файла для сохранения, без расширения (расширение подставляется автоматически в зависимости от типа изображения)
+     * @param array $aParamsSave Дополнительные опции сохранения, например, не делать вотермарк
      *
      * @return bool | string    При успешном сохранении возвращает полный путь до файла
      */
-    public function saveSmart($sDir, $sFile)
+    public function saveSmart($sDir, $sFile, $aParamsSave = array())
     {
         $_this = $this;
-        return $this->callExceptionMethod(function ($oImage) use ($_this, $sDir, $sFile) {
+        return $this->callExceptionMethod(function ($oImage) use ($_this, $sDir, $sFile, $aParamsSave) {
 
             $sFormat = ($_this->getParam('format_auto') && $_this->getFormat()) ? $_this->getFormat() : $_this->getParam('format');
             $sFileTmp = Config::Get('path.tmp.server') . DIRECTORY_SEPARATOR . func_generator(20);
-            $_this->internalSave($sFileTmp, $sFormat);
+            $_this->internalSave($sFileTmp, $sFormat, $aParamsSave);
 
             $sFile .= '.' . $sFormat;
             return $_this->Image_SaveFileSmart($sFileTmp, $sDir, $sFile, 0666, true);
@@ -473,17 +475,22 @@ class ModuleImage_EntityImage extends Entity
      *
      * @param string $sFile Полный путь до локального файла
      * @param string $sFormat Формат сохранения: jpg, gif, png
+     * @param array $aParamsSave Дополнительные опции сохранения, например, не делать вотермарк
+     *
      * @return bool
      */
-    public function internalSave($sFile, $sFormat)
+    public function internalSave($sFile, $sFormat, $aParamsSave = array())
     {
         if (!$oImage = $this->getImage()) {
             return false;
         }
+        $aParamsSave = array_merge(array(
+            'skip_watermark' => false
+        ), $aParamsSave);
         if ($this->getParam('interlace')) {
             $this->interlace($this->getParam('interlace'));
         }
-        if ($this->getParam('watermark_use')) {
+        if (!$aParamsSave['skip_watermark'] and $this->getParam('watermark_use')) {
             if ($this->getParam('watermark_type') == 'image') {
                 $this->watermark($this->getParam('watermark_image'), $this->getParam('watermark_position'));
             }

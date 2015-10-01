@@ -10,7 +10,7 @@
     {$selectedValue = $smarty.local.selectedValue}
     {$hasItems = (bool) $items}
 
-    {if $name && $form}
+    {if $name && $form && ! $selectedValue}
         {field_get_value form=$form name=$name assign=selectedValue}
 
         {if $isMultiple && ! isset($items)}
@@ -25,7 +25,7 @@
                     {field_select_loop items=$item.value}
                 </optgroup>
             {else}
-                {$isSelected = ( $isMultiple && ! $hasItems ) || ( ( is_array( $selectedValue ) ) ? in_array( $item.value, $selectedValue ) : ( $item.value == $selectedValue ) )}
+                {$isSelected = ( is_array( $selectedValue ) ) ? in_array( $item.value, $selectedValue ) : ( $item.value == $selectedValue )}
 
                 <option value="{$item.value}" {if $isSelected}selected{/if} {cattr list=$item.attributes} {cdata name=$component data=$item.data}>
                     {$item.text|indent:( $item.level * 5 ):'&nbsp;'}

@@ -23,8 +23,8 @@
 
 {* Генерируем копии локальных переменных, *}
 {* чтобы их можно было изменять в дочерних шаблонах *}
-{foreach [ 'form', 'placeholder', 'isDisabled', 'entity', 'entityScenario', 'escape', 'inputData', 'data', 'label', 'name',
-	'rules', 'useValue', 'value', 'id', 'inputClasses', 'inputAttributes', 'mods', 'classes', 'attributes', 'note' ] as $param}
+{foreach [ 'form', 'placeholder', 'isDisabled', 'entity', 'entityScenario', 'escape', 'data', 'label', 'name',
+	'rules', 'useValue', 'value', 'id', 'inputClasses', 'inputAttributes', 'inputData', 'mods', 'classes', 'attributes', 'note' ] as $param}
     {assign var="$param" value=$smarty.local.$param}
 {/foreach}
 
@@ -92,12 +92,15 @@
 		data-parsley-{$rule@key}="{$rule@value}"
 	{/foreach}
 	{cattr list=$inputAttributes}
-	{cdata name=$component list=$data}
+	{cdata name=$component list=$inputData}
 {/function}
 
 
 {block 'field'}
-	<div class="{$component} {cmods name=$component mods=$mods} clearfix {$classes} {block 'field_classes'}{/block}" {cattr list=$attributes}>
+	<div class="{$component} {cmods name=$component mods=$mods} clearfix {$classes} {block 'field_classes'}{/block}"
+		{cdata name=$component list=$data}
+		{cattr list=$attributes}>
+
 		{* Лэйбл *}
 		{if $label}
 			<label for="{$uid}" class="{$component}-label">{$label}</label>

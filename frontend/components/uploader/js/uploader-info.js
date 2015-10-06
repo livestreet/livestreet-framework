@@ -59,8 +59,9 @@
 			this.file = $();
 
 			// Удаление файла
-			this.element.on( 'click' + this.eventNamespace, this.option( 'selectors.remove' ), function () {
+			this.element.on( 'click' + this.eventNamespace, this.option( 'selectors.remove' ), function ( event ) {
 				this.file.lsUploaderFile( 'remove' );
+				event.preventDefault();
 			}.bind( this ));
 
 			// Сохранение свойств файла

@@ -1,0 +1,17 @@
+{
+    "name": "confirm",
+    "version": "1.0.0",
+    "dependencies": {
+        "css-reset": "*",
+        "ls-vendor": "*",
+        "ls-core": "*",
+        "ls-component": "*",
+        "icon": "*"
+    },
+    "scripts": {
+        "confirm": {
+            "file": "js/confirm.js",
+            "merge": true
+        }
+    }
+}

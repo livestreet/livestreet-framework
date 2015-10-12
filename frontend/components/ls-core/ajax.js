@@ -74,7 +74,8 @@ ls.ajax = (function ($) {
 		var more = more || {},
 			form = typeof form == 'string' ? $(form) : form,
 			button = more.submitButton || form.find('[type=submit]').eq(0),
-			params = more.params || {};
+			params = more.params || {},
+			lock = typeof more.lock === 'undefined' ? true : more.lock;
 
 		params.security_ls_key = LIVESTREET_SECURITY_KEY;
 
@@ -92,6 +93,7 @@ ls.ajax = (function ($) {
 			dataType: more.dataType || 'json',
 			data: params,
 			beforeSubmit: function (arr, form, options) {
+				if ( lock ) ls.utils.formLock( form );
 				button && button.prop('disabled', true).addClass('loading');
 			},
 			beforeSerialize: function (form, options) {
@@ -130,13 +132,15 @@ ls.ajax = (function ($) {
 				if ( $.isFunction( more.onResponse ) ) more.onResponse.apply( this, arguments );
 			},
 			error: more.error,
-			complete: function(){
+			complete: function() {
 				NProgress.done();
 				button.prop('disabled', false).removeClass('loading');
 
 				if (more.complete) {
 					more.complete.apply(ls.dev,arguments);
 				}
+
+				if ( lock ) ls.utils.formUnlock( form );
 			}.bind(this)
 		};
 

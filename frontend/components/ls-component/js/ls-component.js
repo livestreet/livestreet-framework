@@ -30,12 +30,7 @@
             this._getParamsFromData();
 
             // Список локальных элементов
-            this.elements = {};
-
-            // Получаем локальные элементы компонента из селекторов
-            $.each( this.options.selectors || {}, function ( key, value ) {
-                this.elements[ key ] = this.element.find( value );
-            }.bind( this ));
+            this.elements = this._getElementsFromSelectors( this.options.selectors, this.element );
 
             // Генерируем методы для работы с классами
             $.each( [ 'hasClass', 'addClass', 'removeClass' ], function ( key, value ) {
@@ -52,6 +47,19 @@
                     return element[ value ]( classes );
                 }.bind( this )
             }.bind( this ));
+        },
+
+        /**
+         * Получает элементы компонента из селекторов
+         */
+        _getElementsFromSelectors: function( selectors, context ) {
+            var elements = {};
+
+            $.each( selectors || {}, function ( key, value ) {
+                elements[ key ] = ( context || this.document ).find( value );
+            }.bind( this ));
+
+            return elements;
         },
 
         /**
@@ -115,7 +123,15 @@
          * Отправка формы
          */
         _submit: function( url, form, callback, more ) {
-            ls.ajax.submit( this.options.urls[ url ], form, callback.bind( this ), $.extend({
+            if ( typeof callback === "string" ) {
+                callback = this[ callback ];
+            }
+
+            if ( $.isFunction( callback ) ) {
+                callback = callback.bind( this );
+            }
+
+            ls.ajax.submit( this.options.urls[ url ], form, callback, $.extend({
                 params: this.option( 'params' ) || {}
             }, more ));
         },

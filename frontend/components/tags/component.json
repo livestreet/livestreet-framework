@@ -5,6 +5,7 @@
         "cloud": "tag-cloud.tpl",
         "search-form": "search-form.tags.tpl",
         "tags": "tags.tpl",
+        "item": "tags-item.tpl",
         "block.tags": "blocks/block.tags.tpl"
     },
     "styles": {

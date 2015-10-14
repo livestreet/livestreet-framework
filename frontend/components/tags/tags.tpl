@@ -4,18 +4,26 @@
 
 {$component = 'ls-tags'}
 
-{if $smarty.local.tags}
-	<ul class="{$component} js-tags-topic-{$smarty.local.targetId}" data-type="{$smarty.local.targetType}" data-id="{$smarty.local.targetId}">
-		<li class="{$component}-item {$component}-item-label">{$aLang.tags.tags}:</li>
+{* Генерируем копии локальных переменных, *}
+{* чтобы их можно было изменять в дочерних шаблонах *}
+{foreach [ 'title', 'tags', 'mods', 'classes', 'attributes' ] as $param}
+    {assign var="$param" value=$smarty.local.$param}
+{/foreach}
 
-		{strip}
-			{block 'tags_list'}
-				{foreach $smarty.local.tags as $tag}
-					<li class="{$component}-item {$component}-item-tag">
-						{if ! $tag@first}, {/if}<a rel="tag" href="{router page='tag'}{$tag|escape:'url'}/">{$tag|escape}</a>
-					</li>
-				{/foreach}
-			{/block}
-		{/strip}
+{block 'tags_options'}{/block}
+
+{if $tags}
+	<ul class="{$component} {cmods name=$component mods=$mods} {$classes} clearfix" {cattr list=$attributes}>
+		{if $title}
+			<li class="{$component}-item {$component}-title">
+				{$title}
+			</li>
+		{/if}
+
+		{block 'tags_list'}
+			{foreach $tags as $tag}
+				{component 'tags' template='item' text=$tag url="{router page='tag'}{$tag|escape:'url'}/" isFirst=$tag@first}
+			{/foreach}
+		{/block}
 	</ul>
 {/if}

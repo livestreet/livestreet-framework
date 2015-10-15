@@ -20,7 +20,6 @@
     white-space: nowrap;
     line-height: normal;
     color: #444;
-    background-image: none;
     cursor: pointer;
     -webkit-border-radius: 3px;
        -moz-border-radius: 3px;
@@ -137,7 +136,7 @@
 .ls-button[disabled],
 .ls-button[disabled]:hover {
     border-color: #ccc;
-    background: #eee;
+    background-color: #eee;
     color: #999;
 }
 

@@ -158,7 +158,7 @@
 .ls-nav--sub > .ls-nav-item.active > .ls-nav-item-link {
     color: #48a4d5;
 }
-.ls-nav--sub .ls-nav-separator {
+.ls-nav-separator {
     height: 0;
     border-top: 1px solid #eee;
     margin: 5px 0;

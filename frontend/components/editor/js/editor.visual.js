@@ -84,7 +84,7 @@
 		 * 
 		 */
 		setText: function ( text ) {
-			this.element.tinymce().getContent( text );
+			this.element.tinymce().setContent( text );
 		},
 
 		/**

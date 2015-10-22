@@ -47,23 +47,16 @@ var ls = ls || {};
 				overflow: 'auto'
 			});
 
-			this.element.show({
-				effect: 'fade',
-				duration: 300
-			});
+			this.element.fadeIn( 300 );
 		};
 
 		/**
 		 * Hide
 		 */
 		this.hide = function () {
-			this.element.hide({
-				effect: 'fade',
-				duration: 300,
-				complete: function () {
-					html.css('overflow', 'auto');
-					body.css('margin-right', 0);
-				}
+			this.element.fadeOut( 300, function () {
+				html.css('overflow', 'auto');
+				body.css('margin-right', 0);
 			});
 		};
 

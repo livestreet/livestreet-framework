@@ -331,7 +331,7 @@
 				}, function( response ) {
 					this.window.trigger( key, [response.sTmpKey] );
 					this.option( 'params.target_tmp', response.sTmpKey || null );
-				});
+				}, { async: false });
 			}
 		},
 

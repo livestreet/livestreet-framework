@@ -56,9 +56,9 @@
     min-height: 10px;
 }
 .ls-modal-title {
-	font-size: 17px;
-	margin: 0 30px 0 0;
-	color: #000;
+    font-size: 17px;
+    margin: 0 30px 0 0;
+    color: #000;
 }
 
 
@@ -72,7 +72,7 @@
 
 /* Content */
 .ls-modal .ls-modal-body {
-	padding: 20px;
+    padding: 20px;
 }
 
 

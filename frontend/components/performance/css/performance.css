@@ -3,16 +3,16 @@
  */
 
 .ls-performance {
-	margin: 20px;
-	padding: 20px;
+    margin: 20px;
+    padding: 20px;
 }
 .ls-performance table {
-	width: 100%;
+    width: 100%;
 }
 .ls-performance td {
-	vertical-align: top;
+    vertical-align: top;
 }
 .ls-performance h4 {
-	font-weight: bold;
-	font-size: 14px;
+    font-weight: bold;
+    font-size: 14px;
 }

@@ -7,18 +7,18 @@
  */
 
 .ls-tooltip {
-	display: none;
-	position: absolute;
-	z-index: 9999;
-	min-width: 50px;
-	max-width: 300px;
-	background-color: #222;
-	color: #fff;
-	-webkit-box-shadow: 0 0 5px rgba(0,0,0,.2);
-	        box-shadow: 0 0 5px rgba(0,0,0,.2);
-	-webkit-border-radius: 4px;
-	   -moz-border-radius: 4px;
-	        border-radius: 4px;
+    display: none;
+    position: absolute;
+    z-index: 9999;
+    min-width: 50px;
+    max-width: 300px;
+    background-color: #222;
+    color: #fff;
+    -webkit-box-shadow: 0 0 5px rgba(0,0,0,.2);
+            box-shadow: 0 0 5px rgba(0,0,0,.2);
+    -webkit-border-radius: 4px;
+       -moz-border-radius: 4px;
+            border-radius: 4px;
 }
 .ls-tooltip-title { padding: 13px 15px 0; font-weight: bold; }
 .ls-tooltip-content { padding: 15px 15px; }
@@ -29,15 +29,15 @@
 /* Arrow */
 .ls-tooltip:after,
 .ls-tooltip:before {
-	content: '';
-	position: absolute;
-	top: auto;
-	right: auto;
-	bottom: auto;
-	left: auto;
-	width: 0;
-	height: 0;
-	border: 6px solid transparent;
+    content: '';
+    position: absolute;
+    top: auto;
+    right: auto;
+    bottom: auto;
+    left: auto;
+    width: 0;
+    height: 0;
+    border: 6px solid transparent;
 }
 .ls-tooltip:before { border-width: 7px; }
 

@@ -6,11 +6,11 @@
 .editor-help header { margin-bottom: 20px; }
 
 .editor-help-body {
-	display: none;
-	padding: 20px;
-	margin-bottom: 20px;
-	background: #f7f7f7;
-	color: #333;
+    display: none;
+    padding: 20px;
+    margin-bottom: 20px;
+    background: #f7f7f7;
+    color: #333;
 }
 .editor-help-body h3 { font-size: 18px; font-weight: bold; margin-bottom: 10px; }
 

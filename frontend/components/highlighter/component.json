@@ -9,10 +9,16 @@
         "ls-component": "*"
     },
     "scripts": {
-        "vendor-highlight": "vendor/highlight/highlight.pack.js",
+        "vendor-highlight": {
+            "file": "vendor/highlight/highlight.pack.js",
+            "compress": false
+        },
         "highlighter": "js/highlighter.js"
     },
     "styles": {
-        "vendor-highlight": "vendor/highlight/styles/github.css"
+        "vendor-highlight": {
+            "file": "vendor/highlight/styles/github.css",
+            "compress": false
+        }
     }
 }

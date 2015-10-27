@@ -5,11 +5,17 @@
         "css-reset": "*"
     },
     "scripts": {
-        "vendor-fotorama": "vendor/fotorama/fotorama.js",
+        "vendor-fotorama": {
+            "file": "vendor/fotorama/fotorama.js",
+            "compress": false
+        },
         "slider": "js/slider.js"
     },
     "styles": {
-        "vendor-fotorama": "vendor/fotorama/fotorama.css"
+        "vendor-fotorama": {
+            "file": "vendor/fotorama/fotorama.css",
+            "compress": false
+        }
     },
     "templates": {
         "slider": "slider.tpl"

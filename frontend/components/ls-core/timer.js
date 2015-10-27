@@ -11,31 +11,31 @@
 var ls = ls || {};
 
 ls.timer = (function ($) {
-	"use strict";
+    "use strict";
 
-	var _aTimers = {};
+    var _aTimers = {};
 
-	/**
-	 * Запуск метода через определенный период, поддерживает пролонгацию
-	 */
-	this.run = function(oContext, fMethod, sUniqKey, aParams, iTime) {
-		iTime = iTime || 1500;
-		aParams = aParams || [];
-		sUniqKey = sUniqKey || Math.random();
+    /**
+     * Запуск метода через определенный период, поддерживает пролонгацию
+     */
+    this.run = function(oContext, fMethod, sUniqKey, aParams, iTime) {
+        iTime = iTime || 1500;
+        aParams = aParams || [];
+        sUniqKey = sUniqKey || Math.random();
 
-		if (_aTimers[sUniqKey]) {
-			clearTimeout(_aTimers[sUniqKey]);
-			_aTimers[sUniqKey] = null;
-		}
+        if (_aTimers[sUniqKey]) {
+            clearTimeout(_aTimers[sUniqKey]);
+            _aTimers[sUniqKey] = null;
+        }
 
-		var timeout = setTimeout(function(){
-			clearTimeout(_aTimers[sUniqKey]);
-			_aTimers[sUniqKey] = null;
-			fMethod.apply(oContext, aParams);
-		}.bind(this), iTime);
+        var timeout = setTimeout(function(){
+            clearTimeout(_aTimers[sUniqKey]);
+            _aTimers[sUniqKey] = null;
+            fMethod.apply(oContext, aParams);
+        }.bind(this), iTime);
 
-		_aTimers[sUniqKey] = timeout;
-	};
+        _aTimers[sUniqKey] = timeout;
+    };
 
-	return this;
+    return this;
 }).call(ls.timer || {},jQuery);

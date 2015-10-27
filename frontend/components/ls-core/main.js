@@ -14,31 +14,31 @@ var ls = ls || {};
  * Дополнительные функции
  */
 ls = (function ($) {
-	/**
-	 * Дефолтные опции
-	 *
-	 * @private
-	 */
-	var _defaults = {
-		production: false,
+    /**
+     * Дефолтные опции
+     *
+     * @private
+     */
+    var _defaults = {
+        production: false,
 
-		classes: {
-			states: {
-				active: 'active',
-				loading: 'loading',
-				open: 'open'
-			}
-		}
-	};
+        classes: {
+            states: {
+                active: 'active',
+                loading: 'loading',
+                open: 'open'
+            }
+        }
+    };
 
-	/**
-	 * Инициализация
-	 *
-	 * @param {Object} options Опции
-	 */
-	this.init = function (options) {
-		this.options = $.extend({}, _defaults, options);
-	};
+    /**
+     * Инициализация
+     *
+     * @param {Object} options Опции
+     */
+    this.init = function (options) {
+        this.options = $.extend({}, _defaults, options);
+    };
 
-	return this;
+    return this;
 }).call(ls || {}, jQuery);

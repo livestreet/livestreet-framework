@@ -76,7 +76,7 @@
                 <ul class="{$component}-file-list js-uploader-list"></ul>
 
                 {component 'more'
-                	attributes = [ style => 'display: none' ]
+                    attributes = [ style => 'display: none' ]
                     classes    = 'js-uploader-list-more'
                     ajaxParams = [ 'page' => 2 ]}
 

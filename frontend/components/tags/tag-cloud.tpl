@@ -12,19 +12,19 @@
 {$component = 'ls-tag-cloud'}
 
 {if $smarty.local.tags}
-	<ul class="{$component} word-wrap">
-		{foreach $smarty.local.tags as $tag}
-			<li class="{$component}-item {if $tag->getText() && $smarty.local.active == $tag->getText()}active{/if}">
-				<a class="ls-tag-size-{$tag->getSize()}" href="{eval var=$smarty.local.url}" title="{$tag->getCount()}">
-					{if $smarty.local.text}
-						{eval var=$smarty.local.text}
-					{else}
-						{$tag->getText()|escape}
-					{/if}
-				</a>
-			</li>
-		{/foreach}
-	</ul>
+    <ul class="{$component} word-wrap">
+        {foreach $smarty.local.tags as $tag}
+            <li class="{$component}-item {if $tag->getText() && $smarty.local.active == $tag->getText()}active{/if}">
+                <a class="ls-tag-size-{$tag->getSize()}" href="{eval var=$smarty.local.url}" title="{$tag->getCount()}">
+                    {if $smarty.local.text}
+                        {eval var=$smarty.local.text}
+                    {else}
+                        {$tag->getText()|escape}
+                    {/if}
+                </a>
+            </li>
+        {/foreach}
+    </ul>
 {else}
-	{component 'blankslate' text=$aLang.common.empty}
+    {component 'blankslate' text=$aLang.common.empty}
 {/if}

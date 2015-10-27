@@ -10,13 +10,13 @@
  *}
 
 {component 'nav'
-	name       = ( $smarty.local.name ) ? "{$smarty.local.name}_menu" : ''
-	activeItem = $smarty.local.activeItem
-	mods       = 'stacked dropdown'
-	showSingle = true
-	classes    = "ls-dropdown-menu js-ls-dropdown-menu {$smarty.local.classes}"
-	attributes = array_merge( $smarty.local.attributes|default:[], [
+    name       = ( $smarty.local.name ) ? "{$smarty.local.name}_menu" : ''
+    activeItem = $smarty.local.activeItem
+    mods       = 'stacked dropdown'
+    showSingle = true
+    classes    = "ls-dropdown-menu js-ls-dropdown-menu {$smarty.local.classes}"
+    attributes = array_merge( $smarty.local.attributes|default:[], [
         'role' => 'menu',
         'aria-hidden' => 'true'
     ])
-	items      = $smarty.local.items}
+    items      = $smarty.local.items}

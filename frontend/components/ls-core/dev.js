@@ -11,39 +11,39 @@
 var ls = ls || {};
 
 ls.dev = (function ($) {
-	/**
-	 * Дефолтные опции
-	 *
-	 * @private
-	 */
-	var _defaults = { };
+    /**
+     * Дефолтные опции
+     *
+     * @private
+     */
+    var _defaults = { };
 
-	/**
-	 * Инициализация
-	 *
-	 * @param {Object} options Опции
-	 */
-	this.init = function (options) {
-		this.options = $.extend({}, _defaults, options);
-	};
+    /**
+     * Инициализация
+     *
+     * @param {Object} options Опции
+     */
+    this.init = function (options) {
+        this.options = $.extend({}, _defaults, options);
+    };
 
-	/**
-	 * Дебаг сообщений
-	 */
-	this.debug = function() {
-		if ( ls.options.production ) return;
+    /**
+     * Дебаг сообщений
+     */
+    this.debug = function() {
+        if ( ls.options.production ) return;
 
-		this.log.apply(this, arguments);
-	};
+        this.log.apply(this, arguments);
+    };
 
-	/**
-	 * Лог сообщений
-	 */
-	this.log = function() {
-		if ( window.console && window.console.log ) {
-			Function.prototype.bind.call(console.log, console).apply(console, arguments);
-		}
-	};
+    /**
+     * Лог сообщений
+     */
+    this.log = function() {
+        if ( window.console && window.console.log ) {
+            Function.prototype.bind.call(console.log, console).apply(console, arguments);
+        }
+    };
 
-	return this;
+    return this;
 }).call(ls.dev || {}, jQuery);

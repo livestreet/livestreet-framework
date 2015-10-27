@@ -12,7 +12,7 @@
  * TODO: Fix IE
  */
 if ( ! 'form' in document.createElement( 'button' ) ) {
-	jQuery( document ).on( 'click', 'button[form]', function () {
-		jQuery( '#' + $( this ).attr( 'form' ) ).submit();
-	});
+    jQuery( document ).on( 'click', 'button[form]', function () {
+        jQuery( '#' + $( this ).attr( 'form' ) ).submit();
+    });
 }

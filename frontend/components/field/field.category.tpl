@@ -13,23 +13,23 @@
 {if $params.form_fill_current_from_request && $formField}
     {$selected = $formField}
 {elseif $categoriesSelected}
-	{$selected = []}
+    {$selected = []}
 
-	{foreach $categoriesSelected as $category}
-		{$selected[] = $category->getId()}
-	{/foreach}
+    {foreach $categoriesSelected as $category}
+        {$selected[] = $category->getId()}
+    {/foreach}
 {/if}
 
 {* Формируем список категорий для select'а *}
 {$items = []}
 
 {if ! $params.validate_require}
-	{$items[] = [ 'value' => '', 'text' => '&mdash;' ]}
+    {$items[] = [ 'value' => '', 'text' => '&mdash;' ]}
 {/if}
 
 {foreach $categories as $category}
-	{$entity = $category.entity}
-	{$items[] = [ 'value' => $entity->getId(), 'text' => $entity->getTitle(), 'level' => $category.level ]}
+    {$entity = $category.entity}
+    {$items[] = [ 'value' => $entity->getId(), 'text' => $entity->getTitle(), 'level' => $category.level ]}
 {/foreach}
 
 {* Селект *}

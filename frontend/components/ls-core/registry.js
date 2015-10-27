@@ -11,34 +11,34 @@
 var ls = ls || {};
 
 ls.registry = (function ($) {
-	"use strict";
+    "use strict";
 
-	/**
-	 * Данные
-	 * 
-	 * @private
-	 */
-	var _aData = {};
+    /**
+     * Данные
+     * 
+     * @private
+     */
+    var _aData = {};
 
-	/**
-	 * Сохранение
-	 */
-	this.set = function(sName, data){
-		if (typeof(sName)=='object') {
-			$.each(sName,function(k,v) {
-				_aData[k]=v;
-			});
-		} else {
-			_aData[sName] = data;
-		}
-	};
+    /**
+     * Сохранение
+     */
+    this.set = function(sName, data){
+        if (typeof(sName)=='object') {
+            $.each(sName,function(k,v) {
+                _aData[k]=v;
+            });
+        } else {
+            _aData[sName] = data;
+        }
+    };
 
-	/**
-	 * Получение
-	 */
-	this.get = function(sName){
-		return _aData[sName];
-	};
+    /**
+     * Получение
+     */
+    this.get = function(sName){
+        return _aData[sName];
+    };
 
-	return this;
+    return this;
 }).call(ls.registry || {}, jQuery);

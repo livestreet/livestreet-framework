@@ -9,78 +9,78 @@
  */
 
 $.widget( "livestreet.lsEditor", {
-	/**
-	 * Дефолтные опции
-	 */
-	options: {
-		type: null,
-		media: null,
-		media_options: {},
-		set: 'default'
-	},
+    /**
+     * Дефолтные опции
+     */
+    options: {
+        type: null,
+        media: null,
+        media_options: {},
+        set: 'default'
+    },
 
-	/**
-	 * Конструктор
-	 *
-	 * @constructor
-	 * @private
-	 */
-	_create: function() {
-		this.strategy = this.element.data( 'editor-type' ) == 'visual' ? 'lsEditorVisual' : 'lsEditorMarkup';
+    /**
+     * Конструктор
+     *
+     * @constructor
+     * @private
+     */
+    _create: function() {
+        this.strategy = this.element.data( 'editor-type' ) == 'visual' ? 'lsEditorVisual' : 'lsEditorMarkup';
 
-		this.option( 'set', this.element.data('editor-set') || this.option( 'set' ) );
-		this.option( 'media', $( '#' + this.element.data('editor-media') || this.option( 'media' ) ) );
+        this.option( 'set', this.element.data('editor-set') || this.option( 'set' ) );
+        this.option( 'media', $( '#' + this.element.data('editor-media') || this.option( 'media' ) ) );
 
-		// Иниц-ия компонента media (вставка медиа-файлов)
-		this.options.media_options.editor = this.element;
-		this.option( 'media' ).lsMedia( this.option( 'media_options' ) );
+        // Иниц-ия компонента media (вставка медиа-файлов)
+        this.options.media_options.editor = this.element;
+        this.option( 'media' ).lsMedia( this.option( 'media_options' ) );
 
-		// Иниц-ия редактора определенного типа
-		this.element[ this.strategy ]( this.options );
-	},
+        // Иниц-ия редактора определенного типа
+        this.element[ this.strategy ]( this.options );
+    },
 
-	/**
-	 * Метод необходимо вызывать при отображении редактора который до этого был скрыт.
-	 * Это необходимо для того чтобы у редакторов, которые криво иниц-ся после отображения, была возможность переиниц-ся.
-	 */
-	onShow: function () {
-		this.element[ this.strategy ]( 'onShow' );
-	},
+    /**
+     * Метод необходимо вызывать при отображении редактора который до этого был скрыт.
+     * Это необходимо для того чтобы у редакторов, которые криво иниц-ся после отображения, была возможность переиниц-ся.
+     */
+    onShow: function () {
+        this.element[ this.strategy ]( 'onShow' );
+    },
 
-	/**
-	 * Вставка текста
-	 *
-	 * @param {String} text Текст для вставки
-	 */
-	insert: function ( text ) {
-		this.element[ this.strategy ]( 'insert', text );
-	},
+    /**
+     * Вставка текста
+     *
+     * @param {String} text Текст для вставки
+     */
+    insert: function ( text ) {
+        this.element[ this.strategy ]( 'insert', text );
+    },
 
-	/**
-	 * 
-	 */
-	getText: function () {
-		return this.element[ this.strategy ]( 'getText' );
-	},
+    /**
+     * 
+     */
+    getText: function () {
+        return this.element[ this.strategy ]( 'getText' );
+    },
 
-	/**
-	 * 
-	 */
-	setText: function ( text ) {
-		this.element[ this.strategy ]( 'setText', text );
-	},
+    /**
+     * 
+     */
+    setText: function ( text ) {
+        this.element[ this.strategy ]( 'setText', text );
+    },
 
-	/**
-	 * 
-	 */
-	focus: function () {
-		this.element[ this.strategy ]( 'focus' );
-	},
+    /**
+     * 
+     */
+    focus: function () {
+        this.element[ this.strategy ]( 'focus' );
+    },
 
-	/**
-	 * 
-	 */
-	showMedia: function () {
-		this.element[ this.strategy ]( 'showMedia' );
-	}
+    /**
+     * 
+     */
+    showMedia: function () {
+        this.element[ this.strategy ]( 'showMedia' );
+    }
 });

@@ -13,17 +13,17 @@
 {block 'tags_options'}{/block}
 
 {if $tags}
-	<ul class="{$component} {cmods name=$component mods=$mods} {$classes} clearfix" {cattr list=$attributes}>
-		{if $title}
-			<li class="{$component}-item {$component}-title">
-				{$title}
-			</li>
-		{/if}
+    <ul class="{$component} {cmods name=$component mods=$mods} {$classes} clearfix" {cattr list=$attributes}>
+        {if $title}
+            <li class="{$component}-item {$component}-title">
+                {$title}
+            </li>
+        {/if}
 
-		{block 'tags_list'}
-			{foreach $tags as $tag}
-				{component 'tags' template='item' text=$tag url="{router page='tag'}{$tag|escape:'url'}/" isFirst=$tag@first}
-			{/foreach}
-		{/block}
-	</ul>
+        {block 'tags_list'}
+            {foreach $tags as $tag}
+                {component 'tags' template='item' text=$tag url="{router page='tag'}{$tag|escape:'url'}/" isFirst=$tag@first}
+            {/foreach}
+        {/block}
+    </ul>
 {/if}

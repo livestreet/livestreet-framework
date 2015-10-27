@@ -9,133 +9,133 @@
  */
 
 $.widget( "livestreet.lsEditorMarkup", {
-	/**
-	 * Дефолтные опции
-	 */
-	options: {
-		media: null,
-		sets: {
-			default: {
-				onShiftEnter: { keepDefault:false, replaceWith: '<br />\n' },
-				onCtrlEnter: { keepDefault:false, openWith: '\n<p>', closeWith: '</p>' },
-				onTab: { keepDefault:false, replaceWith: '    ' },
-				markupSet:  [
-					{ name: 'H4', className: 'editor-h4', openWith: '<h4>', closeWith: '</h4>' },
-					{ name: 'H5', className: 'editor-h5', openWith: '<h5>', closeWith: '</h5>' },
-					{ name: 'H6', className: 'editor-h6', openWith: '<h6>', closeWith: '</h6>' },
-					{ separator: '---------------' },
-					{ name: ls.lang.get('editor.markup.toolbar.b'), className: 'editor-bold', key: 'B', openWith: '(!(<strong>|!|<b>)!)', closeWith: '(!(</strong>|!|</b>)!)' },
-					{ name: ls.lang.get('editor.markup.toolbar.i'), className: 'editor-italic', key: 'I', openWith: '(!(<em>|!|<i>)!)', closeWith: '(!(</em>|!|</i>)!)'  },
-					{ name: ls.lang.get('editor.markup.toolbar.s'), className: 'editor-stroke', key: 'S', openWith: '<s>', closeWith: '</s>' },
-					{ name: ls.lang.get('editor.markup.toolbar.u'), className: 'editor-underline', key: 'U', openWith: '<u>', closeWith: '</u>' },
-					{ name: ls.lang.get('editor.markup.toolbar.quote'), className: 'editor-quote', key: 'Q', replaceWith: function( m ) { if ( m.selectionOuter ) return '<blockquote>' + m.selectionOuter + '</blockquote>'; else if (m.selection) return '<blockquote>' + m.selection + '</blockquote>'; else return '<blockquote></blockquote>' }},
-					{ name: ls.lang.get('editor.markup.toolbar.code'), className: 'editor-code', openWith: '<(!(code|!|codeline)!)>', closeWith: '</(!(code|!|codeline)!)>' },
-					{ separator: '---------------' },
-					{ name: ls.lang.get('editor.markup.toolbar.list_ul'), className: 'editor-ul', openWith: '    <li>', closeWith: '</li>', multiline: true, openBlockWith: '<ul>\n', closeBlockWith: '\n</ul>' },
-					{ name: ls.lang.get('editor.markup.toolbar.list_ol'), className: 'editor-ol', openWith: '    <li>', closeWith: '</li>', multiline: true, openBlockWith: '<ol>\n', closeBlockWith: '\n</ol>' },
-					{ name: ls.lang.get('editor.markup.toolbar.list_li'), className: 'editor-li', openWith: '<li>', closeWith: '</li>' },
-					{ separator: '---------------' },
-					{ name: ls.lang.get('editor.markup.toolbar.image'), className: 'editor-picture', key: 'P', beforeInsert: function ( markitup ) { $( markitup.textarea ).lsEditor( 'showMedia' ); } },
-					{ name: ls.lang.get('editor.markup.toolbar.video'), className: 'editor-video', replaceWith: '<video>[![' + ls.lang.get('editor.markup.toolbar.video_promt') + ':!:http://]!]</video>' },
-					{ name: ls.lang.get('editor.markup.toolbar.url'), className: 'editor-link', key: 'L', openWith: '<a href="[![' + ls.lang.get('editor.markup.toolbar.url_promt') + ':!:http://]!]"(!( title="[![Title]!]")!)>', closeWith: '</a>', placeHolder: 'Your text to link...' },
-					{ name: ls.lang.get('editor.markup.toolbar.user'), className: 'editor-user', replaceWith: '<ls user="[![' + ls.lang.get('editor.markup.toolbar.user_promt') + ']!]" />' },
-					{ separator: '---------------' },
-					{ name: ls.lang.get('editor.markup.toolbar.clear_tags'), className: 'editor-clean', replaceWith: function( markitup ) { return markitup.selection.replace(/<(.*?)>/g, ""); }},
-					{ name: ls.lang.get('editor.markup.toolbar.cut'), className: 'editor-cut', replaceWith: function( markitup ) { if ( markitup.selection ) return '<cut name="' + markitup.selection + '">'; else return '<cut>' }}
-				]
-			},
-			light: {
-				onShiftEnter: { keepDefault: false, replaceWith: '<br />\n' },
-				onTab: { keepDefault: false, replaceWith: '    ' },
-				markupSet:  [
-					{ name: ls.lang.get('editor.markup.toolbar.b'), className: 'editor-bold', key: 'B', openWith: '(!(<strong>|!|<b>)!)', closeWith: '(!(</strong>|!|</b>)!)' },
-					{ name: ls.lang.get('editor.markup.toolbar.i'), className: 'editor-italic', key: 'I', openWith: '(!(<em>|!|<i>)!)', closeWith: '(!(</em>|!|</i>)!)'  },
-					{ name: ls.lang.get('editor.markup.toolbar.s'), className: 'editor-stroke', key: 'S', openWith: '<s>', closeWith: '</s>' },
-					{ name: ls.lang.get('editor.markup.toolbar.u'), className: 'editor-underline', key: 'U', openWith: '<u>', closeWith: '</u>' },
-					{ separator: '---------------' },
-					{ name: ls.lang.get('editor.markup.toolbar.quote'), className: 'editor-quote', key: 'Q', replaceWith: function(m) { if (m.selectionOuter) return '<blockquote>' + m.selectionOuter + '</blockquote>'; else if (m.selection) return '<blockquote>' + m.selection + '</blockquote>'; else return '<blockquote></blockquote>' } },
-					{ name: ls.lang.get('editor.markup.toolbar.code'), className: 'editor-code', openWith: '<(!(code|!|codeline)!)>', closeWith: '</(!(code|!|codeline)!)>' },
-					{ name: ls.lang.get('editor.markup.toolbar.image'), className: 'editor-picture', key: 'P', beforeInsert: function ( markitup ) { $( markitup.textarea ).lsEditor( 'showMedia' ); } },
-					{ name: ls.lang.get('editor.markup.toolbar.url'), className: 'editor-link', key: 'L', openWith: '<a href="[![' + ls.lang.get('editor.markup.toolbar.url_promt') + ':!:http://]!]"(!( title="[![Title]!]")!)>', closeWith: '</a>', placeHolder: 'Your text to link...' },
-					{ name: ls.lang.get('editor.markup.toolbar.user'), className: 'editor-user', replaceWith: '<ls user="[![' + ls.lang.get('editor.markup.toolbar.user_promt') + ']!]" />' },
-					{ separator: '---------------' },
-					{ name: ls.lang.get('editor.markup.toolbar.clear_tags'), className: 'editor-clean', replaceWith: function( markitup ) { return markitup.selection.replace(/<(.*?)>/g, "") } }
-				]
-			}
-		}
-	},
+    /**
+     * Дефолтные опции
+     */
+    options: {
+        media: null,
+        sets: {
+            default: {
+                onShiftEnter: { keepDefault:false, replaceWith: '<br />\n' },
+                onCtrlEnter: { keepDefault:false, openWith: '\n<p>', closeWith: '</p>' },
+                onTab: { keepDefault:false, replaceWith: '    ' },
+                markupSet:  [
+                    { name: 'H4', className: 'editor-h4', openWith: '<h4>', closeWith: '</h4>' },
+                    { name: 'H5', className: 'editor-h5', openWith: '<h5>', closeWith: '</h5>' },
+                    { name: 'H6', className: 'editor-h6', openWith: '<h6>', closeWith: '</h6>' },
+                    { separator: '---------------' },
+                    { name: ls.lang.get('editor.markup.toolbar.b'), className: 'editor-bold', key: 'B', openWith: '(!(<strong>|!|<b>)!)', closeWith: '(!(</strong>|!|</b>)!)' },
+                    { name: ls.lang.get('editor.markup.toolbar.i'), className: 'editor-italic', key: 'I', openWith: '(!(<em>|!|<i>)!)', closeWith: '(!(</em>|!|</i>)!)'  },
+                    { name: ls.lang.get('editor.markup.toolbar.s'), className: 'editor-stroke', key: 'S', openWith: '<s>', closeWith: '</s>' },
+                    { name: ls.lang.get('editor.markup.toolbar.u'), className: 'editor-underline', key: 'U', openWith: '<u>', closeWith: '</u>' },
+                    { name: ls.lang.get('editor.markup.toolbar.quote'), className: 'editor-quote', key: 'Q', replaceWith: function( m ) { if ( m.selectionOuter ) return '<blockquote>' + m.selectionOuter + '</blockquote>'; else if (m.selection) return '<blockquote>' + m.selection + '</blockquote>'; else return '<blockquote></blockquote>' }},
+                    { name: ls.lang.get('editor.markup.toolbar.code'), className: 'editor-code', openWith: '<(!(code|!|codeline)!)>', closeWith: '</(!(code|!|codeline)!)>' },
+                    { separator: '---------------' },
+                    { name: ls.lang.get('editor.markup.toolbar.list_ul'), className: 'editor-ul', openWith: '    <li>', closeWith: '</li>', multiline: true, openBlockWith: '<ul>\n', closeBlockWith: '\n</ul>' },
+                    { name: ls.lang.get('editor.markup.toolbar.list_ol'), className: 'editor-ol', openWith: '    <li>', closeWith: '</li>', multiline: true, openBlockWith: '<ol>\n', closeBlockWith: '\n</ol>' },
+                    { name: ls.lang.get('editor.markup.toolbar.list_li'), className: 'editor-li', openWith: '<li>', closeWith: '</li>' },
+                    { separator: '---------------' },
+                    { name: ls.lang.get('editor.markup.toolbar.image'), className: 'editor-picture', key: 'P', beforeInsert: function ( markitup ) { $( markitup.textarea ).lsEditor( 'showMedia' ); } },
+                    { name: ls.lang.get('editor.markup.toolbar.video'), className: 'editor-video', replaceWith: '<video>[![' + ls.lang.get('editor.markup.toolbar.video_promt') + ':!:http://]!]</video>' },
+                    { name: ls.lang.get('editor.markup.toolbar.url'), className: 'editor-link', key: 'L', openWith: '<a href="[![' + ls.lang.get('editor.markup.toolbar.url_promt') + ':!:http://]!]"(!( title="[![Title]!]")!)>', closeWith: '</a>', placeHolder: 'Your text to link...' },
+                    { name: ls.lang.get('editor.markup.toolbar.user'), className: 'editor-user', replaceWith: '<ls user="[![' + ls.lang.get('editor.markup.toolbar.user_promt') + ']!]" />' },
+                    { separator: '---------------' },
+                    { name: ls.lang.get('editor.markup.toolbar.clear_tags'), className: 'editor-clean', replaceWith: function( markitup ) { return markitup.selection.replace(/<(.*?)>/g, ""); }},
+                    { name: ls.lang.get('editor.markup.toolbar.cut'), className: 'editor-cut', replaceWith: function( markitup ) { if ( markitup.selection ) return '<cut name="' + markitup.selection + '">'; else return '<cut>' }}
+                ]
+            },
+            light: {
+                onShiftEnter: { keepDefault: false, replaceWith: '<br />\n' },
+                onTab: { keepDefault: false, replaceWith: '    ' },
+                markupSet:  [
+                    { name: ls.lang.get('editor.markup.toolbar.b'), className: 'editor-bold', key: 'B', openWith: '(!(<strong>|!|<b>)!)', closeWith: '(!(</strong>|!|</b>)!)' },
+                    { name: ls.lang.get('editor.markup.toolbar.i'), className: 'editor-italic', key: 'I', openWith: '(!(<em>|!|<i>)!)', closeWith: '(!(</em>|!|</i>)!)'  },
+                    { name: ls.lang.get('editor.markup.toolbar.s'), className: 'editor-stroke', key: 'S', openWith: '<s>', closeWith: '</s>' },
+                    { name: ls.lang.get('editor.markup.toolbar.u'), className: 'editor-underline', key: 'U', openWith: '<u>', closeWith: '</u>' },
+                    { separator: '---------------' },
+                    { name: ls.lang.get('editor.markup.toolbar.quote'), className: 'editor-quote', key: 'Q', replaceWith: function(m) { if (m.selectionOuter) return '<blockquote>' + m.selectionOuter + '</blockquote>'; else if (m.selection) return '<blockquote>' + m.selection + '</blockquote>'; else return '<blockquote></blockquote>' } },
+                    { name: ls.lang.get('editor.markup.toolbar.code'), className: 'editor-code', openWith: '<(!(code|!|codeline)!)>', closeWith: '</(!(code|!|codeline)!)>' },
+                    { name: ls.lang.get('editor.markup.toolbar.image'), className: 'editor-picture', key: 'P', beforeInsert: function ( markitup ) { $( markitup.textarea ).lsEditor( 'showMedia' ); } },
+                    { name: ls.lang.get('editor.markup.toolbar.url'), className: 'editor-link', key: 'L', openWith: '<a href="[![' + ls.lang.get('editor.markup.toolbar.url_promt') + ':!:http://]!]"(!( title="[![Title]!]")!)>', closeWith: '</a>', placeHolder: 'Your text to link...' },
+                    { name: ls.lang.get('editor.markup.toolbar.user'), className: 'editor-user', replaceWith: '<ls user="[![' + ls.lang.get('editor.markup.toolbar.user_promt') + ']!]" />' },
+                    { separator: '---------------' },
+                    { name: ls.lang.get('editor.markup.toolbar.clear_tags'), className: 'editor-clean', replaceWith: function( markitup ) { return markitup.selection.replace(/<(.*?)>/g, "") } }
+                ]
+            }
+        }
+    },
 
-	/**
-	 * Конструктор
-	 *
-	 * @constructor
-	 * @private
-	 */
-	_create: function () {
-		var _this = this;
+    /**
+     * Конструктор
+     *
+     * @constructor
+     * @private
+     */
+    _create: function () {
+        var _this = this;
 
-		this.element.markItUp( this.option( 'sets.' + this.option( 'set' ) ) );
+        this.element.markItUp( this.option( 'sets.' + this.option( 'set' ) ) );
 
-		// Помощь
-		var help = $( '.js-editor-help[data-form-id=' + this.element.attr( 'id' ) + ']' ),
-			toggle = help.find( '.js-editor-help-toggle' ),
-			content = help.find( '.js-editor-help-body' );
+        // Помощь
+        var help = $( '.js-editor-help[data-form-id=' + this.element.attr( 'id' ) + ']' ),
+            toggle = help.find( '.js-editor-help-toggle' ),
+            content = help.find( '.js-editor-help-body' );
 
-		toggle.on( 'click' + this.eventNamespace, function ( event ) {
-			content.toggle();
-			event.preventDefault();
-		});
+        toggle.on( 'click' + this.eventNamespace, function ( event ) {
+            content.toggle();
+            event.preventDefault();
+        });
 
-		$( '.js-tags-help-link' ).click(function() {
-			var tag = $( this );
+        $( '.js-tags-help-link' ).click(function() {
+            var tag = $( this );
 
-			_this.insert( tag.data( 'insert' ) || tag.text() );
+            _this.insert( tag.data( 'insert' ) || tag.text() );
 
-			return false;
-		});
-	},
+            return false;
+        });
+    },
 
-	/**
-	 * 
-	 */
-	onShow: function () {
-		return;
-	},
+    /**
+     * 
+     */
+    onShow: function () {
+        return;
+    },
 
-	/**
-	 * Вставка текста
-	 *
-	 * @param {String} text Текст для вставки
-	 */
-	insert: function ( text ) {
-		$.markItUp({ target: this.element, replaceWith: text });
-	},
+    /**
+     * Вставка текста
+     *
+     * @param {String} text Текст для вставки
+     */
+    insert: function ( text ) {
+        $.markItUp({ target: this.element, replaceWith: text });
+    },
 
-	/**
-	 * 
-	 */
-	getText: function () {
-		return this.element.val();
-	},
+    /**
+     * 
+     */
+    getText: function () {
+        return this.element.val();
+    },
 
-	/**
-	 * 
-	 */
-	setText: function ( text ) {
-		return this.element.val( text );
-	},
+    /**
+     * 
+     */
+    setText: function ( text ) {
+        return this.element.val( text );
+    },
 
-	/**
-	 * 
-	 */
-	focus: function () {
-		this.element.focus();
-	},
+    /**
+     * 
+     */
+    focus: function () {
+        this.element.focus();
+    },
 
-	/**
-	 * 
-	 */
-	showMedia: function ( text ) {
-		this.option( 'media' ).lsMedia( 'show' );
-	}
+    /**
+     * 
+     */
+    showMedia: function ( text ) {
+        this.option( 'media' ).lsMedia( 'show' );
+    }
 });

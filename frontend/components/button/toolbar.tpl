@@ -30,7 +30,7 @@
     {$groupMod = 'vertical'}
 {/if}
 
-<div class="{$component} {cmods name=$component mods=$mods} {$classes} clearfix" {cattr list=$attributes} role="toolbar">
+<div class="{$component} {cmods name=$component mods=$mods} {$classes} ls-clearfix" {cattr list=$attributes} role="toolbar">
     {if is_array( $groups )}
         {foreach $groups as $group}
             {if is_array( $group )}

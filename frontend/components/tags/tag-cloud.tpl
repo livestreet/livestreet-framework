@@ -12,7 +12,7 @@
 {$component = 'ls-tag-cloud'}
 
 {if $smarty.local.tags}
-    <ul class="{$component} word-wrap">
+    <ul class="{$component} ls-word-wrap">
         {foreach $smarty.local.tags as $tag}
             <li class="{$component}-item {if $tag->getText() && $smarty.local.active == $tag->getText()}active{/if}">
                 <a class="ls-tag-size-{$tag->getSize()}" href="{eval var=$smarty.local.url}" title="{$tag->getCount()}">

@@ -15,5 +15,5 @@
         'remote-options' => [ 'data' => [ 'params' => [ 'name' => $smarty.local.captchaName ] ] ]
     ]}
 
-    {$inputClasses = "$inputClasses width-100"}
+    {$inputClasses = "$inputClasses ls-width-100"}
 {/block}

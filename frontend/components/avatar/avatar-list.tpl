@@ -17,7 +17,7 @@
     {assign var="$param" value=$smarty.local.$param}
 {/foreach}
 
-{$classes = "$classes clearfix"}
+{$classes = "$classes ls-clearfix"}
 
 {block 'avatar_list_options'}{/block}
 

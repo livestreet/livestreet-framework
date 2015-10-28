@@ -31,6 +31,10 @@
                 uploader: '.js-field-image-ajax-modal .js-uploader-modal',
                 choose: '.js-field-image-ajax-modal .js-uploader-modal-choose'
             },
+            // Классы
+            classes: {
+                loading: 'ls-loading'
+            },
             params: {}
         },
 
@@ -75,7 +79,7 @@
 
             if ( ! id ) return;
 
-            this.elements.image.show().addClass( 'loading' );
+            this.elements.image.show().addClass( this.option( 'classes.loading' ) );
             this.elements.modal.lsModal( 'hide' );
 
             this._load( 'create', { 'id': id }, function( response ) {
@@ -102,7 +106,7 @@
          */
         load: function() {
             this._load( 'load', function( response ) {
-                this.elements.image.removeClass( 'loading' ).show().html( $.trim( response.sTemplatePreview ) );
+                this.elements.image.removeClass( this.option( 'classes.loading' ) ).show().html( $.trim( response.sTemplatePreview ) );
             });
         }
     });

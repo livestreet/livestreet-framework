@@ -23,7 +23,7 @@
                 counter: '.js-more-count'
             },
             classes: {
-                loading: 'loading',
+                loading: 'ls-loading',
                 locked: 'ls-more--locked'
             },
             // Селектор блока с содержимым

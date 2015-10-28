@@ -24,7 +24,7 @@
     background-color: #9575CD;
 }
 
-.ls-more.loading {
+.ls-more.ls-loading {
     text-indent: -9999px;
 }
 .ls-more.ls-more--locked {

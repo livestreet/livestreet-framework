@@ -189,8 +189,8 @@ input[type="button"].ls-button--block {
 /**
  * Loading
  */
-.ls-button[disabled].loading,
-.ls-button.loading {
+.ls-button[disabled].ls-loading,
+.ls-button.ls-loading {
     color: transparent;
     background-repeat: no-repeat;
     background-position: 50% 50%;

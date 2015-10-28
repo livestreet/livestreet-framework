@@ -10,7 +10,7 @@
         <dl class="{$component}-item">
             {foreach $item['tags'] as $tag}
                 <dt>
-                    <a href="#" class="link-dotted js-tags-help-link" {if $tag['insert']}data-insert="{$tag['insert']}"{/if}>
+                    <a href="#" class="ls-link-dotted js-tags-help-link" {if $tag['insert']}data-insert="{$tag['insert']}"{/if}>
                         {$tag['text']}
                     </a>
                 </dt>
@@ -24,8 +24,8 @@
 
 
 <div class="{$component} js-editor-help" data-form-id="{$smarty.local.targetId}">
-    <header class="{$component}-header clearfix">
-        <a href="#" class="link-dotted help-link js-editor-help-toggle">{$aLang.editor.markup.help.link_show}</a>
+    <header class="{$component}-header ls-clearfix">
+        <a href="#" class="ls-link-dotted help-link js-editor-help-toggle">{$aLang.editor.markup.help.link_show}</a>
     </header>
 
     <div class="{$component}-body js-editor-help-body">
@@ -42,7 +42,7 @@
 
         <h3 class="h3">{$aLang.editor.markup.help.standart}</h3>
 
-        <div class="clearfix">
+        <div class="ls-clearfix">
             <ul class="{$component}-col">
                 {editor_help_item items=[
                     [ 'tags' => [

@@ -26,7 +26,7 @@
         {hook run='uploader_area_after'}
 
         {* Враппер *}
-        <div class="{$component}-wrapper clearfix">
+        <div class="{$component}-wrapper ls-clearfix">
             {* Сайдбар *}
             <div class="{$component}-aside js-uploader-aside is-empty">
                 {* Блок отображаемый когда нет активного файла *}
@@ -43,7 +43,7 @@
             </div>
 
             {* Основное содержимое *}
-            <div class="{$component}-content js-uploader-content clearfix">
+            <div class="{$component}-content js-uploader-content ls-clearfix">
                 {* @hook Начало контента *}
                 {hook run='uploader_content_begin'}
 
@@ -66,6 +66,7 @@
                 ]}
 
                 {* Сообщение о пустом списке *}
+                {* TODO: i18n *}
                 {component 'blankslate'
                     visible=false
                     text='Нет загруженных файлов'

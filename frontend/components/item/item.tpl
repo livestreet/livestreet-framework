@@ -13,7 +13,7 @@
 {block 'item_options'}{/block}
 
 {* Дефолтные значения *}
-{$classes = "$classes clearfix"}
+{$classes = "$classes ls-clearfix"}
 {$element = $element|default:'div'}
 
 {if $image}

@@ -138,7 +138,7 @@ select[multiple].ls-field-input { max-width: 300px; }
 .ls-field-image-ajax-image {
     margin-bottom: 15px;
 }
-.ls-field-image-ajax-image.loading {
+.ls-field-image-ajax-image.ls-loading {
     min-height: 100px;
     margin-bottom: 15px;
     background-color: #fafafa;

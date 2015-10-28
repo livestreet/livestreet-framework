@@ -34,7 +34,7 @@
     {$disabledItemsCounter = $disabledItemsCounter + ( ! $item['is_enabled']|default:true && $item['name'] != '-' )}
 {/foreach}
 
-{$classes = "{$classes} clearfix"}
+{$classes = "{$classes} ls-clearfix"}
 
 {if $isSubnav}
     {$mods = "$mods sub"}

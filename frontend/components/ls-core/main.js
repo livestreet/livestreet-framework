@@ -25,7 +25,7 @@ ls = (function ($) {
         classes: {
             states: {
                 active: 'active',
-                loading: 'loading',
+                loading: 'ls-loading',
                 open: 'open'
             }
         }

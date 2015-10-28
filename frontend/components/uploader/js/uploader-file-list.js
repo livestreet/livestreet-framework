@@ -37,7 +37,7 @@
 
             // Классы
             classes : {
-                loading: 'loading'
+                loading: 'ls-loading'
             },
 
             // HTML

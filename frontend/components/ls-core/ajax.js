@@ -94,7 +94,7 @@ ls.ajax = (function ($) {
             data: params,
             beforeSubmit: function (arr, form, options) {
                 if ( lock ) ls.utils.formLock( form );
-                button && button.prop('disabled', true).addClass('loading');
+                button && button.prop('disabled', true).addClass(ls.options.classes.states.loading);
             },
             beforeSerialize: function (form, options) {
                 if (typeof more.validate == 'undefined' || more.validate === true) {
@@ -134,7 +134,7 @@ ls.ajax = (function ($) {
             error: more.error,
             complete: function() {
                 NProgress.done();
-                button.prop('disabled', false).removeClass('loading');
+                button.prop('disabled', false).removeClass(ls.options.classes.states.loading);
 
                 if (more.complete) {
                     more.complete.apply(ls.dev,arguments);

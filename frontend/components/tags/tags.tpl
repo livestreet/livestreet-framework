@@ -13,7 +13,7 @@
 {block 'tags_options'}{/block}
 
 {if $tags}
-    <ul class="{$component} {cmods name=$component mods=$mods} {$classes} clearfix" {cattr list=$attributes}>
+    <ul class="{$component} {cmods name=$component mods=$mods} {$classes} ls-clearfix" {cattr list=$attributes}>
         {if $title}
             <li class="{$component}-item {$component}-title">
                 {$title}

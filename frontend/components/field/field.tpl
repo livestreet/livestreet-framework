@@ -97,7 +97,7 @@
 
 
 {block 'field'}
-    <div class="{$component} {cmods name=$component mods=$mods} clearfix {$classes} {block 'field_classes'}{/block}"
+    <div class="{$component} {cmods name=$component mods=$mods} ls-clearfix {$classes} {block 'field_classes'}{/block}"
         {cdata name=$component list=$data}
         {cattr list=$attributes}>
 

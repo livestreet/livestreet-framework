@@ -24,7 +24,7 @@
             // Классы
             classes: {
                 active: 'active',
-                loading: 'loading'
+                loading: 'ls-loading'
             },
 
             // Настройки аякса

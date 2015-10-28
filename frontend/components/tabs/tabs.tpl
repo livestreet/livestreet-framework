@@ -10,7 +10,7 @@
 
 <div class="{$component} {$smarty.local.classes} {cmods name=$component mods=$smarty.local.mods}">
     {* Табы *}
-    <ul class="ls-tab-list clearfix" data-tab-list>
+    <ul class="ls-tab-list ls-clearfix" data-tab-list>
         {foreach $tabs as $tab}
             {* Уникальный ID для привязки таба к его содержимому *}
             {$uid = "tab{rand( 0, 10e10 )}"}

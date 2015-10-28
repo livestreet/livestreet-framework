@@ -7,7 +7,7 @@
 <div class="{$component_info}-group js-uploader-info-group" data-type="{$smarty.local.type}">
     {* Действия *}
     <ul class="{$component_info}-actions">
-        <li><a href="#" class="link-dotted js-uploader-info-remove">{lang name='uploader.actions.remove'}</a></li>
+        <li><a href="#" class="ls-link-dotted js-uploader-info-remove">{lang name='uploader.actions.remove'}</a></li>
     </ul>
 
     {* Уникальные св-ва для каждого типа *}

@@ -28,7 +28,7 @@
 {/if}
 
 {if $buttons}
-    <div class="{$component} {cmods name=$component mods=$mods} {$classes} clearfix" {cattr list=$attributes} role="{$role}">
+    <div class="{$component} {cmods name=$component mods=$mods} {$classes} ls-clearfix" {cattr list=$attributes} role="{$role}">
         {if is_array( $buttons )}
             {foreach $buttons as $button}
                 {if is_array( $button )}

@@ -15,7 +15,7 @@
 
             {* Информация *}
             <ul class="{$component_info}-base-properties">
-                <li><strong class="{$component_info}-property-name word-wrap {$property_bind}" data-name="name"></strong></li>
+                <li><strong class="{$component_info}-property-name ls-word-wrap {$property_bind}" data-name="name"></strong></li>
                 <li class="{$component_info}-property-date {$property_bind}" data-name="date"></li>
                 <li><span class="{$component_info}-property-size {$property_bind}" data-name="size"></span></li>
             </ul>

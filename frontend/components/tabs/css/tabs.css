@@ -31,7 +31,7 @@
 .ls-tab-pane {
     display: none;
 }
-.ls-tab-pane.loading {
+.ls-tab-pane.ls-loading {
     min-height: 150px;
     background-position: 50% 45px;
 }

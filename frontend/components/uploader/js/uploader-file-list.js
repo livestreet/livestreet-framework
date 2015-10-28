@@ -71,6 +71,7 @@
         load: function() {
             this._trigger( 'beforeload', null, this );
 
+            this.unselectAll();
             this.empty();
             this._load( 'load', 'onLoad' );
         },

@@ -149,7 +149,6 @@
                     this.elements.list_more[ filter === 'all' ? 'show' : 'hide' ]();
                 }
 
-                this.unselectAll();
                 this.reload();
             }});
 

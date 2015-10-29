@@ -294,7 +294,7 @@ return array(
         // Если нужно оставлять пустые не короткие теги
         'cfgSetTagIsEmpty'          => array(
             array(
-                array('param', 'embed', 'a', 'iframe')
+                array('param', 'embed', 'a', 'iframe', 'td')
             ),
         ),
         // Не нужна авто-расстановка <br>

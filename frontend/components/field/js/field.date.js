@@ -19,6 +19,7 @@
             format: 'DD.MM.YYYY',
             yearRange: 100,
             firstDay: 1,
+            language: null,
             i18n: {
                 previousMonth : 'Previous Month',
                 nextMonth     : 'Next Month',
@@ -36,6 +37,8 @@
          */
         _create: function() {
             this._super();
+
+            this.option( 'i18n', window.PikadayConfig.i18n[ this.option( 'language' ) ] || this.option( 'i18n' ) );
 
             this.element.pikaday( this.options );
         }

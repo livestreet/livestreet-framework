@@ -205,3 +205,14 @@ select[multiple].ls-field-input { max-width: 300px; }
 .parsley-errors-list.filled {
     display: block;
 }
+
+/**
+ * Date
+ */
+.pika-label {
+    padding: 5px 3px 2px;
+    border-bottom: 1px dashed #777;
+}
+.pika-label:first-child {
+    margin-right: 5px;
+}

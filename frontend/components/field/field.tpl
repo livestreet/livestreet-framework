@@ -48,7 +48,7 @@
  *}
 {function field_input_attr_value}
 {strip}
-    {if $value}
+    {if isset($value)}
         {($escape) ? htmlspecialchars($value) : $value}
     {elseif $name and $form}
         {field_get_value form=$form name=$name}

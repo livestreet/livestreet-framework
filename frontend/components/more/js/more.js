@@ -121,8 +121,7 @@
                         var countLeft = this.getCount() - response.count_loaded;
 
                         if ( countLeft <= 0 ) {
-                            this.destroy();
-                            this.element.remove();
+                            response.hide = true;
                         } else {
                             this.setCount( countLeft );
                         }
@@ -138,16 +137,16 @@
                         if ( response[ v ] ) this._setParam( v, response[ v ] );
                     }.bind( this ));
 
-                    if ( response.hide ) {
-                        this.destroy();
-                        this.element.remove();
-                    }
+
                 } else {
                     // Для блоков без счетчиков
                     ls.msg.notice( null, ls.lang.get( 'more.empty' ) );
+                }
 
-                    this.destroy();
-                    this.element.remove();
+                if ( response.hide ) {
+                    this.element.hide();
+                } else {
+                    this.element.show();
                 }
 
                 this.unlock();

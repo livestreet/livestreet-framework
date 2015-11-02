@@ -35,7 +35,7 @@
             // Параметры запроса
             params: {},
             // Проксирующие параметры
-            proxy: []
+            proxy: [ 'next_page' ]
         },
 
         /**
@@ -108,13 +108,7 @@
 
             this._load( 'load', function ( response ) {
                 if ( response.count_loaded > 0 ) {
-                    var html = $('<div></div>').html( $.trim( response.html ) );
-
-                    if ( html.find( this.options.target ).length ) {
-                        html = html.find( this.options.target ).first();
-                    }
-
-                    this.target[ this.options.append ? 'append' : 'prepend' ]( html.html() );
+                    this.target[ this.options.append ? 'append' : 'prepend' ]( $.trim( response.html ) );
 
                     // Обновляем счетчик
                     if ( this.elements.counter.length ) {
@@ -127,17 +121,10 @@
                         }
                     }
 
-                    // Номер страницы
-                    if (response.next_page) {
-                        this.options.params.next_page = response.next_page;
-                    }
-
                     // Обновляем параметры
                     $.each( this.options.proxy, function( k, v ) {
                         if ( response[ v ] ) this._setParam( v, response[ v ] );
                     }.bind( this ));
-
-
                 } else {
                     // Для блоков без счетчиков
                     ls.msg.notice( null, ls.lang.get( 'more.empty' ) );

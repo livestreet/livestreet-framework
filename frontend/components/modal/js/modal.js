@@ -53,10 +53,12 @@ var ls = ls || {};
         /**
          * Hide
          */
-        this.hide = function () {
+        this.hide = function ( callback ) {
             this.element.fadeOut( 300, function () {
                 html.css('overflow', 'auto');
                 body.css('margin-right', 0);
+
+                if ( $.isFunction( callback ) ) callback();
             });
         };
 
@@ -247,13 +249,17 @@ var ls = ls || {};
 
             _overlay.element.css('overflow', 'hidden');
 
-            // Если есть другие открытые окна, то оверлей не скрываем
-            if ( hideOverlay && ! _overlay.getActiveModal().not(this.element).length ) _overlay.hide();
-
             this._hide(this.element, this.options.hide, function () {
                 if ( this.options.url ) this.element.remove();
 
-                this._trigger("afterhide", null, this);
+                // Если есть другие открытые окна, то оверлей не скрываем
+                if ( hideOverlay && ! _overlay.getActiveModal().not(this.element).length ) {
+                    _overlay.hide(function () {
+                        this._trigger("afterhide", null, this);
+                    }.bind(this));
+                } else {
+                    this._trigger("afterhide", null, this);
+                }
             }.bind(this));
         },
 

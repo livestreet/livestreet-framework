@@ -232,11 +232,6 @@ var ls = ls || {};
             if ( ! isOverlayVisible ) _overlay.show();
 
             this._show(this.element, this.options.show, function () {
-                if (this.options.aftershow) {
-                    if (typeof( this.options.aftershow ) == 'string') {
-                        $.proxy(eval(this.options.aftershow), this);
-                    }
-                }
                 this._trigger("aftershow", null, this);
             }.bind(this));
         },

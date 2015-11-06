@@ -148,6 +148,46 @@
          */
         _getParam: function( param ) {
             return this.option( 'params.' + param );
+        },
+
+        /**
+         * Функция взята из widget.js
+         * Добавлен вызов инлайновых коллбэков
+         */
+        _trigger: function( type, event, data ) {
+            var prop, orig,
+                callback = this.options[ type ];
+
+            // @livestreet
+            if ( typeof callback === 'string' ) {
+                eval(callback);
+                return true;
+            }
+            // @livestreet end
+
+            data = data || {};
+            event = $.Event( event );
+            event.type = ( type === this.widgetEventPrefix ?
+                type :
+                this.widgetEventPrefix + type ).toLowerCase();
+            // the original event may come from any element
+            // so we need to reset the target on the new event
+            event.target = this.element[ 0 ];
+
+            // copy original event properties over to the new event
+            orig = event.originalEvent;
+            if ( orig ) {
+                for ( prop in orig ) {
+                    if ( !( prop in event ) ) {
+                        event[ prop ] = orig[ prop ];
+                    }
+                }
+            }
+
+            this.element.trigger( event, data );
+            return !( $.isFunction( callback ) &&
+                callback.apply( this.element[0], [ event ].concat( data ) ) === false ||
+                event.isDefaultPrevented() );
         }
 
         /**

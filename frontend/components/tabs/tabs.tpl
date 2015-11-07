@@ -6,9 +6,15 @@
 
 {$component = 'ls-tabs'}
 
-{$tabs = $smarty.local.tabs}
+{* Генерируем копии локальных переменных, *}
+{* чтобы их можно было изменять в дочерних шаблонах *}
+{foreach [ 'tabs', 'mods', 'classes', 'attributes' ] as $param}
+    {assign var="$param" value=$smarty.local.$param}
+{/foreach}
 
-<div class="{$component} {$smarty.local.classes} {cmods name=$component mods=$smarty.local.mods}">
+{block 'tabs_options'}{/block}
+
+<div class="{$component} {cmods name=$component mods=$mods} {$classes}" {cattr list=$attributes}>
     {* Табы *}
     <ul class="ls-tab-list ls-clearfix" data-tab-list>
         {foreach $tabs as $tab}

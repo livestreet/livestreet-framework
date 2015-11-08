@@ -195,3 +195,16 @@ input[type="button"].ls-button--block {
     background-repeat: no-repeat;
     background-position: 50% 50%;
 }
+
+/**
+ * Счетчик
+ */
+.ls-button .ls-badge {
+    vertical-align: middle;
+    line-height: 18px;
+}
+.ls-button--primary .ls-badge { background: #fff; color: #286090; }
+.ls-button--success .ls-badge { background: #fff; color: #5cb85c; }
+.ls-button--info    .ls-badge { background: #fff; color: #5bc0de; }
+.ls-button--warning .ls-badge { background: #fff; color: #f0ad4e; }
+.ls-button--danger  .ls-badge { background: #fff; color: #d9534f; }

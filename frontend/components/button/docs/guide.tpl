@@ -302,3 +302,24 @@
 {/capture}
 
 {test_example content=$smarty.capture.test_example_content code=$smarty.capture.test_example_code}
+
+
+{**
+ * Счетчик
+ *}
+{test_heading text='Счетчик'}
+
+{capture 'test_example_content'}
+    {component 'button' text='Комментарии' icon='comments' badge=[ value => 10 ]} <br><br>
+    {component 'button' text='Комментарии' icon='comments' badge=[ value => 10 ] mods='primary'} <br><br>
+    {component 'button' text='Комментарии' icon='comments' badge=[ value => 10 ] mods='success'} <br><br>
+    {component 'button' text='Комментарии' icon='comments' badge=[ value => 10 ] mods='info'} <br><br>
+    {component 'button' text='Комментарии' icon='comments' badge=[ value => 10 ] mods='warning'} <br><br>
+    {component 'button' text='Комментарии' icon='comments' badge=[ value => 10 ] mods='danger'}
+{/capture}
+
+{capture 'test_example_code'}
+{ldelim}component 'button' text='Комментарии' icon='comments' badge=[ value => 10 ]{rdelim}
+{/capture}
+
+{test_example content=$smarty.capture.test_example_content code=$smarty.capture.test_example_code}

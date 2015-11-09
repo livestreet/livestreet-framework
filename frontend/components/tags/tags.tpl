@@ -22,7 +22,7 @@
 
         {block 'tags_list'}
             {foreach $tags as $tag}
-                {component 'tags' template='item' text=$tag url="{router page='tag'}{$tag|escape:'url'}/" isFirst=$tag@first}
+                {component 'tags' template='item' text=$tag->getText() url=$tag->getUrl() isFirst=$tag@first}
             {/foreach}
         {/block}
     </ul>

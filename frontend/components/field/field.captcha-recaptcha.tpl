@@ -1,7 +1,5 @@
 {**
  * Каптча
- *
- * @scripts <framework>/js/livestreet/recaptcha.js
  *}
 
 {$component = 'ls-field'}

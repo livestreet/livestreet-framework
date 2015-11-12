@@ -31,7 +31,7 @@
     <div class="{$component}-body js-editor-help-body">
         <h3 class="h3">{$aLang.editor.markup.help.special}</h3>
 
-        <div class="mb-30">
+        <div class="ls-mb-30">
             {editor_help_item items=[
                 [ 'tags' => [ [ 'text' => '&lt;cut&gt;' ] ], 'def' => $aLang.editor.markup.help.special_cut ],
                 [ 'tags' => [ [ 'text' => "&lt;cut name=\"{$aLang.editor.markup.help.special_cut_name_example_name}\"&gt;" ] ], 'def' => $aLang.editor.markup.help.special_cut_name ],

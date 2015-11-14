@@ -27,7 +27,10 @@
 
             // Ссылки
             urls: {
-                load: aRouter['ajax'] + "media/load-gallery/"
+                // Подгрузка файлов
+                load: null,
+                // Удаление файлов
+                remove: null
             },
 
             // Селекторы
@@ -117,6 +120,9 @@
          */
         initFiles: function( files ) {
             return files.lsUploaderFile({
+                urls: {
+                    remove: this.option( 'urls.remove' )
+                },
                 beforeactivate: this._onFileBeforeActivate.bind( this ),
                 afteractivate: this._onFileAfterActivate.bind( this ),
                 afterdeactivate: this._onFileAfterDeactivate.bind( this ),

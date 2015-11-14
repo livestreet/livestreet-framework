@@ -8,8 +8,11 @@
     {$mods = "$mods uploader"}
     {$options = array_merge( $options|default:[], [ 'center' => 'false' ] )}
     {$content = {component 'uploader' classes='js-uploader-modal'}}
-    {$primaryButton = [
-        'text' => {lang 'common.choose'},
-        'classes' => 'js-uploader-modal-choose'
-    ]}
+
+    {if $smarty.local.choosable|default:true}
+        {$primaryButton = [
+            'text' => {lang 'common.choose'},
+            'classes' => 'js-uploader-modal-choose'
+        ]}
+    {/if}
 {/block}

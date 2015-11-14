@@ -20,6 +20,12 @@
             urls: {
                 // Загрузка файла
                 upload: aRouter['ajax'] + 'media/upload/',
+                // Подгрузка файлов
+                load: aRouter['ajax'] + 'media/load-gallery/',
+                // Удаление
+                remove: aRouter['ajax'] + 'media/remove-file/',
+                // Обновление св-ва
+                update_property: aRouter['ajax'] + 'media/save-data-file/',
                 // Генерация временного хэша
                 generate_target_tmp: aRouter['ajax'] + 'media/generate-target-tmp/'
             },
@@ -102,8 +108,17 @@
             }
 
             // Иниц-ия саб-компонентов
-            this.elements.info.lsUploaderInfo( $.extend( {}, this.option( 'info_options' ), { uploader: this.element } ) );
+            this.elements.info.lsUploaderInfo( $.extend( {}, this.option( 'info_options' ), {
+                urls: {
+                    update_property: this.option( 'urls.update_property' )
+                },
+                uploader: this.element
+            }));
             this.elements.list.lsUploaderFileList( $.extend( {}, this.option( 'list_options' ), {
+                urls: {
+                    load: this.option( 'urls.load' ),
+                    remove: this.option( 'urls.remove' )
+                },
                 params: this.option( 'params' ),
                 beforeload: this._onFileListBeforeLoad.bind( this ),
                 afterload: this._onFileListLoaded.bind( this ),
@@ -116,7 +131,7 @@
 
             this.elements.list_more.lsMore({
                 urls: {
-                    load: this.elements.list.lsUploaderFileList( 'option', 'urls.load' )
+                    load: this.option( 'urls.load' )
                 },
                 params: this.option( 'params' ),
                 afterload: function () {

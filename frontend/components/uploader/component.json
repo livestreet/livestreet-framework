@@ -17,13 +17,15 @@
         "block.info": "uploader-block.info.tpl",
         "block": "uploader-block.tpl",
         "modal": "modal.uploader.tpl",
-        "file": "uploader-file.tpl"
+        "file": "uploader-file.tpl",
+        "attach": "uploader-attach.tpl"
     },
     "scripts": {
         "uploader-file-list": "js/uploader-file-list.js",
         "uploader-file": "js/uploader-file.js",
         "uploader": "js/uploader.js",
-        "uploader-info": "js/uploader-info.js"
+        "uploader-info": "js/uploader-info.js",
+        "attach": "js/uploader-attach.js"
     },
     "styles": {
         "file": "css/uploader-file.css",

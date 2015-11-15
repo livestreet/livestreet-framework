@@ -26,7 +26,9 @@
     {block 'modal_title'}
         <header class="{$component}-header">
             {* Заголовок *}
-            <h3 class="{$component}-title">{$title}</h3>
+            {if $title}
+                <h3 class="{$component}-title">{$title}</h3>
+            {/if}
 
             {* Кнопка закрытия *}
             <button class="{$component}-close" data-type="modal-close">

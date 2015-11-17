@@ -26,6 +26,8 @@
                 remove: aRouter['ajax'] + 'media/remove-file/',
                 // Обновление св-ва
                 update_property: aRouter['ajax'] + 'media/save-data-file/',
+                // Кол-во загруженных файлов
+                count: aRouter['ajax'] + 'media/count/',
                 // Генерация временного хэша
                 generate_target_tmp: aRouter['ajax'] + 'media/generate-target-tmp/'
             },
@@ -42,7 +44,9 @@
                 uploader: '.js-uploader-modal'
             },
 
-            params: {}
+            params: {
+                security_ls_key: LIVESTREET_SECURITY_KEY
+            }
         },
 
         /**
@@ -54,31 +58,66 @@
         _create: function () {
             this._super();
 
-            this.elements.modal.lsModal({
-                aftershow: function () {
-                    this.elements.uploader.lsUploader( 'getElement', 'list' ).lsUploaderFileList( 'load' );
-                    // т.к. генерация происходит после инициализации
-                    this._setParam( 'target_tmp', this.elements.uploader.lsUploader( 'option', 'params.target_tmp' ) );
-                }.bind(this),
-                afterhide: this.onHide.bind(this)
-            });
+            this.elements.button.on( 'click', this.showUploader.bind( this ) );
 
-            this.elements.button.on( 'click', function () {
-                this.elements.modal.lsModal('show');
-            }.bind(this));
+            this.elements.modal.lsModal({
+                aftershow: this.onUploaderShow.bind( this ),
+                afterhide: this.onUploaderHide.bind( this )
+            });
 
             this.elements.uploader.lsUploader({
                 autoload: false,
                 urls: this.option( 'urls' ),
-                params: $.extend( {}, { security_ls_key: LIVESTREET_SECURITY_KEY }, this.options.params )
+                params: this.option( 'params' )
             });
         },
 
         /**
-         * 
+         * Показывает загрузчик
          */
-        onHide: function() {
+        showUploader: function() {
+            this.elements.modal.lsModal( 'show' );
+        },
+
+        /**
+         * Коллбэк вызываемый после того как загрузчик показан
+         */
+        onUploaderShow: function() {
+            this.elements.uploader.lsUploader( 'getElement', 'list' ).lsUploaderFileList( 'load' );
+            // т.к. генерация происходит после инициализации
+            this._setParam( 'target_tmp', this.elements.uploader.lsUploader( 'option', 'params.target_tmp' ) );
+        },
+
+        /**
+         * Коллбэк вызываемый после того как загрузчик закрыт
+         */
+        onUploaderHide: function() {
+            this.updateCounter();
             this._trigger( 'afterhide', null, this );
+        },
+
+        /**
+         * Обновляет счетчик
+         */
+        updateCounter: function() {
+            this.elements.counter.text( '...' );
+
+            this._load( 'count', function ( response ) {
+                this.setCounter( response.count );
+            }.bind( this ));
+        },
+
+        /**
+         * Устанавливает счетчик
+         *
+         * @param {Number} count Кол-во загруженных файлов
+         */
+        setCounter: function( count ) {
+            if ( count <= 0 ) {
+                this.elements.counter.text( ls.lang.get( 'uploader.attach.empty' ) );
+            } else {
+                this.elements.counter.text( ls.lang.pluralize( count, ls.lang.get( 'uploader.attach.count' ) ) );
+            }
         }
     });
 })(jQuery);

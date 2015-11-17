@@ -9,6 +9,7 @@
     {$classes = $smarty.local.classes}
     {$attributes = $smarty.local.attributes}
     {$show = $smarty.local.show|default:true}
+    {$useFilter = $smarty.local.useFilter|default:true}
 {/block}
 
 <div class="{$component} {cmods name=$component mods=$mods} {$classes}" {cattr list=$attributes}>
@@ -48,22 +49,24 @@
                 {hook run='uploader_content_begin'}
 
                 {* Фильтр *}
-                {component 'actionbar' classes="{$component}-filter js-uploader-filter" items=[
-                    [
-                        'buttons' => [
-                            [
-                                text => {lang 'uploader.filter.uploaded'},
-                                classes => 'active js-uploader-filter-item',
-                                attributes => [ 'data-filter' => 'uploaded' ]
-                            ],
-                            [
-                                text => {lang 'uploader.filter.all'},
-                                classes => 'js-uploader-filter-item',
-                                attributes => [ 'data-filter' => 'all' ]
+                {if $useFilter}
+                    {component 'actionbar' classes="{$component}-filter js-uploader-filter" items=[
+                        [
+                            'buttons' => [
+                                [
+                                    text => {lang 'uploader.filter.uploaded'},
+                                    classes => 'active js-uploader-filter-item',
+                                    attributes => [ 'data-filter' => 'uploaded' ]
+                                ],
+                                [
+                                    text => {lang 'uploader.filter.all'},
+                                    classes => 'js-uploader-filter-item',
+                                    attributes => [ 'data-filter' => 'all' ]
+                                ]
                             ]
                         ]
-                    ]
-                ]}
+                    ]}
+                {/if}
 
                 {* Сообщение о пустом списке *}
                 {* TODO: i18n *}

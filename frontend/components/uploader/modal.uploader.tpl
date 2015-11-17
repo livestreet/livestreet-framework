@@ -7,7 +7,7 @@
 {block 'modal_options' append}
     {$mods = "$mods uploader"}
     {$options = array_merge( $options|default:[], [ 'center' => 'false' ] )}
-    {$content = {component 'uploader' classes='js-uploader-modal'}}
+    {$content = {component 'uploader' classes='js-uploader-modal' params=$smarty.local.uploader}}
 
     {if $smarty.local.choosable|default:true}
         {$primaryButton = [

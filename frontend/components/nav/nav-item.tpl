@@ -66,7 +66,7 @@
 
             {* Стрелка *}
             {if $menu}
-                <div class="caret {if ! $isRoot}caret--right{/if} {$component}-caret"></div>
+                <div class="ls-caret {if ! $isRoot}ls-caret--right{/if} {$component}-caret"></div>
             {/if}
         </a>
 

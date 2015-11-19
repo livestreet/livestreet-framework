@@ -53,7 +53,7 @@
         items=[
             [ 'name' => 'item1', 'url' => "/", 'text' => 'Item 1' ],
             [ 'name' => 'item2', 'url' => "/", 'text' => 'Item 2' ],
-            [ 'name' => 'item3', 'url' => "/", 'text' => 'Item 3' ],
+            [ 'name' => 'item3', 'url' => "/", 'text' => 'Item 3', 'count' => 5 ],
             [ 'name' => 'item4', 'url' => "/", 'text' => 'Item 4' ],
             [ 'name' => 'item5', 'url' => "/", 'text' => 'Item 5' ]
         ]}

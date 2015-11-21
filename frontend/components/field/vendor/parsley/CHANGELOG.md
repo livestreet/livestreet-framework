@@ -1,5 +1,78 @@
 # Parsley 2.x changelog
 
+## 2.2.0-rc3
+
+- Merged both versions (remote and basic) of Parsley.
+  There is now a single version that is remote & promise aware.
+- Converted src/ and test/ to ECMAScript 6.
+  Requires es5-shim if you need compatibility with IE8.
+
+## 2.2.0-rc2
+
+- A custom validator may specify an error message by simply passing it as first argument
+  when rejecting the promise. (#560)
+- Submit buttons: data now included in the submitted form (#826) and
+  attribute 'formnovalidate' is supported (#972)
+- Remote: use HTTP status code for what is considered valid or not (#956)
+- Remote: allow RESTful urls where "{value}" is replaced by the value to validate
+- Remote: add field:ajaxoptions to allow customizing of the ajax parameters (#894)
+- pattern validator is now anchored, unless it looks like /pattern/flag (#861)
+- Parsley won't try to correct names with caps (#990)
+
+## 2.2.0-rc1
+
+- Major validators refactor:
+  - Compatible with promises from the ground up. Previous API (e.g. `isValid`)
+    remains, but promise-aware API is now recommended (e.g. `whenValid`).
+  - New API to define custom validators (old API is still there but deprecated).
+  - Shorter code, removed dependency on `validators` lib.
+  - The `remote` validator is much smaller now, will probably be merged in the future.
+
+- Deprecated `data-parsley-trim-value` in favour of new `whitespace` API
+- Added `whitespace` API with two options: `trim` and `squish`
+
+## 2.1.2
+
+- fix custom triggers after a `reset()` (#926)
+- fix documentation and generated dist files
+
+## 2.1.1
+
+- Bug fix for reentrant validations
+
+## 2.1.0
+
+- Event remodel
+  - New API `on` and `off` to register for events
+  - Global listeners added with `Parsley.on`
+  - Using the new API, event names no longer have their ".parsley" ending
+  - Compatibility with previous API is maintained, but `$.emit`, `$.listen`,
+    etc. are now deprecated  (#899)
+
+- New features
+  - New event 'form:submit' fired before a form is submitted.
+  - The `value` option can now be a function
+  - Parsley.version is now the best way to get the current version
+  - Additional translations
+
+- Changes
+  - Error containers are created only the first time they are needed.
+  - [BC Break] `isValid()` field method now returns just a boolean, `[]` is no
+  more returned when field is optional and empty. `needsValidation()` appears
+  now to indicate if a valid field needed a validation.
+
+- Bug fixes
+  - Speed optimization (#855)
+  - Eemote cache now cleared after form submission (#813)
+  - Event 'field:reset' now fired if a field is no longer validated (because it
+    is excluded, or removed) (#841)
+  - Support for validators with compound names by restoring full case
+    sensitivity to error messages. (#805)
+  - Fix conflict between different forms on the same page (#888)
+  - Handles checkbox names containing spaces (#881)
+  - Detects name conflicts between validators and regular options
+  - Compatible with jQuery.noConflict() (#859)
+
 ## 2.0.7
 
 - support of html5 `maxlength` and `minlength` (#731)

@@ -1,12 +1,9 @@
 language: node_js
-
 node_js:
-  - 0.10
-
-before_script:
-  - npm install -g bower
-  - npm install -g browserify
-  - bower install
-  - browserify test/env/browserify.js > test/env/browserify_bundle.js
-
-script: npm run-script test-all
+  - "0.10"
+  - "0.12"
+sudo: false
+script: "gulp coverage"
+after_success:
+  - npm install -g codeclimate-test-reporter
+  - codeclimate-test-reporter < coverage/lcov.info

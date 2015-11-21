@@ -38,7 +38,7 @@ window.ParsleyExtend = $.extend(window.ParsleyExtend, {
 });
 
 jQuery(document).ready(function ($) {
-    ParsleyValidator
+    Parsley
         .addValidator('rangetags', function (value, requirement) {
             var tag_count = value.replace(/ /g, "").match(/[^\s,]+(,|)/gi);
             return tag_count && tag_count.length >= requirement[0] && tag_count.length <= requirement[1];

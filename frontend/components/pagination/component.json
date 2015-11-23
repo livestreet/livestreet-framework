@@ -8,10 +8,12 @@
         "css-reset": "*"
     },
     "templates": {
-        "pagination": "pagination.tpl"
+        "pagination": "pagination.tpl",
+        "ajax": "pagination-ajax.tpl"
     },
     "scripts": {
-        "pagination": "js/pagination.js"
+        "pagination": "js/pagination.js",
+        "ajax": "js/pagination-ajax.js"
     },
     "styles": {
         "pagination": "css/pagination.css"

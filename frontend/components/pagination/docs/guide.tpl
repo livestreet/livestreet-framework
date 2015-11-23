@@ -83,3 +83,32 @@
 {/capture}
 
 {test_code code=$smarty.capture.test_code}
+
+
+{**
+ * Модификаторы
+ *}
+{test_heading text='Модификаторы'}
+
+{capture 'test_example_content'}
+    {component 'pagination' total=10 current=3 url='http://example.com/content/page__page__' mods='small'}
+{/capture}
+
+{capture 'test_example_code'}
+{ldelim}component 'pagination'
+    total=10
+    current=3
+    url='http://example.com/content/page__page__'
+    mods='small'{rdelim}
+{/capture}
+
+{test_example content=$smarty.capture.test_example_content code=$smarty.capture.test_example_code}
+
+<script>
+    jQuery(function($) {
+        $('.js-mypagination-ajax').lsPaginationAjax();
+        //$('.js-mypagination-ajax').lsPaginationAjax('setTotalPages', 0);
+    });
+</script>
+
+{component 'pagination' classes='js-mypagination-ajax' total=10 current=3 url='http://example.com/content/page__page__' mods='small'}

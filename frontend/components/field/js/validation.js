@@ -1,40 +1,19 @@
 /**
  * Кастомные валидаторы
  */
-window.ParsleyExtend = window.ParsleyExtend || {};
-window.ParsleyExtend = $.extend(window.ParsleyExtend, {
-    asyncValidators: $.extend({
-        fields: {
-            fn: function (xhr) {
-                this._remoteCache = {};
+window.Parsley.addAsyncValidator('livestreet', function (xhr) {
+    this._remoteCache = {};
 
-                xhr.done(function (response) {
-                    if ('undefined' !== typeof response.aErrors) {
-                        var name = this.$element.attr('name') || this.$element.attr('id');
-                        var msg = response.aErrors[name].join("<br>");
-                        window.ParsleyUI.updateError(this, 'remote', msg);
-                        return false
-                    }
-                }.bind(this));
-
-                return 'undefined' === typeof xhr.responseJSON.aErrors;
-            },
-            prepare: function () {
-                var params = {
-                    data: {
-                        fields: {
-                            0: {
-                                field: this.$element.attr('name') || this.$element.attr('id'),
-                                value: this.getValue()
-                            }
-                        }
-                    }
-                };
-                this.options.remoteOptions = $.extend(true, this.options.remoteOptions || {}, params);
-            },
-            url: false
+    xhr.done(function (response) {
+        if ('undefined' !== typeof response.aErrors) {
+            var name = this.$element.attr('name') || this.$element.attr('id');
+            var msg = response.aErrors[name].join("<br>");
+            window.ParsleyUI.updateError(this, 'remote', msg);
+            return false;
         }
-    }, window.ParsleyExtend.asyncValidators)
+    }.bind(this));
+
+    return 'undefined' === typeof xhr.responseJSON.aErrors;
 });
 
 jQuery(document).ready(function ($) {

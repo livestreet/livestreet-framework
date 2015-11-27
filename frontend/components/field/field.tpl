@@ -72,7 +72,7 @@
         {/if}
 
         {if $rule@key === 'remote'}
-            data-parsley-remote-validator="{$rules['remote-validator']|default:'fields'}"
+            data-parsley-remote-validator="{$rules['remote-validator']|default:'livestreet'}"
             data-parsley-trigger="focusout"
 
             {* Default remote options *}

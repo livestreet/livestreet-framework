@@ -35,8 +35,6 @@
         "upload-area": "field.upload-area.tpl"
     },
     "scripts": {
-        "validation": "js/validation.js",
-
         "vendor-chosen": "vendor/chosen/chosen.jquery.js",
         "vendor-chosen-order": "vendor/chosen-order/chosen.order.jquery.js",
         "vendor-chosen-ajax": "vendor/ajax-chosen/lib/ajax-chosen.js",
@@ -46,6 +44,8 @@
         "vendor-pikaday": "vendor/pikaday/pikaday.js",
         "vendor-pikaday-jquery": "vendor/pikaday/pikaday.jquery.js",
         "vendor-timepicker": "vendor/timepicker/jquery.timepicker.js",
+
+        "validation": "js/validation.js",
 
         "autocomplete": "js/autocomplete.js",
 

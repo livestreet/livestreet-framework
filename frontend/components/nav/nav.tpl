@@ -56,7 +56,7 @@
                     {if $item['name'] != '-'}
                         {component 'nav' template='item'
                             isRoot   = !$isSubnav
-                            isActive = ($smarty.local.activeItem == $item['name'])
+                            isActive = ($smarty.local.activeItem && $smarty.local.activeItem == $item['name'])
                             params   = $item}
                     {else}
                         {* Разделитель *}

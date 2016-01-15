@@ -378,6 +378,10 @@ class MapperORM extends Mapper
             }
             if (strtolower($sConditionCurrent) == 'in') {
                 $sFilterFields .= " and {$sFieldCurrent} {$sConditionCurrent} ( ?a ) ";
+            } elseif (trim($sConditionCurrent) == '=' and is_null($v)) {
+                $sFilterFields .= " and {$sFieldCurrent} IS ? ";
+            } elseif (trim($sConditionCurrent) == '<>' and is_null($v)) {
+                $sFilterFields .= " and {$sFieldCurrent} IS NOT ? ";
             } else {
                 $sFilterFields .= " and {$sFieldCurrent} {$sConditionCurrent} ? ";
             }

@@ -13,11 +13,7 @@
 
 {$component = 'ls-block'}
 
-{* Генерируем копии локальных переменных, *}
-{* чтобы их можно было изменять в дочерних шаблонах *}
-{foreach [ 'title', 'content', 'show', 'footer', 'list', 'tabs', 'mods', 'classes', 'attributes' ] as $param}
-    {assign var="$param" value=$smarty.local.$param}
-{/foreach}
+{component_define_params params=[ 'title', 'content', 'show', 'footer', 'list', 'tabs', 'mods', 'classes', 'attributes' ]}
 
 {block 'block_options'}{/block}
 

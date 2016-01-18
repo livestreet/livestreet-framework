@@ -5,11 +5,7 @@
 {* Название компонента *}
 {$component = 'ls-modal'}
 
-{* Генерируем копии локальных переменных, *}
-{* чтобы их можно было изменять в дочерних шаблонах *}
-{foreach [ 'title', 'content', 'tabs', 'body', 'id', 'options', 'showFooter', 'primaryButton', 'mods', 'classes', 'attributes' ] as $param}
-    {assign var="$param" value=$smarty.local.$param}
-{/foreach}
+{component_define_params params=[ 'title', 'content', 'tabs', 'body', 'id', 'options', 'showFooter', 'primaryButton', 'mods', 'classes', 'attributes' ]}
 
 {* Дефолтные значения *}
 {$showFooter = $showFooter|default:true}

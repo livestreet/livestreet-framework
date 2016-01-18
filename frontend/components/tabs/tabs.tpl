@@ -6,11 +6,7 @@
 
 {$component = 'ls-tabs'}
 
-{* Генерируем копии локальных переменных, *}
-{* чтобы их можно было изменять в дочерних шаблонах *}
-{foreach [ 'tabs', 'mods', 'classes', 'attributes' ] as $param}
-    {assign var="$param" value=$smarty.local.$param}
-{/foreach}
+{component_define_params params=[ 'tabs', 'mods', 'classes', 'attributes' ]}
 
 {block 'tabs_options'}{/block}
 

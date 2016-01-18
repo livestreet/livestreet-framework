@@ -10,9 +10,7 @@
 {* Название компонента *}
 {$component = 'ls-dropdown'}
 
-{foreach [ 'text', 'icon', 'activeItem', 'isSplit', 'menu', 'mods', 'classes', 'attributes' ] as $param}
-    {assign var="$param" value=$smarty.local.$param}
-{/foreach}
+{component_define_params params=[ 'text', 'icon', 'activeItem', 'isSplit', 'menu', 'mods', 'classes', 'attributes' ]}
 
 {if ! $text}
     {$mods = "$mods no-text"}

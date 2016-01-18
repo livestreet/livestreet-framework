@@ -21,11 +21,7 @@
 {* Название компонента *}
 {$component = 'ls-nav-item'}
 
-{* Генерируем копии локальных переменных, *}
-{* чтобы их можно было изменять в дочерних шаблонах *}
-{foreach [ 'menu', 'url', 'text', 'icon', 'showZeroCounter', 'activeItem', 'count', 'isRoot', 'isActive', 'show', 'data', 'mods', 'classes', 'attributes', 'target' ] as $param}
-    {assign var="$param" value=$smarty.local.$param}
-{/foreach}
+{component_define_params params=[ 'menu', 'url', 'text', 'icon', 'showZeroCounter', 'activeItem', 'count', 'isRoot', 'isActive', 'show', 'data', 'mods', 'classes', 'attributes', 'target' ]}
 
 {* Дефолтные значения *}
 {$show = $show|default:true}

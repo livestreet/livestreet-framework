@@ -11,11 +11,7 @@
 {* Название компонента *}
 {$component = 'ls-avatar-list'}
 
-{* Генерируем копии локальных переменных, *}
-{* чтобы их можно было изменять в дочерних шаблонах *}
-{foreach [ 'items', 'blankslateParams', 'mods', 'classes', 'attributes' ] as $param}
-    {assign var="$param" value=$smarty.local.$param}
-{/foreach}
+{component_define_params params=[ 'items', 'blankslateParams', 'mods', 'classes', 'attributes' ]}
 
 {$classes = "$classes ls-clearfix"}
 

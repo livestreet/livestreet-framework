@@ -7,9 +7,7 @@
  * @param array  $attributes
  *}
 
-{foreach [ 'items' ] as $param}
-    {assign var="$param" value=$smarty.local.$param}
-{/foreach}
+{component_define_params params=[ 'items' ]}
 
 {if is_array( $items )}
     {foreach $items as $avatar}

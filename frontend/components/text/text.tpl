@@ -10,11 +10,7 @@
 {* Название компонента *}
 {$component = 'text'}
 
-{* Генерируем копии локальных переменных, *}
-{* чтобы их можно было изменять в дочерних шаблонах *}
-{foreach [ 'text', 'mods', 'classes', 'attributes' ] as $param}
-    {assign var="$param" value=$smarty.local.$param}
-{/foreach}
+{component_define_params params=[ 'text', 'mods', 'classes', 'attributes' ]}
 
 {block 'text_options'}{/block}
 

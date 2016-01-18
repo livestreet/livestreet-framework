@@ -4,11 +4,7 @@
 
 {$component = 'ls-item'}
 
-{* Генерируем копии локальных переменных, *}
-{* чтобы их можно было изменять в дочерних шаблонах *}
-{foreach [ 'image', 'content', 'desc', 'title', 'titleUrl', 'element', 'mods', 'classes', 'attributes' ] as $param}
-    {assign var="$param" value=$smarty.local.$param}
-{/foreach}
+{component_define_params params=[ 'image', 'content', 'desc', 'title', 'titleUrl', 'element', 'mods', 'classes', 'attributes' ]}
 
 {block 'item_options'}{/block}
 

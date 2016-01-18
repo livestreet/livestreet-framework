@@ -13,11 +13,7 @@
 {* Название компонента *}
 {$component = 'ls-more'}
 
-{* Генерируем копии локальных переменных, *}
-{* чтобы их можно было изменять в дочерних шаблонах *}
-{foreach [ 'text', 'target', 'count', 'append', 'mods', 'classes', 'attributes', 'ajaxParams' ] as $param}
-    {assign var="$param" value=$smarty.local.$param}
-{/foreach}
+{component_define_params params=[ 'text', 'target', 'count', 'append', 'mods', 'classes', 'attributes', 'ajaxParams' ]}
 
 {block 'more_options'}{/block}
 

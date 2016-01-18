@@ -14,11 +14,7 @@
 {* Название компонента *}
 {$component = 'ls-avatar'}
 
-{* Генерируем копии локальных переменных, *}
-{* чтобы их можно было изменять в дочерних шаблонах *}
-{foreach [ 'image', 'size', 'name', 'url', 'alt', 'mods', 'classes', 'attributes' ] as $param}
-    {assign var="$param" value=$smarty.local.$param}
-{/foreach}
+{component_define_params params=[ 'image', 'size', 'name', 'url', 'alt', 'mods', 'classes', 'attributes' ]}
 
 {$size = $size|default:'default'}
 {$sizes = [ 'large', 'default', 'small', 'xsmall', 'xxsmall', 'text' ]}

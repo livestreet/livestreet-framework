@@ -9,11 +9,7 @@
 {* Название компонента *}
 {$component = 'ls-pagination'}
 
-{* Генерируем копии локальных переменных, *}
-{* чтобы их можно было изменять в дочерних шаблонах *}
-{foreach [ 'mods', 'classes', 'attributes' ] as $param}
-    {assign var="$param" value=$smarty.local.$param}
-{/foreach}
+{component_define_params params=[ 'mods', 'classes', 'attributes' ]}
 
 {$mods = "$mods ajax"}
 

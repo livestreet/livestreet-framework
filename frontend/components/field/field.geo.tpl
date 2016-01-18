@@ -11,9 +11,7 @@
 {extends './field.tpl'}
 
 {block 'field_options' append}
-    {foreach [ 'place', 'countries', 'regions', 'cities', 'targetType' ] as $param}
-        {assign var="$param" value=$smarty.local.$param}
-    {/foreach}
+    {component_define_params params=[ 'place', 'countries', 'regions', 'cities', 'targetType' ]}
 
     {if $targetType}
         {$attributes = array_merge( $attributes|default:[], [ 'data-type' => $targetType ] )}

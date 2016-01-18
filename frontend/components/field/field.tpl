@@ -21,12 +21,8 @@
 {* Название компонента *}
 {$component = 'ls-field'}
 
-{* Генерируем копии локальных переменных, *}
-{* чтобы их можно было изменять в дочерних шаблонах *}
-{foreach [ 'form', 'placeholder', 'isDisabled', 'entity', 'entityScenario', 'escape', 'data', 'label', 'name',
-    'rules', 'useValue', 'value', 'id', 'inputClasses', 'inputAttributes', 'inputData', 'mods', 'classes', 'attributes', 'note' ] as $param}
-    {assign var="$param" value=$smarty.local.$param}
-{/foreach}
+{component_define_params params=[ 'form', 'placeholder', 'isDisabled', 'entity', 'entityScenario', 'escape', 'data', 'label', 'name',
+    'rules', 'useValue', 'value', 'id', 'inputClasses', 'inputAttributes', 'inputData', 'mods', 'classes', 'attributes', 'note' ]}
 
 {* Уникальный ID *}
 {$uid = $id|default:($component|cat:rand(0, 10e10))}

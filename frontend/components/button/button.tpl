@@ -16,12 +16,7 @@
 
 {* Название компонента *}
 {$component = 'ls-button'}
-
-{* Генерируем копии локальных переменных, *}
-{* чтобы их можно было изменять в дочерних шаблонах *}
-{foreach [ 'type', 'text', 'value', 'url', 'id', 'name', 'badge', 'isDisabled', 'form', 'icon', 'mods', 'classes', 'attributes' ] as $param}
-    {assign var="$param" value=$smarty.local.$param}
-{/foreach}
+{component_define_params params=[ 'type', 'text', 'value', 'url', 'id', 'name', 'badge', 'isDisabled', 'form', 'icon', 'mods', 'classes', 'attributes' ]}
 
 {* Дефолтные значения *}
 {if $icon && ! $text}

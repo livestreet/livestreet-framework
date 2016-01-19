@@ -7,7 +7,6 @@
 
 {* Название компонента *}
 {$component = 'ls-tags-item'}
-
 {component_define_params params=[ 'text', 'url', 'isFirst', 'isLast', 'mods', 'classes', 'attributes' ]}
 
 {block 'tags_item_options'}{/block}

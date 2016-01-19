@@ -8,7 +8,6 @@
 
 {* Название компонента *}
 {$component = 'ls-pagination'}
-
 {component_define_params params=[ 'mods', 'classes', 'attributes' ]}
 
 {$mods = "$mods ajax"}

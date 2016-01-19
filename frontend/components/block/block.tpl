@@ -1,18 +1,17 @@
 {**
  * Блок
  *
- * @param string       $title       (null)        Заголовок
- * @param string       $content     (null)
- * @param boolean      $show        (true)
- * @param array|string $list        (null)
- * @param array|string $tabs        (null)
- * @param string       $mods        (success)     Список модификторов основного блока (через пробел)
- * @param string       $classes     (null)        Список классов основного блока (через пробел)
- * @param array        $attributes  (null)        Список атрибутов основного блока
+ * @param string       $title      Заголовок
+ * @param string       $content
+ * @param boolean      $show
+ * @param array|string $list
+ * @param array|string $tabs
+ * @param string       $mods       Список модификторов основного блока (через пробел)
+ * @param string       $classes    Список классов основного блока (через пробел)
+ * @param array        $attributes Список атрибутов основного блока
  *}
 
 {$component = 'ls-block'}
-
 {component_define_params params=[ 'title', 'content', 'show', 'footer', 'list', 'tabs', 'mods', 'classes', 'attributes' ]}
 
 {block 'block_options'}{/block}

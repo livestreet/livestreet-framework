@@ -10,7 +10,6 @@
 
 {* Название компонента *}
 {$component = 'ls-avatar-list'}
-
 {component_define_params params=[ 'items', 'blankslateParams', 'mods', 'classes', 'attributes' ]}
 
 {$classes = "$classes ls-clearfix"}

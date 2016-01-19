@@ -9,7 +9,6 @@
 
 {* Название компонента *}
 {$component = 'ls-badge'}
-
 {component_define_params params=[ 'value', 'mods', 'classes', 'attributes' ]}
 
 {block 'badge_options'}{/block}

@@ -5,7 +5,6 @@
  *}
 
 {$component = 'ls-tabs'}
-
 {component_define_params params=[ 'tabs', 'mods', 'classes', 'attributes' ]}
 
 {block 'tabs_options'}{/block}

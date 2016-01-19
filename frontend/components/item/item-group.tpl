@@ -9,7 +9,6 @@
 
 {* Название компонента *}
 {$component = 'ls-item-group'}
-
 {component_define_params params=[ 'items', 'mods', 'classes', 'attributes' ]}
 
 {block 'list_group_options'}{/block}

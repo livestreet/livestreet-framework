@@ -12,7 +12,7 @@
 
 {* Название компонента *}
 {$component = 'ls-details'}
-
+{$jsprefix = 'js-details'}
 {component_define_params params=[ 'title', 'content', 'body', 'open', 'mods', 'classes', 'attributes' ]}
 
 {* Проверяем нужно разворачивать блок или нет *}
@@ -25,12 +25,12 @@
 {* Item *}
 <div class="{$component} {cmods name=$component mods=$mods} {$classes}" {cattr list=$attributes}>
     {* Заголовок *}
-    <h3 class="{$component}-title js-{$component}-title">
+    <h3 class="{$component}-title {$jsprefix}-title">
         {$title}
     </h3>
 
     {* Основной блок *}
-    <div class="{$component}-body js-{$component}-body">
+    <div class="{$component}-body {$jsprefix}-body">
         {* Содержимое *}
         {if $content}
             <div class="{$component}-content">

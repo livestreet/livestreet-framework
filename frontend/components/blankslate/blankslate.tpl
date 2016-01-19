@@ -11,7 +11,6 @@
 
 {* Название компонента *}
 {$component = 'ls-blankslate'}
-
 {component_define_params params=[ 'title', 'text', 'visible', 'mods', 'classes', 'attributes' ]}
 
 {$visible = $visible|default:true}

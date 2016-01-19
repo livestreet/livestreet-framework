@@ -7,7 +7,7 @@
 {block 'button_group_options' append}
     {$classes = "$classes ls-toolbar-item"}
     {$mods = "$mods vertical"}
-    {$groups = $smarty.local.items}
+    {$groups = $items}
 {/block}
 
 {block 'button_group_button'}

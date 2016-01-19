@@ -8,8 +8,7 @@
  *}
 
 {* Название компонента *}
-{$component = 'text'}
-
+{$component = 'ls-text'}
 {component_define_params params=[ 'text', 'mods', 'classes', 'attributes' ]}
 
 {block 'text_options'}{/block}

@@ -7,7 +7,6 @@
 
 {* Название компонента *}
 {$component = 'ls-info-list'}
-
 {component_define_params params=[ 'title', 'list', 'mods', 'classes', 'attributes' ]}
 
 {block 'info_list_options'}{/block}

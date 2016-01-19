@@ -9,7 +9,6 @@
 
 {* Название компонента *}
 {$component = 'slider'}
-
 {component_define_params params=[ 'images', 'mods', 'classes', 'attributes' ]}
 
 {block 'slider_options'}{/block}

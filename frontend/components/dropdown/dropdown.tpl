@@ -9,7 +9,6 @@
 
 {* Название компонента *}
 {$component = 'ls-dropdown'}
-
 {component_define_params params=[ 'text', 'icon', 'activeItem', 'isSplit', 'menu', 'mods', 'classes', 'attributes' ]}
 
 {if ! $text}

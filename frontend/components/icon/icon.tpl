@@ -8,5 +8,6 @@
  *}
 
 {$component = 'ls-icon'}
+{component_define_params params=[ 'icon', 'mods', 'classes', 'attributes' ]}
 
-<i class="fa fa-{$smarty.local.icon} {cmods name=$component mods=$smarty.local.mods} {$smarty.local.classes}" {cattr list=$smarty.local.attributes}></i>
+<i class="fa fa-{$icon} {$component} {cmods name=$component mods=$mods} {$classes}" {cattr list=$attributes}></i>

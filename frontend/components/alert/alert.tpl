@@ -1,13 +1,13 @@
 {**
  * Уведомления
  *
- * @param string  $title       (null)        Заголовок
- * @param mixed   $text        (null)        Массив либо строка с текстом уведомления. Массив должен быть в формате: `[ [ title, msg ], ... ]`
- * @param bool    $visible     (true)        Показывать или нет уведомление
- * @param bool    $dismissible (false)       Показывать или нет кнопку закрытия
- * @param string  $mods        (success)     Список модификторов основного блока (через пробел)
- * @param string  $classes     (null)        Список классов основного блока (через пробел)
- * @param array   $attributes  (null)        Список атрибутов основного блока
+ * @param string  $title          Заголовок
+ * @param mixed   $text           Массив либо строка с текстом уведомления. Массив должен быть в формате: `[ [ title, msg ], ... ]`
+ * @param bool    $visible        Показывать или нет уведомление
+ * @param bool    $dismissible    Показывать или нет кнопку закрытия
+ * @param string  $mods="success" Список модификторов основного блока (через пробел)
+ * @param string  $classes        Список классов основного блока (через пробел)
+ * @param array   $attributes     Список атрибутов основного блока
  *}
 
 {* Название компонента *}

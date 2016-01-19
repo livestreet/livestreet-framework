@@ -12,7 +12,6 @@
 
 {* Название компонента *}
 {$component = 'ls-jumbotron'}
-
 {component_define_params params=[ 'title', 'subtitle', 'titleUrl', 'content', 'mods', 'classes', 'attributes' ]}
 
 {block 'jumbotron_options'}{/block}

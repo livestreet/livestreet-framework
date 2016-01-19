@@ -3,7 +3,6 @@
  *}
 
 {$component = 'ls-tags'}
-
 {component_define_params params=[ 'title', 'tags', 'mods', 'classes', 'attributes' ]}
 
 {block 'tags_options'}{/block}

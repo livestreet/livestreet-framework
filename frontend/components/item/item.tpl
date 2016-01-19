@@ -3,7 +3,6 @@
  *}
 
 {$component = 'ls-item'}
-
 {component_define_params params=[ 'image', 'content', 'desc', 'title', 'titleUrl', 'element', 'mods', 'classes', 'attributes' ]}
 
 {block 'item_options'}{/block}

@@ -13,7 +13,6 @@
 
 {* Название компонента *}
 {$component = 'ls-avatar'}
-
 {component_define_params params=[ 'image', 'size', 'name', 'url', 'alt', 'mods', 'classes', 'attributes' ]}
 
 {$size = $size|default:'default'}

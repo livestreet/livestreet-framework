@@ -8,7 +8,6 @@
  *}
 
 {$component = 'details-group'}
-
 {component_define_params params=[ 'items', 'mods', 'classes', 'attributes' ]}
 
 {block 'details_group_options'}{/block}

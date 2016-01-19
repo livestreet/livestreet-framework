@@ -14,7 +14,6 @@
 
 {* Название компонента *}
 {$component = 'ls-nav'}
-
 {component_define_params params=[ 'hook', 'items', 'activeItem', 'showSingle', 'isSubnav', 'items', 'mods', 'classes', 'attributes' ]}
 
 {* Получаем пункты установленные плагинами *}
@@ -41,7 +40,7 @@
 
 {* Отображем меню только если есть активные пункты *}
 {if count( $items ) - $disabledItemsCounter - ( ( $showSingle|default:false ) ? 0 : 1 )}
-    <ul class="{$component} {cmods name=$component mods=$mods} {$classes}" {cattr list=$smarty.local.attributes}>
+    <ul class="{$component} {cmods name=$component mods=$mods} {$classes}" {cattr list=$attributes}>
         {foreach $items as $item}
             {$isEnabled = $item[ 'is_enabled' ]}
 
@@ -52,7 +51,7 @@
                     {if $item['name'] != '-'}
                         {component 'nav' template='item'
                             isRoot   = !$isSubnav
-                            isActive = ($smarty.local.activeItem && $smarty.local.activeItem == $item['name'])
+                            isActive = ($activeItem && $activeItem == $item['name'])
                             params   = $item}
                     {else}
                         {* Разделитель *}

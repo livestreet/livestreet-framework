@@ -12,7 +12,6 @@
 
 {* Название компонента *}
 {$component = 'ls-more'}
-
 {component_define_params params=[ 'text', 'target', 'count', 'append', 'mods', 'classes', 'attributes', 'ajaxParams' ]}
 
 {block 'more_options'}{/block}

@@ -4,7 +4,6 @@
 
 {* Название компонента *}
 {$component = 'ls-modal'}
-
 {component_define_params params=[ 'title', 'content', 'tabs', 'body', 'id', 'options', 'showFooter', 'primaryButton', 'mods', 'classes', 'attributes' ]}
 
 {* Дефолтные значения *}

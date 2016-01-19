@@ -7,10 +7,10 @@
  * @param array  $attributes
  *}
 
-{extends 'Component@button.toolbar'}
+{extends 'component@button.toolbar'}
 
 {block 'button_toolbar_options' append}
-    {$groups = $smarty.local.items}
+    {$groups = $items}
     {$classes = "$classes ls-actionbar"}
 {/block}
 

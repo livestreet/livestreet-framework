@@ -442,6 +442,7 @@ abstract class ModuleORM extends Module
         } else {
             $aFilterCache = $aFilter;
             unset($aFilterCache['#with']);
+            unset($aFilterCache['#scope']);
             $sCacheKey = $sEntityFull . '_items_by_filter_' . serialize($aFilterCache);
             $aCacheTags = array($sEntityFull . '_save', $sEntityFull . '_delete');
             $iCacheTime = 60 * 60 * 24; // скорее лучше хранить в свойстве сущности, для возможности выборочного переопределения
@@ -729,11 +730,15 @@ abstract class ModuleORM extends Module
             if (!is_array($aScopes)) {
                 $aScopes = array($aScopes);
             }
+            /**
+             * Приводим значение к единой форме ассоциативного массива: array('user'=>array(), 'topic'=>array('blog_id'=>123) )
+             */
+            func_array_simpleflip($aScopes, array());
             $oEntityEmpty = Engine::GetEntity($sEntityFull);
-            foreach ($aScopes as $sScope) {
+            foreach ($aScopes as $sScope => $aScopeParams) {
                 $sMethod = 'getScope' . func_camelize($sScope);
                 if (method_exists($oEntityEmpty, $sMethod)) {
-                    if ($aFilterAdd = call_user_func(array($oEntityEmpty, $sMethod)) and is_array($aFilterAdd)) {
+                    if ($aFilterAdd = call_user_func_array(array($oEntityEmpty, $sMethod), $aScopeParams) and is_array($aFilterAdd)) {
                         $aFilter = array_merge($aFilterAdd, $aFilter);
                     }
                 }

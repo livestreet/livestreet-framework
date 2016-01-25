@@ -474,149 +474,9 @@ abstract class ModuleORM extends Module
              */
             func_array_simpleflip($aFilter['#with'], array());
             /**
-             * Формируем список примари ключей
+             * Подтягиваем связанные данные
              */
-            $aEntityPrimaryKeys = array();
-            foreach ($aEntities as $oEntity) {
-                $aEntityPrimaryKeys[] = $oEntity->_getPrimaryKeyValue();
-            }
-            $oEntityEmpty = Engine::GetEntity($sEntityFull);
-            $aRelations = $oEntityEmpty->_getRelations();
-            foreach ($aFilter['#with'] as $sRelationName => $aRelationFilter) {
-                if (!isset($aRelations[$sRelationName])) {
-                    continue;
-                }
-                /**
-                 * Если нужна дополнительная обработка через коллбек
-                 * Параметр в обработчике должен приниматься по ссылке
-                 */
-                if (isset($aRelationFilter['#callback-filter']) and $aRelationFilter['#callback-filter'] instanceof Closure) {
-                    $callback = $aRelationFilter['#callback-filter'];
-                    $callback($aEntities, $aRelationFilter);
-                }
-                /**
-                 * Если необходимо, то выставляем сразу нужное значение и не делаем никаких запросов
-                 */
-                if (isset($aRelationFilter['#value-set'])) {
-                    foreach ($aEntities as $oEntity) {
-                        $oEntity->_setData(array($sRelationName => $aRelationFilter['#value-set']));
-                    }
-                    continue;
-                }
-                /**
-                 * Чистим фильтр от коллбека, иначе он может пройти дальше по цепочке вызовов
-                 */
-                unset($aRelationFilter['#callback-filter']);
-
-                $sRelType = $aRelations[$sRelationName]['type'];
-                $sRelEntity = $this->Plugin_GetRootDelegater('entity',
-                    $aRelations[$sRelationName]['rel_entity']); // получаем корневую сущность, без учета наследников
-                $sRelKey = $aRelations[$sRelationName]['rel_key'];
-
-                if (!array_key_exists($sRelationName, $aRelations) or !in_array($sRelType, array(
-                        EntityORM::RELATION_TYPE_BELONGS_TO,
-                        EntityORM::RELATION_TYPE_HAS_ONE,
-                        EntityORM::RELATION_TYPE_HAS_MANY,
-                        EntityORM::RELATION_TYPE_MANY_TO_MANY
-                    ))
-                ) {
-                    throw new Exception("The entity <{$sEntityFull}> not have relation <{$sRelationName}>");
-                }
-
-                /**
-                 * Делаем общий запрос по всем ключам
-                 */
-                $oRelEntityEmpty = Engine::GetEntity($sRelEntity);
-                $sRelModuleName = Engine::GetModuleName($sRelEntity);
-                $sRelEntityName = Engine::GetEntityName($sRelEntity);
-                $sRelPluginPrefix = Engine::GetPluginPrefix($sRelEntity);
-                $sRelPrimaryKey = method_exists($oRelEntityEmpty,
-                    '_getPrimaryKey') ? $oRelEntityEmpty->_getPrimaryKey() : 'id';
-                if ($sRelType == EntityORM::RELATION_TYPE_BELONGS_TO) {
-                    /**
-                     * Формируем список ключей
-                     */
-                    $aEntityKeyValues = array();
-                    foreach ($aEntities as $oEntity) {
-                        $aEntityKeyValues[] = $oEntity->_getDataOne($sRelKey);
-                    }
-                    $aEntityKeyValues = array_unique($aEntityKeyValues);
-
-                    $sKeyTo = $aRelations[$sRelationName]['rel_key_to'] ?: $sRelPrimaryKey;
-                    $aFilterRel = array(
-                        $sKeyTo . ' in' => $aEntityKeyValues,
-                        '#index-from'   => $sKeyTo
-                    );
-                    $aFilterRel = array_merge($aFilterRel, $aRelationFilter);
-                    $aRelData = Engine::GetInstance()->_CallModule("{$sRelPluginPrefix}{$sRelModuleName}_get{$sRelEntityName}ItemsByFilter",
-                        array($aFilterRel));
-                } elseif ($sRelType == EntityORM::RELATION_TYPE_HAS_ONE) {
-                    $aFilterRel = array($sRelKey . ' in' => $aEntityPrimaryKeys, '#index-from' => $sRelKey);
-                    $aFilterRel = array_merge($aFilterRel, $aRelationFilter, $aRelations[$sRelationName]['filter']);
-                    $aRelData = Engine::GetInstance()->_CallModule("{$sRelPluginPrefix}{$sRelModuleName}_get{$sRelEntityName}ItemsByFilter",
-                        array($aFilterRel));
-                } elseif ($sRelType == EntityORM::RELATION_TYPE_HAS_MANY) {
-                    if ($aRelations[$sRelationName]['key_from']) {
-                        /**
-                         * Формируем список ключей
-                         */
-                        $aEntityKeyValues = array();
-                        foreach ($aEntities as $oEntity) {
-                            $aEntityKeyValues[] = $oEntity->_getDataOne($aRelations[$sRelationName]['key_from']);
-                        }
-                        $aEntityKeyValues = array_unique($aEntityKeyValues);
-                    }
-
-                    $aFilterRel = array(
-                        $sRelKey . ' in' => $aRelations[$sRelationName]['key_from'] ? $aEntityKeyValues : $aEntityPrimaryKeys,
-                        '#index-group'   => $sRelKey
-                    );
-                    $aFilterRel = array_merge($aFilterRel, $aRelationFilter, $aRelations[$sRelationName]['filter']);
-                    $aRelData = Engine::GetInstance()->_CallModule("{$sRelPluginPrefix}{$sRelModuleName}_get{$sRelEntityName}ItemsByFilter",
-                        array($aFilterRel));
-                } elseif ($sRelType == EntityORM::RELATION_TYPE_MANY_TO_MANY) {
-                    $sEntityJoin = $aRelations[$sRelationName]['join_entity'];
-                    $sKeyJoin = $aRelations[$sRelationName]['join_key'];
-                    $aFilterAdd = $aRelations[$sRelationName]['filter'];
-                    if (!array_key_exists('#value-default', $aRelationFilter)) {
-                        $aRelationFilter['#value-default'] = array();
-                    }
-                    $aFilterRel = array_merge($aFilterAdd, $aRelationFilter);
-                    $aRelData = Engine::GetInstance()->_CallModule("{$sRelPluginPrefix}{$sRelModuleName}_get{$sRelEntityName}ItemsByJoinEntity",
-                        array($sEntityJoin, $sKeyJoin, $sRelKey, $aEntityPrimaryKeys, $aFilterRel));
-                    $aRelData = $this->_setIndexesGroupJoinField($aRelData, $sKeyJoin);
-                }
-                /**
-                 * Собираем набор
-                 */
-                foreach ($aEntities as $oEntity) {
-                    if ($sRelType == EntityORM::RELATION_TYPE_BELONGS_TO) {
-                        $sKeyData = $oEntity->_getDataOne($sRelKey);
-                    } elseif (in_array($sRelType, array(
-                        EntityORM::RELATION_TYPE_HAS_ONE,
-                        EntityORM::RELATION_TYPE_HAS_MANY,
-                        EntityORM::RELATION_TYPE_MANY_TO_MANY
-                    ))) {
-                        $sKeyData = $oEntity->_getPrimaryKeyValue();
-                    } else {
-                        break;
-                    }
-                    if ($sRelType == EntityORM::RELATION_TYPE_HAS_MANY and $aRelations[$sRelationName]['key_from']) {
-                        $sKeyData = $oEntity->_getDataOne($aRelations[$sRelationName]['key_from']);
-                    }
-                    if (isset($aRelData[$sKeyData])) {
-                        $oEntity->_setData(array($sRelationName => $aRelData[$sKeyData]));
-                    } elseif (isset($aRelationFilter['#value-default'])) {
-                        $oEntity->_setData(array($sRelationName => $aRelationFilter['#value-default']));
-                    }
-                    if ($sRelType == EntityORM::RELATION_TYPE_MANY_TO_MANY) {
-                        // Создаём объекты-обёртки для связей MANY_TO_MANY
-                        $oEntity->_setManyToManyRelations(new ORMRelationManyToMany($oEntity->_getRelationsData($sRelationName)),
-                            $sRelationName);
-                    }
-                }
-            }
-
+            $this->_attachRelationObjects($aEntities, $aFilter['#with'], $sEntityFull);
         }
         /**
          * Returns assotiative array, indexed by PRIMARY KEY or another field.
@@ -673,6 +533,167 @@ abstract class ModuleORM extends Module
             $aIndexedEntities[$oEntity->_getDataOne($sKey)] = $oEntity;
         }
         return $aIndexedEntities;
+    }
+
+    /**
+     * @param array $aEntities Список сущностей
+     * @param array $aWith Список связей (в фильтре используется как "#with")
+     * @param null|string $sEntityFull Исходный класс сущности для которой подтягиваем связи
+     * @throws Exception
+     */
+    protected function _attachRelationObjects($aEntities, $aWith, $sEntityFull = null)
+    {
+        if (!count($aEntities)) {
+            return;
+        }
+        func_array_simpleflip($aWith, array());
+        if (is_null($sEntityFull)) {
+            $oEntityFirst = reset($aEntities);
+            $sEntityFull = $this->_NormalizeEntityRootName($oEntityFirst);
+        }
+        /**
+         * Формируем список примари ключей
+         */
+        $aEntityPrimaryKeys = array();
+        foreach ($aEntities as $oEntity) {
+            $aEntityPrimaryKeys[] = $oEntity->_getPrimaryKeyValue();
+        }
+        $oEntityEmpty = Engine::GetEntity($sEntityFull);
+        $aRelations = $oEntityEmpty->_getRelations();
+        foreach ($aWith as $sRelationName => $aRelationFilter) {
+            if (!isset($aRelations[$sRelationName])) {
+                continue;
+            }
+            /**
+             * Если нужна дополнительная обработка через коллбек
+             * Параметр в обработчике должен приниматься по ссылке
+             */
+            if (isset($aRelationFilter['#callback-filter']) and $aRelationFilter['#callback-filter'] instanceof Closure) {
+                $callback = $aRelationFilter['#callback-filter'];
+                $callback($aEntities, $aRelationFilter);
+            }
+            /**
+             * Если необходимо, то выставляем сразу нужное значение и не делаем никаких запросов
+             */
+            if (isset($aRelationFilter['#value-set'])) {
+                foreach ($aEntities as $oEntity) {
+                    $oEntity->_setData(array($sRelationName => $aRelationFilter['#value-set']));
+                }
+                continue;
+            }
+            /**
+             * Чистим фильтр от коллбека, иначе он может пройти дальше по цепочке вызовов
+             */
+            unset($aRelationFilter['#callback-filter']);
+
+            $sRelType = $aRelations[$sRelationName]['type'];
+            $sRelEntity = $this->Plugin_GetRootDelegater('entity',
+                $aRelations[$sRelationName]['rel_entity']); // получаем корневую сущность, без учета наследников
+            $sRelKey = $aRelations[$sRelationName]['rel_key'];
+
+            if (!array_key_exists($sRelationName, $aRelations) or !in_array($sRelType, array(
+                    EntityORM::RELATION_TYPE_BELONGS_TO,
+                    EntityORM::RELATION_TYPE_HAS_ONE,
+                    EntityORM::RELATION_TYPE_HAS_MANY,
+                    EntityORM::RELATION_TYPE_MANY_TO_MANY
+                ))
+            ) {
+                throw new Exception("The entity <{$sEntityFull}> not have relation <{$sRelationName}>");
+            }
+
+            /**
+             * Делаем общий запрос по всем ключам
+             */
+            $oRelEntityEmpty = Engine::GetEntity($sRelEntity);
+            $sRelModuleName = Engine::GetModuleName($sRelEntity);
+            $sRelEntityName = Engine::GetEntityName($sRelEntity);
+            $sRelPluginPrefix = Engine::GetPluginPrefix($sRelEntity);
+            $sRelPrimaryKey = method_exists($oRelEntityEmpty,
+                '_getPrimaryKey') ? $oRelEntityEmpty->_getPrimaryKey() : 'id';
+            if ($sRelType == EntityORM::RELATION_TYPE_BELONGS_TO) {
+                /**
+                 * Формируем список ключей
+                 */
+                $aEntityKeyValues = array();
+                foreach ($aEntities as $oEntity) {
+                    $aEntityKeyValues[] = $oEntity->_getDataOne($sRelKey);
+                }
+                $aEntityKeyValues = array_unique($aEntityKeyValues);
+
+                $sKeyTo = $aRelations[$sRelationName]['rel_key_to'] ?: $sRelPrimaryKey;
+                $aFilterRel = array(
+                    $sKeyTo . ' in' => $aEntityKeyValues,
+                    '#index-from'   => $sKeyTo
+                );
+                $aFilterRel = array_merge($aFilterRel, $aRelationFilter);
+                $aRelData = Engine::GetInstance()->_CallModule("{$sRelPluginPrefix}{$sRelModuleName}_get{$sRelEntityName}ItemsByFilter",
+                    array($aFilterRel));
+            } elseif ($sRelType == EntityORM::RELATION_TYPE_HAS_ONE) {
+                $aFilterRel = array($sRelKey . ' in' => $aEntityPrimaryKeys, '#index-from' => $sRelKey);
+                $aFilterRel = array_merge($aFilterRel, $aRelationFilter, $aRelations[$sRelationName]['filter']);
+                $aRelData = Engine::GetInstance()->_CallModule("{$sRelPluginPrefix}{$sRelModuleName}_get{$sRelEntityName}ItemsByFilter",
+                    array($aFilterRel));
+            } elseif ($sRelType == EntityORM::RELATION_TYPE_HAS_MANY) {
+                if ($aRelations[$sRelationName]['key_from']) {
+                    /**
+                     * Формируем список ключей
+                     */
+                    $aEntityKeyValues = array();
+                    foreach ($aEntities as $oEntity) {
+                        $aEntityKeyValues[] = $oEntity->_getDataOne($aRelations[$sRelationName]['key_from']);
+                    }
+                    $aEntityKeyValues = array_unique($aEntityKeyValues);
+                }
+
+                $aFilterRel = array(
+                    $sRelKey . ' in' => $aRelations[$sRelationName]['key_from'] ? $aEntityKeyValues : $aEntityPrimaryKeys,
+                    '#index-group'   => $sRelKey
+                );
+                $aFilterRel = array_merge($aFilterRel, $aRelationFilter, $aRelations[$sRelationName]['filter']);
+                $aRelData = Engine::GetInstance()->_CallModule("{$sRelPluginPrefix}{$sRelModuleName}_get{$sRelEntityName}ItemsByFilter",
+                    array($aFilterRel));
+            } elseif ($sRelType == EntityORM::RELATION_TYPE_MANY_TO_MANY) {
+                $sEntityJoin = $aRelations[$sRelationName]['join_entity'];
+                $sKeyJoin = $aRelations[$sRelationName]['join_key'];
+                $aFilterAdd = $aRelations[$sRelationName]['filter'];
+                if (!array_key_exists('#value-default', $aRelationFilter)) {
+                    $aRelationFilter['#value-default'] = array();
+                }
+                $aFilterRel = array_merge($aFilterAdd, $aRelationFilter);
+                $aRelData = Engine::GetInstance()->_CallModule("{$sRelPluginPrefix}{$sRelModuleName}_get{$sRelEntityName}ItemsByJoinEntity",
+                    array($sEntityJoin, $sKeyJoin, $sRelKey, $aEntityPrimaryKeys, $aFilterRel));
+                $aRelData = $this->_setIndexesGroupJoinField($aRelData, $sKeyJoin);
+            }
+            /**
+             * Собираем набор
+             */
+            foreach ($aEntities as $oEntity) {
+                if ($sRelType == EntityORM::RELATION_TYPE_BELONGS_TO) {
+                    $sKeyData = $oEntity->_getDataOne($sRelKey);
+                } elseif (in_array($sRelType, array(
+                    EntityORM::RELATION_TYPE_HAS_ONE,
+                    EntityORM::RELATION_TYPE_HAS_MANY,
+                    EntityORM::RELATION_TYPE_MANY_TO_MANY
+                ))) {
+                    $sKeyData = $oEntity->_getPrimaryKeyValue();
+                } else {
+                    break;
+                }
+                if ($sRelType == EntityORM::RELATION_TYPE_HAS_MANY and $aRelations[$sRelationName]['key_from']) {
+                    $sKeyData = $oEntity->_getDataOne($aRelations[$sRelationName]['key_from']);
+                }
+                if (isset($aRelData[$sKeyData])) {
+                    $oEntity->_setData(array($sRelationName => $aRelData[$sKeyData]));
+                } elseif (isset($aRelationFilter['#value-default'])) {
+                    $oEntity->_setData(array($sRelationName => $aRelationFilter['#value-default']));
+                }
+                if ($sRelType == EntityORM::RELATION_TYPE_MANY_TO_MANY) {
+                    // Создаём объекты-обёртки для связей MANY_TO_MANY
+                    $oEntity->_setManyToManyRelations(new ORMRelationManyToMany($oEntity->_getRelationsData($sRelationName)),
+                        $sRelationName);
+                }
+            }
+        }
     }
 
     /**

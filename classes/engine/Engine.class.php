@@ -303,6 +303,11 @@ class Engine
      */
     public function Shutdown()
     {
+        /**
+         * Запускаем хуки для события перед завершением работы Engine
+         */
+        $this->Hook_Run('engine_shutdown_prepare');
+
         $this->ShutdownModules();
         /**
          * Запускаем хуки для события завершения работы Engine

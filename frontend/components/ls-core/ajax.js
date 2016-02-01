@@ -46,6 +46,7 @@ ls.ajax = (function ($) {
             success: function( response ) {
                 if ( response.bStateError ) {
                     if ( more.showNotices && ( response.sMsgTitle || response.sMsg ) ) ls.msg.error( response.sMsgTitle, response.sMsg );
+                    if ( $.isFunction( more.onError ) ) more.onError.apply( this, arguments );
                 } else {
                     if ( more.showNotices && ( response.sMsgTitle || response.sMsg ) ) ls.msg.notice( response.sMsgTitle, response.sMsg );
                     if ( $.isFunction( callback ) ) callback.apply( this, arguments );

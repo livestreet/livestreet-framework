@@ -288,19 +288,12 @@ var ls = ls || {};
             options.params = params || {};
 
             ls.ajax.load(url, params, function (result) {
-                if (result.bStateError) {
-                    _loader.hide();
-                    _overlay.hide();
-                    ls.msg.error('Error', result.sMsg);
-                } else {
-                    _loader.hide();
-                    $( $.trim( result['sText'] ) ).lsModal( options ).lsModal('show');
-                }
+                _loader.hide();
+                $( $.trim( result['sText'] ) ).lsModal( options ).lsModal('show');
             }, {
-                error: function () {
+                onError: function () {
                     _loader.hide();
                     _overlay.hide();
-                    ls.msg.error('Error');
                 }
             });
         };

@@ -76,6 +76,7 @@
 
             this.unselectAll();
             this.empty();
+            this._addClass( 'loading' );
             this._load( 'load', 'onLoad' );
         },
 
@@ -85,7 +86,6 @@
         empty: function() {
             this.getFiles().lsUploaderFile( 'destroy' ).remove();
             this.element.empty();
-            this._addClass( 'loading' );
         },
 
         /**
@@ -98,11 +98,11 @@
         /**
          * Коллбэк вызываемый после подгрузки списка файлов
          */
-        onLoad: function( respone ) {
-            this._removeClass( 'loading' ).html( $.trim( respone.html ) );
+        onLoad: function( response ) {
+            this._removeClass( 'loading' ).html( $.trim( response.html ) );
             this.initFiles( this.getFiles() );
 
-            this._trigger( 'afterload', null, this );
+            this._trigger( 'afterload', null, { context: this, response: response } );
         },
 
         /**

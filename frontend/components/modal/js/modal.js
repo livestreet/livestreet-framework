@@ -108,7 +108,7 @@ var ls = ls || {};
     // ----------
 
     var _loader = (function ($) {
-        this.element = $('<div class="ls-modal-loader loading js-ls-modal-loader" />');
+        this.element = $('<div class="ls-modal-loader ls-loading js-ls-modal-loader" />');
 
         /**
          * Init

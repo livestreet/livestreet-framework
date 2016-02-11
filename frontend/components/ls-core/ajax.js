@@ -109,9 +109,9 @@ ls.ajax = (function ($) {
 
                 return true;
             },
-            success: function (result, status, xhr, form) {
-                if ( result.aErrors && more.showNotices ) {
-                    $.each(result.aErrors, function(key, field) {
+            success: function (response, status, xhr, form) {
+                if ( response.aErrors && more.showNotices ) {
+                    $.each(response.aErrors, function(key, field) {
                         ls.notification.error(null, field);
                     });
                 }

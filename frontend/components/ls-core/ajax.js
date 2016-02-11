@@ -110,37 +110,30 @@ ls.ajax = (function ($) {
                 return true;
             },
             success: function (result, status, xhr, form) {
-                if ( result.aErrors ) {
+                if ( result.aErrors && more.showNotices ) {
                     $.each(result.aErrors, function(key, field) {
                         ls.notification.error(null, field);
                     });
                 }
 
-                if (result.bStateError) {
-                    ls.msg.error(null, result.sMsg);
-
-                    // more.warning(result, status, xhr, form);
+                if ( response.bStateError ) {
+                    if ( more.showNotices && ( response.sMsgTitle || response.sMsg ) ) ls.msg.error( response.sMsgTitle, response.sMsg );
+                    if ( $.isFunction( more.onError ) ) more.onError.apply( this, arguments );
                 } else {
-                    if (result.sMsg) {
-                        ls.msg.notice(null, result.sMsg);
-                    }
-
-                    if (typeof callback === 'function') {
-                        callback(result, status, xhr, form);
-                    }
+                    if ( more.showNotices && ( response.sMsgTitle || response.sMsg ) ) ls.msg.notice( response.sMsgTitle, response.sMsg );
+                    if ( $.isFunction( callback ) ) callback.apply( this, arguments );
                 }
 
                 if ( $.isFunction( more.onResponse ) ) more.onResponse.apply( this, arguments );
-            },
-            error: more.error,
+            },,
+            error: function(msg){
+                if ( $.isFunction( more.onError ) ) more.onError.apply( this, arguments );
+            }.bind(this),
             complete: function() {
                 NProgress.done();
                 button.prop('disabled', false).removeClass(ls.options.classes.states.loading);
 
-                if (more.complete) {
-                    more.complete.apply(ls.dev,arguments);
-                }
-
+                if ( $.isFunction( more.onComplete ) ) more.onComplete.apply( this, arguments );
                 if ( lock ) ls.utils.formUnlock( form );
             }.bind(this)
         };

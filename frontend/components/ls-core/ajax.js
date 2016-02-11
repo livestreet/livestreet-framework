@@ -125,7 +125,7 @@ ls.ajax = (function ($) {
                 }
 
                 if ( $.isFunction( more.onResponse ) ) more.onResponse.apply( this, arguments );
-            },,
+            },
             error: function(msg){
                 if ( $.isFunction( more.onError ) ) more.onError.apply( this, arguments );
             }.bind(this),

@@ -18,7 +18,7 @@
         {foreach $items as $item}
             {if is_array( $item )}
                 {block 'details_group_item'}
-                    {component 'details' classes='js-ls-details-group-item' params=$item}
+                    {component 'details' classes='js-details-group-item' params=$item}
                 {/block}
             {else}
                 {$item}

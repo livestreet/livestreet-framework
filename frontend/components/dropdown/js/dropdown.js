@@ -167,7 +167,8 @@ $.widget( "livestreet.lsDropdown", $.livestreet.lsComponent, {
             // if ( focus ) this.elements.toggle.focus();
             this._menuFocusedItem = null;
             this.elements.menu.attr( 'aria-hidden', true );
-            this._removeClass( this.elements.toggle, 'open' ).removeData('dropdown-state-hide');
+            this._removeClass( this.elements.toggle, 'open' )
+            this.element.removeData('dropdown-state-hide');
             this._trigger('afterhide', null, this);
         }.bind(this));
     },

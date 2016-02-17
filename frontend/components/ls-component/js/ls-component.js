@@ -13,6 +13,17 @@
     "use strict";
 
     $.widget( "livestreet.lsComponent", {
+        options: {
+            // Классы
+            classes: {},
+            // Селекторы
+            selectors: {},
+            // Ссылки
+            urls: {},
+            // Параметры отправляемые при каждом аякс запросе
+            params: {}
+        },
+
         /**
          * Конструктор
          *
@@ -31,22 +42,6 @@
 
             // Список локальных элементов
             this.elements = this._getElementsFromSelectors( this.options.selectors, this.element );
-
-            // Генерируем методы для работы с классами
-            $.each( [ 'hasClass', 'addClass', 'removeClass' ], function ( key, value ) {
-                this[ '_' + value ] = function( element, classes ) {
-                    if ( typeof element === "string" ) {
-                        classes = element;
-                        element = this.element;
-                    }
-
-                    classes = $.map( classes.split( ' ' ), function ( value ) {
-                        return this.option( 'classes.' + value );
-                    }.bind( this )).join( ' ' );
-
-                    return element[ value ]( classes );
-                }.bind( this )
-            }.bind( this ));
         },
 
         /**
@@ -188,21 +183,18 @@
             return !( $.isFunction( callback ) &&
                 callback.apply( this.element[0], [ event ].concat( data ) ) === false ||
                 event.isDefaultPrevented() );
-        }
+        },
 
         /**
          * Проверка наличия класса
          */
-        // _hasClass: function( element, classes ) {},
+        _hasClass: function( element, key ) {
+            if ( typeof element === "string" ) {
+                key = element;
+                element = this.element;
+            }
 
-        /**
-         * Добавление класса
-         */
-        // _addClass: function( element, classes ) {},
-
-        /**
-         * Удаление класса
-         */
-        // _removeClass: function( element, classes ) {},
+            return element.hasClass( this.option( 'classes.' + key ) );
+        }
     });
 })(jQuery);

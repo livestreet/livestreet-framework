@@ -2,7 +2,7 @@
  * E-mail
  *}
 
-{extends './field.text.tpl'}
+{extends 'component@field.text'}
 
 {block 'field_options' append}
     {$name = $name|default:'mail'}

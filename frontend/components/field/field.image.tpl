@@ -2,7 +2,7 @@
  * Выбор файла
  *}
 
-{extends './field.file.tpl'}
+{extends 'component@field.file'}
 
 {block 'field_file_info'}
     <p>

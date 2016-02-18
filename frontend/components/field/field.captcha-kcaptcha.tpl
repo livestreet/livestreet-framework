@@ -2,7 +2,7 @@
  * Каптча
  *}
 
-{extends './field.text.tpl'}
+{extends 'component@field.text'}
 
 {block 'field_input' prepend}
     <span data-type="captcha" data-lscaptcha-name="{$smarty.local.captchaName}" class="ls-field--captcha-image"></span>

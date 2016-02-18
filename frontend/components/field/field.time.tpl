@@ -2,4 +2,4 @@
  * Выбор времени
  *}
 
-{extends './field.date.tpl'}
+{extends 'component@field.date'}

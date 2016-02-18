@@ -2,7 +2,7 @@
  * 
  *}
 
-{extends './field.tpl'}
+{extends 'component@field.field'}
 
 {block 'field' prepend}
     {$mods = "$mods checkbox"}

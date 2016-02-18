@@ -8,7 +8,7 @@
  * @param attributes string  (null)     Атрибуты (указываются через пробел)
  *}
 
-{extends './field.tpl'}
+{extends 'component@field.field'}
 
 {block 'field'}
     <input type="hidden" {field_input_attr_common} />

@@ -8,7 +8,7 @@
  * @param array  $cities
  *}
 
-{extends './field.tpl'}
+{extends 'component@field.field'}
 
 {block 'field_options' append}
     {component_define_params params=[ 'place', 'countries', 'regions', 'cities', 'targetType' ]}

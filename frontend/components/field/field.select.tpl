@@ -2,7 +2,7 @@
  * Выпадающий список
  *}
 
-{extends './field.tpl'}
+{extends 'component@field.field'}
 
 {block 'field_input'}
     {$items = (array) $smarty.local.items}

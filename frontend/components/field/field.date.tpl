@@ -2,7 +2,7 @@
  * Выбор даты
  *}
 
-{extends './field.text.tpl'}
+{extends 'component@field.text'}
 
 {block 'field_options' append}
     {$mods = "$mods date"}

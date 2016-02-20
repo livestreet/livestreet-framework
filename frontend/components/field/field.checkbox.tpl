@@ -10,5 +10,5 @@
 {/block}
 
 {block 'field_input'}
-    <input type="checkbox" {field_input_attr_common} {if $smarty.local.checked}checked{else}{if {field_get_value form=$form name=$name} == 1}checked{/if}{/if} />
+    <input type="checkbox" {field_input_attr_common} {if $checked}checked{else}{if {field_get_value form=$form name=$name} == 1}checked{/if}{/if} />
 {/block}

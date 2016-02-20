@@ -2,7 +2,9 @@
  * Каптча
  *}
 
-{component 'field' template="captcha-{$smarty.local.type}"
-    captchaName=$smarty.local.captchaName
-    name=$smarty.local.name
-    label=$smarty.local.label}
+{component_define_params params=[ 'label', 'captchaName', 'name', 'type' ]}
+
+{component 'field' template="captcha-{$type}"
+    captchaName=$captchaName
+    name=$name
+    label=$label}

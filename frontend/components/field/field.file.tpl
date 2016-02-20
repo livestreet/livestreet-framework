@@ -4,9 +4,10 @@
 
 {extends 'component@field.field'}
 
-{block 'field' prepend}
+{block 'field_options' append}
+    {component_define_params params=[ 'uploadedFiles', 'removeName' ]}
+
     {$mods = "$mods file"}
-    {$uploadedFiles = $smarty.local.uploadedFiles}
 {/block}
 
 {block 'field_input'}
@@ -19,7 +20,7 @@
             {/block}
 
             <label>
-                <input type="checkbox" name="{$smarty.local.removeName}" value="1"> {lang 'common.remove'}
+                <input type="checkbox" name="{$removeName}" value="1"> {lang 'common.remove'}
             </label>
         </div>
     {/if}

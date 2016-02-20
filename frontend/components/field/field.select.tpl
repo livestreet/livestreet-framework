@@ -4,12 +4,11 @@
 
 {extends 'component@field.field'}
 
-{block 'field_input'}
-    {$items = (array) $smarty.local.items}
-    {$isMultiple = $smarty.local.isMultiple}
-    {$selectedValue = $smarty.local.selectedValue}
-    {$hasItems = (bool) $items}
+{block 'field_options' append}
+    {component_define_params params=[ 'items', 'isMultiple', 'selectedValue' ]}
+{/block}
 
+{block 'field_input'}
     {if $name && $form && ! $selectedValue}
         {field_get_value form=$form name=$name assign=selectedValue}
 
@@ -35,7 +34,7 @@
     {/function}
 
     {* data-placeholder нужен для плагина chosen *}
-    <select {field_input_attr_common useValue=false} {cdata name=$component list=$inputData} {if $smarty.local.placeholder}data-placeholder="{$smarty.local.placeholder}"{/if} {if $isMultiple}multiple{/if}>
+    <select {field_input_attr_common useValue=false} {cdata name=$component list=$inputData} {if $placeholder}data-placeholder="{$placeholder}"{/if} {if $isMultiple}multiple{/if}>
         {field_select_loop items=$items}
     </select>
 {/block}

@@ -4,14 +4,15 @@
 
 
 {$component = 'ls-field-image-ajax'}
+{component_define_params params=[ 'targetType', 'targetId', 'modalTitle', 'label', 'mods', 'classes', 'attributes' ]}
 
-<div class="{$component} {cmods name=$component mods=$mods} {$smarty.local.classes} fieldset" {cattr list=$smarty.local.attributes}
-    data-param-target_type="{$smarty.local.targetType}"
-    data-param-target_id="{$smarty.local.targetId}"
+<div class="{$component} {cmods name=$component mods=$mods} {$classes} fieldset" {cattr list=$attributes}
+    data-param-target_type="{$targetType}"
+    data-param-target_id="{$targetId}"
     {if $imagePreviewItems}data-param-id="{$imagePreviewItems[0]->getMediaId()}"{/if}>
 
     <div class="fieldset-header">
-        <h2 class="fieldset-title">{$smarty.local.label}</h2>
+        <h2 class="fieldset-title">{$label}</h2>
     </div>
 
     <div class="fieldset-body">
@@ -31,6 +32,6 @@
 
         {component 'uploader' template='modal'
             classes = 'js-field-image-ajax-modal'
-            title   = $smarty.local.modalTitle}
+            title   = $modalTitle}
     </div>
 </div>

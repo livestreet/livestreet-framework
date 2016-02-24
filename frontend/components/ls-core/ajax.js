@@ -21,8 +21,9 @@ ls.ajax = (function ($) {
         params = params || {};
 
         more.showNotices = typeof more.showNotices === 'undefined' ? true : more.showNotices;
+        more.showProgress = typeof more.showProgress === 'undefined' ? true : more.showProgress;
 
-        if ( ! more.progressNotShow ) {
+        if ( more.showProgress ) {
             NProgress.start();
         }
 
@@ -78,11 +79,14 @@ ls.ajax = (function ($) {
             params = more.params || {},
             lock = typeof more.lock === 'undefined' ? true : more.lock;
 
-        params.security_ls_key = LIVESTREET_SECURITY_KEY;
+        more.showNotices = typeof more.showNotices === 'undefined' ? true : more.showNotices;
+        more.showProgress = typeof more.showProgress === 'undefined' ? true : more.showProgress;
 
-        if (!more.progressNotShow) {
+        if ( more.showProgress ) {
             NProgress.start();
         }
+
+        if ( typeof LIVESTREET_SECURITY_KEY !== 'undefined' ) params.security_ls_key = LIVESTREET_SECURITY_KEY;
 
         if (url.indexOf('http://') != 0 && url.indexOf('https://') != 0 && url.indexOf('/') != 0) {
             url = aRouter['ajax'] + url + '/';

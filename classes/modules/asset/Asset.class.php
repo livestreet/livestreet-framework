@@ -115,20 +115,31 @@ class ModuleAsset extends Module
         /**
          * Проверям на необходимость замены
          */
-        if (isset($this->aAssets[$sType]['prepend'][$sFileKey])) {
-            if ($bReplace) {
-                unset($this->aAssets[$sType]['prepend'][$sFileKey]);
-            } else {
-                return false;
+        foreach (array('prepend', 'append') as $sTypeAdd) {
+            if (isset($this->aAssets[$sType][$sTypeAdd][$sFileKey])) {
+                if ($bReplace) {
+                    unset($this->aAssets[$sType][$sTypeAdd][$sFileKey]);
+                } else {
+                    return false;
+                }
+            }
+            /**
+             * Дополнительно проверим на путь к файлу, если в качестве ключа использовалось имя
+             * todo: при таком подходе смысла в ключах массива нет и можно искать на дубли только по значению
+             */
+            if ($aParams['name']) {
+                foreach ($this->aAssets[$sType][$sTypeAdd] as $sFindKey => $aFileParams) {
+                    if ($aParams['file'] == $aFileParams['file']) {
+                        if ($bReplace) {
+                            unset($this->aAssets[$sType][$sTypeAdd][$sFindKey]);
+                        } else {
+                            return false;
+                        }
+                    }
+                }
             }
         }
-        if (isset($this->aAssets[$sType]['append'][$sFileKey])) {
-            if ($bReplace) {
-                unset($this->aAssets[$sType]['append'][$sFileKey]);
-            } else {
-                return false;
-            }
-        }
+
         $this->aAssets[$sType][$bPrepend ? 'prepend' : 'append'][$sFileKey] = $aParams;
         return true;
     }

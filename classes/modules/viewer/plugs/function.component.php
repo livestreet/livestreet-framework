@@ -31,6 +31,14 @@ function smarty_function_component($aParams, &$oSmarty)
 {
     if (isset($aParams['_default_short'])) {
         $aParams['component'] = $aParams['_default_short'];
+        /**
+         * Если компонент формата "name.template"
+         */
+        $aComponentParts = explode('.', $aParams['component'], 2);
+        if (count($aComponentParts) > 1) {
+            $aParams['component'] = $aComponentParts[0];
+            $aParams['template'] = $aComponentParts[1];
+        }
     }
     if (empty($aParams['component'])) {
         trigger_error("Config: missing 'component' parametr", E_USER_WARNING);

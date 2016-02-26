@@ -137,6 +137,7 @@ abstract class ModuleValidate_EntityValidator extends Entity
             }
         }
         if ($aReplace) {
+            $aReplacePairs = array();
             foreach ($aReplace as $sFrom => $sTo) {
                 $aReplacePairs["%%{$sFrom}%%"] = $sTo;
             }
@@ -198,7 +199,7 @@ abstract class ModuleValidate_EntityValidator extends Entity
             /**
              * Подставляем имя поля в сообщение об ошибке валидации
              */
-            $sMsg = str_replace('%%field%%', is_null($this->label) ? $sField : $this->label, $sMsg);
+            $sMsg = str_replace('%%field%%', '«' . (is_null($this->label) ? $sField : $this->label) . '»', $sMsg);
             $oEntity->_addValidateError($sField, $sMsg);
             return false;
         } else {

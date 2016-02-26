@@ -201,6 +201,7 @@ select[multiple].ls-field-input { max-width: 300px; }
     background: #f44336;
     color: #ffcdd2;
     color: rgba(255,255,255,.7);
+    list-style: outside none none;
 }
 .parsley-errors-list.filled {
     display: block;

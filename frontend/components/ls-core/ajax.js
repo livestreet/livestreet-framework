@@ -100,6 +100,16 @@ ls.ajax = (function ($) {
             beforeSubmit: function (arr, form, options) {
                 if ( lock ) ls.utils.formLock( form );
                 button && button.prop('disabled', true).addClass(ls.options.classes.states.loading);
+                /**
+                 * Сбрасываем текущие ошибки
+                 */
+                var fieldsForClearError=form.data('fieldsForClearError');
+                if (fieldsForClearError && fieldsForClearError.length) {
+                    $.each(fieldsForClearError,function(k,v){
+                        var input=form.find('[name='+v+']');
+                        window.ParsleyUI.removeError(input.parsley(), v);
+                    });
+                }
             },
             beforeSerialize: function (form, options) {
                 if (typeof more.validate == 'undefined' || more.validate === true) {
@@ -114,10 +124,21 @@ ls.ajax = (function ($) {
                 return true;
             },
             success: function (response, status, xhr, form) {
-                if ( response.aErrors && more.showNotices ) {
-                    $.each(response.aErrors, function(key, field) {
-                        ls.notification.error(null, field);
+                if ( response.errors && more.showNotices ) {
+                    var fieldsForClearError=[];
+                    $.each(response.errors, function(key, field) {
+                        var input=form.find('[name='+key+']');
+                        if (input.length) {
+                            var msg=field.join('<br>');
+                            window.ParsleyUI.addError(input.parsley(), key, msg);
+                            /**
+                             * Сохраняем для следующего сброса
+                             */
+                            fieldsForClearError.push(key);
+                        }
                     });
+                    form.data('fieldsForClearError',fieldsForClearError);
+                    more.showNotices = false;
                 }
 
                 if ( response.bStateError ) {

@@ -95,7 +95,7 @@ class ModuleValidate extends Module
         $oValidator = $this->CreateValidator($sNameValidator, $oObject, null, $aParams);
 
         if (($sMsg = $oValidator->validate($mValue)) !== true) {
-            $sMsg = str_replace('%%field%%', is_null($oValidator->label) ? '' : $oValidator->label, $sMsg);
+            $sMsg = str_replace('%%field%%', is_null($oValidator->label) ? '' : '«' . $oValidator->label . '»', $sMsg);
             $this->AddError($sMsg);
             return false;
         } else {

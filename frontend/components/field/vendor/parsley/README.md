@@ -6,7 +6,7 @@ JavaScript form validation, without actually writing a single line of JavaScript
 
 ## Version
 
-2.2.0-rc1
+2.3.5
 
 ## Doc
 
@@ -45,22 +45,10 @@ npm install
 gulp test
 ```
 
-## Build `dist/`
+## Build `dist/` and `doc/annotated-source`
 
 ```
 gulp build
-```
-
-## Generate annotated documentation
-
-First time:
-```
-npm install -g docco
-```
-
-then
-```
-grunt build-annotated-source
 ```
 
 ## Run tests

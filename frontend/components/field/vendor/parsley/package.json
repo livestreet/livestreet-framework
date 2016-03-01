@@ -1,6 +1,6 @@
 {
   "name": "parsleyjs",
-  "version": "2.2.0-rc4",
+  "version": "2.3.5",
   "homepage": "http://parsleyjs.org",
   "license": "MIT",
   "description": "Validate your forms, frontend, without writing a single line of javascript!",
@@ -63,7 +63,8 @@
     "gulp-replace": "*",
     "gulp-sourcemaps": "^1.3.0",
     "gulp-uglify": "^1.2.0",
-    "isparta": "^3.0.3",
+    "gulp-git": "^1.7.0",
+    "isparta": "~3.0.3",
     "mocha": "^2.1.0",
     "moment": "*",
     "run-sequence": "^1.0.2",
@@ -77,6 +78,7 @@
     "entryFileName": "parsley",
     "mainVarName": "parsley",
     "mochaGlobals": [
+      "$",
       "stub",
       "spy",
       "expect",

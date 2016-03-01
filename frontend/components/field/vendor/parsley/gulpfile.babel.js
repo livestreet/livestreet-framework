@@ -14,7 +14,7 @@ import source  from 'vinyl-source-stream';
 import fs  from 'fs';
 import moment  from 'moment';
 import docco  from 'docco';
-
+import {spawn} from 'child_process';
 import manifest  from './package.json';
 
 // Load all of our Gulp plugins
@@ -80,6 +80,7 @@ function build(done) {
 
     $.file(exportFileName + '.js', res.code, { src: true })
       .pipe($.plumber())
+      .pipe($.replace('@@version', manifest.version))
       .pipe($.sourcemaps.init({ loadMaps: true }))
       .pipe($.babel())
       .pipe($.header(head, {pkg: manifest, now: moment()}))
@@ -109,7 +110,6 @@ function buildDoc(done) {
       gulp.src(dest + '*.html', { base: "./" })
       .pipe($.replace('<div id="jump_page">', '<div id="jump_page"><a class="source" href="../index.html"><<< back to documentation</a>'))
       .pipe($.replace('</body>', '<script type="text/javascript">var _gaq=_gaq||[];_gaq.push(["_setAccount","UA-37229467-1"]);_gaq.push(["_trackPageview"]);(function(){var e=document.createElement("script");e.type="text/javascript";e.async=true;e.src=("https:"==document.location.protocol?"https://ssl":"http://www")+".google-analytics.com/ga.js";var t=document.getElementsByTagName("script")[0];t.parentNode.insertBefore(e,t)})();</script></body>'))
-      .pipe($.replace('@@version', manifest.version))
       .pipe(gulp.dest('.'))
       .on('end', done);
   });
@@ -117,15 +117,17 @@ function buildDoc(done) {
 
 function copyI18n(done) {
   gulp.src(['src/i18n/*.js'])
-    .pipe($.replace("import Parsley from 'parsley';", "// Load this after Parsley"))  // Quick hack
+    .pipe($.replace("import Parsley from '../parsley';", "// Load this after Parsley"))  // Quick hack
+    .pipe($.replace("import Parsley from '../parsley/main';", ""))  // en uses special import
     .pipe(gulp.dest('dist/i18n/'))
     .on('end', done);
 }
 
 function writeVersion() {
-  return gulp.src(['index.html', 'doc/download.html'], { base: "./" })
+  return gulp.src(['index.html', 'doc/download.html', 'README.md'], { base: "./" })
     .pipe($.replace(/class="parsley-version">[^<]*</, `class="parsley-version">v${manifest.version}<`))
     .pipe($.replace(/releases\/tag\/[^"]*/, `releases/tag/${manifest.version}`))
+    .pipe($.replace(/## Version\n\n\S+\n\n/, `## Version\n\n${manifest.version}\n\n`))
     .pipe(gulp.dest('.'))
 }
 
@@ -150,6 +152,7 @@ function browserifyBundler() {
   const allFiles = ['./test/setup/browserify.js'].concat(testFiles);
 
   // Create our bundler, passing in the arguments required for watchify
+  watchify.args.debug = true;
   const bundler = browserify(allFiles, watchify.args);
 
   // Set up Babelify so that ES6 works in the tests
@@ -223,6 +226,38 @@ function testBrowser() {
   });
 }
 
+function gitClean() {
+  $.git.status({args : '--porcelain'}, (err, stdout) => {
+    if (err) throw err;
+    if (/^ ?M/.test(stdout)) throw 'You have uncommitted changes!'
+  });
+}
+
+function npmPublish(done) {
+  spawn('npm', ['publish'], { stdio: 'inherit' }).on('close', done);
+}
+
+function gitPush() {
+  $.git.push('origin', 'master', {args: '--follow-tags'}, err => { if (err) throw err });
+}
+
+function gitPushPages() {
+  $.git.push('origin', 'master:gh-pages', err => { if (err) throw err });
+}
+
+function gitTag() {
+  $.git.tag(manifest.version, {quiet: false}, err => { if (err) throw err });
+}
+
+gulp.task('release-git-clean', gitClean);
+gulp.task('release-npm-publish', npmPublish);
+gulp.task('release-git-push', gitPush);
+gulp.task('release-git-push-pages', gitPushPages);
+gulp.task('release-git-tag', gitTag);
+
+gulp.task('release', () => {
+  runSequence('release-git-clean', 'release-git-tag', 'release-git-push', 'release-git-push-pages', 'release-npm-publish');
+});
 // Remove the built files
 gulp.task('clean', cleanDist);
 

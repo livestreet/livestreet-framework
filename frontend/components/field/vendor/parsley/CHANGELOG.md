@@ -1,5 +1,25 @@
 # Parsley 2.x changelog
 
+## master
+
+## 2.3.1
+
+- Parsley now relies on `input` events instead of `change` and `keyup` events
+  to revalidate after the first failure. This is now customizable with the
+  `triggerAfterFailure` option. Triggers specified with the `trigger` option
+  are unbound once a field has failed.
+- Parsley updates the UI before firing success/error/validated events
+- Deprecated uses of ParsleyUI. Methods are now instance methods of ParsleyField,
+  with modernized interfaces.
+
+## 2.2.0
+
+- type="number" now follows HTML5 spec. In particular, commas are no longer accepted. (#1037)
+- Calls to validate, isValid, whenValidate, whenValid use named arguments
+  (e.g. validate({force: true, group: 'foo'})). Previous API is supported for
+  isValid/validate but is deprecated.
+- Drop support for undocumented option `eventValidate`.
+
 ## 2.2.0-rc3
 
 - Merged both versions (remote and basic) of Parsley.

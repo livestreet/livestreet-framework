@@ -103,10 +103,11 @@ ls.ajax = (function ($) {
                 /**
                  * Сбрасываем текущие ошибки
                  */
-                var fieldsForClearError=form.data('fieldsForClearError');
+                var fieldsForClearError = form.data('fieldsForClearError');
+
                 if (fieldsForClearError && fieldsForClearError.length) {
-                    $.each(fieldsForClearError,function(k,v){
-                        var input=form.find('[name='+v+']');
+                    $.each(fieldsForClearError, function (k, v) {
+                        var input = form.find('[name=' + v + ']');
                         window.ParsleyUI.removeError(input.parsley(), v);
                     });
                 }
@@ -125,11 +126,13 @@ ls.ajax = (function ($) {
             },
             success: function (response, status, xhr, form) {
                 if ( response.errors && more.showNotices ) {
-                    var fieldsForClearError=[];
+                    var fieldsForClearError = [];
+
                     $.each(response.errors, function(key, field) {
-                        var input=form.find('[name='+key+']');
+                        var input = form.find('[name=' + key + ']');
+
                         if (input.length) {
-                            var msg=field.join('<br>');
+                            var msg = field.join('<br>');
                             window.ParsleyUI.addError(input.parsley(), key, msg);
                             /**
                              * Сохраняем для следующего сброса
@@ -137,7 +140,7 @@ ls.ajax = (function ($) {
                             fieldsForClearError.push(key);
                         }
                     });
-                    form.data('fieldsForClearError',fieldsForClearError);
+                    form.data('fieldsForClearError', fieldsForClearError);
                     more.showNotices = false;
                 }
 

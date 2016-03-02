@@ -1,13 +1,18 @@
 {**
- * 
+ * Radio input
  *}
 
 {extends 'component@field.field'}
 
-{block 'field' prepend}
+{block 'field_options' prepend}
     {$mods = "$mods checkbox"}
+    {$getValueFromForm = false}
 {/block}
 
 {block 'field_input'}
-    <input type="radio" {field_input_attr_common} {if $checked}checked{else}{if {field_get_value form=$form name=$name} == 1}checked{/if}{/if} />
+    {if $name && $form}
+        {$checked = $value == {field_get_value form=$form name=$name}}
+    {/if}
+
+    <input type="radio" {field_input_attr_common} {if $checked}checked{/if} />
 {/block}

@@ -22,7 +22,7 @@
 {$component = 'ls-field'}
 
 {component_define_params params=[ 'form', 'placeholder', 'isDisabled', 'entity', 'entityScenario', 'escape', 'data', 'label', 'name',
-    'rules', 'useValue', 'value', 'id', 'inputClasses', 'inputAttributes', 'inputData', 'mods', 'classes', 'attributes', 'note' ]}
+    'rules', 'value', 'id', 'inputClasses', 'inputAttributes', 'inputData', 'mods', 'classes', 'attributes', 'note' ]}
 
 {* Уникальный ID *}
 {$uid = $id|default:($component|cat:rand(0, 10e10))}
@@ -31,26 +31,22 @@
 {$rules = $rules|default:[]}
 {$escape = $escape|default:true}
 {$form = $form|default:$_aRequest}
+{$getValueFromForm = true}
 
 {* Правила валидации *}
 {if $entity}
     {field_make_rule entity=$entity field=$entityField|default:$name scenario=$entityScenario assign=rules}
 {/if}
 
-{block 'field_options'}{/block}
-
-{**
- * Получение значения атрибута value
- *}
-{function field_input_attr_value}
-{strip}
-    {if isset($value)}
-        {($escape) ? htmlspecialchars($value) : $value}
-    {elseif $name and $form}
-        {field_get_value form=$form name=$name}
+{block 'field_options'}
+    {* Получение значения атрибута value *}
+    {if $getValueFromForm && $name && $form}
+        {$value = {field_get_value form=$form name=$name}}
     {/if}
-{/strip}
-{/function}
+
+    {* Escape *}
+    {$value = ($escape) ? htmlspecialchars($value) : $value}
+{/block}
 
 {**
  * Общие атрибуты
@@ -58,7 +54,7 @@
 {function field_input_attr_common useValue=true}
     id="{$uid}"
     class="{$component}-input {$inputClasses}"
-    {if $useValue}value="{field_input_attr_value}"{/if}
+    {if $useValue}value="{$value}"{/if}
     {if $name}name="{$name}"{/if}
     {if $placeholder}placeholder="{$placeholder}"{/if}
     {if $isDisabled}disabled{/if}

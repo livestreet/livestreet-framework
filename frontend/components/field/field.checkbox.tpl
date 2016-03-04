@@ -15,7 +15,7 @@
 
 {block 'field_input'}
     {if $name && $form}
-        {$formValue = {field_get_value form=$form name=$name}}
+        {field_get_value form=$form name=$name assign=formValue}
 
         {if is_array($formValue)}
             {$checked = in_array($value, $formValue)}

@@ -99,7 +99,8 @@
          * Коллбэк вызываемый после подгрузки списка файлов
          */
         onLoad: function( response ) {
-            this._removeClass( 'loading' ).html( $.trim( response.html ) );
+            this._removeClass( 'loading' )
+            this.element.html( $.trim( response.html ) );
             this.initFiles( this.getFiles() );
 
             this._trigger( 'afterload', null, { context: this, response: response } );

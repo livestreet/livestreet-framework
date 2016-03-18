@@ -12,12 +12,13 @@
 
 {* Название компонента *}
 {$component = 'ls-alert'}
-{component_define_params params=[ 'title', 'text', 'visible', 'dismissible', 'mods', 'classes', 'attributes' ]}
+{component_define_params params=[ 'title', 'text', 'visible', 'dismissible', 'close', 'mods', 'classes', 'attributes' ]}
 
 {* Дефолтные значения *}
 {$uid = "{$component}{rand( 0, 10e10 )}"}
 {$visible = $visible|default:true}
 
+{$dismissible = ( $close ) ? $close : $dismissible}
 {if $dismissible}
     {$mods = "$mods dismissible"}
 {/if}

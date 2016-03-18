@@ -114,7 +114,7 @@ ls.ajax = (function ($) {
             },
             beforeSerialize: function (form, options) {
                 if (typeof more.validate == 'undefined' || more.validate === true) {
-                    var res=form.parsley().validate();
+                    var res=form.parsley('validate');
                     if (!res) {
                         NProgress.done();
                         if ( $.isFunction( more.onValidateFail ) ) more.onValidateFail.apply( this, arguments );

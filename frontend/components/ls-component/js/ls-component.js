@@ -21,7 +21,16 @@
             // Ссылки
             urls: {},
             // Параметры отправляемые при каждом аякс запросе
-            params: {}
+            params: {
+                security_ls_key: LIVESTREET_SECURITY_KEY
+            },
+            // Локализация
+            i18n: {},
+            // Элементы
+            elements: {},
+            // Глобальный префикс для селекторов и текстовок, элементы с данным префиксом ищутся во всем документе,
+            // а не только внутри компонента
+            _globalChar: '@'
         },
 
         /**
@@ -42,16 +51,27 @@
 
             // Список локальных элементов
             this.elements = this._getElementsFromSelectors( this.options.selectors, this.element );
+            this.option( 'elements', this.elements );
         },
 
         /**
          * Получает элементы компонента из селекторов
          */
         _getElementsFromSelectors: function( selectors, context ) {
-            var elements = {};
+            var elements = {},
+                context = context || this.document;
 
             $.each( selectors || {}, function ( key, value ) {
-                elements[ key ] = ( context || this.document ).find( value );
+                // Если селектор начинается с глобального символа, то ищем элемент во всем документе,
+                // а не только внутри компонента
+                if ( $.type(value) == 'string' && value.charAt(0) == this.option('_globalChar') ) {
+                    value = value.substr(1);
+                    context = this.document;
+                }
+
+                elements[ key ] = $.type( value ) == 'object'
+                    ? this._getElementsFromSelectors( value, context )
+                    : context.find( value );
             }.bind( this ));
 
             return elements;
@@ -61,7 +81,7 @@
          * Получает локальный элемент по его имени
          */
         getElement: function( name ) {
-            return this.elements[ name ];
+            return this.option( 'elements.' + name );
         },
 
         /**
@@ -195,6 +215,45 @@
             }
 
             return element.hasClass( this.option( 'classes.' + key ) );
+        },
+
+        /**
+         * Локализация
+         *
+         * @param {String}        key    Ключ текстовки в опции i18n компонента
+         * @param {Object|Number} params Список для замены в текстовке, например { name: 'John Doe' } заменит строку %%name%%  текстовке на 'John Doe'.
+         *                               Если вместо объекта со списком замены указано число, то этот аргумент считается аргументом count.
+         * @param {Number}        count  Кол-во элементов для склонения сущ. во множ. числе
+         */
+        _i18n: function( key, params, count ) {
+            var text = this.option( 'i18n.' + key );
+
+            // Если в значении указан глобальный префикс, то считаем значение ключом
+            // и ищем значение в глобальном массиве текстовок
+            if ( text && text.charAt(0) == this.option('_globalChar') ) {
+                text = ls.i18n.get( text.substr(1) );
+            }
+
+            if ( ! text ) return key;
+
+            if ( params && $.isNumeric( params ) ) {
+                count = params;
+                params = null;
+            }
+
+            if ( $.isFunction( text ) ) {
+                text = text();
+            }
+
+            if ( count ) {
+                text = ls.i18n.pluralize( count, text );
+            }
+
+            if ( params ) {
+                text = ls.i18n.replace( text, params );
+            }
+
+            return text;
         }
     });
 })(jQuery);

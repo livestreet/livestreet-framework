@@ -27,7 +27,11 @@
                 region: '.js-field-geo-region',
                 city: '.js-field-geo-city'
             },
-            params: {}
+            params: {},
+            i18n: {
+                select_region: '@field.geo.select_region',
+                select_city: '@field.geo.select_city'
+            }
         },
 
         /**
@@ -58,7 +62,7 @@
             }
 
             this._load( 'regions', { country: this.elements.country.val(), target_type: this.type }, function( response ) {
-                this.append( this.elements.region, response.aRegions, ls.lang.get( 'field.geo.select_region' ) );
+                this.append( this.elements.region, response.aRegions, this._i18n( 'select_region' ) );
             }.bind( this ));
         },
 
@@ -72,7 +76,7 @@
             }
 
             this._load( 'cities', { region: this.elements.region.val(), target_type: this.type }, function( response ) {
-                this.append( this.elements.city, response.aCities, ls.lang.get( 'field.geo.select_city' ) );
+                this.append( this.elements.city, response.aCities, this._i18n( 'select_city' ) );
             }.bind( this ));
         },
 

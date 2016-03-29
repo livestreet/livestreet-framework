@@ -12,7 +12,7 @@
 
 {* Название компонента *}
 {$component = 'ls-more'}
-{component_define_params params=[ 'text', 'target', 'count', 'append', 'mods', 'classes', 'attributes', 'ajaxParams' ]}
+{component_define_params params=[ 'text', 'text_count', 'target', 'count', 'append', 'mods', 'classes', 'attributes', 'ajaxParams' ]}
 
 {block 'more_options'}{/block}
 
@@ -21,13 +21,15 @@
     {cattr list=$attributes}
     {cattr list=$ajaxParams prefix='data-param-'}
     {if $append}data-lsmore-append="{$append}"{/if}
-    {if $target}data-lsmore-target="{$target}"{/if}>
+    {if $target}data-lsmore-target="{$target}"{/if}
+    {if isset($count)}data-lsmore-count="{$count}"{/if}>
 
     {* Текст *}
-    {$text|default:{lang 'more.text'}}
-
-    {* Счетчик *}
-    {if $count}
-        (<span class="js-more-count">{$count}</span>)
-    {/if}
+    {block 'more_text'}
+        {if isset($count)}
+            {$text_count|default:{lang 'more.text_count' count=$count plural=true}}
+        {else}
+            {$text|default:{lang 'more.text'}}
+        {/if}
+    {/block}
 </div>

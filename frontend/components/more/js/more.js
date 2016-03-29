@@ -19,9 +19,6 @@
             urls: {
                 load: null
             },
-            selectors: {
-                counter: '.js-more-count'
-            },
             classes: {
                 loading: 'ls-loading',
                 locked: 'ls-more--locked'
@@ -35,7 +32,12 @@
             // Параметры запроса
             params: {},
             // Проксирующие параметры
-            proxy: [ 'next_page' ]
+            proxy: [ 'next_page' ],
+            i18n: {
+                text: '@more.text',
+                text_count: '@more.text_count',
+                empty: '@more.empty'
+            }
         },
 
         /**
@@ -88,14 +90,15 @@
          * Получает значение счетчика
          */
         getCount: function () {
-            return this.elements.counter.length && parseInt( this.elements.counter.text(), 10 );
+            return parseInt( this.element.data('lsmore-count'), 10 );
         },
 
         /**
          * Устанавливает значение счетчика
          */
         setCount: function ( number ) {
-            this.elements.counter.length && this.elements.counter.text( number );
+            this.element.data('lsmore-count', number);
+            this.element.text( this._i18n( 'text_count', number ) );
         },
 
         /**
@@ -111,14 +114,12 @@
                     this.target[ this.options.append ? 'append' : 'prepend' ]( $.trim( response.html ) );
 
                     // Обновляем счетчик
-                    if ( this.elements.counter.length ) {
-                        var countLeft = this.getCount() - response.count_loaded;
+                    var countLeft = this.getCount() - response.count_loaded;
 
-                        if ( countLeft <= 0 ) {
-                            response.hide = true;
-                        } else {
-                            this.setCount( countLeft );
-                        }
+                    if ( countLeft <= 0 ) {
+                        response.hide = true;
+                    } else {
+                        this.setCount( countLeft || 0 );
                     }
 
                     // Обновляем параметры
@@ -127,7 +128,7 @@
                     }.bind( this ));
                 } else {
                     // Для блоков без счетчиков
-                    ls.msg.notice( null, ls.lang.get( 'more.empty' ) );
+                    ls.msg.notice( null, this._i18n( 'empty' ) );
                 }
 
                 if ( response.hide ) {

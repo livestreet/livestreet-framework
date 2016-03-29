@@ -35,7 +35,7 @@ function smarty_function_cmods($aParams)
     }
 
     // Разделитель между названием компонента и мод-ом
-    $sDelimiter = $aParams['delimiter'] ? $aParams['delimiter'] : Config::Get('view.mod_delimiter');
+    $sDelimiter = $aParams['delimiter'] ?: Config::Get('view.mod_delimiter');
 
     // Удаляем лишние пробелы
     $sMods = trim(preg_replace('/\s+/', ' ', $aParams['mods']));

@@ -68,11 +68,11 @@
 
         {if $showPager}
             <ul class="{$component}-list {$component}-pager">
-                {* Следущая страница *}
-                {pagination_item page=$prev text="&larr; {$aLang.pagination.previous}" linkClasses="js-{$component}-prev"}
-
                 {* Предыдущая страница *}
-                {pagination_item page=$next text="{$aLang.pagination.next} &rarr;" linkClasses="js-{$component}-next"}
+                {pagination_item page=$prev text="&larr; {$aLang.pagination.previous}" linkClasses="{$component}-prev js-{$component}-prev"}
+
+                {* Следущая страница *}
+                {pagination_item page=$next text="{$aLang.pagination.next} &rarr;" linkClasses="{$component}-next js-{$component}-next"}
             </ul>
         {/if}
 

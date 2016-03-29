@@ -27,7 +27,7 @@
                             "load": "{$tab[ 'url' ]}"
                         }
                     }'
-                    {$tab[ 'attributes' ]}>
+                    {cattr list=$tab[ 'attributes' ]}>
 
                     {$tab[ 'text' ]}
                 </li>

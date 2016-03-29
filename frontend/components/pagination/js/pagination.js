@@ -28,6 +28,11 @@
             hash: {
                 next: '',
                 prev: ''
+            },
+
+            i18n: {
+                last: '@pagination.notices.last',
+                first: '@pagination.notices.first'
             }
         },
 
@@ -54,7 +59,7 @@
                 if ( url ) {
                     window.location = url + ( this.options.hash[ name ] && useHash ? '#' + this.options.hash[ name ] : '' );
                 } else {
-                    ls.msg.error( null, name == 'next' ? ls.lang.get('pagination.notices.last') : ls.lang.get('pagination.notices.first') );
+                    ls.msg.error( null, this._i18n( name == 'next' ? 'last' : 'first' ) );
                 }
             }
         },

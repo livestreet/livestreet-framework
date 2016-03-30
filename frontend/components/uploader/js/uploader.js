@@ -54,7 +54,7 @@
                 filter: '.js-uploader-filter',
                 filter_item: '.js-uploader-filter-item',
                 list_blankslate: '.js-uploader-list-blankslate',
-                list_more: '.js-uploader-list-more'
+                list_pagination: '.js-uploader-list-pagination'
             },
 
             // Классы
@@ -129,16 +129,8 @@
                 fileafterremove: this._onFileAfterRemove.bind( this )
             }));
 
-            this.elements.list_more.lsMore({
-                urls: {
-                    load: this.option( 'urls.load' )
-                },
-                params: this.option( 'params' ),
-                afterload: function () {
-                    this.elements.list.lsUploaderFileList( 'reinitFiles' )
-                }.bind(this),
-                proxy: [ 'page' ],
-                target: this.elements.list
+            this.elements.list_pagination.lsPaginationAjax({
+                pagechanged: this._onPageChanged.bind( this )
             });
 
             this._initFileUploader();
@@ -146,29 +138,30 @@
             this._activeFilter = 'uploaded';
 
             this._on( this.elements.filter_item, { click: function ( event ) {
-                var button = $( event.target ),
-                    filter = button.data( 'filter' ),
-                    targetType = filter === 'all' ? null : this.option( 'target_type' );
-
-                this._activeFilter = filter;
-
-                this.elements.filter_item.removeClass('active')
-                button.addClass('active');
-
-                this.elements.list.lsUploaderFileList( 'option', 'params.target_type', targetType );
-
-                if ( this.elements.list_more.lsMore( 'instance' ) ) {
-                    this.elements.list_more
-                        .lsMore( 'option', 'params.target_type', targetType )
-                        .lsMore( 'option', 'params.page', 2 );
-                    this.elements.list_more[ filter === 'all' ? 'show' : 'hide' ]();
-                }
-
-                this.reload();
+                this.setTargetTypeFilter( $( event.target ).data( 'filter' ) );
             }});
 
             // Подгрузка списка файлов
             this.option( 'autoload' ) && this.elements.list.lsUploaderFileList( 'load' );
+        },
+
+        /**
+         * 
+         */
+        setTargetTypeFilter: function ( filter ) {
+            var targetType = filter === 'all' ? null : this.option( 'target_type' );
+
+            this._activeFilter = filter;
+
+            this.elements.filter_item.removeClass('active')
+            this.elements.filter_item.filter('[data-filter=' + filter + ']').addClass('active');
+
+            this.elements.list.lsUploaderFileList( 'option', 'params.target_type', targetType );
+            this.elements.list.lsUploaderFileList( 'option', 'params.page', 1 );
+
+            this.elements.list_pagination.hide();
+
+            this.reload();
         },
 
         /**
@@ -208,6 +201,14 @@
             } else {
                 this.getElement( 'list' ).css( 'max-height', maxHeight );
             }
+        },
+
+        /**
+         * 
+         */
+        _onPageChanged: function( event, page ) {
+            this.getElement( 'list' ).lsUploaderFileList( 'option', 'params.page', page );
+            this.reload();
         },
 
         /**
@@ -264,6 +265,12 @@
          * 
          */
         _onFileListLoaded: function( event, data ) {
+            if ( data.response.pagination ) {
+                this.elements.list_pagination.lsPaginationAjax( 'setCurrentPage', data.response.pagination.iCurrentPage ).show();
+            } else {
+                this.elements.list_pagination.hide();
+            }
+
             this.checkEmpty();
             this._resizeFileList();
         },
@@ -368,10 +375,6 @@
          */
         checkEmpty: function() {
             this.elements.list_blankslate[ this.getElement( 'list' ).lsUploaderFileList( 'isEmpty' ) ? 'show' : 'hide' ]();
-
-            if ( this._activeFilter === 'all' && this.elements.list_more.lsMore( 'instance' ) ) {
-                this.elements.list_more[ this.getElement( 'list' ).lsUploaderFileList( 'isEmpty' ) ? 'hide' : 'show' ]();
-            }
         },
 
         /**

@@ -82,6 +82,7 @@
          * Собирает пагинатор
          */
         _build: function () {
+            var isVisible = this.element.is(':visible');
             var current = this.getCurrentPage();
             var total = this.getTotalPages();
             var padding = this.option( 'padding' );
@@ -115,7 +116,9 @@
                 result += this.option( 'html.separator' )() + this.option( 'html.page' )( total );
             }
 
-            this.element.show().html( result );
+            this.element.html( result );
+
+            if ( isVisible ) this.element.show();
         },
 
         /**

@@ -19,17 +19,17 @@
             // Ссылки
             urls: {
                 // Загрузка файла
-                upload: aRouter['ajax'] + 'media/upload/',
+                upload: null,
                 // Подгрузка файлов
-                load: aRouter['ajax'] + 'media/load-gallery/',
+                load: null,
                 // Удаление файла
-                remove: aRouter['ajax'] + 'media/remove-file/',
+                remove: null,
                 // Обновление св-ва
-                update_property: aRouter['ajax'] + 'media/save-data-file/',
+                update_property: null,
                 // Кол-во загруженных файлов
-                count: aRouter['ajax'] + 'media/count/',
+                count: null,
                 // Генерация временного хэша
-                generate_target_tmp: aRouter['ajax'] + 'media/generate-target-tmp/'
+                generate_target_tmp: null
             },
 
             // Селекторы
@@ -44,8 +44,9 @@
                 uploader: '.js-uploader-modal'
             },
 
-            params: {
-                security_ls_key: LIVESTREET_SECURITY_KEY
+            i18n: {
+                empty: '@uploader.attach.empty',
+                count: '@uploader.attach.count'
             }
         },
 
@@ -114,9 +115,9 @@
          */
         setCounter: function( count ) {
             if ( count <= 0 ) {
-                this.elements.counter.text( ls.lang.get( 'uploader.attach.empty' ) );
+                this.elements.counter.text( this._i18n( 'empty' ) );
             } else {
-                this.elements.counter.text( ls.lang.pluralize( count, ls.lang.get( 'uploader.attach.count' ) ) );
+                this.elements.counter.text( this._i18n( 'count', count ) );
             }
         }
     });

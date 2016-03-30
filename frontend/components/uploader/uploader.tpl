@@ -79,10 +79,10 @@
                 {* Список файлов *}
                 <ul class="{$component}-file-list js-uploader-list"></ul>
 
-                {component 'more'
+                {component 'pagination' template='ajax'
+                    mods='small'
                     attributes = [ style => 'display: none' ]
-                    classes    = 'js-uploader-list-more'
-                    ajaxParams = [ 'page' => 2 ]}
+                    classes    = 'js-uploader-list-pagination'}
 
                 {* @hook Конец контента *}
                 {hook run='uploader_content_end'}

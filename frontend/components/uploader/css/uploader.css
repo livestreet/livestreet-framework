@@ -73,3 +73,12 @@
 .ls-modal--uploader {
     max-width: 850px;
 }
+
+
+/**
+ * Пагинация
+ */
+.ls-uploader .ls-pagination {
+    display: none;
+    padding-top: 5px;
+}

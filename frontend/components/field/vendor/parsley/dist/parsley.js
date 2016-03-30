@@ -969,18 +969,24 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       var assert = _ref5.assert;
 
       this._insertErrorWrapper();
-      this._ui.$errorsWrapper.addClass('filled').append($(this.options.errorTemplate).addClass('parsley-' + name).html(message || this._getErrorMessage(assert)));
+      // @livestreet
+      this._ui.$errorsWrapper.addClass('filled').append($(this.options.errorTemplate).attr('data-parsley-field-name', name).html(message || this._getErrorMessage(assert)));
+      // @livestreet end
     },
 
     _updateError: function _updateError(name, _ref6) {
       var message = _ref6.message;
       var assert = _ref6.assert;
 
-      this._ui.$errorsWrapper.addClass('filled').find('.parsley-' + name).html(message || this._getErrorMessage(assert));
+      // @livestreet
+      this._ui.$errorsWrapper.addClass('filled').find('[data-parsley-field-name="' + name + '"]').html(message || this._getErrorMessage(assert));
+      // @livestreet end
     },
 
     _removeError: function _removeError(name) {
-      this._ui.$errorsWrapper.removeClass('filled').find('.parsley-' + name).remove();
+      // @livestreet
+      this._ui.$errorsWrapper.removeClass('filled').find('[data-parsley-field-name="' + name + '"]').remove();
+      // @livestreet end
     },
 
     _getErrorMessage: function _getErrorMessage(constraint) {

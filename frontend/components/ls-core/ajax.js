@@ -100,15 +100,13 @@ ls.ajax = (function ($) {
             beforeSubmit: function (arr, form, options) {
                 if ( lock ) ls.utils.formLock( form );
                 button && button.prop('disabled', true).addClass(ls.options.classes.states.loading);
-                /**
-                 * Сбрасываем текущие ошибки
-                 */
+
+                // Сбрасываем текущие ошибки
                 var fieldsForClearError = form.data('fieldsForClearError');
 
                 if (fieldsForClearError && fieldsForClearError.length) {
                     $.each(fieldsForClearError, function (k, v) {
-                        var input = form.find('[name="' + v + '"]');
-                        window.ParsleyUI.removeError(input.parsley(), v);
+                        form.find('[name="' + v + '"]').parsley().removeError(v);
                     });
                 }
             },
@@ -132,11 +130,9 @@ ls.ajax = (function ($) {
                         var input = form.find('[name="' + key + '"]');
 
                         if (input.length) {
-                            var msg = field.join('<br>');
-                            window.ParsleyUI.addError(input.parsley(), key, msg);
-                            /**
-                             * Сохраняем для следующего сброса
-                             */
+                            input.parsley().addError(key, { message: field.join('<br>') });
+
+                            // Сохраняем для следующего сброса
                             fieldsForClearError.push(key);
                         }
                     });

@@ -266,7 +266,10 @@
          */
         _onFileListLoaded: function( event, data ) {
             if ( data.response.pagination ) {
-                this.elements.list_pagination.lsPaginationAjax( 'setCurrentPage', data.response.pagination.iCurrentPage ).show();
+                this.elements.list_pagination
+                    .lsPaginationAjax( 'setTotalPages', data.response.pagination.iCountPage )
+                    .lsPaginationAjax( 'setCurrentPage', data.response.pagination.iCurrentPage )
+                    .show();
             } else {
                 this.elements.list_pagination.hide();
             }

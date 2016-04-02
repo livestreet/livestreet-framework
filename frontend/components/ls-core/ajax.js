@@ -17,9 +17,12 @@ ls.ajax = (function ($) {
      * 
      */
     this.options = {
+        selectors: {
+            alert: '.js-ajax-form-alert'
+        },
         html: {
             alert: function (title, text) {
-                return '<div class="ls-alert ls-alert--error">' +
+                return '<div class="ls-alert ls-alert--error js-ajax-form-alert">' +
                             (title ? '<h4 class="ls-alert-title">' + title + '</h4>' : '') +
                             (text ? '<div class="ls-alert-body">' + text + '</div>' : '') +
                         '</div>';
@@ -190,6 +193,7 @@ ls.ajax = (function ($) {
      * 
      */
     this.showFormAlert = function (form, title, text) {
+        form.find(this.options.selectors.alert).remove();
         form.prepend(this.options.html.alert(title, text));
     };
 

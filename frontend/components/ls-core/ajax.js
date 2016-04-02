@@ -14,6 +14,20 @@ ls.ajax = (function ($) {
     "use strict";
 
     /**
+     * 
+     */
+    this.options = {
+        html: {
+            alert: function (title, text) {
+                return '<div class="ls-alert ls-alert--error">' +
+                            (title ? '<h4 class="ls-alert-title">' + title + '</h4>' : '') +
+                            (text ? '<div class="ls-alert-body">' + text + '</div>' : '') +
+                        '</div>';
+            }
+        }
+    };
+
+    /**
      * Выполнение AJAX запроса, автоматически передает security key
      */
     this.load = function(url, params, callback, more) {
@@ -141,7 +155,12 @@ ls.ajax = (function ($) {
                 }
 
                 if ( response.bStateError ) {
-                    if ( more.showNotices && ( response.sMsgTitle || response.sMsg ) ) ls.msg.error( response.sMsgTitle, response.sMsg );
+                    if ( more.showNotices && ( response.sMsgTitle || response.sMsg ) ) {
+                        ls.msg.error( response.sMsgTitle, response.sMsg );
+                    } else if (response.sMsgTitle || response.sMsg) {
+                        this.showFormAlert(form, response.sMsgTitle, response.sMsg);
+                    }
+
                     if ( $.isFunction( more.onError ) ) more.onError.apply( this, arguments );
                 } else {
                     if ( more.showNotices && ( response.sMsgTitle || response.sMsg ) ) ls.msg.notice( response.sMsgTitle, response.sMsg );
@@ -149,7 +168,7 @@ ls.ajax = (function ($) {
                 }
 
                 if ( $.isFunction( more.onResponse ) ) more.onResponse.apply( this, arguments );
-            },
+            }.bind(this),
             error: function(msg){
                 if ( $.isFunction( more.onError ) ) more.onError.apply( this, arguments );
             }.bind(this),
@@ -165,6 +184,13 @@ ls.ajax = (function ($) {
         ls.hook.run('ls_ajaxsubmit_before', [options,form,callback,more], this);
 
         form.ajaxSubmit(options);
+    };
+
+    /**
+     * 
+     */
+    this.showFormAlert = function (form, title, text) {
+        form.prepend(this.options.html.alert(title, text));
     };
 
     /**

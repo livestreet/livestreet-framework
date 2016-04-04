@@ -119,14 +119,8 @@ ls.ajax = (function ($) {
                 button && button.prop('disabled', true).addClass(ls.options.classes.states.loading);
 
                 // Сбрасываем текущие ошибки
-                var fieldsForClearError = form.data('fieldsForClearError');
-
-                if (fieldsForClearError && fieldsForClearError.length) {
-                    $.each(fieldsForClearError, function (k, v) {
-                        form.find('[name="' + v + '"]').parsley().removeError(v);
-                    });
-                }
-            },
+                this.clearFieldErrors(form);
+            }.bind(this),
             beforeSerialize: function (form, options) {
                 if (typeof more.validate == 'undefined' || more.validate === true) {
                     var res=form.parsley('validate');
@@ -141,27 +135,17 @@ ls.ajax = (function ($) {
             },
             success: function (response, status, xhr, form) {
                 if ( response.errors && more.showNotices ) {
-                    var fieldsForClearError = [];
-
-                    $.each(response.errors, function(key, field) {
-                        var input = form.find('[name="' + key + '"]');
-
-                        if (input.length) {
-                            input.parsley().addError(key, { message: field.join('<br>') });
-
-                            // Сохраняем для следующего сброса
-                            fieldsForClearError.push(key);
-                        }
-                    });
-                    form.data('fieldsForClearError', fieldsForClearError);
+                    this.showFieldErrors(form, response.errors);
                     more.showNotices = false;
                 }
 
                 if ( response.bStateError ) {
-                    if ( more.showNotices && ( response.sMsgTitle || response.sMsg ) ) {
-                        ls.msg.error( response.sMsgTitle, response.sMsg );
-                    } else if (response.sMsgTitle || response.sMsg) {
-                        this.showFormAlert(form, response.sMsgTitle, response.sMsg);
+                    if ( more.showNotices ) {
+                        if ( response.sMsgTitle || response.sMsg )
+                            ls.msg.error( response.sMsgTitle, response.sMsg );
+                    } else {
+                        if ( response.is_form_error && ( response.sMsgTitle || response.sMsg ) )
+                            this.showFormAlert(form, response.sMsgTitle, response.sMsg);
                     }
 
                     if ( $.isFunction( more.onError ) ) more.onError.apply( this, arguments );
@@ -187,6 +171,39 @@ ls.ajax = (function ($) {
         ls.hook.run('ls_ajaxsubmit_before', [options,form,callback,more], this);
 
         form.ajaxSubmit(options);
+    };
+
+    /**
+     * 
+     */
+    this.clearFieldErrors = function (form) {
+        var fieldsForClearError = form.data('fieldsForClearError');
+
+        if (fieldsForClearError && fieldsForClearError.length) {
+            $.each(fieldsForClearError, function (k, v) {
+                form.find('[name="' + v + '"]').parsley().removeError(v);
+            });
+        }
+    };
+
+    /**
+     * 
+     */
+    this.showFieldErrors = function (form, errors) {
+        var fieldsForClearError = [];
+
+        $.each(errors, function(key, field) {
+            var input = form.find('[name="' + key + '"]');
+
+            if (input.length) {
+                input.parsley().addError(key, { message: field.join('<br>') });
+
+                // Сохраняем для следующего сброса
+                fieldsForClearError.push(key);
+            }
+        });
+
+        form.data('fieldsForClearError', fieldsForClearError);
     };
 
     /**

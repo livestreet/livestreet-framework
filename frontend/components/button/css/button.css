@@ -194,6 +194,7 @@ input[type="button"].ls-button--block {
     color: transparent;
     background-repeat: no-repeat;
     background-position: 50% 50%;
+    transition: none;
 }
 
 /**

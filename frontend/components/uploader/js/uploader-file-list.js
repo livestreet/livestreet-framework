@@ -114,6 +114,8 @@
 
             this.initFiles( data.context ).lsUploaderFile( 'uploading' );
             this.element.prepend( data.context );
+
+            this._trigger( 'afterfileadd', null, { context: this, data: data } );
         },
 
         /**

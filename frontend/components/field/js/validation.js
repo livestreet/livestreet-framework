@@ -16,17 +16,15 @@ window.Parsley.addAsyncValidator('livestreet', function (xhr) {
     return 'undefined' === typeof xhr.responseJSON.errors;
 });
 
-/* TODO: Fix
-jQuery(document).ready(function ($) {
+jQuery(function ($) {
     Parsley.addValidator('rangetags', {
-        requirementType: 'string',
-        validateString: function(value, requirement) {
+        requirementType: [ 'integer', 'integer' ],
+        validateString: function(value, min, max) {
             var tag_count = value.replace(/ /g, "").match(/[^\s,]+(,|)/gi);
-            return tag_count && tag_count.length >= requirement[0] && tag_count.length <= requirement[1];
+            return tag_count && tag_count.length >= min && tag_count.length <= max;
         },
         messages: {
-            en: ls.lang.get('validate.tags.count', {'field': '', 'min': '%s', 'max': '%s'}),
+            ru: ls.lang.get('validate.tags.count', {'field': '', 'min': '%s', 'max': '%s'})
         }
     });
 });
-*/

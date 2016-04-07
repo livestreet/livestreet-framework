@@ -3,20 +3,20 @@
  *
  * @param string name
  * @param string text
- * @param string classes
- * @param string attributes
  * @param string activeItem
  * @param array  items
  *}
 
+{component_define_params params=[ 'items', 'name', 'text', 'activeItem', 'mods', 'classes', 'attributes' ]}
+
 {component 'nav'
-    name       = ( $smarty.local.name ) ? "{$smarty.local.name}_menu" : ''
-    activeItem = $smarty.local.activeItem
+    name       = ( $name ) ? "{$name}_menu" : ''
+    activeItem = $activeItem
     mods       = 'stacked dropdown'
     showSingle = true
-    classes    = "ls-dropdown-menu js-ls-dropdown-menu {$smarty.local.classes}"
-    attributes = array_merge( $smarty.local.attributes|default:[], [
+    classes    = "ls-dropdown-menu js-ls-dropdown-menu {$classes}"
+    attributes = array_merge( $attributes|default:[], [
         'role' => 'menu',
         'aria-hidden' => 'true'
     ])
-    items      = $smarty.local.items}
+    items      = $items}

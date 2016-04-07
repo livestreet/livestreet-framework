@@ -3,9 +3,7 @@
  *}
 
 {* TODO: Конфликт со спец параметром params компонентов *}
-{$params = $smarty.local.params}
-{$categoriesSelected = $smarty.local.categoriesSelected}
-{$categories = $smarty.local.categories}
+{component_define_params params=[ 'categories', 'categoriesSelected', 'params', 'mods', 'classes', 'attributes' ]}
 
 {* Получаем id выделеных категорий *}
 {$formField = {field_get_value form=$_aRequest name=$params.form_field}}

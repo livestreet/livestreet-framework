@@ -21,7 +21,7 @@
 {* Название компонента *}
 {$component = 'ls-field'}
 
-{component_define_params params=[ 'form', 'placeholder', 'isDisabled', 'entity', 'entityScenario', 'escape', 'data', 'label', 'name',
+{component_define_params params=[ 'form', 'placeholder', 'isDisabled', 'entity', 'entityScenario', 'entityField', 'escape', 'data', 'label', 'name',
     'rules', 'value', 'id', 'inputClasses', 'inputAttributes', 'inputData', 'mods', 'classes', 'attributes', 'note' ]}
 
 {* Уникальный ID *}

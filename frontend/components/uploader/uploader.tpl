@@ -5,11 +5,10 @@
 {$component = 'ls-uploader'}
 
 {block 'uploader_options'}
-    {$mods = $smarty.local.mods}
-    {$classes = $smarty.local.classes}
-    {$attributes = $smarty.local.attributes}
-    {$show = $smarty.local.show|default:true}
-    {$useFilter = $smarty.local.useFilter|default:true}
+    {component_define_params params=[ 'show', 'useFilter', 'mods', 'classes', 'attributes' ]}
+
+    {$show = $show|default:true}
+    {$useFilter = $useFilter|default:true}
 {/block}
 
 <div class="{$component} {cmods name=$component mods=$mods} {$classes}" {cattr list=$attributes}>

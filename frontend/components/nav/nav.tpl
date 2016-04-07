@@ -18,7 +18,7 @@
 
 {* Получаем пункты установленные плагинами *}
 {if $hook}
-    {hook run=$hook assign='hookItems' params=$smarty.local.params items=$items array=true}
+    {hook run=$hook assign='hookItems' params=$params items=$items array=true}
     {$items = ( $hookItems ) ? $hookItems : $items}
 {/if}
 

@@ -9,13 +9,11 @@
 <!doctype html>
 
 {$component = 'layout'}
+{component_define_params params=[ 'mods', 'classes', 'attributes' ]}
 
 {block 'layout_options'}
     {$rtl = ( Config::Get('view.rtl') ) ? 'dir="rtl"' : ''}
     {$lang = Config::Get('lang.current')}
-    {$attributes = $smarty.local.attributes}
-    {$classes = $smarty.local.classes}
-    {$mods = $smarty.local.mods}
 {/block}
 
 <!--[if lt IE 7]> <html class="no-js ie6 oldie" lang="{$lang}" {$rtl}> <![endif]-->

@@ -2,9 +2,9 @@
  * Информация о производительности движка
  *}
 
-{if $bIsShowStatsPerformance}
-    {$stats = $smarty.local.stats}
+{component_define_params params=[ 'stats', 'timeFullPerformance' ]}
 
+{if $bIsShowStatsPerformance}
     <div class="alert alert--info ls-performance">
         {hook run='statistics_performance_begin'}
 
@@ -25,7 +25,7 @@
                 <td>
                     <h4>PHP</h4>
                     time load modules: <strong>{$stats.engine.time_load_module}</strong><br />
-                    full time: <strong>{$smarty.local.timeFullPerformance}</strong>
+                    full time: <strong>{$timeFullPerformance}</strong>
                 </td>
                 <td>
                     <h4>Memory</h4>

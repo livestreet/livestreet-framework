@@ -21,9 +21,7 @@
 {* Путь до папки с изображенями *}
 {$imagesDir = "{$LS->Component_GetWebPath('email')}/images"}
 
-{$title = $smarty.local.title}
-{$content = $smarty.local.content}
-
+{component_define_params params=[ 'title', 'content' ]}
 
 {* Фон *}
 <table width="100%" align="center" bgcolor="#{$backgroundColor}" cellpadding="0" cellspacing="0" style="border-collapse: collapse;">

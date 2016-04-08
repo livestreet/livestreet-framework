@@ -11,6 +11,8 @@
 (function ($) {
     "use strict";
 
+    var notReadyItems = [];
+
     $.widget("livestreet.lsReCaptcha", $.livestreet.lsComponent, {
         /**
          * Дефолтные опции
@@ -33,47 +35,44 @@
             if (window['grecaptcha']) {
                 this.init();
             } else {
-                if (!$.livestreet.lsReCaptcha.prototype.notReadyItems) {
-                    $.livestreet.lsReCaptcha.prototype.notReadyItems = [];
-                }
-                $.livestreet.lsReCaptcha.prototype.notReadyItems.push(this);
+                notReadyItems.push(this);
             }
         },
 
         init: function () {
             var el = this.element.get(0);
+
             this.grecaptcha = grecaptcha.render(el, {
-                'sitekey': this.options.key,
-                'callback': function (response) {
-                    this.callbackResponse.call(this, response);
-                }.bind(this)
+                sitekey: this.options.key,
+                callback: this.callbackResponse.bind(this)
             });
 
+            // Поле для результата валидации
+            this.input = $('<input>').attr({
+                name: this.options.name,
+                type: 'hidden'
+            });
+
+            this.input.appendTo(this.element);
+
+            // Кнопка обновления капчи
             var reset = $('#' + $(el).attr('id') + '-reset');
+
             if (reset.length) {
-                reset.click(function (e) {
-                    this.reset();
-                }.bind(this));
+                reset.click(this.reset.bind(this));
             }
         },
 
         callbackResponse: function (response) {
-            if (!this.input) {
-                this.input = $('<input>').attr({
-                    name: this.options.name,
-                    type: 'hidden'
-                });
-                this.input.insertAfter(this.element);
-            }
             this.input.val(response);
         },
 
         initNotReady: function () {
-            if ($.livestreet.lsReCaptcha.prototype.notReadyItems) {
-                $.each($.livestreet.lsReCaptcha.prototype.notReadyItems, function (k, v) {
+            if (notReadyItems) {
+                $.each(notReadyItems, function (k, v) {
                     v.init()
                 });
-                $.livestreet.lsReCaptcha.prototype.notReadyItems = [];
+                notReadyItems = [];
             }
         },
 

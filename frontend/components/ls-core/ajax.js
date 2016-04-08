@@ -134,9 +134,8 @@ ls.ajax = (function ($) {
                 return true;
             },
             success: function (response, status, xhr, form) {
-                if ( response.errors && more.showNotices ) {
+                if ( response.errors ) {
                     this.showFieldErrors(form, response.errors);
-                    more.showNotices = false;
                 }
 
                 if ( response.bStateError ) {

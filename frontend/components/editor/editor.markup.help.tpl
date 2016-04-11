@@ -24,7 +24,7 @@
 {/function}
 
 
-<div class="{$component} js-editor-help" data-form-id="{targetId}">
+<div class="{$component} js-editor-help" data-form-id="{$targetId}">
     <header class="{$component}-header ls-clearfix">
         <a href="#" class="ls-link-dotted help-link js-editor-help-toggle">{$aLang.editor.markup.help.link_show}</a>
     </header>

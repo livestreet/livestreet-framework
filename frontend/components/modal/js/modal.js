@@ -66,7 +66,7 @@ var ls = ls || {};
          * Resize
          */
         this.resize = function () {
-            this.element.height( _window.height() );
+            this.element.innerHeight( _window.height() );
 
             // Центрирование мод. окна при ресайзе
             // Необходимо из за того что в FF и IE анимация воспроизводится

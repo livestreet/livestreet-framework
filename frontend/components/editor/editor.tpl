@@ -24,6 +24,7 @@
  *}
 {function editor_textarea}
     {component 'field.textarea'
+        id = $_uid
         inputAttributes = array_merge( $inputAttributes|default:[], [ 'data-editor-type' => $type, 'data-editor-set' => $set, 'data-editor-media' => $_mediaUid ] )
         rows = $rows|default:10
         params = $params}

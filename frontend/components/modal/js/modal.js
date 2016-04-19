@@ -220,7 +220,7 @@ var ls = ls || {};
             this.element.css({
                 // Центрируем по вертикали только если высота
                 // модального меньше высоты окна
-                'margin-top': this.options.center && this.element.outerHeight() < _overlay.element.height() ? ( _overlay.element.height() - this.element.outerHeight() ) / 2 : 50,
+                'margin-top': this.options.center && this.element.outerHeight() < _overlay.element.height() ? ( _overlay.element.height() - this.element.outerHeight() ) / 2 : this.element.css('margin-top'),
                 // В FF и IE исправляет баг с анимацией
                 'margin-left': ( _overlay.element.width() - this.element.outerWidth() ) / 2
             });

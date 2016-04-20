@@ -43,10 +43,6 @@ var ls = ls || {};
             // Добавляем отступ чтобы контент не смещался после убирания скроллбара
             if ( body.outerHeight() > _window.height() ) body.css('margin-right', scrollbarWidth);
 
-            this.element.css({
-                overflow: 'auto'
-            });
-
             this.element.fadeIn( 300 );
         };
 
@@ -67,13 +63,6 @@ var ls = ls || {};
          */
         this.resize = function () {
             this.element.innerHeight( _window.height() );
-
-            // Центрирование мод. окна при ресайзе
-            // Необходимо из за того что в FF и IE анимация воспроизводится
-            // криво при margin: 0 auto
-            var modal = this.getActiveModal();
-            if ( ! modal.length ) return;
-            modal.css('margin-left', ( _overlay.element.width() - modal.outerWidth() ) / 2);
         };
 
         /**
@@ -87,7 +76,7 @@ var ls = ls || {};
          * Return active modal window
          */
         this.getActiveModal = function () {
-            return _overlay.element.find('[data-type=modal]:visible').eq(0);
+            return _overlay.element.find('[data-type=modal]:visible').eq(-1);
         };
 
         /**
@@ -146,6 +135,8 @@ var ls = ls || {};
             selectors: {
                 // Кнопка закрытия модального
                 close: '[data-type=modal-close]',
+                // Диалоговое окно
+                dialog: '.ls-modal-dialog',
                 // Табы
                 tabs: '.js-ls-modal-tabs'
             },
@@ -200,10 +191,31 @@ var ls = ls || {};
             // События
             // ----------
 
+            this._on( _window, { resize: 'resize' });
+
+            // Клик по оверлею
+            this.element.on('click', function (e) {
+                if ( e.target == this ) {
+                    _overlay.getActiveModal().lsModal('hide');
+                    _loader.hide();
+                }
+            });
+
             // Кнопки закрытия модального окна
             this._on( this.getElement( 'close' ), { click: 'hide' });
 
             this._trigger("create", null, this);
+        },
+
+        /**
+         * Центрирование мод. окна при ресайзе
+         * Необходимо из за того что в FF и IE анимация воспроизводится
+         * криво при margin: 0 auto
+         */
+        resize: function () {
+            this.element.innerHeight( _window.height() );
+            var dialog = this.getElement('dialog');
+            dialog.css('margin-left', ( this.element.width() - dialog.outerWidth() ) / 2);
         },
 
         /**
@@ -212,17 +224,17 @@ var ls = ls || {};
         show: function () {
             var isOverlayVisible = _overlay.isVisible();
 
-            _overlay.getActiveModal().lsModal('hide', false);
-
             if ( ! isOverlayVisible ) _overlay.element.css({ 'display' : 'block', 'visibility' : 'hidden' });
+            this.element.css('overflow', 'auto');
             this.element.css({ 'display' : 'block', 'visibility' : 'hidden' });
 
-            this.element.css({
+            var dialog = this.getElement('dialog');
+            dialog.css({
                 // Центрируем по вертикали только если высота
                 // модального меньше высоты окна
-                'margin-top': this.options.center && this.element.outerHeight() < _overlay.element.height() ? ( _overlay.element.height() - this.element.outerHeight() ) / 2 : this.element.css('margin-top'),
+                'margin-top': this.options.center && dialog.outerHeight() < this.element.height() ? ( this.element.height() - dialog.outerHeight() ) / 2 : dialog.css('margin-top'),
                 // В FF и IE исправляет баг с анимацией
-                'margin-left': ( _overlay.element.width() - this.element.outerWidth() ) / 2
+                'margin-left': ( this.element.width() - dialog.outerWidth() ) / 2
             });
 
             if ( ! isOverlayVisible ) _overlay.element.css({ 'display' : 'none', 'visibility' : 'visible' });
@@ -233,6 +245,7 @@ var ls = ls || {};
 
             this._show(this.element, this.options.show, function () {
                 this._trigger("aftershow", null, this);
+                this.resize();
             }.bind(this));
         },
 
@@ -242,7 +255,7 @@ var ls = ls || {};
         hide: function ( hideOverlay ) {
             hideOverlay = typeof hideOverlay === 'undefined' ? true : hideOverlay;
 
-            _overlay.element.css('overflow', 'hidden');
+            this.element.css('overflow', 'hidden');
 
             this._hide(this.element, this.options.hide, function () {
                 if ( this.options.url ) this.element.remove();
@@ -319,14 +332,6 @@ var ls = ls || {};
 
     // События
     // ----------
-
-    // Клик по оверлею
-    _overlay.element.on('click', function (e) {
-        if ( e.target == this ) {
-            _overlay.getActiveModal().lsModal('hide');
-            _loader.hide();
-        }
-    });
 
     // Закрытие модального по нажатию на Esc
     $(document).on('keyup.modal', function (e) {

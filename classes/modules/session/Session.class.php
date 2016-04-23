@@ -86,7 +86,9 @@ class ModuleSession extends Module
             ) {
                 session_id(getRequest('SSID'));
             } else {
-                session_regenerate_id();
+                if (session_status() == PHP_SESSION_ACTIVE) {
+                    session_regenerate_id();
+                }
             }
             session_start();
         }

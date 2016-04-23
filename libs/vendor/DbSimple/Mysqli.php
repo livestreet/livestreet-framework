@@ -25,11 +25,29 @@ require_once __DIR__.'/Database.php';
 class DbSimple_Mysqli extends DbSimple_Database
 {
     var $link;
-
-    /**
-     * constructor(string $dsn)
+   /**
+     * DbSimple_Mysqli constructor.
      * Connect to MySQL server.
+     * @param $dsn string
      */
+    function __construct($dsn)
+    {
+        if (!is_callable("mysqli_connect"))
+            return $this->_setLastError("-1", "MySQLi extension is not loaded", "mysqli_connect");
+
+        if (!empty($dsn["persist"])) {
+            if (version_compare(PHP_VERSION, '5.3') < 0) {
+                return $this->_setLastError("-1", "Persistent connections in MySQLi is allowable since PHP 5.3", "mysqli_connect");
+            } else {
+                $dsn["host"] = "p:".$dsn["host"];
+            }
+        }
+        $this->dsn=$dsn;
+        $this->_connect($dsn);
+    }
+    
+
+    
     function DbSimple_Mysqli($dsn)
     {
         
@@ -186,7 +204,7 @@ class DbSimple_Mysqli extends DbSimple_Database
     protected function _performFetch($result)
     {
         $row = mysqli_fetch_assoc($result);
-        if (mysql_error()) return $this->_setDbError($this->_lastQuery);
+        if (mysqli_error($this->link)) return $this->_setDbError($this->_lastQuery);
         if ($row === false) return null;
         return $row;
     }

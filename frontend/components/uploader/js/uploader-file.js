@@ -235,7 +235,7 @@
          */
         setProgress: function( percent ) {
             this.getElement( 'progress_value' ).height( percent + '%' );
-            this.getElement( 'progress_label' ).text( percent + '%' );
+            this.getElement( 'progress_label' ).text( percent == 100 ? 'Обработка..' : percent + '%' );
         },
 
         /**

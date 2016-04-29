@@ -46,26 +46,6 @@ class DbSimple_Mysqli extends DbSimple_Database
         $this->_connect($dsn);
     }
     
-
-    
-    function DbSimple_Mysqli($dsn)
-    {
-        
-        if (!is_callable("mysqli_connect"))
-            return $this->_setLastError("-1", "MySQLi extension is not loaded", "mysqli_connect");
-        
-        if (!empty($dsn["persist"])) {
-            if (version_compare(PHP_VERSION, '5.3') < 0) {
-                return $this->_setLastError("-1", "Persistent connections in MySQLi is allowable since PHP 5.3", "mysqli_connect");
-            } else {
-                $dsn["host"] = "p:".$dsn["host"];
-            }
-        }
-
-		$this->dsn=$dsn;
-		$this->_connect($dsn);
-    }
-
 	protected function _connect($dsn) {
 		if ( isset($dsn['socket']) ) {
 			// Socket connection

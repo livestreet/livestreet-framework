@@ -7,6 +7,7 @@ return array(
             // вызов метода с параметрами
             array(
                 array(
+                    'p',
                     'ls',
                     'cut',
                     'a',

@@ -21,9 +21,14 @@ class ExifMetadataReader extends AbstractMetadataReader
 {
     public function __construct()
     {
-        if (!function_exists('exif_read_data')) {
+        if (!self::isSupported()) {
             throw new NotSupportedException('PHP exif extension is required to use the ExifMetadataReader');
         }
+    }
+
+    public static function isSupported()
+    {
+        return function_exists('exif_read_data');
     }
 
     /**
@@ -51,6 +56,13 @@ class ExifMetadataReader extends AbstractMetadataReader
      */
     protected function extractFromStream($resource)
     {
+        if (0 < ftell($resource)) {
+            $metadata = stream_get_meta_data($resource);
+            if ($metadata['seekable']) {
+                rewind($resource);
+            }
+        }
+
         return $this->doReadData(stream_get_contents($resource));
     }
 

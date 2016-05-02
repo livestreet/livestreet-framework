@@ -366,6 +366,23 @@ class ModuleFs extends Module
     }
 
     /**
+     * Возвращает размер файла с учетом типа
+     *
+     * @param $sFile
+     * @return int|null
+     */
+    public function GetFileSize($sFile)
+    {
+        $sType = $this->GetPathType($sFile);
+        if (in_array($sType, array(self::PATH_TYPE_SERVER, self::PATH_TYPE_RELATIVE, self::PATH_TYPE_WEB))) {
+            if (file_exists($sFileServer = $this->GetPathServer($sFile))) {
+                return filesize($sFileServer);
+            }
+        }
+        return null;
+    }
+
+    /**
      * Проверяет на существование локальный файл
      *
      * @param string $sFile

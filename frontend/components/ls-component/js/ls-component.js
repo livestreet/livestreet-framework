@@ -152,6 +152,18 @@
         },
 
         /**
+         * Подготавливает форму для ajax сабмита
+         */
+        _form: function( url, form, callback, more ) {
+            var args = arguments;
+
+            form.on('submit', function (event) {
+                event.preventDefault();
+                this._submit.apply(this, [].slice.call(args));
+            }.bind(this));
+        },
+
+        /**
          * Устанавливает ajax параметр
          */
         _setParam: function( param, value ) {
@@ -254,6 +266,52 @@
             }
 
             return text;
+        },
+
+        /**
+         * Функция взята из widget.js
+         * Убрано добавление ключа из option.classes к элементу
+         */
+        _classes: function( options ) {
+            var full = [];
+            var that = this;
+
+            options = $.extend( {
+                element: this.element,
+                classes: this.options.classes || {}
+            }, options );
+
+            function processClassString( classes, checkOption ) {
+                var current, i;
+
+                for ( i = 0; i < classes.length; i++ ) {
+                    if ( checkOption ) {
+                        if ( options.classes[ classes[ i ] ] ) {
+                            full.push( options.classes[ classes[ i ] ] );
+                        }
+                    } else {
+                        current = that.classesElementLookup[ classes[ i ] ] || $();
+
+                        if ( options.add ) {
+                            current = $( $.unique( current.get().concat( options.element.get() ) ) );
+                        } else {
+                            current = $( current.not( options.element ).get() );
+                        }
+
+                        that.classesElementLookup[ classes[ i ] ] = current;
+                        full.push( classes[ i ] );
+                    }
+                }
+            }
+
+            if ( options.keys ) {
+                processClassString( options.keys.match( /\S+/g ) || [], true );
+            }
+            if ( options.extra ) {
+                processClassString( options.extra.match( /\S+/g ) || [] );
+            }
+
+            return full.join( " " );
         }
     });
 })(jQuery);

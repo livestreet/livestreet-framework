@@ -63,7 +63,8 @@
 
                 LIVESTREET_SECURITY_KEY = '{$LIVESTREET_SECURITY_KEY}',
                 LANGUAGE                = '{Config::Get('lang.current')}',
-                WYSIWYG                 = {if Config::Get('view.wysiwyg')}true{else}false{/if};
+                WYSIWYG                 = {if Config::Get('view.wysiwyg')}true{else}false{/if},
+                ACTION = '{$sAction}';
 
             var aRouter = [];
             {foreach $aRouter as $sPage => $sPath}

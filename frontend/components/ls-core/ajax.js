@@ -68,6 +68,9 @@ ls.ajax = (function ($) {
                 } else {
                     if ( more.showNotices && ( response.sMsgTitle || response.sMsg ) ) ls.msg.notice( response.sMsgTitle, response.sMsg );
                     if ( $.isFunction( callback ) ) callback.apply( this, arguments );
+
+                    response.sUrlRedirect && (window.location = response.sUrlRedirect);
+                    response.bRefresh && (window.location.reload());
                 }
 
                 if ( $.isFunction( more.onResponse ) ) more.onResponse.apply( this, arguments );
@@ -151,6 +154,9 @@ ls.ajax = (function ($) {
                 } else {
                     if ( more.showNotices && ( response.sMsgTitle || response.sMsg ) ) ls.msg.notice( response.sMsgTitle, response.sMsg );
                     if ( $.isFunction( callback ) ) callback.apply( this, arguments );
+
+                    response.sUrlRedirect && (window.location = response.sUrlRedirect);
+                    response.bRefresh && (window.location.reload());
                 }
 
                 if ( $.isFunction( more.onResponse ) ) more.onResponse.apply( this, arguments );

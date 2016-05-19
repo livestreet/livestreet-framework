@@ -2,30 +2,11 @@
  * Кроп изображений
  */
 
-.ls-crop {
-    text-align: center;
-}
-
-.ls-crop-image-holder {
-    margin-right: 10px;
-}
-.ls-crop-image-holder, .ls-crop-previews {
-    display: inline-block;
-    vertical-align: top;
-}
-.ls-crop-preview {
-    overflow: hidden;
-    margin-bottom: 15px;
-}
-
 /**
  * Модальное окно
  */
 .ls-modal--crop {
     max-width: 550px;
-}
-.ls-modal--crop .ls-modal-footer {
-    text-align: center;
 }
 .ls-modal--crop .ls-crop-desc {
     margin-bottom: 20px;

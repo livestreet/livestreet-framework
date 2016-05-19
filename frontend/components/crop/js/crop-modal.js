@@ -8,63 +8,62 @@
  * @author    Denis Shakhov <denis.shakhov@gmail.com>
  */
 
-var ls = ls || {};
-
-ls.cropModal = (function ($) {
+(function($) {
     "use strict";
 
-    var _defaults = {
-        urls: {
-            modal: null,
-            save: null
-        },
-        params: {
-            usePreview: false
-        },
-        selectors: {
-            crop: '.js-crop',
-            submit: '.js-crop-submit'
-        },
-        crop_options: {},
-        aftersave: null,
-        afterhide: null
-    };
-
-    /**
-     * Показывает модальное окно
-     */
-    this.show = function( options ) {
-        var options = $.extend( {}, _defaults, options );
-
-        ls.modal.load( options.urls.modal, options.params, {
-            aftershow: function( event, modal ) {
-                var crop   = modal.element.find( options.selectors.crop ).lsCrop( options.crop_options );
-                var submit = modal.element.find( options.selectors.submit );
-                var image  = crop.lsCrop( 'getImage' );
-
-                submit.on( 'click', function() {
-                    var paramsRequest = $.extend({}, {
-                        size: crop.lsCrop( 'getSelection' ),
-                        canvas_width: image.innerWidth()
-                    }, options.params || {});
-
-                    ls.ajax.load( options.urls.save, paramsRequest, function( response ) {
-                        modal.hide();
-
-                        if ( $.isFunction( options.aftersave ) ) {
-                            options.aftersave( response, modal, image );
-                        }
-                    });
-                });
+    $.widget( "livestreet.lsCropModal", $.livestreet.lsComponent, {
+        /**
+         * Дефолтные опции
+         */
+        options: {
+            // Ссылки
+            urls: {
+                submit: null
             },
-            afterhide: function( event, modal ) {
-                if ( $.isFunction( options.afterhide ) ) {
-                    options.afterhide( event, modal );
-                }
-            },
-            center: false
-        });
-    };
 
-    return this;
-}).call( ls.cropModal || {}, jQuery );
+            // Селекторы
+            selectors: {
+                crop: '.js-crop',
+                submit: '.js-crop-submit'
+            },
+
+            cropOptions: {},
+
+            submitted: null
+        },
+
+        /**
+         * Конструктор
+         *
+         * @constructor
+         * @private
+         */
+        _create: function () {
+            this._super();
+
+            this.elements.crop.lsCrop(this.option('cropOptions'));
+
+            this._on(this.elements.submit, { click: 'onSubmit' });
+        },
+
+        /**
+         * Сабмит
+         */
+        onSubmit: function() {
+            var params = {
+                size: this.elements.crop.lsCrop( 'getSelection' ),
+                canvas_width: this.elements.crop.lsCrop( 'getImageData' ).width
+            };
+
+            this._load('submit', params, 'onSubmitSuccess');
+        },
+
+        /**
+         * Коллбэк вызываемый после сабмита
+         */
+        onSubmitSuccess: function(response) {
+            this._trigger('submitted', null, { element: this.element, response: response });
+            this.element.lsModal('hide');
+        }
+    });
+})(jQuery);

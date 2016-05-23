@@ -131,7 +131,7 @@
                 callback = callback.bind( this );
             }
 
-            ls.ajax.load( this.options.urls[ url ], params || {}, callback, more );
+            ls.ajax.load( this.option('urls.' + url), params || {}, callback, more );
         },
 
         /**
@@ -146,7 +146,7 @@
                 callback = callback.bind( this );
             }
 
-            ls.ajax.submit( this.options.urls[ url ], form, callback, $.extend({
+            ls.ajax.submit( this.option('urls.' + url), form, callback, $.extend({
                 params: this.option( 'params' ) || {}
             }, more ));
         },

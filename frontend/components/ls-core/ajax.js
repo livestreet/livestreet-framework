@@ -95,7 +95,8 @@ ls.ajax = (function ($) {
     this.submit = function(url, form, callback, more) {
         var more = more || {},
             form = typeof form == 'string' ? $(form) : form,
-            button = more.submitButton || form.find('[type=submit]').eq(0),
+            buttonSubmit = form.find('[type=submit]').eq(0),
+            button = more.submitButton || (buttonSubmit.length && buttonSubmit) || $('button[form=' + form.attr('id') + ']'),
             params = more.params || {},
             lock = typeof more.lock === 'undefined' ? true : more.lock;
 

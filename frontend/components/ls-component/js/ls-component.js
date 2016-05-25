@@ -59,19 +59,22 @@
          */
         _getElementsFromSelectors: function( selectors, context ) {
             var elements = {},
-                context = context || this.document;
+                context = context || this.document,
+                ctx;
 
             $.each( selectors || {}, function ( key, value ) {
+                ctx = context;
+
                 // Если селектор начинается с глобального символа, то ищем элемент во всем документе,
                 // а не только внутри компонента
                 if ( $.type(value) == 'string' && value.charAt(0) == this.option('_globalChar') ) {
                     value = value.substr(1);
-                    context = this.document;
+                    ctx = this.document;
                 }
 
                 elements[ key ] = $.type( value ) == 'object'
-                    ? this._getElementsFromSelectors( value, context )
-                    : context.find( value );
+                    ? this._getElementsFromSelectors( value, ctx )
+                    : ctx.find( value );
             }.bind( this ));
 
             return elements;

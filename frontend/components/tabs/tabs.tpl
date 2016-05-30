@@ -9,37 +9,20 @@
 
 {block 'tabs_options'}{/block}
 
+{* Уникальный ID для привязки таба к его содержимому *}
+{foreach $tabs as $tab}
+    {$tabs[ $tab@index ][ 'uid' ] = "tab{rand( 0, 10e10 )}"}
+{/foreach}
+
 <div class="{$component} {cmods name=$component mods=$mods} {$classes}" {cattr list=$attributes}>
     {* Табы *}
-    <ul class="ls-tab-list ls-clearfix" data-tab-list>
-        {foreach $tabs as $tab}
-            {* Уникальный ID для привязки таба к его содержимому *}
-            {$uid = "tab{rand( 0, 10e10 )}"}
-            {$tabs[ $tab@index ][ 'uid' ] = $uid}
-
-            {if $tab[ 'is_enabled' ]|default:true}
-                <li class="ls-tab {$tab[ 'classes' ]}
-                    {if $tab@first}active{/if}"
-                    data-tab
-                    data-lstab-options='{
-                        "target": "{$uid}",
-                        "urls": {
-                            "load": "{$tab[ 'url' ]}"
-                        }
-                    }'
-                    {cattr list=$tab[ 'attributes' ]}>
-
-                    {$tab[ 'text' ]}
-                </li>
-            {/if}
-        {/foreach}
-    </ul>
+    {component 'tabs.list' tabs=$tabs}
 
     {* Содержимое табов *}
     <div class="ls-tabs-panes" data-tab-panes>
         {foreach $tabs as $tab}
             {if $tab[ 'is_enabled' ]|default:true}
-                <div class="ls-tab-pane" {if $tab@first}style="display: block"{/if} data-tab-pane id="{$tab[ 'uid' ]}">
+                <div class="ls-tab-pane" {if $tab['isActive']}style="display: block"{/if} data-tab-pane id="{$tab[ 'uid' ]}">
                     {if $tab[ 'content' ]}
                         <div class="ls-tab-pane-content">
                             {$tab[ 'content' ]}

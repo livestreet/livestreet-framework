@@ -12,8 +12,8 @@
 
 {capture 'test_example_content'}
     {component 'tabs' classes='js-my-tabs' tabs=[
-        [ text => 'Tab 1', content => 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quae, explicabo!' ],
-        [ text => 'Tab 2', content => 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Qui expedita, quibusdam voluptas quia numquam provident nobis rem quam hic eum.' ]
+        [ text => 'Tab 1', content => 'Tab 1. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quae, explicabo!', isActive => true ],
+        [ text => 'Tab 2', content => 'Tab 2. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Qui expedita, quibusdam voluptas quia numquam provident nobis rem quam hic eum.' ]
     ]}
 {/capture}
 

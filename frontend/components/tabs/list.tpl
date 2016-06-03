@@ -1,11 +1,11 @@
 {$component = 'ls-tab-list'}
-{component_define_params params=[ 'tabs', 'mods', 'classes', 'attributes' ]}
+{component_define_params params=[ 'activeTab', 'tabs', 'mods', 'classes', 'attributes' ]}
 
 <ul class="{$component} {cmods name=$component mods=$mods} {$classes} ls-clearfix" {cattr list=$attributes} data-tab-list>
     {foreach $tabs as $tab}
         {if $tab[ 'is_enabled' ]|default:true}
             <li class="ls-tab {$tab[ 'classes' ]}
-                {if $tab['isActive']}active{/if}"
+                {if $tab['isActive'] || $activeTab == $tab['name']}active{/if}"
                 data-tab
                 data-lstab-options='{
                     "target": "{$tab['uid']}",

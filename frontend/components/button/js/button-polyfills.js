@@ -9,10 +9,18 @@
 /**
  * Атрибут form
  * https://developer.mozilla.org/en-US/docs/Web/HTML/Element/button#attr-form
- * TODO: Fix IE
  */
-if ( ! 'form' in document.createElement( 'button' ) ) {
-    jQuery( document ).on( 'click', 'button[form]', function () {
-        jQuery( '#' + $( this ).attr( 'form' ) ).submit();
-    });
-}
+jQuery(function ($) {
+    // http://html5test.com/
+    var element = document.createElement('div');
+    document.body.appendChild(element);
+    element.innerHTML = '<form id="form"></form><input form="form">';
+
+    if (element.lastChild.form != element.firstChild) {
+        $(document).on('click', 'button[form]', function () {
+            $('#' + $(this).attr('form')).submit();
+        });
+    }
+
+    document.body.removeChild(element);
+});

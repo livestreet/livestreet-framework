@@ -18,11 +18,16 @@
     float: left;
     padding: 7px 12px;
     margin-right: 2px;
-    background: #eee;
     cursor: pointer;
     border-radius: 2px;
 }
-.ls-tab.active {
+.ls-tab,
+.ls-tab a {
+    background: #eee;
+    color: #333;
+}
+.ls-tab.active,
+.ls-tab.active a {
     background: #2891d3;
     color: #fff;
 }

@@ -9,6 +9,7 @@
     },
     "templates": {
         "tabs": "tabs.tpl",
+        "tab": "tab.tpl",
         "list": "list.tpl"
     },
     "scripts": {

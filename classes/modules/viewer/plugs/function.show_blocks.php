@@ -44,8 +44,12 @@ function smarty_function_show_blocks($aParams, &$oSmarty)
                 $sResult .= smarty_insert_block(array('block' => $aBlock['name'], 'params' => isset($aBlock['params']) ? $aBlock['params'] : array()),
                     $oSmarty);
             } elseif ($aBlock['type'] == 'template') {
-                $sResult .= $oSmarty->getSubTemplate($aBlock['name'], $oSmarty->cache_id, $oSmarty->compile_id, null, null,
-                    array('params' => isset($aBlock['params']) ? $aBlock['params'] : array()), Smarty::SCOPE_LOCAL);
+                $aDataTpl = array();
+                if (isset($aBlock['params'])) {
+                    $aDataTpl = $aBlock['params'];
+                    $aDataTpl['params'] = $aBlock['params'];
+                }
+                $sResult .= $oSmarty->getSubTemplate($aBlock['name'], $oSmarty->cache_id, $oSmarty->compile_id, null, null, $aDataTpl, Smarty::SCOPE_LOCAL);
             }
         }
     }

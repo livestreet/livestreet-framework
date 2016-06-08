@@ -146,15 +146,23 @@ class ModuleComponent extends Module
                     continue;
                 }
                 /**
-                 * Смотрим в каком каталоге есть файл
+                 * Может быть внешний ресурс
                  */
-                foreach ($aData['paths'] as $sPath) {
-                    $sFile = $sPath . '/' . $sAsset;
-                    if (file_exists($sFile)) {
-                        break;
+                $iPos = strpos($sAsset, '//');
+                if ($iPos !== false and $iPos < 7) {
+                    $sFile = $sAsset;
+                } else {
+                    /**
+                     * Смотрим в каком каталоге есть файл
+                     */
+                    foreach ($aData['paths'] as $sPath) {
+                        $sFile = $sPath . '/' . $sAsset;
+                        if (file_exists($sFile)) {
+                            break;
+                        }
                     }
                 }
-                $sFileName = (is_int($mName) ? $sAsset : $mName);
+                $sFileName = (is_int($mName) ? md5($sAsset) : $mName);
                 $aParams['name'] = "component.{$sName}.{$sFileName}";
                 $this->Viewer_PrependStyle($sFile, $aParams);
             }
@@ -176,15 +184,23 @@ class ModuleComponent extends Module
                     continue;
                 }
                 /**
-                 * Смотрим в каком каталоге есть файл
+                 * Может быть внешний ресурс
                  */
-                foreach ($aData['paths'] as $sPath) {
-                    $sFile = $sPath . '/' . $sAsset;
-                    if (file_exists($sFile)) {
-                        break;
+                $iPos = strpos($sAsset, '//');
+                if ($iPos !== false and $iPos < 7) {
+                    $sFile = $sAsset;
+                } else {
+                    /**
+                     * Смотрим в каком каталоге есть файл
+                     */
+                    foreach ($aData['paths'] as $sPath) {
+                        $sFile = $sPath . '/' . $sAsset;
+                        if (file_exists($sFile)) {
+                            break;
+                        }
                     }
                 }
-                $sFileName = (is_int($mName) ? $sAsset : $mName);
+                $sFileName = (is_int($mName) ? md5($sAsset) : $mName);
                 $aParams['name'] = "component.{$sName}.{$sFileName}";
                 $this->Viewer_PrependScript($sFile, $aParams);
             }

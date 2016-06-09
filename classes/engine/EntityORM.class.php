@@ -798,6 +798,9 @@ abstract class EntityORM extends Entity
                     $mCmdArgs = array();
                     switch ($sRelationType) {
                         case self::RELATION_TYPE_BELONGS_TO :
+                            if (!$this->_getDataOne($sRelationKey)) {
+                                return null;
+                            }
                             $sKeyTo = $aRelations[$sKey]['rel_key_to'] ?: $sRelPrimaryKey;
                             $sCmd = "{$sRelPluginPrefix}{$sRelModuleName}_get{$sRelEntityName}By" . func_camelize($sKeyTo);
                             $mCmdArgs = array($this->_getDataOne($sRelationKey));

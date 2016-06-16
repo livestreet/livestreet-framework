@@ -5,6 +5,7 @@
 {extends 'component@field.field'}
 
 {block 'field_options'}
+    {component_define_params params=[ 'checked' ]}
     {$mods = "$mods checkbox"}
     {$getValueFromForm = false}
 

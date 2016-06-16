@@ -58,7 +58,9 @@
             {/if}
 
             {* Текст *}
-            {$text}
+            <span class="{$component}-text">
+                {$text}
+            </span>
 
             {* Стрелка *}
             {if $menu}
@@ -69,10 +71,9 @@
         {* Подменю *}
         {if $menu}
             {component 'nav'
-                activeItem = $activeItem
                 mods       = 'stacked'
                 isSubnav   = true
-                items      = $menu}
+                params     = $menu}
         {/if}
     </li>
 {/if}

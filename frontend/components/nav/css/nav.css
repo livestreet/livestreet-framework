@@ -45,7 +45,7 @@
 
 
 /**
- * Стрелки
+ * Стрелка
  */
 .ls-nav .ls-nav-item.ls-nav-item--has-children > .ls-nav-item-link,
 .ls-nav.ls-nav--sub .ls-nav-item.ls-nav-item--has-children > .ls-nav-item-link {
@@ -82,6 +82,11 @@
     border-radius: 2px;
     -webkit-transition: background .2s, color .2s;
     transition: background .2s, color .2s;
+}
+
+/* Стрелка */
+.ls-nav--pills .ls-nav-item-link > .ls-nav-item-caret {
+    border-top-color: #fff;
 }
 
 /* Hover */
@@ -143,10 +148,10 @@
 }
 .ls-nav--sub > .ls-nav-item.active {
     background: #2196F3;
-    color: #48a4d5;
+    color: #fff;
 }
 .ls-nav--sub > .ls-nav-item.active > .ls-nav-item-link {
-    color: #48a4d5;
+    color: #fff;
 }
 .ls-nav-separator {
     height: 0;
@@ -169,7 +174,7 @@
     top: 100%;
     left: 0;
 }
-.ls-nav-item:hover > .ls-nav--sub {
+.ls-nav > .ls-nav--sub > .ls-nav-item:hover > .ls-nav--sub {
     display: block;
 }
 

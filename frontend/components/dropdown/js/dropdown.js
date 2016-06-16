@@ -18,6 +18,7 @@ $.widget( "livestreet.lsDropdown", $.livestreet.lsComponent, {
         },
         selectors: {
             toggle: '.js-ls-dropdown-toggle',
+            text: '',
             menu: '.js-ls-dropdown-menu'
         },
         // Позиционирование
@@ -118,13 +119,14 @@ $.widget( "livestreet.lsDropdown", $.livestreet.lsComponent, {
      * 
      */
     setText: function ( text ) {
-        this.elements.toggle.text( text );
+        this.elements[ this.elements.text.length ? 'text' : 'toggle' ].text( text );
     },
 
     /**
      * Показавает/скрывает меню
      */
-    toggle: function () {
+    toggle: function (event) {
+        event.preventDefault();
         this[ this.elements.menu.is( ':visible' ) ? 'hide' : 'show' ]();
     },
 

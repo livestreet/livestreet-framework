@@ -33,13 +33,15 @@
 
 {if $isSubnav}
     {$mods = "$mods sub"}
+{else}
+    {$mods = "$mods root"}
 {/if}
 
 {* Smarty-блок для изменения опций *}
 {block 'nav_options'}{/block}
 
 {* Отображем меню только если есть активные пункты *}
-{if count( $items ) - $disabledItemsCounter - ( ( $showSingle|default:false ) ? 0 : 1 )}
+{if count( $items ) - $disabledItemsCounter - ( ( $showSingle|default:true ) ? 0 : 1 )}
     <ul class="{$component} {cmods name=$component mods=$mods} {$classes}" {cattr list=$attributes}>
         {foreach $items as $item}
             {$isEnabled = $item[ 'is_enabled' ]}
@@ -51,6 +53,7 @@
                     {if $item['name'] != '-'}
                         {component 'nav' template='item'
                             isRoot   = !$isSubnav
+                            activeItem = $activeItem
                             isActive = ($activeItem && $activeItem == $item['name'])
                             params   = $item}
                     {else}

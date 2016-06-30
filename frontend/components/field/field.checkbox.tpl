@@ -15,7 +15,7 @@
 {/block}
 
 {block 'field_input'}
-    {if $name && $form}
+    {if ! isset($checked) && $name && $form}
         {field_get_value form=$form name=$name assign=formValue}
 
         {if is_array($formValue)}

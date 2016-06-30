@@ -40,7 +40,7 @@
 
 {block 'field_options'}
     {* Получение значения атрибута value *}
-    {if $getValueFromForm && $name && $form}
+    {if ! isset($value) && $getValueFromForm && $name && $form}
         {$value = {field_get_value form=$form name=$name}|default:$value}
     {/if}
 

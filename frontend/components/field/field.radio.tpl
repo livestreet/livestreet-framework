@@ -10,7 +10,7 @@
 {/block}
 
 {block 'field_input'}
-    {if $name && $form}
+    {if ! isset($checked) && $name && $form}
         {$checked = $value == {field_get_value form=$form name=$name}}
     {/if}
 

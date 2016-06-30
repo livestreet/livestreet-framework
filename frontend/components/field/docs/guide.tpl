@@ -370,3 +370,124 @@
 {test_heading text='Image ajax'}
 
 <p>TODO</p>
+
+
+
+{test_heading text='Передача параметров в форму'}
+
+<p>По умолчанию каждое поле ищет свое значение в глобальной переменной <code>$_aRequest</code>. Ключ в этом массиве является именем нужного поля, а значение - значением поля. В примере ниже, в текстовом поле с именем <code>login</code> выведется текст <code>vasya</code></p>
+
+{capture 'test_example_content'}
+    {$_aRequest = [
+        login => 'vasya'
+    ]}
+
+    {component 'field.text' name='login' label='Login'}
+{/capture}
+
+{capture 'test_example_code'}
+// Переменная $_aRequest задается на бэкенде
+{ldelim}$_aRequest = [
+    login => 'vasya'
+]{rdelim}
+
+{ldelim}component 'field.text' name='login' label='Login'{rdelim}
+{/capture}
+
+{test_example content=$smarty.capture.test_example_content code=$smarty.capture.test_example_code}
+
+
+
+<p>При желании можно передать значения полей в своей переменной, но в этом случае придется передать массив со значениями в каждое поле:</p>
+
+{capture 'test_example_code'}
+// Переменная $myForm задается на бэкенде
+{ldelim}$myForm = [
+    login => 'vasya'
+]{rdelim}
+
+{ldelim}component 'field.text' form=$myForm name='login' label='Login'{rdelim}
+{/capture}
+
+{test_code code=$smarty.capture.test_example_code}
+
+
+
+{test_heading text='Передача параметров в checkbox/radio'}
+
+<p>Значение для checkbox'а может быть как булевым значением так и массивом.</p>
+
+{capture 'test_example_content'}
+    {$_aRequest = [
+        my_checkbox => true
+    ]}
+
+    {component 'field.checkbox' name='my_checkbox' label='My Checkbox'}
+{/capture}
+
+{capture 'test_example_code'}
+// Переменная $_aRequest задается на бэкенде
+{ldelim}$_aRequest = [
+    // true - checkbox отмечен, false - не отмечен
+    my_checkbox => true
+]{rdelim}
+
+{ldelim}component 'field.checkbox' name='my_checkbox' label='My Checkbox'{rdelim}
+{/capture}
+
+{test_example content=$smarty.capture.test_example_content code=$smarty.capture.test_example_code}
+
+
+
+
+<p>В случае если значение является массивом, отмечены будут только те checkbox'ы (с одинаковым атрибутом name), чьи значения (атрибут value) находятся в массиве:</p>
+
+{capture 'test_example_content'}
+    {$_aRequest = [
+        my_checkbox => [ 'checkbox1', 'checkbox3' ]
+    ]}
+
+    {component 'field.checkbox' name='my_checkbox' value='checkbox1' label='My Checkbox 1'}
+    {component 'field.checkbox' name='my_checkbox' value='checkbox2' label='My Checkbox 2'}
+    {component 'field.checkbox' name='my_checkbox' value='checkbox3' label='My Checkbox 3'}
+{/capture}
+
+{capture 'test_example_code'}
+// Переменная $_aRequest задается на бэкенде
+{ldelim}$_aRequest = [
+    my_checkbox => [ 'checkbox1', 'checkbox3' ]
+]{rdelim}
+
+{ldelim}component 'field.checkbox' name='my_checkbox' value='checkbox1' label='...'{rdelim}
+{ldelim}component 'field.checkbox' name='my_checkbox' value='checkbox2' label='...'{rdelim}
+{ldelim}component 'field.checkbox' name='my_checkbox' value='checkbox3' label='...'{rdelim}
+{/capture}
+
+{test_example content=$smarty.capture.test_example_content code=$smarty.capture.test_example_code}
+
+
+
+<p>Для выделение radio input'а (из группы с одинаковым атрибутом name) необходимо передать значение атрибута value:</p>
+
+{capture 'test_example_content'}
+    {$_aRequest = [
+        my_radio => 'radio2'
+    ]}
+
+    {component 'field.radio' name='my_radio' value='radio1' label='My Radio 1'}
+    {component 'field.radio' name='my_radio' value='radio2' label='My Radio 2'}
+    {component 'field.radio' name='my_radio' value='radio3' label='My Radio 3'}
+{/capture}
+
+{capture 'test_example_code'}
+// Переменная $_aRequest задается на бэкенде
+{ldelim}$_aRequest = [
+    my_radio => 'radio2'
+]{rdelim}
+
+{ldelim}component 'field.radio' name='my_radio' value='radio1' label='...'{rdelim}
+{ldelim}component 'field.radio' name='my_radio' value='radio2' label='...'{rdelim}
+{ldelim}component 'field.radio' name='my_radio' value='radio3' label='...'{rdelim}
+{/capture}
+
+{test_example content=$smarty.capture.test_example_content code=$smarty.capture.test_example_code}

@@ -58,5 +58,9 @@ function smarty_function_cfg($aParams, &$oSmarty)
     /**
      * Возвращаем значение из конфигурации
      */
-    return $mReturn;
+    if (!empty($aParams['assign'])) {
+        $oSmarty->assign($aParams['assign'], $mReturn);
+    } else {
+        return $mReturn;
+    }
 }

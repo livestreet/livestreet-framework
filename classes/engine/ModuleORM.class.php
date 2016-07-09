@@ -88,8 +88,10 @@ abstract class ModuleORM extends Module
              * Смотрим наличие связи many_to_many и добавляем их в бд
              */
             foreach ($oEntity->_getRelations() as $sRelName => $aRelation) {
-                if ($aRelation['type'] == EntityORM::RELATION_TYPE_MANY_TO_MANY && $oEntity->$sRelName->isUpdated()) {
-                    $this->_updateManyToManyRelation($oEntity, $sRelName);
+                if ($aRelation['type'] == EntityORM::RELATION_TYPE_MANY_TO_MANY) {
+                    if ($oEntity->$sRelName->isUpdated()) {
+                        $this->_updateManyToManyRelation($oEntity, $sRelName);
+                    }
                     $oEntity->resetRelationsData($sRelName);
                 }
             }

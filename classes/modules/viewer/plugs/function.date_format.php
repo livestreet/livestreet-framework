@@ -46,9 +46,15 @@ function smarty_function_date_format($aParams, &$oSmarty)
 {
     $oEngine = Engine::getInstance();
 
-    return $oEngine->Viewer_GetDateFormat(
+    $sResult = $oEngine->Viewer_GetDateFormat(
         isset($aParams['date']) ? $aParams['date'] : null,
         isset($aParams['format']) ? $aParams['format'] : 'd F Y, H:i',
         array_intersect_key($aParams, array_flip(array('declination', 'now', 'day', 'minutes_back', 'hours_back', 'tz', 'notz')))
     );
+    if (!empty($aParams['assign'])) {
+        $oSmarty->assign($aParams['assign'], $sResult);
+    } else {
+        return $sResult;
+    }
+    return '';
 }

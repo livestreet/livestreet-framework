@@ -39,6 +39,24 @@ $fGetConfig = create_function('$sPath', '$config=array(); return include $sPath;
  * Получаем текущее окружение
  */
 $sEnvironmentCurrent = Engine::GetEnvironment();
+
+/**
+ * Инклудим все *.php файлы из каталога {path.root.framework}/include/ - это файлы ядра
+ */
+$sDirInclude = Config::get('path.framework.server') . '/include/';
+if ($hDirInclude = opendir($sDirInclude)) {
+    while (false !== ($sFileInclude = readdir($hDirInclude))) {
+        $sFileIncludePathFull = $sDirInclude . $sFileInclude;
+        if ($sFileInclude != '.' and $sFileInclude != '..' and is_file($sFileIncludePathFull)) {
+            $aPathInfo = pathinfo($sFileIncludePathFull);
+            if (isset($aPathInfo['extension']) and strtolower($aPathInfo['extension']) == 'php') {
+                require_once($sDirInclude . $sFileInclude);
+            }
+        }
+    }
+    closedir($hDirInclude);
+}
+
 /**
  * Загружает конфиги модулей вида /config/modules/[module_name]/config.php
  */
@@ -67,24 +85,6 @@ if (is_dir($sDirConfig) and $hDirConfig = opendir($sDirConfig)) {
         }
     }
     closedir($hDirConfig);
-}
-
-
-/**
- * Инклудим все *.php файлы из каталога {path.root.framework}/include/ - это файлы ядра
- */
-$sDirInclude = Config::get('path.framework.server') . '/include/';
-if ($hDirInclude = opendir($sDirInclude)) {
-    while (false !== ($sFileInclude = readdir($hDirInclude))) {
-        $sFileIncludePathFull = $sDirInclude . $sFileInclude;
-        if ($sFileInclude != '.' and $sFileInclude != '..' and is_file($sFileIncludePathFull)) {
-            $aPathInfo = pathinfo($sFileIncludePathFull);
-            if (isset($aPathInfo['extension']) and strtolower($aPathInfo['extension']) == 'php') {
-                require_once($sDirInclude . $sFileInclude);
-            }
-        }
-    }
-    closedir($hDirInclude);
 }
 
 /**

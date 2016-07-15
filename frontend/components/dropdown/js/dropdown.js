@@ -77,7 +77,7 @@ $.widget( "livestreet.lsDropdown", $.livestreet.lsComponent, {
         }
 
         // Объект относительно которого позиционируется меню
-        this.options.position.of = this.options.position.of || this.element;
+        this.options.position.of = this.options.position.of || this.elements.toggle;
 
         this.options.position.using = this.options.position.using || function ( position, feedback ) {
             ls.utils.removeClassByPrefix( this.elements.menu, 'position-' );

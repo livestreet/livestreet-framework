@@ -134,7 +134,7 @@
                 callback = callback.bind( this );
             }
 
-            ls.ajax.load( this.option('urls.' + url), params || {}, callback, more );
+            return ls.ajax.load( this.option('urls.' + url), params || {}, callback, more );
         },
 
         /**
@@ -251,7 +251,7 @@
 
             if ( ! text ) return key;
 
-            if ( params && $.isNumeric( params ) ) {
+            if ( $.isNumeric( params ) ) {
                 count = params;
                 params = null;
             }
@@ -260,7 +260,7 @@
                 text = text();
             }
 
-            if ( count ) {
+            if ( $.isNumeric( count ) ) {
                 text = ls.i18n.pluralize( count, text );
             }
 

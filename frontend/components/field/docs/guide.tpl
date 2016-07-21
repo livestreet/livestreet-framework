@@ -68,8 +68,8 @@
 {capture 'test_example_content'}
     <script>
         jQuery(function($) {
-            $('.js-my-datepicker').lsFieldDate({ language: LANGUAGE });
-            $('.js-my-timepicker').lsFieldTime();
+            $('.js-my-datepicker').lsDate({ language: LANGUAGE });
+            $('.js-my-timepicker').lsTime();
         });
     </script>
 
@@ -87,8 +87,8 @@
 {capture 'test_example_code'}
 <script>
     jQuery(function($) {
-        $('.js-my-datepicker').lsFieldDate({ language: LANGUAGE });
-        $('.js-my-timepicker').lsFieldTime();
+        $('.js-my-datepicker').lsDate({ language: LANGUAGE });
+        $('.js-my-timepicker').lsTime();
     });
 </script>
 

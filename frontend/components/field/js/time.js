@@ -11,7 +11,7 @@
 (function($) {
     "use strict";
 
-    $.widget( "livestreet.lsFieldTime", $.livestreet.lsComponent, {
+    $.widget( "livestreet.lsTime", $.livestreet.lsComponent, {
         /**
          * Дефолтные опции
          */

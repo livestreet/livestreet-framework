@@ -50,8 +50,8 @@
         "autocomplete": "js/autocomplete.js",
 
         "date-ru": "js/field.date.ru.js",
-        "date": "js/field.date.js",
-        "time": "js/field.time.js",
+        "date": "js/date.js",
+        "time": "js/time.js",
 
         "captcha": "js/field.captcha.js",
         "recaptcha": "js/field.recaptcha.js",

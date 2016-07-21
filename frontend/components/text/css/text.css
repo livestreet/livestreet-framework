@@ -35,7 +35,10 @@
 /* Responsive */
 .ls-text object,
 .ls-text iframe,
-.ls-text img { max-width: 100%; }
+.ls-text img {
+    max-width: 100%;
+    border: none;
+}
 
 
 /* Lists */

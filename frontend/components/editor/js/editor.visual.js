@@ -19,6 +19,7 @@
             set: 'default',
             sets: {
                 common: {
+                    language: LANGUAGE,
                     plugins: 'media table fullscreen autolink link pagebreak code autoresize livestreet',
                     skin: 'livestreet',
                     menubar: false,
@@ -31,10 +32,10 @@
                     remove_script_host: false
                 },
                 default: {
-                    toolbar: 'styleselect ls-h4 ls-h5 ls-h6 ls-pre ls-code | bold italic strikethrough underline blockquote table | bullist numlist | link media ls-media ls-user | lsuser removeformat pagebreak code fullscreen'
+                    toolbar: 'styleselect ls-pre ls-code | bold italic strikethrough underline blockquote table | bullist numlist | link media ls-media ls-user | lsuser removeformat pagebreak code fullscreen'
                 },
                 light: {
-                    toolbar: 'styleselect ls-h4 ls-h5 ls-h6 ls-pre ls-code | bold italic strikethrough underline blockquote | bullist numlist | removeformat pagebreak code'
+                    toolbar: 'styleselect ls-pre ls-code | bold italic strikethrough underline blockquote | bullist numlist | removeformat pagebreak code'
                 }
             }
         },

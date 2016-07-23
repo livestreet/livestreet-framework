@@ -1313,7 +1313,7 @@ class Engine
                 // Модуль плагина
                 $sPath .= 'plugins/' . func_underscore($aInfo[self::CI_PLUGIN])
                     . '/classes/modules/' . func_underscore($aInfo[self::CI_MODULE])
-                    . '/' . $aInfo[self::CI_MODULE] . '.class.php';;
+                    . '/' . $aInfo[self::CI_MODULE] . '.class.php';
             } else {
                 // Модуль ядра
                 $sFile = 'classes/modules/' . func_underscore($aInfo[self::CI_MODULE])
@@ -1329,7 +1329,7 @@ class Engine
                 // Хук плагина
                 $sPath .= 'plugins/' . func_underscore($aInfo[self::CI_PLUGIN])
                     . '/classes/hooks/Hook' . $aInfo[self::CI_HOOK]
-                    . '.class.php';;
+                    . '.class.php';
             } else {
                 // Хук ядра
                 $sPath .= 'classes/hooks/Hook' . $aInfo[self::CI_HOOK] . '.class.php';
@@ -1340,7 +1340,7 @@ class Engine
                 // Блок плагина
                 $sPath .= 'plugins/' . func_underscore($aInfo[self::CI_PLUGIN])
                     . '/classes/blocks/Block' . $aInfo[self::CI_BLOCK]
-                    . '.class.php';;
+                    . '.class.php';
             } else {
                 // Блок ядра
                 $sPath .= 'classes/blocks/Block' . $aInfo[self::CI_BLOCK] . '.class.php';
@@ -1349,7 +1349,7 @@ class Engine
             // Плагин
             $sPath .= 'plugins/' . func_underscore($aInfo[self::CI_PLUGIN])
                 . '/Plugin' . $aInfo[self::CI_PLUGIN]
-                . '.class.php';;
+                . '.class.php';
         } else {
             $sClassName = is_string($oObject) ? $oObject : get_class($oObject);
             $sPath = $sPathFramework . 'classes/engine/' . $sClassName . '.class.php';

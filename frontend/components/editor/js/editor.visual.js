@@ -26,8 +26,9 @@
                     statusbar: false,
                     pagebreak_separator: '<cut>',
                     forced_root_block: false,
-                    extended_valid_elements: 'lsuser',
-                    custom_elements: '~lsuser',
+                    extended_valid_elements: 'ls[user]',
+                    custom_elements: '~ls',
+                    short_ended_elements: 'ls img br hr param',
                     relative_urls: false,
                     remove_script_host: false
                 },

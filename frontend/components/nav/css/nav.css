@@ -174,7 +174,7 @@
     top: 100%;
     left: 0;
 }
-.ls-nav > .ls-nav--sub > .ls-nav-item:hover > .ls-nav--sub {
+.ls-nav .ls-nav-item:hover > .ls-nav--sub {
     display: block;
 }
 

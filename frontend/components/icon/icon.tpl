@@ -7,7 +7,7 @@
  * @param array  $attributes
  *}
 
-{$component = 'ls-icon'}
+{$component = 'fa'}
 {component_define_params params=[ 'icon', 'mods', 'classes', 'attributes' ]}
 
-<i class="fa fa-{$icon} {$component} {cmods name=$component mods=$mods} {$classes}" {cattr list=$attributes}></i>
+<i class="{$component} fa-{$icon} {cmods name=$component mods=$mods delimiter='-'} {$classes}" {cattr list=$attributes}></i>

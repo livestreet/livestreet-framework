@@ -73,7 +73,7 @@
             {component 'nav'
                 mods       = 'stacked'
                 isSubnav   = true
-                items      = $menu}
+                params     = $menu}
         {/if}
     </li>
 {/if}

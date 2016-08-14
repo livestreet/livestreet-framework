@@ -5,6 +5,7 @@
         "css-reset": "*"
     },
     "templates": {
+        "stack": "stack.tpl",
         "icon": "icon.tpl"
     },
     "styles": {

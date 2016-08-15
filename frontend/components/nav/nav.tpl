@@ -2,9 +2,9 @@
  * Навигация
  *
  * @param string  $hook
+ * @param integer $hookParams
  * @param array   $items
  * @param string  $activeItem
- * @param integer $hookParams
  * @param boolean $showSingle
  * @param boolean $isSubnav
  * @param string  $mods
@@ -18,7 +18,7 @@
 
 {* Получаем пункты установленные плагинами *}
 {if $hook}
-    {hook run=$hook assign='hookItems' params=$params items=$items array=true}
+    {hook run="nav_{$hook}" assign='hookItems' params=$hookParams items=$items array=true}
     {$items = ( $hookItems ) ? $hookItems : $items}
 {/if}
 

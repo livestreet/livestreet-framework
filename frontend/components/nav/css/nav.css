@@ -88,6 +88,9 @@
 .ls-nav--pills .ls-nav-item-link > .ls-nav-item-caret {
     border-top-color: #fff;
 }
+.ls-nav--pills .ls-nav-item:hover > .ls-nav-item-link > .ls-caret--right {
+    border-left-color: #fff;
+}
 
 /* Hover */
 .ls-nav--pills > .ls-nav-item > .ls-nav-item-link:hover,

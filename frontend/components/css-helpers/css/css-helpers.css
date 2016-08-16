@@ -138,6 +138,6 @@
     border-top-color: #333;
 }
 .ls-caret.ls-caret--right {
-    border-top-color: transparent;
+    border-top-color: transparent !important;
     border-left-color: #333;
 }

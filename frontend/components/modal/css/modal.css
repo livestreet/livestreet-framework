@@ -11,11 +11,25 @@
 
 /* Base class */
 .ls-modal {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1000;
     display: none;
-    margin: 50px auto;
+    overflow: hidden;
+    -webkit-overflow-scrolling: touch;
+    outline: 0;
+    padding: 30px;
+    background-color: rgba(0,0,0, .1);
+}
+
+.ls-modal-dialog {
     position: relative;
     min-width: 300px;
     max-width: 500px;
+    margin: 50px auto;
     color: #333;
     border-radius: 4px;
     background-color: #fff;
@@ -137,9 +151,8 @@
     bottom: 0;
     left: 0;
     right: 0;
-    background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAA9JREFUeNpiYmBgaAAIMAAAjwCD5Hc2/AAAAABJRU5ErkJggg==);;
+    background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAA9JREFUeNpiYmBgaAAIMAAAjwCD5Hc2/AAAAABJRU5ErkJggg==);
     background: rgba(0,0,0,.5);
     z-index: 999;
     overflow: auto;
-    padding: 30px;
 }

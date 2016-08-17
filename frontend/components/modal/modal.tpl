@@ -17,49 +17,51 @@
     data-type="modal"
     {cattr prefix='data-lsmodal-' list=$options}>
 
-    {* Шапка *}
-    {block 'modal_title'}
-        <header class="{$component}-header">
-            {* Заголовок *}
-            {if $title}
-                <h3 class="{$component}-title">{$title}</h3>
+    <div class="{$component}-dialog">
+        {* Шапка *}
+        {block 'modal_title'}
+            <header class="{$component}-header">
+                {* Заголовок *}
+                {if $title}
+                    <h3 class="{$component}-title">{$title}</h3>
+                {/if}
+
+                {* Кнопка закрытия *}
+                <button class="{$component}-close" data-type="modal-close">
+                    {component 'icon' icon='remove' attributes=[ 'aria-hidden' => 'true' ]}
+                </button>
+            </header>
+        {/block}
+
+        {block 'modal_header_after'}{/block}
+
+        {* Содержимое *}
+        {block 'modal_content'}
+            {if $content}
+                <div class="{$component}-body">
+                    {$content}{$smarty.block.child}
+                </div>
             {/if}
+        {/block}
 
-            {* Кнопка закрытия *}
-            <button class="{$component}-close" data-type="modal-close">
-                {component 'icon' icon='remove' attributes=[ 'aria-hidden' => 'true' ]}
-            </button>
-        </header>
-    {/block}
+        {* Tabs *}
+        {( is_array( $tabs ) ) ? {component 'tabs' classes="{$component}-tabs js-{$component}-tabs" params=$tabs} : $tabs}
 
-    {block 'modal_header_after'}{/block}
+        {$body}
 
-    {* Содержимое *}
-    {block 'modal_content'}
-        {if $content}
-            <div class="{$component}-body">
-                {$content}{$smarty.block.child}
-            </div>
-        {/if}
-    {/block}
+        {* Подвал *}
+        {block 'modal_footer'}
+            {if $showFooter}
+                <div class="{$component}-footer">
+                    {block 'modal_footer_inner'}
+                        {* Кнопка закрытия окна *}
+                        {component 'button' type='button' text={lang 'common.cancel'} attributes=[ 'data-type' => 'modal-close' ]}
 
-    {* Tabs *}
-    {( is_array( $tabs ) ) ? {component 'tabs' classes="{$component}-tabs js-{$component}-tabs" params=$tabs} : $tabs}
-
-    {$body}
-
-    {* Подвал *}
-    {block 'modal_footer'}
-        {if $showFooter}
-            <div class="{$component}-footer">
-                {block 'modal_footer_inner'}
-                    {* Кнопка закрытия окна *}
-                    {component 'button' type='button' text={lang 'common.cancel'} attributes=[ 'data-type' => 'modal-close' ]}
-
-                    {* Кнопка отвечающее за основное действие *}
-                    {( is_array( $primaryButton ) ) ? {component 'button' mods='primary' params=$primaryButton} : $primaryButton}
-                {/block}
-            </div>
-        {/if}
-    {/block}
+                        {* Кнопка отвечающее за основное действие *}
+                        {( is_array( $primaryButton ) ) ? {component 'button' mods='primary' params=$primaryButton} : $primaryButton}
+                    {/block}
+                </div>
+            {/if}
+        {/block}
+    </div>
 </div>

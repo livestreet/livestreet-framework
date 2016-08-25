@@ -555,7 +555,7 @@ kbd kbd {
 /* Content.Objects.less */
 .mce-object {
   border: 1px dotted #3A3A3A;
-  background: #d5d5d5 url(img/object.gif) no-repeat center;
+  background: #D5D5D5 url(img/object.gif) no-repeat center;
 }
 .mce-pagebreak {
   cursor: default;
@@ -585,7 +585,7 @@ kbd kbd {
   width: 9px !important;
   height: 9px !important;
   border: 1px dotted #3A3A3A;
-  background: #d5d5d5 url(img/anchor.gif) no-repeat center;
+  background: #D5D5D5 url(img/anchor.gif) no-repeat center;
 }
 .mce-nbsp,
 .mce-shy {
@@ -697,11 +697,8 @@ table th {
 /**
  * Пользователь
  */
-lsuser {
-  color: #1A80DB;
+.ls-user {
   font-weight: bold;
-  text-decoration: underline;
-}
-lsuser:hover {
-  color: #058;
+  color: #1A80DB;
+  display: inline-block;
 }

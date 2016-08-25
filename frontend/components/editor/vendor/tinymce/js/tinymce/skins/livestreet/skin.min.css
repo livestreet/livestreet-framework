@@ -10,7 +10,7 @@
   vertical-align: top;
   background: transparent;
   text-decoration: none;
-  color: #333333;
+  color: #333;
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 14px;
   text-shadow: none;
@@ -95,7 +95,7 @@ div.mce-edit-area {
 }
 .mce-charmap td {
   cursor: default;
-  border: 1px solid #eeeeee;
+  border: 1px solid #eee;
   width: 20px;
   height: 20px;
   line-height: 20px;
@@ -107,7 +107,7 @@ div.mce-edit-area {
   text-align: center;
 }
 .mce-charmap td:hover {
-  background: #d9d9d9;
+  background: #D9D9D9;
 }
 .mce-grid td.mce-grid-cell div {
   border: 1px solid #d6d6d6;
@@ -288,8 +288,8 @@ div.mce-tinymce-inline {
   position: relative;
 }
 .mce-panel {
-  border: 0 solid #eeeeee;
-  background-color: #ffffff;
+  border: 0 solid #eee;
+  background-color: #fff;
 }
 .mce-floatpanel {
   position: absolute;
@@ -318,8 +318,8 @@ div.mce-tinymce-inline {
   background: transparent;
   top: 0;
   left: 0;
-  background: #ffffff;
-  border: 1px solid #eeeeee;
+  background: #FFF;
+  border: 1px solid #eee;
   border: 1px solid rgba(0, 0, 0, 0.25);
 }
 .mce-floatpanel.mce-popover.mce-bottom {
@@ -330,7 +330,7 @@ div.mce-tinymce-inline {
   left: 50%;
   margin-left: -11px;
   border-top-width: 0;
-  border-bottom-color: #eeeeee;
+  border-bottom-color: #eee;
   border-bottom-color: rgba(0, 0, 0, 0.25);
   top: -11px;
 }
@@ -338,7 +338,7 @@ div.mce-tinymce-inline {
   top: 1px;
   margin-left: -10px;
   border-top-width: 0;
-  border-bottom-color: #ffffff;
+  border-bottom-color: #FFF;
 }
 .mce-floatpanel.mce-popover.mce-bottom.mce-start {
   margin-left: -22px;
@@ -374,7 +374,7 @@ div.mce-fullscreen {
   top: 0;
   width: 100%;
   height: 100%;
-  background: #000000;
+  background: #000;
 }
 #mce-modal-block.mce-in {
   opacity: 0.3;
@@ -387,7 +387,7 @@ div.mce-fullscreen {
 .mce-window {
   filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
   background: transparent;
-  background: #ffffff;
+  background: #FFF;
   position: fixed;
   top: 0;
   left: 0;
@@ -430,7 +430,7 @@ div.mce-fullscreen {
 }
 .mce-foot {
   display: block;
-  background-color: #ffffff;
+  background-color: #FFF;
   border-top: 1px solid #c5c5c5;
 }
 .mce-window-head .mce-dragh {
@@ -484,7 +484,7 @@ body .mce-abs-layout-item,
 }
 .mce-tooltip-inner {
   font-size: 11px;
-  background-color: #000000;
+  background-color: #000;
   color: white;
   max-width: 200px;
   padding: 5px 8px 4px 8px;
@@ -496,19 +496,19 @@ body .mce-abs-layout-item,
   width: 0;
   height: 0;
   line-height: 0;
-  border: 5px dashed #000000;
+  border: 5px dashed #000;
 }
 .mce-tooltip-arrow-n {
-  border-bottom-color: #000000;
+  border-bottom-color: #000;
 }
 .mce-tooltip-arrow-s {
-  border-top-color: #000000;
+  border-top-color: #000;
 }
 .mce-tooltip-arrow-e {
-  border-left-color: #000000;
+  border-left-color: #000;
 }
 .mce-tooltip-arrow-w {
-  border-right-color: #000000;
+  border-right-color: #000;
 }
 .mce-tooltip-nw,
 .mce-tooltip-sw {
@@ -594,7 +594,7 @@ body .mce-abs-layout-item,
 }
 .mce-btn:hover,
 .mce-btn:focus {
-  color: #333333;
+  color: #333;
   background-color: #e3e3e3;
   border-color: #cccccc;
 }
@@ -620,7 +620,7 @@ body .mce-abs-layout-item,
   line-height: 20px;
   *line-height: 16px;
   cursor: pointer;
-  color: #333333;
+  color: #333;
   text-align: center;
   overflow: visible;
   -webkit-appearance: none;
@@ -634,7 +634,7 @@ body .mce-abs-layout-item,
 }
 .mce-primary {
   min-width: 50px;
-  color: #ffffff;
+  color: #fff;
   border: 1px solid transparent;
   border-color: transparent;
   background-color: #2d8ac7;
@@ -658,7 +658,7 @@ body .mce-abs-layout-item,
 }
 .mce-primary button,
 .mce-primary button i {
-  color: #ffffff;
+  color: #fff;
   text-shadow: 1px 1px none;
 }
 .mce-btn-large button {
@@ -694,16 +694,16 @@ body .mce-abs-layout-item,
   width: 0;
   height: 0;
   vertical-align: top;
-  border-top: 4px solid #333333;
+  border-top: 4px solid #333;
   border-right: 4px solid transparent;
   border-left: 4px solid transparent;
   content: "";
 }
 .mce-disabled .mce-caret {
-  border-top-color: #aaaaaa;
+  border-top-color: #aaa;
 }
 .mce-caret.mce-up {
-  border-bottom: 4px solid #333333;
+  border-bottom: 4px solid #333;
   border-top: 0;
 }
 .mce-btn-flat {
@@ -768,7 +768,7 @@ i.mce-i-checkbox {
   overflow: hidden;
 }
 .mce-checked i.mce-i-checkbox {
-  color: #333333;
+  color: #333;
   font-size: 16px;
   line-height: 16px;
   text-indent: 0;
@@ -948,8 +948,8 @@ i.mce-i-checkbox {
   top: 0;
   left: -1px;
   width: 100%;
-  border: 1px solid #333333;
-  background: #ffffff;
+  border: 1px solid #333;
+  background: #fff;
   height: 4px;
   z-index: 100;
 }
@@ -972,20 +972,20 @@ i.mce-i-checkbox {
   *display: inline;
   *zoom: 1;
   cursor: pointer;
-  color: #333333;
+  color: #333;
 }
 .mce-path-item:hover {
   text-decoration: underline;
 }
 .mce-path-item:focus {
-  background: #666666;
-  color: #ffffff;
+  background: #666;
+  color: #fff;
 }
 .mce-path .mce-divider {
   display: inline;
 }
 .mce-disabled .mce-path-item {
-  color: #aaaaaa;
+  color: #aaa;
 }
 .mce-rtl .mce-path {
   direction: rtl;
@@ -1036,7 +1036,7 @@ i.mce-i-checkbox {
   margin-left: 2px;
 }
 .mce-iframe {
-  border: 0 solid #eeeeee;
+  border: 0 solid #eee;
   width: 100%;
   height: 100%;
 }
@@ -1051,7 +1051,7 @@ i.mce-i-checkbox {
   overflow: auto;
 }
 .mce-label.mce-disabled {
-  color: #aaaaaa;
+  color: #aaa;
 }
 .mce-label.mce-multiline {
   white-space: pre-wrap;
@@ -1073,21 +1073,21 @@ i.mce-i-checkbox {
   border: 1px solid #f5f5f5;
 }
 .mce-menubar .mce-menubtn button span {
-  color: #333333;
+  color: #333;
 }
 .mce-menubar .mce-caret {
-  border-top-color: #333333;
+  border-top-color: #333;
 }
 .mce-menubar .mce-menubtn:hover,
 .mce-menubar .mce-menubtn.mce-active,
 .mce-menubar .mce-menubtn:focus {
   border-color: #cccccc;
-  background: #ffffff;
+  background: #fff;
   filter: none;
 }
 /* MenuButton */
 .mce-menubtn span {
-  color: #333333;
+  color: #333;
   margin-right: 2px;
   line-height: 20px;
   *line-height: 16px;
@@ -1117,7 +1117,7 @@ i.mce-i-checkbox {
   clear: both;
   font-weight: normal;
   line-height: 20px;
-  color: #333333;
+  color: #333;
   white-space: nowrap;
   cursor: pointer;
   line-height: normal;
@@ -1126,7 +1126,7 @@ i.mce-i-checkbox {
 }
 .mce-menu-item .mce-ico,
 .mce-menu-item .mce-text {
-  color: #333333;
+  color: #333;
 }
 .mce-menu-item.mce-disabled .mce-text,
 .mce-menu-item.mce-disabled .mce-ico {
@@ -1143,7 +1143,7 @@ i.mce-i-checkbox {
   color: white;
 }
 .mce-menu-item.mce-disabled:hover {
-  background: #cccccc;
+  background: #CCC;
 }
 .mce-menu-shortcut {
   display: inline-block;
@@ -1166,7 +1166,7 @@ i.mce-i-checkbox {
   margin-right: 6px;
   border-top: 4px solid transparent;
   border-bottom: 4px solid transparent;
-  border-left: 4px solid #333333;
+  border-left: 4px solid #333;
 }
 .mce-menu-item.mce-selected .mce-caret,
 .mce-menu-item:focus .mce-caret,
@@ -1188,7 +1188,7 @@ i.mce-i-checkbox {
   background-color: #3498db;
 }
 .mce-menu-item-preview.mce-active {
-  border-left: 5px solid #aaaaaa;
+  border-left: 5px solid #aaa;
 }
 .mce-menu-item-normal.mce-active .mce-text {
   color: white;
@@ -1236,7 +1236,7 @@ div.mce-menu .mce-menu-item-sep,
 .mce-rtl .mce-menu-item .mce-caret {
   margin-left: 6px;
   margin-right: 0;
-  border-right: 4px solid #333333;
+  border-right: 4px solid #333;
   border-left: 0;
 }
 .mce-rtl .mce-menu-item.mce-selected .mce-caret,
@@ -1255,7 +1255,7 @@ div.mce-menu .mce-menu-item-sep,
   padding: 5px 0 5px 0;
   margin: -1px 0 0;
   min-width: 160px;
-  background: #ffffff;
+  background: #fff;
   border: 1px solid #999999;
   border: 1px solid rgba(0, 0, 0, 0.2);
   z-index: 1002;
@@ -1315,11 +1315,11 @@ div.mce-menu .mce-menu-item-sep,
   cursor: se-resize;
 }
 i.mce-i-resize {
-  color: #333333;
+  color: #333;
 }
 .mce-slider {
-  border: 1px solid #aaaaaa;
-  background: #eeeeee;
+  border: 1px solid #AAA;
+  background: #EEE;
   width: 100px;
   height: 10px;
   position: relative;
@@ -1330,8 +1330,8 @@ i.mce-i-resize {
   height: 100px;
 }
 .mce-slider-handle {
-  border: 1px solid #bbbbbb;
-  background: #dddddd;
+  border: 1px solid #BBB;
+  background: #DDD;
   display: block;
   width: 13px;
   height: 13px;
@@ -1385,7 +1385,7 @@ i.mce-i-resize {
 }
 .mce-tabs,
 .mce-tabs + .mce-container-body {
-  background: #ffffff;
+  background: #FFF;
 }
 .mce-tab {
   display: inline-block;
@@ -1400,10 +1400,10 @@ i.mce-i-resize {
   cursor: pointer;
 }
 .mce-tab:hover {
-  background: #fdfdfd;
+  background: #FDFDFD;
 }
 .mce-tab.mce-active {
-  background: #fdfdfd;
+  background: #FDFDFD;
   border-bottom-color: transparent;
   margin-bottom: -1px;
   height: 14px;
@@ -1416,7 +1416,7 @@ i.mce-i-resize {
   border-width: 0 0 0 1px;
 }
 .mce-textbox {
-  background: #ffffff;
+  background: #fff;
   border: 1px solid #c5c5c5;
   display: inline-block;
   -webkit-transition: border linear .2s, box-shadow linear .2s;
@@ -1426,14 +1426,14 @@ i.mce-i-resize {
   padding: 0 4px 0 4px;
   white-space: pre-wrap;
   *white-space: pre;
-  color: #333333;
+  color: #333;
 }
 .mce-textbox:focus,
 .mce-textbox.mce-focus {
   border-color: #3498db;
 }
 .mce-placeholder .mce-textbox {
-  color: #aaaaaa;
+  color: #aaa;
 }
 .mce-textbox.mce-multiline {
   padding: 4px;
@@ -1454,7 +1454,7 @@ i.mce-i-resize {
   opacity: 0.6;
   filter: alpha(opacity=60);
   zoom: 1;
-  background: #ffffff url('img/loader.gif') no-repeat center center;
+  background: #fff url('img/loader.gif') no-repeat center center;
 }
 .mce-throbber-inline {
   position: static;
@@ -1491,7 +1491,7 @@ i.mce-i-resize {
   background-size: cover;
   width: 16px;
   height: 16px;
-  color: #333333;
+  color: #333;
 }
 .mce-btn-small .mce-ico {
   font-family: 'tinymce-small', Arial;
@@ -1739,5 +1739,5 @@ i.mce-i-resize {
 }
 i.mce-i-backcolor {
   text-shadow: none;
-  background: #bbbbbb;
+  background: #BBB;
 }

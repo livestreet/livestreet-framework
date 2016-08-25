@@ -35,12 +35,10 @@
     {block 'modal_header_after'}{/block}
 
     {* Содержимое *}
-    {block 'modal_content'}
-        {if $content}
-            <div class="{$component}-body">
-                {$content}{$smarty.block.child}
-            </div>
-        {/if}
+    {block 'modal_body'}
+        <div class="{$component}-body">
+            {block 'modal_content'}{$content}{/block}
+        </div>
     {/block}
 
     {* Tabs *}

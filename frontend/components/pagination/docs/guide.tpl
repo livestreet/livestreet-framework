@@ -104,6 +104,9 @@
 
 {test_example content=$smarty.capture.test_example_content code=$smarty.capture.test_example_code}
 
+
+{test_heading text='Ajax пагинация'}
+
 <script>
     jQuery(function($) {
         $('.js-mypagination-ajax').lsPaginationAjax();

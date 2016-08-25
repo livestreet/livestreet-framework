@@ -57,24 +57,16 @@
 
 
 /* User */
-.ls-text .ls-user         { color: #333; }
-.ls-text .ls-user:visited { color: #333; }
-.ls-text .ls-user:hover   { color: #555; }
-
-
-/* User */
 /* TODO: Fix icon */
 .ls-user {
     font-weight: bold;
-    color: #333;
     display: inline-block;
 }
+.ls-text a.ls-user {
+    text-decoration: none;
+}
 .ls-user:before {
-    content: '';
-    display: inline-block;
-    width: 14px;
-    height: 14px;
     margin-right: 3px;
-    background: url(../images/icons.png) -168px 0 no-repeat;
-    vertical-align: middle;
+    font-family: FontAwesome;
+    content: "\f007";
 }

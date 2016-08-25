@@ -5,7 +5,7 @@
 {component_define_params params=[ 'stats', 'timeFullPerformance' ]}
 
 {if $bIsShowStatsPerformance}
-    <div class="alert alert--info ls-performance">
+    <div class="ls-alert ls-alert--info ls-performance">
         {hook run='statistics_performance_begin'}
 
         <table>

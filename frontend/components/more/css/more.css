@@ -9,6 +9,7 @@
 .ls-more {
     display: block;
     overflow: hidden;
+    position: relative;
     padding: 12px;
     margin-top: 30px;
     text-align: center;
@@ -24,8 +25,19 @@
     background-color: #9575CD;
 }
 
-.ls-more.ls-loading {
-    text-indent: -9999px;
+.ls-more-loader {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+}
+.ls-more.ls-more--loading .ls-more-loader {
+    display: block;
+}
+.ls-more.ls-more--loading .ls-more-text {
+    visibility: hidden;
 }
 .ls-more.ls-more--locked {
     background-color: #D1C4E9;

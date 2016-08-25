@@ -19,8 +19,11 @@
             urls: {
                 load: null
             },
+            selectors: {
+                text: '.js-more-text'
+            },
             classes: {
-                loading: 'ls-loading',
+                loading: 'ls-more--loading',
                 locked: 'ls-more--locked'
             },
             // Селектор блока с содержимым
@@ -98,7 +101,7 @@
          */
         setCount: function ( number ) {
             this.element.data('lsmore-count', number);
-            this.element.text( this._i18n( 'text_count', number ) );
+            this.elements.text.text( this._i18n( 'text_count', number ) );
         },
 
         /**

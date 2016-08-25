@@ -24,12 +24,16 @@
     {if $target}data-lsmore-target="{$target}"{/if}
     {if isset($count)}data-lsmore-count="{$count}"{/if}>
 
+    <div class="{$component}-loader ls-loading"></div>
+
     {* Текст *}
     {block 'more_text'}
-        {if isset($count)}
-            {$text_count|default:{lang 'more.text_count' count=$count plural=true}}
-        {else}
-            {$text|default:{lang 'more.text'}}
-        {/if}
+        <span class="{$component}-text js-more-text">
+            {if isset($count)}
+                {$text_count|default:{lang 'more.text_count' count=$count plural=true}}
+            {else}
+                {$text|default:{lang 'more.text'}}
+            {/if}
+        </span>
     {/block}
 </div>

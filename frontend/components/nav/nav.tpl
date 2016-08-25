@@ -2,7 +2,7 @@
  * Навигация
  *
  * @param string  $hook
- * @param integer $hookParams
+ * @param array   $hookParams
  * @param array   $items
  * @param string  $activeItem
  * @param boolean $showSingle
@@ -14,7 +14,7 @@
 
 {* Название компонента *}
 {$component = 'ls-nav'}
-{component_define_params params=[ 'hook', 'items', 'activeItem', 'showSingle', 'isSubnav', 'items', 'mods', 'classes', 'attributes' ]}
+{component_define_params params=[ 'hook', 'hookParams', 'items', 'activeItem', 'showSingle', 'isSubnav', 'items', 'mods', 'classes', 'attributes' ]}
 
 {* Получаем пункты установленные плагинами *}
 {if $hook}

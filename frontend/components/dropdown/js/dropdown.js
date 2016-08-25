@@ -151,6 +151,7 @@ $.widget( "livestreet.lsDropdown", $.livestreet.lsComponent, {
         }.bind(this));
 
         this._reposition();
+        this._addClass( 'open' );
         this._addClass( this.elements.toggle, 'open' );
     },
 
@@ -169,7 +170,8 @@ $.widget( "livestreet.lsDropdown", $.livestreet.lsComponent, {
             // if ( focus ) this.elements.toggle.focus();
             this._menuFocusedItem = null;
             this.elements.menu.attr( 'aria-hidden', true );
-            this._removeClass( this.elements.toggle, 'open' )
+            this._removeClass( 'open' );
+            this._removeClass( this.elements.toggle, 'open' );
             this.elements.toggle.removeData('dropdown-state-hide');
             this._trigger('afterhide', null, this);
         }.bind(this));

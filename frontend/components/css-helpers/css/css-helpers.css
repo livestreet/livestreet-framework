@@ -50,9 +50,11 @@
 
 
 /* Clearfix */
-.ls-clearfix:before,
-.ls-clearfix:after { content: ""; display: table; line-height: 0; }
-.ls-clearfix:after { clear: both; }
+.ls-clearfix:after {
+    content: "";
+    display: block;
+    clear: both;
+}
 
 
 /* Word Wrap */

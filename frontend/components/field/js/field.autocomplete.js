@@ -22,6 +22,10 @@
             urls: {
                 load: null
             },
+            response: {
+                value: 'value',
+                text: 'label'
+            },
             params: {}
         },
 
@@ -53,11 +57,11 @@
                 var results = [];
 
                 $.each(data.aItems, function (i, data) {
-                    results.push($.isArray(data) ? { value: data, text: data } : { value: data.value, text: data.text });
-                });
+                    results.push($.isArray(data) ? { value: data, text: data } : { value: data[ this.options.response.value ], text: data[ this.options.response.text ] });
+                }.bind(this));
 
                 return results;
-            }, this.options );
+            }.bind(this), this.options );
         }
     });
 })(jQuery);

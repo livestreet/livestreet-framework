@@ -941,7 +941,7 @@ abstract class ModuleORM extends Module
             return array(
                 'collection' => $aEntities,
                 'count'      => $this->GetCountItemsByJoinEntity($sEntityJoin, $sKeyJoin, $sRelationKey,
-                    $aRelationValues, $aFilter, $sEntityFull = null)
+                    $aRelationValues, $aFilter, $sEntityFull)
             );
         }
         return $aEntities;

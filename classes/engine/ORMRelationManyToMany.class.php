@@ -42,6 +42,12 @@ class ORMRelationManyToMany extends LsObject
      */
     protected $aCollection = array();
     /**
+     * Общее количество объектов связи
+     *
+     * @var integer
+     */
+    protected $iCount = 0;
+    /**
      * Флаг обновления списка объектов связи
      *
      * @var bool
@@ -61,6 +67,12 @@ class ORMRelationManyToMany extends LsObject
         }
         if (!is_array($aCollection)) {
             $aCollection = array($aCollection);
+        }
+        if (!isset($aCollection['collection'])) {
+            $this->iCount = count($aCollection);
+        } else {
+            $this->iCount = $aCollection['count'];
+            $aCollection = $aCollection['collection'];
         }
         foreach ($aCollection as $oEntity) {
             $this->aCollection[$oEntity->_getPrimaryKeyValue()] = $oEntity;
@@ -122,6 +134,16 @@ class ORMRelationManyToMany extends LsObject
     public function getCollection()
     {
         return $this->aCollection;
+    }
+
+    /**
+     * Возвращает список объектов связи
+     *
+     * @return array
+     */
+    public function getCount()
+    {
+        return $this->iCount;
     }
 
     /**

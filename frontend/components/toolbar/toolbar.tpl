@@ -2,14 +2,15 @@
  * Тулбар
  *}
 
-{extends 'component@button.toolbar'}
+{$component = 'ls-toolbar'}
+{component_define_params params=[ 'items', 'mods', 'classes', 'attributes' ]}
 
-{block 'button_toolbar_options' append}
-    {$classes = "$classes ls-toolbar"}
-    {$mods = "$mods vertical"}
-    {$groups = $items}
-{/block}
-
-{block 'button_toolbar_group'}
-    {component 'toolbar' template='item' role='group' mods=$groupMod params=$group}
-{/block}
+<div class="{$component} {cmods name=$component mods=$mods} {$classes}" {cattr list=$attributes}>
+    {if is_array($items)}
+        {foreach $items as $item}
+            {component 'toolbar.item' params=$item}
+        {/foreach}
+    {else}
+        {$items}
+    {/if}
+</div>

@@ -9,7 +9,6 @@
     },
     "templates": {
         "item": "toolbar-item.tpl",
-        "button": "toolbar-button.tpl",
         "toolbar": "toolbar.tpl"
     },
     "scripts": {

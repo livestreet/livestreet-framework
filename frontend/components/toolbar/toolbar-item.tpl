@@ -2,14 +2,15 @@
  * Тулбар
  *}
 
-{extends 'component@button.group'}
+{$component = 'ls-toolbar-item'}
+{component_define_params params=[ 'html', 'url', 'icon', 'mods', 'classes', 'attributes' ]}
 
-{block 'button_group_options' append}
-    {$classes = "$classes ls-toolbar-item"}
-    {$mods = "$mods vertical"}
-    {$groups = $items}
-{/block}
-
-{block 'button_group_button'}
-    {component 'toolbar' template='button' params=array_merge( $buttonParams|default:[], $button )}
-{/block}
+{if $url}<a href="{$url}"{else}<div{/if} class="{$component} {cmods name=$component mods=$mods} {$classes}" {cattr list=$attributes}>
+    {if $html}
+        {$html}
+    {else}
+        {if $icon}
+            {component 'icon' icon=$icon}
+        {/if}
+    {/if}
+{if $url}</a>{else}</div>{/if}

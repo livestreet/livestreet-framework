@@ -12,7 +12,7 @@
  *}
 
 {$component = 'ls-block'}
-{component_define_params params=[ 'title', 'content', 'show', 'footer', 'list', 'tabs', 'mods', 'classes', 'attributes' ]}
+{component_define_params params=[ 'title', 'titleUrl', 'content', 'show', 'footer', 'list', 'tabs', 'mods', 'classes', 'attributes' ]}
 
 {block 'block_options'}{/block}
 
@@ -25,7 +25,11 @@
             <header class="{$component}-header">
                 {block 'block_header_inner'}
                     <h3 class="{$component}-title">
-                        {$title}
+                        {if $titleUrl}
+                            <a href="{$titleUrl}">{$title}</a>
+                        {else}
+                            {$title}
+                        {/if}
                     </h3>
                 {/block}
             </header>

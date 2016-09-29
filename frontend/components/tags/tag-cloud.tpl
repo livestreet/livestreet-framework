@@ -12,9 +12,7 @@
     <ul class="{$component} ls-word-wrap">
         {foreach $tags as $tag}
             <li class="{$component}-item {if $tag->getText() && $active == $tag->getText()}active{/if}">
-                <a class="ls-tag-size-{$tag->getSize()}" href="{$tag->getUrl()}" title="{$tag->getCount()}">
-                    {$tag->getText()|escape}
-                </a>
+                <a class="ls-tag-size-{$tag->getSize()}" href="{$tag->getUrl()}" title="{$tag->getCount()}">{$tag->getText()|escape}</a>
             </li>
         {/foreach}
     </ul>

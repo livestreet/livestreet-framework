@@ -270,6 +270,18 @@ abstract class Entity extends LsObject
     }
 
     /**
+     * Хук, срабатывает перед валидацией сущности
+     *
+     * @return bool
+     */
+    protected function beforeValidate()
+    {
+        $bResult = true;
+        $this->RunBehaviorHook('before_validate', array('bResult' => &$bResult));
+        return $bResult;
+    }
+
+    /**
      * Выполняет валидацию данных сущности
      * Если $aFields=null, то выполняется валидация по всем полям из $this->aValidateRules, иначе по пересечению
      *
@@ -280,6 +292,9 @@ abstract class Entity extends LsObject
      */
     public function _Validate($aFields = null, $bClearErrors = true)
     {
+        if (!$this->beforeValidate()) {
+            return false;
+        }
         if ($bClearErrors) {
             $this->_clearValidateErrors();
         }

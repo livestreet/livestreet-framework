@@ -30,6 +30,7 @@
         "image": "field.image.tpl",
         "radio": "field.radio.tpl",
         "select": "field.select.tpl",
+        "number": "field.number.tpl",
         "text": "field.text.tpl",
         "textarea": "field.textarea.tpl",
         "upload-area": "field.upload-area.tpl"

@@ -94,12 +94,12 @@ class ModuleValidate_EntityValidatorTags extends ModuleValidate_EntityValidator
             }
         }
         $iCount = count($aTagsNew);
-        if ($iCount > $this->countMax or $iCount < $this->countMin) {
-            return $this->getMessage($this->Lang_Get('validate.tags.count', null, false), 'msg',
-                array('max' => $this->countMax, 'min' => $this->countMin));
-        } elseif (!$iCount) {
+        if (!$iCount) {
             return $this->getMessage($this->Lang_Get('validate.tags.empty', null, false), 'msg',
                 array('min' => $this->min, 'max' => $this->max));
+        } elseif ($iCount > $this->countMax or $iCount < $this->countMin) {
+            return $this->getMessage($this->Lang_Get('validate.tags.count', null, false), 'msg',
+                array('max' => $this->countMax, 'min' => $this->countMin));
         }
         /**
          * Если проверка от сущности, то возвращаем обновленное значение

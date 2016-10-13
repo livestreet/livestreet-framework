@@ -118,11 +118,14 @@
 
                     // Обновляем счетчик
                     var countLeft = this.getCount() - response.count_loaded;
+                    if ('undefined' !== typeof response.count_left) {
+                        countLeft = response.count_left;
+                    }
 
                     if ( countLeft <= 0 ) {
                         response.hide = true;
                     } else {
-                        this.setCount( countLeft || 0 );
+                        this.setCount( countLeft || 0);
                     }
 
                     // Обновляем параметры
@@ -132,6 +135,7 @@
                 } else {
                     // Для блоков без счетчиков
                     ls.msg.notice( null, this._i18n( 'empty' ) );
+                    response.hide = true;
                 }
 
                 if ( response.hide ) {

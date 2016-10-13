@@ -809,6 +809,9 @@ abstract class EntityORM extends Entity
                             $aFilterAdd = $aRelations[$sKey]['filter'];
                             $sCmd = "{$sRelPluginPrefix}{$sRelModuleName}_get{$sRelEntityName}ByFilter";
                             $aFilterAdd = array_merge(array($sRelationKey => $iPrimaryKeyValue), $aFilterAdd);
+                            if ($bUseFilter) {
+                                $aFilterAdd = array_merge($aFilterAdd, $aArgs[0]);
+                            }
                             $mCmdArgs = array($aFilterAdd);
                             break;
                         case self::RELATION_TYPE_HAS_MANY :

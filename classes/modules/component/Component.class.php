@@ -83,6 +83,7 @@ class ModuleComponent extends Module
          */
         $aComponentsName = array_keys($this->aComponentsList);
         foreach ($aComponentsName as $sName) {
+            list($sComponentPlugin, $sComponentName) = $this->ParseName($sName);
             $aTree[$sName] = array();
             /**
              * Считываем данные компонента
@@ -100,7 +101,12 @@ class ModuleComponent extends Module
                          */
                         continue;
                     }
-                    $aTree[$sName][] = strtolower(is_int($mKey) ? $mValue : $mKey);
+                    $sNameDepend = is_int($mKey) ? $mValue : $mKey;
+                    list($sComponentDependPlugin, $sComponentDependName) = $this->ParseName($sNameDepend);
+                    if (!$sComponentDependPlugin and $sComponentPlugin) {
+                        $sNameDepend = $sComponentPlugin . ':' . $sComponentDependName;
+                    }
+                    $aTree[$sName][] = strtolower($sNameDepend);
                 }
             }
         }

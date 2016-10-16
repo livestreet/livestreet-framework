@@ -13,6 +13,8 @@
 {$component = 'ls-crop'}
 {component_define_params params=[ 'desc', 'image', 'originalWidth', 'originalHeight', 'width', 'height', 'title', 'mods', 'classes', 'attributes' ]}
 
+{block 'crop_modal_options'}{/block}
+
 {capture 'modal_content'}
     {$desc = $desc|escape}
 

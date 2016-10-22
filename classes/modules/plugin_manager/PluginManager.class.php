@@ -659,7 +659,7 @@ class ModulePluginManager extends ModuleORM
         $aResultFiles = array();
         foreach ($aVersions as $sVersion) {
             $aResultFiles[$sVersion] = array();
-            $aFiles = glob($sPluginDir . "{$sVersion}/*");
+            $aFiles = glob($sPluginDir . "{$sVersion}/*.php");
             if ($aFiles) {
                 foreach ($aFiles as $sFile) {
                     $aResultFiles[$sVersion][] = array(

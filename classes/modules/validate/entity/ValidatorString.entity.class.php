@@ -92,15 +92,15 @@ class ModuleValidate_EntityValidatorString extends ModuleValidate_EntityValidato
 
         if ($this->min !== null && $iLength < $this->min) {
             return $this->getMessage($this->Lang_Get('validate.string.too_short', null, false), 'msgTooShort',
-                array('min' => $this->min));
+                array('count' => $this->Lang_Pluralize($this->min, $this->Lang_Get('validate.symbols', array('count' => $this->min)))));
         }
         if ($this->max !== null && $iLength > $this->max) {
             return $this->getMessage($this->Lang_Get('validate.string.too_long', null, false), 'msgTooLong',
-                array('max' => $this->max));
+                array('count' => $this->Lang_Pluralize($this->max, $this->Lang_Get('validate.symbols', array('count' => $this->max)))));
         }
         if ($this->is !== null && $iLength !== $this->is) {
             return $this->getMessage($this->Lang_Get('validate.string.no_length', null, false), 'msg',
-                array('length' => $this->is));
+                array('count' => $this->Lang_Pluralize($this->is, $this->Lang_Get('validate.symbols', array('count' => $this->is)))));
         }
         if (!$this->allowEmpty && $this->isEmpty($sValue)) {
             return $this->getMessage($this->Lang_Get('validate.empty_error', null, false), 'msg');

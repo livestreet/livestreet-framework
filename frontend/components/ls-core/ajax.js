@@ -139,17 +139,17 @@ ls.ajax = (function ($) {
                 return true;
             },
             success: function (response, status, xhr, form) {
-                if ( response.errors ) {
-                    this.showFieldErrors(form, response.errors);
-                }
-
                 if ( response.bStateError ) {
-                    if ( more.showNotices ) {
-                        if ( response.sMsgTitle || response.sMsg )
-                            ls.msg.error( response.sMsgTitle, response.sMsg );
+                    if ( response.errors ) {
+                        this.showFieldErrors(form, response.errors);
                     } else {
-                        if ( response.is_form_error && ( response.sMsgTitle || response.sMsg ) )
-                            this.showFormAlert(form, response.sMsgTitle, response.sMsg);
+                        if ( more.showNotices ) {
+                            if ( response.sMsgTitle || response.sMsg )
+                                ls.msg.error( response.sMsgTitle, response.sMsg );
+                        } else {
+                            if ( response.is_form_error && ( response.sMsgTitle || response.sMsg ) )
+                                this.showFormAlert(form, response.sMsgTitle, response.sMsg);
+                        }
                     }
 
                     if ( $.isFunction( more.onError ) ) more.onError.apply( this, arguments );

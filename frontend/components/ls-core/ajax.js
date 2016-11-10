@@ -114,6 +114,11 @@ ls.ajax = (function ($) {
             url = aRouter['ajax'] + url + '/';
         }
 
+        if ($.isFunction(form.parsley)) {
+            form.parsley().off('form:validate', ls.ajax.onFormValidate);
+            form.parsley().on('form:validate', ls.ajax.onFormValidate);
+        }
+
         var options = {
             type: 'POST',
             url: url,
@@ -178,6 +183,13 @@ ls.ajax = (function ($) {
         ls.hook.run('ls_ajaxsubmit_before', [options,form,callback,more], this);
 
         form.ajaxSubmit(options);
+    };
+
+    /**
+     * 
+     */
+    this.onFormValidate = function (event) {
+        ls.ajax.clearFieldErrors(event.$element);
     };
 
     /**

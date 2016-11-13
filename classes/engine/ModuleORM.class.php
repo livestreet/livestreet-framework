@@ -335,11 +335,7 @@ abstract class ModuleORM extends Module
      */
     public function LoadTree($aFilter = array(), $sEntityFull = null)
     {
-        if (is_null($sEntityFull)) {
-            $sEntityFull = Engine::GetPluginPrefix($this) . 'Module' . Engine::GetModuleName($this) . '_Entity' . Engine::GetModuleName(get_class($this));
-        } elseif (!substr_count($sEntityFull, '_')) {
-            $sEntityFull = Engine::GetPluginPrefix($this) . 'Module' . Engine::GetModuleName($this) . '_Entity' . $sEntityFull;
-        }
+        $sEntityFull = $this->_NormalizeEntityRootName($sEntityFull);
         if ($oEntityDefault = Engine::GetEntity($sEntityFull)) {
             if ($oEntityDefault->_isUsedRelationType(EntityORM::RELATION_TYPE_TREE)) {
                 if ($sPrimaryKey = $oEntityDefault->_getPrimaryKey()) {
@@ -1347,7 +1343,7 @@ abstract class ModuleORM extends Module
         } else {
             $sPluginPrefix = Engine::GetPluginPrefix($this);
             $sModuleName = Engine::GetModuleName($this);
-            $sEntityName = $sEntity;
+            $sEntityName = ucfirst($sEntity);
         }
         /**
          * Получаем корневой модуль

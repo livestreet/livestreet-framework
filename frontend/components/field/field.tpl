@@ -25,7 +25,7 @@
     'rules', 'value', 'id', 'inputClasses', 'inputAttributes', 'inputData', 'mods', 'classes', 'attributes', 'note' ]}
 
 {* Уникальный ID *}
-{$uid = $id|default:($component|cat:rand(0, 10e10))}
+{$uid = $id|default:($component|cat:mt_rand())}
 
 {* Дефолтные значения *}
 {$rules = $rules|default:[]}

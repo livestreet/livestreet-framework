@@ -22,7 +22,7 @@
         <p class="{$component}-desc">{$desc}</p>
     {/if}
 
-    <img src="{$image|escape}?v{rand( 0, 10e10 )}" width="{$width}" height="{$height}" class="{$component}-image js-crop" data-crop-width="{$originalWidth}" data-crop-height="{$originalHeight}">
+    <img src="{$image|escape}?v{mt_rand()}" width="{$width}" height="{$height}" class="{$component}-image js-crop" data-crop-width="{$originalWidth}" data-crop-height="{$originalHeight}">
 {/capture}
 
 {component 'modal'

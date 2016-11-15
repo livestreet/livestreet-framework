@@ -11,7 +11,7 @@
 
 {* Уникальный ID для привязки таба к его содержимому *}
 {foreach $tabs as $tab}
-    {$tabs[ $tab@index ][ 'uid' ] = "tab{rand( 0, 10e10 )}"}
+    {$tabs[ $tab@index ][ 'uid' ] = "tab{mt_rand()}"}
 {/foreach}
 
 <div class="{$component} {cmods name=$component mods=$mods} {$classes}" {cattr list=$attributes}>

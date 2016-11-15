@@ -13,7 +13,7 @@
 {$set = $set|default:'default'}
 
 {* Уникальный ID *}
-{$_uid = $id|default:($component|cat:rand(0, 10e10))}
+{$_uid = $id|default:($component|cat:mt_rand())}
 
 {* Уникальный ID окна загрузки файлов *}
 {$_mediaUid = "media{$_uid}"}

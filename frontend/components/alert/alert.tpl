@@ -15,7 +15,7 @@
 {component_define_params params=[ 'title', 'text', 'visible', 'dismissible', 'close', 'mods', 'classes', 'attributes' ]}
 
 {* Дефолтные значения *}
-{$uid = "{$component}{rand( 0, 10e10 )}"}
+{$uid = "{$component}{mt_rand()}"}
 {$visible = $visible|default:true}
 
 {$dismissible = ( $close ) ? $close : $dismissible}

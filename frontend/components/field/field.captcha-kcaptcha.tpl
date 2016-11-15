@@ -12,9 +12,7 @@
     <span data-type="captcha" data-lscaptcha-name="{$captchaName}" class="ls-field--captcha-image"></span>
 
     {$rules = [
-        'required'      => true,
-        'remote'        => {router page='ajax/captcha/validate'},
-        'remote-options' => [ 'data' => [ 'name' => $captchaName ] ]
+        'required' => true
     ]}
 
     {$inputClasses = "$inputClasses ls-width-100"}

@@ -55,7 +55,16 @@
          * 
          */
         __init: function () {
-            this.element.tinymce( $.extend( {}, this.option( 'sets.common' ), this.option( 'sets.' + this.option( 'set' ) ) ) );
+            this.element.tinymce( $.extend( {
+                setup: function (editor) {
+                    editor.on('keydown', function(event) {
+                        if (event.ctrlKey && event.keyCode == 13){
+                            this._trigger('submitted');
+                            event.preventDefault();
+                        }
+                    }.bind(this));
+                }.bind(this)
+            }, this.option( 'sets.common' ), this.option( 'sets.' + this.option( 'set' ) ) ) );
         },
 
         /**

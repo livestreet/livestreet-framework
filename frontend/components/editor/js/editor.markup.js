@@ -93,6 +93,10 @@ $.widget( "livestreet.lsEditorMarkup", {
 
             return false;
         });
+
+        this.element.on('keyup', null, 'ctrl+return', function () {
+            this._trigger('submitted');
+        }.bind(this));
     },
 
     /**

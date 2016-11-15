@@ -63,7 +63,10 @@ $.widget( "livestreet.lsDropdown", $.livestreet.lsComponent, {
         this._super();
 
         // Вынос меню в тег body
-        if ( this.options.body ) this.elements.menu.appendTo('body');
+        if ( this.options.body ) {
+            this._initialMenuParent = this.elements.menu.parent();
+            this.elements.menu.appendTo('body');
+        }
 
         // Пункты меню
         this._menuItems = this.elements.menu.find('li:not(.ls-dropdown-separator)');
@@ -235,5 +238,14 @@ $.widget( "livestreet.lsDropdown", $.livestreet.lsComponent, {
 
         this.elements.menu.position( this.options.position );
         this._trigger( 'reposition', null, this );
+    },
+
+    /**
+     * 
+     */
+    _destroy: function () {
+        if (this.options.body) {
+            this.elements.menu.appendTo(this._initialMenuParent);
+        }
     }
 });

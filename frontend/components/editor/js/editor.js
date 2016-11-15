@@ -16,7 +16,8 @@ $.widget( "livestreet.lsEditor", {
         type: null,
         media: null,
         media_options: {},
-        set: 'default'
+        set: 'default',
+        submitted: null
     },
 
     /**

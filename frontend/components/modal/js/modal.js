@@ -212,11 +212,12 @@ var ls = ls || {};
         show: function () {
             var isOverlayVisible = _overlay.isVisible();
 
+            this._trigger("beforeshow", null, this);
+
             _overlay.getActiveModal().lsModal('hide', false);
 
             if ( ! isOverlayVisible ) _overlay.element.css({ 'display' : 'block', 'visibility' : 'hidden' });
             this.element.css({ 'display' : 'block', 'visibility' : 'hidden' });
-
             this.element.css({
                 // Центрируем по вертикали только если высота
                 // модального меньше высоты окна
@@ -242,7 +243,7 @@ var ls = ls || {};
         hide: function ( hideOverlay ) {
             hideOverlay = typeof hideOverlay === 'undefined' ? true : hideOverlay;
 
-            _overlay.element.css('overflow', 'hidden');
+            this._trigger("beforehide", null, this);
 
             this._hide(this.element, this.options.hide, function () {
                 if ( this.options.url ) this.element.remove();

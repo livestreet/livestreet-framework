@@ -52,7 +52,7 @@
         onSubmit: function() {
             var params = {
                 size: this.elements.crop.lsCrop( 'getSelection' ),
-                canvas_width: this.elements.crop.lsCrop( 'getImageData' ).width
+                canvas_width: this.elements.crop.lsCrop( 'getImageData' ).naturalWidth
             };
 
             this._load('submit', params, 'onSubmitSuccess');

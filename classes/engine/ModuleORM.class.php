@@ -688,6 +688,8 @@ abstract class ModuleORM extends Module
                     $oEntity->_setData(array($sRelationName => $aRelData[$sKeyData]));
                 } elseif (isset($aRelationFilter['#value-default'])) {
                     $oEntity->_setData(array($sRelationName => $aRelationFilter['#value-default']));
+                } elseif ($sRelType == EntityORM::RELATION_TYPE_HAS_MANY) {
+                    $oEntity->_setData(array($sRelationName => array()));
                 }
                 if ($sRelType == EntityORM::RELATION_TYPE_MANY_TO_MANY) {
                     // Создаём объекты-обёртки для связей MANY_TO_MANY

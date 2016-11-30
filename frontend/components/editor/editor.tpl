@@ -32,7 +32,7 @@
 
 {* Визуальный редактор *}
 {if $type == 'visual'}
-    {hookb run='editor_visual'}
+    {hookb run='editor_visual' targetId=$_uid}
         {asset type='js' file="Component@editor.vendor/tinymce/js/tinymce/tinymce.min"}
         {asset type='js' file="Component@editor.vendor/tinymce/js/tinymce/jquery.tinymce.min"}
         {asset type='js' file="Component@editor.visual"}
@@ -42,7 +42,7 @@
 
 {* Markup редактор *}
 {else}
-    {hookb run='editor_markup'}
+    {hookb run='editor_markup' targetId=$_uid}
         <script type="text/javascript">
             ls.lang.load({lang_load name="editor.markup.toolbar.b, editor.markup.toolbar.i, editor.markup.toolbar.u, editor.markup.toolbar.s, editor.markup.toolbar.url, editor.markup.toolbar.url_promt, editor.markup.toolbar.image_promt, editor.markup.toolbar.code, editor.markup.toolbar.video, editor.markup.toolbar.video_promt, editor.markup.toolbar.image, editor.markup.toolbar.cut, editor.markup.toolbar.quote, editor.markup.toolbar.list, editor.markup.toolbar.list_ul, editor.markup.toolbar.list_ol, editor.markup.toolbar.list_li, editor.markup.toolbar.title, editor.markup.toolbar.title_h4, editor.markup.toolbar.title_h5, editor.markup.toolbar.title_h6, editor.markup.toolbar.clear_tags, editor.markup.toolbar.user, editor.markup.toolbar.user_promt"});
         </script>

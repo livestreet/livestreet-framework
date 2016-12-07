@@ -108,6 +108,11 @@ class ModuleNotify extends Module
          */
         $sBody = $this->oViewerLocal->Fetch($this->GetTemplatePath($sTemplate, $sPluginName));
         /**
+         * Альтернативный текст (plain/text)
+         */
+        $this->oViewerLocal->Assign('isText', true);
+        $sBodyAlt = $this->oViewerLocal->Fetch($this->GetTemplatePath($sTemplate, $sPluginName));
+        /**
          * Если в конфигураторе указан отложенный метод отправки,
          * то добавляем задание в массив. В противном случае,
          * сразу отсылаем на email
@@ -116,6 +121,7 @@ class ModuleNotify extends Module
         $oNotifyTask->setUserMail($sMail);
         $oNotifyTask->setUserLogin($sName);
         $oNotifyTask->setNotifyText($sBody);
+        $oNotifyTask->setNotifyTextAlt($sBodyAlt);
         $oNotifyTask->setNotifySubject($sSubject);
         $oNotifyTask->setDateCreated(date("Y-m-d H:i:s"));
         $oNotifyTask->setNotifyTaskStatus(self::NOTIFY_TASK_STATUS_NULL);
@@ -170,6 +176,9 @@ class ModuleNotify extends Module
         $this->Mail_SetAdress($oTask->getUserMail(), $oTask->getUserLogin());
         $this->Mail_SetSubject($oTask->getNotifySubject());
         $this->Mail_SetBody($oTask->getNotifyText());
+        if ($oTask->getNotifyTextAlt()) {
+            $this->Mail_SetAltBody($oTask->getNotifyTextAlt());
+        }
         $this->Mail_setHTML();
         $this->Mail_Send();
     }

@@ -68,6 +68,16 @@ class ModuleNotify_EntityTask extends Entity
     }
 
     /**
+     * Возвращает альтернативный текст сообщения (plain/text)
+     *
+     * @return string|null
+     */
+    public function getNotifyTextAlt()
+    {
+        return $this->_getDataOne('notify_text_alt');
+    }
+
+    /**
      * Возвращает дату создания сообщения
      *
      * @return string|null
@@ -136,6 +146,16 @@ class ModuleNotify_EntityTask extends Entity
     public function setNotifyText($data)
     {
         $this->_aData['notify_text'] = $data;
+    }
+
+    /**
+     * Устанавливает альтернативный текст уведомления (plain/text)
+     *
+     * @param string $data
+     */
+    public function setNotifyTextAlt($data)
+    {
+        $this->_aData['notify_text_alt'] = $data;
     }
 
     /**

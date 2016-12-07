@@ -126,6 +126,12 @@ class ModuleMail extends Module
      */
     protected $sBody = '';
     /**
+     * Альтернативный текст письма в формате plain/text
+     *
+     * @var string
+     */
+    protected $sAltBody = '';
+    /**
      * Строка последней ошибки
      *
      * @var string
@@ -212,6 +218,16 @@ class ModuleMail extends Module
     }
 
     /**
+     * Устанавливает альтернативный текст сообщения
+     *
+     * @param string $sText Текст сообщения
+     */
+    public function SetAltBody($sText)
+    {
+        $this->sAltBody = $sText;
+    }
+
+    /**
      * Добавляем новый адрес получателя
      *
      * @param string $sMail Емайл
@@ -248,6 +264,9 @@ class ModuleMail extends Module
     {
         $this->oMailer->Subject = $this->sSubject;
         $this->oMailer->Body = $this->sBody;
+        if ($this->sAltBody) {
+            $this->oMailer->AltBody = $this->oMailer->normalizeBreaks($this->oMailer->html2text($this->sAltBody));
+        }
         ob_start();
         $bResult = $this->oMailer->Send();
         $this->sError = ob_get_clean();

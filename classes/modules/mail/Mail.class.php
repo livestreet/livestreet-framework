@@ -214,7 +214,7 @@ class ModuleMail extends Module
      */
     public function SetBody($sText)
     {
-        $this->sBody = $sText;
+        $this->sBody = trim($sText);
     }
 
     /**
@@ -224,7 +224,7 @@ class ModuleMail extends Module
      */
     public function SetAltBody($sText)
     {
-        $this->sAltBody = $sText;
+        $this->sAltBody = $sText ? trim($sText) : $sText;
     }
 
     /**

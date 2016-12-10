@@ -1396,6 +1396,7 @@ class ModuleViewer extends Module
      */
     public function Shutdown()
     {
+        $this->Hook_Run('viewer_shutdown');
         /**
          * Получаем настройки блоков из конфигов
          */

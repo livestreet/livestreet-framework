@@ -52,7 +52,6 @@
         {/block}
 
         <link href="{cfg 'path.skin.assets.web'}/images/favicons/favicon.ico?v1" rel="shortcut icon" />
-        <link rel="search" type="application/opensearchdescription+xml" href="{router page='search'}opensearch/" title="{Config::Get('view.name')}" />
 
         <script>
             {strip}

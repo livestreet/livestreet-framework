@@ -220,6 +220,7 @@ class ModuleViewer extends Module
      */
     public function VarAssign()
     {
+        $this->Hook_Run('viewer_init_assign');
         /**
          * Загружаем весь $_REQUEST, предварительно обработав его функцией func_htmlspecialchars()
          */
@@ -1396,6 +1397,7 @@ class ModuleViewer extends Module
      */
     public function Shutdown()
     {
+        $this->Hook_Run('viewer_shutdown');
         /**
          * Получаем настройки блоков из конфигов
          */

@@ -106,6 +106,7 @@ class ModuleNotify extends Module
         /**
          * Формируем шаблон
          */
+        $this->oViewerLocal->Assign('isText', false);
         $sBody = $this->oViewerLocal->Fetch($this->GetTemplatePath($sTemplate, $sPluginName));
         /**
          * Альтернативный текст (plain/text)

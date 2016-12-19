@@ -200,7 +200,9 @@ ls.ajax = (function ($) {
 
         if (fieldsForClearError && fieldsForClearError.length) {
             $.each(fieldsForClearError, function (k, v) {
-                form.find('[name="' + v + '"]').parsley().removeError(v);
+                var parsley = form.find('[name="' + v + '"]').parsley();
+
+                if (parsley) parsley.removeError(v);
             });
         }
     };
@@ -214,7 +216,7 @@ ls.ajax = (function ($) {
         $.each(errors, function(key, field) {
             var input = form.find('[name="' + key + '"]');
 
-            if (input.length) {
+            if (input.length && input.parsley()) {
                 input.parsley().addError(key, { message: field.join('<br>') });
 
                 // Сохраняем для следующего сброса

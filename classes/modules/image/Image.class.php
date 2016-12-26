@@ -34,6 +34,10 @@ class ModuleImage extends Module
     const INTERLACE_PLANE = 'plane';
     const INTERLACE_PARTITION = 'partition';
 
+    const ERROR_CODE_UNDEFINED = 0;
+    const ERROR_CODE_WRONG_FORMAT = 1;
+    const ERROR_CODE_WRONG_MAX_SIZE = 2;
+
     /**
      * Дефолтные параметры
      * Основная задача в определении списка доступных ключей массива с параметрами
@@ -60,6 +64,12 @@ class ModuleImage extends Module
      * @var string
      */
     protected $sLastErrorText = null;
+    /**
+     * Код последней ошибки
+     *
+     * @var int
+     */
+    protected $iLastErrorCode = null;
     /**
      * Список поддерживаемых драйверов обработки изображений
      *
@@ -121,13 +131,35 @@ class ModuleImage extends Module
     }
 
     /**
+     * Получает код последней ошибки
+     *
+     * @return int
+     */
+    public function GetLastErrorCode()
+    {
+        return $this->iLastErrorCode;
+    }
+
+    /**
      * Устанавливает текст последней ошибки
      *
      * @param string $sText Текст ошибки
+     * @param int|null $iCode Код ошибки
      */
-    public function SetLastError($sText)
+    public function SetLastError($sText, $iCode = null)
     {
         $this->sLastErrorText = $sText;
+        $this->SetLastErrorCode($iCode);
+    }
+
+    /**
+     * Устанавливает код последней ошибки
+     *
+     * @param int|null $iCode
+     */
+    public function SetLastErrorCode($iCode)
+    {
+        $this->iLastErrorCode = $iCode;
     }
 
     /**
@@ -175,7 +207,7 @@ class ModuleImage extends Module
             $oImageObject = $oImagine->open($sFile);
 
             if (!$aSize = getimagesize($sFile, $aImageInfo)) {
-                $this->SetLastError('The file is not an image');
+                $this->SetLastError('The file is not an image', self::ERROR_CODE_WRONG_FORMAT);
                 return false;
             }
             /**
@@ -183,7 +215,7 @@ class ModuleImage extends Module
              */
             $oBox = $oImageObject->getSize();
             if ($oBox->getWidth() > $aParams['size_max_width'] or $oBox->getHeight() > $aParams['size_max_height']) {
-                $this->SetLastError('Maximum size image ' . $aParams['size_max_width'] . 'x' . $aParams['size_max_height']);
+                $this->SetLastError('Maximum size image ' . $aParams['size_max_width'] . 'x' . $aParams['size_max_height'], self::ERROR_CODE_WRONG_FORMAT);
                 return false;
             }
             /**
@@ -196,7 +228,7 @@ class ModuleImage extends Module
             $oImage->setInfoAdditional($aImageInfo);
             return $oImage;
         } catch (Imagine\Exception\Exception $e) {
-            $this->SetLastError($e->getMessage());
+            $this->SetLastError($e->getMessage(), self::ERROR_CODE_UNDEFINED);
             // write to log
             $this->Logger_Warning('Image error: ' . $e->getMessage(), array('exception' => $e));
             return false;

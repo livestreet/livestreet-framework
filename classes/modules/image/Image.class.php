@@ -215,7 +215,7 @@ class ModuleImage extends Module
              */
             $oBox = $oImageObject->getSize();
             if ($oBox->getWidth() > $aParams['size_max_width'] or $oBox->getHeight() > $aParams['size_max_height']) {
-                $this->SetLastError('Maximum size image ' . $aParams['size_max_width'] . 'x' . $aParams['size_max_height'], self::ERROR_CODE_WRONG_FORMAT);
+                $this->SetLastError('Maximum size image ' . $aParams['size_max_width'] . 'x' . $aParams['size_max_height'], self::ERROR_CODE_WRONG_MAX_SIZE);
                 return false;
             }
             /**

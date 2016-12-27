@@ -35,7 +35,6 @@ $.widget( "livestreet.lsToolbar", {
     _create: function() {
         this.target = $(this.options.target);
 
-        this.window._scrollable();
         this.window.on('ready resize scroll', this.reposition.bind(this));
         this.reposition();
     },

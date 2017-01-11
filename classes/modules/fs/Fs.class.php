@@ -212,8 +212,14 @@ class ModuleFs extends Module
      */
     public function GetPathWebFromServer($sPath)
     {
-        $sServerPath = rtrim(str_replace(DIRECTORY_SEPARATOR, '/', Config::Get('path.root.server')), '/');
-        $sWebPath = Router::GetPathRootWeb();
+        static $sWebPath;
+        static $sServerPath;
+        if (!$sServerPath) {
+            $sServerPath = rtrim(str_replace(DIRECTORY_SEPARATOR, '/', Config::Get('path.root.server')), '/');
+        }
+        if (!$sWebPath) {
+            $sWebPath = Router::GetPathRootWeb();
+        }
         return str_ireplace($sServerPath, $sWebPath, str_replace(DIRECTORY_SEPARATOR, '/', $sPath));
     }
 

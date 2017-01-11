@@ -280,28 +280,35 @@ class ModulePlugin extends Module
      */
     public function GetDelegater($sType, $sTo)
     {
-        $aDelegateMapper = array();
-        foreach ($this->aDelegates[$sType] as $kk => $vv) {
-            if ($vv['delegate'] == $sTo) {
-                $aDelegateMapper[$kk] = $vv;
-            }
-        }
-        if (is_array($aDelegateMapper) and count($aDelegateMapper)) {
-            $aKeys = array_keys($aDelegateMapper);
-            return array_shift($aKeys);
-        }
-        foreach ($this->aInherits as $k => $v) {
-            $aInheritMapper = array();
-            foreach ($v['items'] as $kk => $vv) {
-                if ($vv['inherit'] == $sTo) {
-                    $aInheritMapper[$kk] = $vv;
+        static $aCache;
+
+        $sCacheKey = $sType . '+' . $sTo;
+
+        if (!isset($aCache[$sCacheKey])) {
+            $aDelegateMapper = array();
+            foreach ($this->aDelegates[$sType] as $kk => $vv) {
+                if ($vv['delegate'] == $sTo) {
+                    $aDelegateMapper[$kk] = $vv;
                 }
             }
-            if (is_array($aInheritMapper) and count($aInheritMapper)) {
-                return $k;
+            if (is_array($aDelegateMapper) and count($aDelegateMapper)) {
+                $aKeys = array_keys($aDelegateMapper);
+                return $aCache[$sCacheKey] = array_shift($aKeys);
             }
+            foreach ($this->aInherits as $k => $v) {
+                $aInheritMapper = array();
+                foreach ($v['items'] as $kk => $vv) {
+                    if ($vv['inherit'] == $sTo) {
+                        $aInheritMapper[$kk] = $vv;
+                    }
+                }
+                if (is_array($aInheritMapper) and count($aInheritMapper)) {
+                    return $aCache[$sCacheKey] = $k;
+                }
+            }
+            $aCache[$sCacheKey] = $sTo;
         }
-        return $sTo;
+        return $aCache[$sCacheKey];
     }
 
     /**

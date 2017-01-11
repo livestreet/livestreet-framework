@@ -220,6 +220,12 @@ class Engine
      * @var int|null
      */
     protected $iTimeInit = null;
+    /**
+     * Использовать или нет авто-хуки на методы модулей
+     *
+     * @var bool
+     */
+    protected $bUseAutoHooks = false;
 
 
     /**
@@ -230,6 +236,7 @@ class Engine
     protected function __construct()
     {
         $this->iTimeInit = microtime(true);
+        $this->SetUseAutoHooks(Config::Get('sys.module.use_auto_hooks'));
         $this->AutoloadRegister();
         if (get_magic_quotes_gpc()) {
             func_stripslashes($_REQUEST);
@@ -294,6 +301,11 @@ class Engine
          * Запускаем хуки для события завершения инициализации Engine
          */
         $this->Hook_Run('engine_init_complete');
+    }
+
+    public function SetUseAutoHooks($bUse)
+    {
+        $this->bUseAutoHooks = (bool)$bUse;
     }
 
     /**
@@ -566,14 +578,10 @@ class Engine
     public function _CallModule($sName, $aArgs)
     {
         list($oModule, $sModuleName, $sMethod) = $this->GetModule($sName);
-        /**
-         * Необходимость генерации автоматических хуков
-         */
-        $bUseAutoHooks = (bool)Config::Get('sys.module.use_auto_hooks');
 
         $sModuleName = strtolower($sModuleName);
         $aResultHook = array();
-        if ($bUseAutoHooks and !in_array($sModuleName, array('plugin', 'hook'))) {
+        if ($this->bUseAutoHooks and !in_array($sModuleName, array('plugin', 'hook'))) {
             $aResultHook = $this->_CallModule('Hook_Run',
                 array('module_' . $sModuleName . '_' . strtolower($sMethod) . '_before', &$aArgs));
         }
@@ -590,7 +598,7 @@ class Engine
             $result = call_user_func_array(array($oModule, $sMethod), $aArgsRef);
         }
 
-        if ($bUseAutoHooks and !in_array($sModuleName, array('plugin', 'hook'))) {
+        if ($this->bUseAutoHooks and !in_array($sModuleName, array('plugin', 'hook'))) {
             $this->Hook_Run('module_' . $sModuleName . '_' . strtolower($sMethod) . '_after',
                 array('result' => &$result, 'params' => $aArgs));
         }
@@ -607,49 +615,58 @@ class Engine
      */
     public function GetModule($sName)
     {
-        /**
-         * Поддержка полного синтаксиса при вызове метода модуля
-         */
-        $aInfo = self::GetClassInfo(
-            $sName,
-            self::CI_MODULE
-            | self::CI_PPREFIX
-            | self::CI_METHOD
-        );
-        if ($aInfo[self::CI_MODULE] && $aInfo[self::CI_METHOD]) {
-            $sName = $aInfo[self::CI_MODULE] . '_' . $aInfo[self::CI_METHOD];
-            if ($aInfo[self::CI_PPREFIX]) {
-                $sName = $aInfo[self::CI_PPREFIX] . $sName;
+        static $aCache;
+
+        $sCacheKey = $sName;
+
+        if (!isset($aCache[$sCacheKey])) {
+            /**
+             * Поддержка полного синтаксиса при вызове метода модуля
+             */
+            $aInfo = self::GetClassInfo(
+                $sName,
+                self::CI_MODULE
+                | self::CI_PPREFIX
+                | self::CI_METHOD
+            );
+            if ($aInfo[self::CI_MODULE] && $aInfo[self::CI_METHOD]) {
+                $sName = $aInfo[self::CI_MODULE] . '_' . $aInfo[self::CI_METHOD];
+                if ($aInfo[self::CI_PPREFIX]) {
+                    $sName = $aInfo[self::CI_PPREFIX] . $sName;
+                }
             }
-        }
 
-        $aName = explode("_", $sName);
+            $aName = explode("_", $sName);
 
-        if (count($aName) == 2) {
-            $sModuleName = $aName[0];
-            $sModuleClass = 'Module' . $aName[0];
-            $sMethod = $aName[1];
-        } elseif (count($aName) == 3) {
-            $sModuleName = $aName[0] . '_' . $aName[1];
-            $sModuleClass = $aName[0] . '_Module' . $aName[1];
-            $sMethod = $aName[2];
-        } else {
-            throw new Exception("Undefined method module: " . $sName);
-        }
-        /**
-         * Подхватываем делегат модуля (в случае наличия такового)
-         */
-        if (!in_array($sModuleName, array('Plugin', 'Hook'))) {
-            $sModuleClass = $this->Plugin_GetDelegate('module', $sModuleClass);
-        }
+            if (count($aName) == 2) {
+                $sModuleName = $aName[0];
+                $sModuleClass = 'Module' . $aName[0];
+                $sMethod = $aName[1];
+            } elseif (count($aName) == 3) {
+                $sModuleName = $aName[0] . '_' . $aName[1];
+                $sModuleClass = $aName[0] . '_Module' . $aName[1];
+                $sMethod = $aName[2];
+            } else {
+                throw new Exception("Undefined method module: " . $sName);
+            }
+            /**
+             * Подхватываем делегат модуля (в случае наличия такового)
+             */
+            if (!in_array($sModuleName, array('Plugin', 'Hook'))) {
+                $sModuleClass = $this->Plugin_GetDelegate('module', $sModuleClass);
+            }
 
-        if (isset($this->aModules[$sModuleClass])) {
-            $oModule = $this->aModules[$sModuleClass];
-        } else {
-            $oModule = $this->LoadModule($sModuleClass, true);
-        }
+            if (isset($this->aModules[$sModuleClass])) {
+                $oModule = $this->aModules[$sModuleClass];
+            } else {
+                $oModule = $this->LoadModule($sModuleClass, true);
+            }
 
-        return array($oModule, $sModuleName, $sMethod);
+            $aCache[$sCacheKey] = array($oModule, $sModuleName, $sMethod);
+        }
+        return $aCache[$sCacheKey];
+
+
     }
 
     /**
@@ -1113,22 +1130,25 @@ class Engine
          * Проверяем данные в статическом кеше
          */
         $sClassName = is_string($oObject) ? $oObject : get_class($oObject);
-        $sCacheKey = $sClassName;
+
+        $sCacheKey = $sClassName . '_' . $iFlag . '_' . intval($bSingle);
         if (!isset($aCache[$sCacheKey])) {
-            $aCache[$sCacheKey] = self::ParserClassInfo($sClassName);
-        }
-        $aResultFull = $aCache[$sCacheKey];
-        /**
-         * Возвращаем только нужные данные
-         */
-        $aResult = array();
-        foreach ($aResultFull as $k => $v) {
-            if ($iFlag & $k) {
-                $aResult[$k] = $v;
+            $aResultParser = self::ParserClassInfo($sClassName);
+
+            /**
+             * Возвращаем только нужные данные
+             */
+            $aResult = array();
+            foreach ($aResultParser as $k => $v) {
+                if ($iFlag & $k) {
+                    $aResult[$k] = $v;
+                }
             }
+
+            $aCache[$sCacheKey] = $bSingle ? array_pop($aResult) : $aResult;
         }
 
-        return $bSingle ? array_pop($aResult) : $aResult;
+        return $aCache[$sCacheKey];
     }
 
     /**
@@ -1140,85 +1160,91 @@ class Engine
      */
     protected static function ParserClassInfo($sClassName, $iFlag = self::CI_ALL)
     {
-        $aResult = array();
-        if ($iFlag & self::CI_PLUGIN) {
-            $aResult[self::CI_PLUGIN] = preg_match('/^Plugin([^_]+)/', $sClassName, $aMatches)
-                ? $aMatches[1]
-                : null;
-        }
-        if ($iFlag & self::CI_ACTION) {
-            $aResult[self::CI_ACTION] = preg_match('/^(?:Plugin[^_]+_|)Action([^_]+)/', $sClassName, $aMatches)
-                ? $aMatches[1]
-                : null;
-        }
-        if ($iFlag & self::CI_MODULE) {
-            $aResult[self::CI_MODULE] = preg_match('/^(?:Plugin[^_]+_|)Module(?:ORM|)([^_]+)/', $sClassName, $aMatches)
-                ? $aMatches[1]
-                : null;
-        }
-        if ($iFlag & self::CI_ENTITY) {
-            $aResult[self::CI_ENTITY] = preg_match('/_Entity(?:ORM|)([^_]+)/', $sClassName, $aMatches)
-                ? $aMatches[1]
-                : null;
-        }
-        if ($iFlag & self::CI_BEHAVIOR) {
-            $aResult[self::CI_BEHAVIOR] = preg_match('/_Behavior([^_]+)/', $sClassName, $aMatches)
-                ? $aMatches[1]
-                : null;
-        }
-        if ($iFlag & self::CI_MAPPER) {
-            $aResult[self::CI_MAPPER] = preg_match('/_Mapper(?:ORM|)([^_]+)/', $sClassName, $aMatches)
-                ? $aMatches[1]
-                : null;
-        }
-        if ($iFlag & self::CI_HOOK) {
-            $aResult[self::CI_HOOK] = preg_match('/^(?:Plugin[^_]+_|)Hook([^_]+)$/', $sClassName, $aMatches)
-                ? $aMatches[1]
-                : null;
-        }
-        if ($iFlag & self::CI_BLOCK) {
-            $aResult[self::CI_BLOCK] = preg_match('/^(?:Plugin[^_]+_|)Block([^_]+)$/', $sClassName, $aMatches)
-                ? $aMatches[1]
-                : null;
-        }
-        if ($iFlag & self::CI_EVENT) {
-            $aResult[self::CI_EVENT] = preg_match('/_Event([^_]+)/', $sClassName, $aMatches)
-                ? $aMatches[1]
-                : null;
-        }
-        if ($iFlag & self::CI_METHOD) {
-            $sModuleName = $aResult[self::CI_MODULE];
-            $aResult[self::CI_METHOD] = preg_match('/_([^_]+)$/', $sClassName, $aMatches)
-                ? ($sModuleName && strtolower($aMatches[1]) == strtolower('module' . $sModuleName)
-                    ? null
-                    : $aMatches[1]
-                )
-                : null;
-        }
-        if ($iFlag & self::CI_PPREFIX) {
-            $sPluginName = $aResult[self::CI_PLUGIN];
-            $aResult[self::CI_PPREFIX] = $sPluginName
-                ? "Plugin{$sPluginName}_"
-                : '';
-        }
-        if ($iFlag & self::CI_INHERIT) {
-            $aResult[self::CI_INHERIT] = preg_match('/_Inherits?_(\w+)$/', $sClassName, $aMatches)
-                ? $aMatches[1]
-                : null;
-        }
-        if ($iFlag & self::CI_INHERITS) {
-            $sInherit = $aResult[self::CI_INHERIT];
-            $aResult[self::CI_INHERITS] = $sInherit
-                ? self::ParserClassInfo(
-                    $sInherit,
-                    self::CI_OBJECT)
-                : null;
-        }
-        if ($iFlag & self::CI_CLASSPATH) {
-            $aResult[self::CI_CLASSPATH] = self::GetClassPath($sClassName);
-        }
+        static $aCache;
 
-        return $aResult;
+        $sCacheKey = $sClassName . '_' . $iFlag;
+        if (!isset($aCache[$sCacheKey])) {
+            $aResult = array();
+            if ($iFlag & self::CI_PLUGIN) {
+                $aResult[self::CI_PLUGIN] = preg_match('/^Plugin([^_]+)/', $sClassName, $aMatches)
+                    ? $aMatches[1]
+                    : null;
+            }
+            if ($iFlag & self::CI_ACTION) {
+                $aResult[self::CI_ACTION] = preg_match('/^(?:Plugin[^_]+_|)Action([^_]+)/', $sClassName, $aMatches)
+                    ? $aMatches[1]
+                    : null;
+            }
+            if ($iFlag & self::CI_MODULE) {
+                $aResult[self::CI_MODULE] = preg_match('/^(?:Plugin[^_]+_|)Module(?:ORM|)([^_]+)/', $sClassName, $aMatches)
+                    ? $aMatches[1]
+                    : null;
+            }
+            if ($iFlag & self::CI_ENTITY) {
+                $aResult[self::CI_ENTITY] = preg_match('/_Entity(?:ORM|)([^_]+)/', $sClassName, $aMatches)
+                    ? $aMatches[1]
+                    : null;
+            }
+            if ($iFlag & self::CI_BEHAVIOR) {
+                $aResult[self::CI_BEHAVIOR] = preg_match('/_Behavior([^_]+)/', $sClassName, $aMatches)
+                    ? $aMatches[1]
+                    : null;
+            }
+            if ($iFlag & self::CI_MAPPER) {
+                $aResult[self::CI_MAPPER] = preg_match('/_Mapper(?:ORM|)([^_]+)/', $sClassName, $aMatches)
+                    ? $aMatches[1]
+                    : null;
+            }
+            if ($iFlag & self::CI_HOOK) {
+                $aResult[self::CI_HOOK] = preg_match('/^(?:Plugin[^_]+_|)Hook([^_]+)$/', $sClassName, $aMatches)
+                    ? $aMatches[1]
+                    : null;
+            }
+            if ($iFlag & self::CI_BLOCK) {
+                $aResult[self::CI_BLOCK] = preg_match('/^(?:Plugin[^_]+_|)Block([^_]+)$/', $sClassName, $aMatches)
+                    ? $aMatches[1]
+                    : null;
+            }
+            if ($iFlag & self::CI_EVENT) {
+                $aResult[self::CI_EVENT] = preg_match('/_Event([^_]+)/', $sClassName, $aMatches)
+                    ? $aMatches[1]
+                    : null;
+            }
+            if ($iFlag & self::CI_METHOD) {
+                $sModuleName = $aResult[self::CI_MODULE];
+                $aResult[self::CI_METHOD] = preg_match('/_([^_]+)$/', $sClassName, $aMatches)
+                    ? ($sModuleName && strtolower($aMatches[1]) == strtolower('module' . $sModuleName)
+                        ? null
+                        : $aMatches[1]
+                    )
+                    : null;
+            }
+            if ($iFlag & self::CI_PPREFIX) {
+                $sPluginName = $aResult[self::CI_PLUGIN];
+                $aResult[self::CI_PPREFIX] = $sPluginName
+                    ? "Plugin{$sPluginName}_"
+                    : '';
+            }
+            if ($iFlag & self::CI_INHERIT) {
+                $aResult[self::CI_INHERIT] = preg_match('/_Inherits?_(\w+)$/', $sClassName, $aMatches)
+                    ? $aMatches[1]
+                    : null;
+            }
+            if ($iFlag & self::CI_INHERITS) {
+                $sInherit = $aResult[self::CI_INHERIT];
+                $aResult[self::CI_INHERITS] = $sInherit
+                    ? self::ParserClassInfo(
+                        $sInherit,
+                        self::CI_OBJECT)
+                    : null;
+            }
+            if ($iFlag & self::CI_CLASSPATH) {
+                $aResult[self::CI_CLASSPATH] = self::GetClassPath($sClassName);
+            }
+
+            $aCache[$sCacheKey] = $aResult;
+        }
+        return $aCache[$sCacheKey];
     }
 
     /**
@@ -1231,130 +1257,137 @@ class Engine
      */
     public static function GetClassPath($oObject)
     {
-        $aInfo = self::ParserClassInfo(
-            $oObject,
-            self::CI_OBJECT
-        );
-        $sPath = Config::get('path.application.server') . '/';
-        $sPathFramework = Config::get('path.framework.server') . '/';
-        if ($aInfo[self::CI_ENTITY]) {
-            // Сущность
-            if ($aInfo[self::CI_PLUGIN]) {
-                // Сущность модуля плагина
-                $sPath .= 'plugins/' . func_underscore($aInfo[self::CI_PLUGIN])
-                    . '/classes/modules/' . func_underscore($aInfo[self::CI_MODULE])
-                    . '/entity/' . $aInfo[self::CI_ENTITY] . '.entity.class.php';
-            } else {
-                // Сущность модуля ядра
-                $sFile = 'classes/modules/' . func_underscore($aInfo[self::CI_MODULE])
-                    . '/entity/' . $aInfo[self::CI_ENTITY] . '.entity.class.php';
-                $sPath .= $sFile;
-                if (!is_file($sPath)) {
-                    $sPath = $sPathFramework . $sFile;
+        static $aCache;
+
+        $sClassName = is_string($oObject) ? $oObject : get_class($oObject);
+        $sCacheKey = $sClassName;
+
+        if (!isset($aCache[$sCacheKey])) {
+            $aInfo = self::ParserClassInfo(
+                $sClassName,
+                self::CI_OBJECT
+            );
+            $sPath = Config::get('path.application.server') . '/';
+            $sPathFramework = Config::get('path.framework.server') . '/';
+            if ($aInfo[self::CI_ENTITY]) {
+                // Сущность
+                if ($aInfo[self::CI_PLUGIN]) {
+                    // Сущность модуля плагина
+                    $sPath .= 'plugins/' . func_underscore($aInfo[self::CI_PLUGIN])
+                        . '/classes/modules/' . func_underscore($aInfo[self::CI_MODULE])
+                        . '/entity/' . $aInfo[self::CI_ENTITY] . '.entity.class.php';
+                } else {
+                    // Сущность модуля ядра
+                    $sFile = 'classes/modules/' . func_underscore($aInfo[self::CI_MODULE])
+                        . '/entity/' . $aInfo[self::CI_ENTITY] . '.entity.class.php';
+                    $sPath .= $sFile;
+                    if (!is_file($sPath)) {
+                        $sPath = $sPathFramework . $sFile;
+                    }
                 }
-            }
-        } elseif ($aInfo[self::CI_BEHAVIOR]) {
-            // Поведение
-            if ($aInfo[self::CI_PLUGIN]) {
-                // Поведение модуля плагина
-                $sPath .= 'plugins/' . func_underscore($aInfo[self::CI_PLUGIN])
-                    . '/classes/modules/' . func_underscore($aInfo[self::CI_MODULE])
-                    . '/behavior/' . $aInfo[self::CI_BEHAVIOR] . '.behavior.class.php';
-            } else {
-                // Поведение модуля ядра
-                $sFile = 'classes/modules/' . func_underscore($aInfo[self::CI_MODULE])
-                    . '/behavior/' . $aInfo[self::CI_BEHAVIOR] . '.behavior.class.php';
-                $sPath .= $sFile;
-                if (!is_file($sPath)) {
-                    $sPath = $sPathFramework . $sFile;
+            } elseif ($aInfo[self::CI_BEHAVIOR]) {
+                // Поведение
+                if ($aInfo[self::CI_PLUGIN]) {
+                    // Поведение модуля плагина
+                    $sPath .= 'plugins/' . func_underscore($aInfo[self::CI_PLUGIN])
+                        . '/classes/modules/' . func_underscore($aInfo[self::CI_MODULE])
+                        . '/behavior/' . $aInfo[self::CI_BEHAVIOR] . '.behavior.class.php';
+                } else {
+                    // Поведение модуля ядра
+                    $sFile = 'classes/modules/' . func_underscore($aInfo[self::CI_MODULE])
+                        . '/behavior/' . $aInfo[self::CI_BEHAVIOR] . '.behavior.class.php';
+                    $sPath .= $sFile;
+                    if (!is_file($sPath)) {
+                        $sPath = $sPathFramework . $sFile;
+                    }
                 }
-            }
-        } elseif ($aInfo[self::CI_MAPPER]) {
-            // Маппер
-            if ($aInfo[self::CI_PLUGIN]) {
-                // Маппер модуля плагина
-                $sPath .= 'plugins/' . func_underscore($aInfo[self::CI_PLUGIN])
-                    . '/classes/modules/' . func_underscore($aInfo[self::CI_MODULE])
-                    . '/mapper/' . $aInfo[self::CI_MAPPER] . '.mapper.class.php';
-            } else {
-                // Маппер модуля ядра
-                $sFile = 'classes/modules/' . func_underscore($aInfo[self::CI_MODULE])
-                    . '/mapper/' . $aInfo[self::CI_MAPPER] . '.mapper.class.php';
-                $sPath .= $sFile;
-                if (!is_file($sPath)) {
-                    $sPath = $sPathFramework . $sFile;
+            } elseif ($aInfo[self::CI_MAPPER]) {
+                // Маппер
+                if ($aInfo[self::CI_PLUGIN]) {
+                    // Маппер модуля плагина
+                    $sPath .= 'plugins/' . func_underscore($aInfo[self::CI_PLUGIN])
+                        . '/classes/modules/' . func_underscore($aInfo[self::CI_MODULE])
+                        . '/mapper/' . $aInfo[self::CI_MAPPER] . '.mapper.class.php';
+                } else {
+                    // Маппер модуля ядра
+                    $sFile = 'classes/modules/' . func_underscore($aInfo[self::CI_MODULE])
+                        . '/mapper/' . $aInfo[self::CI_MAPPER] . '.mapper.class.php';
+                    $sPath .= $sFile;
+                    if (!is_file($sPath)) {
+                        $sPath = $sPathFramework . $sFile;
+                    }
                 }
-            }
-        } elseif ($aInfo[self::CI_EVENT]) {
-            // Евент
-            if ($aInfo[self::CI_PLUGIN]) {
-                // Евент плагина
-                $sPath .= 'plugins/' . func_underscore($aInfo[self::CI_PLUGIN])
-                    . '/classes/actions/' . lcfirst($aInfo[self::CI_ACTION]) . '/Event' . $aInfo[self::CI_EVENT] . '.class.php';
-            } else {
-                // Евент ядра
-                $sPath .= 'classes/actions/' . lcfirst($aInfo[self::CI_ACTION]) . '/Event'
-                    . $aInfo[self::CI_EVENT] . '.class.php';
-            }
-        } elseif ($aInfo[self::CI_ACTION]) {
-            // Экшн
-            if ($aInfo[self::CI_PLUGIN]) {
-                // Экшн плагина
-                $sPath .= 'plugins/' . func_underscore($aInfo[self::CI_PLUGIN])
-                    . '/classes/actions/Action' . $aInfo[self::CI_ACTION] . '.class.php';
-            } else {
-                // Экшн ядра
-                $sPath .= 'classes/actions/Action'
-                    . $aInfo[self::CI_ACTION] . '.class.php';
-            }
-        } elseif ($aInfo[self::CI_MODULE]) {
-            // Модуль
-            if ($aInfo[self::CI_PLUGIN]) {
-                // Модуль плагина
-                $sPath .= 'plugins/' . func_underscore($aInfo[self::CI_PLUGIN])
-                    . '/classes/modules/' . func_underscore($aInfo[self::CI_MODULE])
-                    . '/' . $aInfo[self::CI_MODULE] . '.class.php';
-            } else {
-                // Модуль ядра
-                $sFile = 'classes/modules/' . func_underscore($aInfo[self::CI_MODULE])
-                    . '/' . $aInfo[self::CI_MODULE] . '.class.php';
-                $sPath .= $sFile;
-                if (!is_file($sPath)) {
-                    $sPath = $sPathFramework . $sFile;
+            } elseif ($aInfo[self::CI_EVENT]) {
+                // Евент
+                if ($aInfo[self::CI_PLUGIN]) {
+                    // Евент плагина
+                    $sPath .= 'plugins/' . func_underscore($aInfo[self::CI_PLUGIN])
+                        . '/classes/actions/' . lcfirst($aInfo[self::CI_ACTION]) . '/Event' . $aInfo[self::CI_EVENT] . '.class.php';
+                } else {
+                    // Евент ядра
+                    $sPath .= 'classes/actions/' . lcfirst($aInfo[self::CI_ACTION]) . '/Event'
+                        . $aInfo[self::CI_EVENT] . '.class.php';
                 }
-            }
-        } elseif ($aInfo[self::CI_HOOK]) {
-            // Хук
-            if ($aInfo[self::CI_PLUGIN]) {
-                // Хук плагина
+            } elseif ($aInfo[self::CI_ACTION]) {
+                // Экшн
+                if ($aInfo[self::CI_PLUGIN]) {
+                    // Экшн плагина
+                    $sPath .= 'plugins/' . func_underscore($aInfo[self::CI_PLUGIN])
+                        . '/classes/actions/Action' . $aInfo[self::CI_ACTION] . '.class.php';
+                } else {
+                    // Экшн ядра
+                    $sPath .= 'classes/actions/Action'
+                        . $aInfo[self::CI_ACTION] . '.class.php';
+                }
+            } elseif ($aInfo[self::CI_MODULE]) {
+                // Модуль
+                if ($aInfo[self::CI_PLUGIN]) {
+                    // Модуль плагина
+                    $sPath .= 'plugins/' . func_underscore($aInfo[self::CI_PLUGIN])
+                        . '/classes/modules/' . func_underscore($aInfo[self::CI_MODULE])
+                        . '/' . $aInfo[self::CI_MODULE] . '.class.php';
+                } else {
+                    // Модуль ядра
+                    $sFile = 'classes/modules/' . func_underscore($aInfo[self::CI_MODULE])
+                        . '/' . $aInfo[self::CI_MODULE] . '.class.php';
+                    $sPath .= $sFile;
+                    if (!is_file($sPath)) {
+                        $sPath = $sPathFramework . $sFile;
+                    }
+                }
+            } elseif ($aInfo[self::CI_HOOK]) {
+                // Хук
+                if ($aInfo[self::CI_PLUGIN]) {
+                    // Хук плагина
+                    $sPath .= 'plugins/' . func_underscore($aInfo[self::CI_PLUGIN])
+                        . '/classes/hooks/Hook' . $aInfo[self::CI_HOOK]
+                        . '.class.php';
+                } else {
+                    // Хук ядра
+                    $sPath .= 'classes/hooks/Hook' . $aInfo[self::CI_HOOK] . '.class.php';
+                }
+            } elseif ($aInfo[self::CI_BLOCK]) {
+                // Блок
+                if ($aInfo[self::CI_PLUGIN]) {
+                    // Блок плагина
+                    $sPath .= 'plugins/' . func_underscore($aInfo[self::CI_PLUGIN])
+                        . '/classes/blocks/Block' . $aInfo[self::CI_BLOCK]
+                        . '.class.php';
+                } else {
+                    // Блок ядра
+                    $sPath .= 'classes/blocks/Block' . $aInfo[self::CI_BLOCK] . '.class.php';
+                }
+            } elseif ($aInfo[self::CI_PLUGIN]) {
+                // Плагин
                 $sPath .= 'plugins/' . func_underscore($aInfo[self::CI_PLUGIN])
-                    . '/classes/hooks/Hook' . $aInfo[self::CI_HOOK]
+                    . '/Plugin' . $aInfo[self::CI_PLUGIN]
                     . '.class.php';
             } else {
-                // Хук ядра
-                $sPath .= 'classes/hooks/Hook' . $aInfo[self::CI_HOOK] . '.class.php';
+                $sPath = $sPathFramework . 'classes/engine/' . $sClassName . '.class.php';
             }
-        } elseif ($aInfo[self::CI_BLOCK]) {
-            // Блок
-            if ($aInfo[self::CI_PLUGIN]) {
-                // Блок плагина
-                $sPath .= 'plugins/' . func_underscore($aInfo[self::CI_PLUGIN])
-                    . '/classes/blocks/Block' . $aInfo[self::CI_BLOCK]
-                    . '.class.php';
-            } else {
-                // Блок ядра
-                $sPath .= 'classes/blocks/Block' . $aInfo[self::CI_BLOCK] . '.class.php';
-            }
-        } elseif ($aInfo[self::CI_PLUGIN]) {
-            // Плагин
-            $sPath .= 'plugins/' . func_underscore($aInfo[self::CI_PLUGIN])
-                . '/Plugin' . $aInfo[self::CI_PLUGIN]
-                . '.class.php';
-        } else {
-            $sClassName = is_string($oObject) ? $oObject : get_class($oObject);
-            $sPath = $sPathFramework . 'classes/engine/' . $sClassName . '.class.php';
+            $aCache[$sCacheKey] = is_file($sPath) ? $sPath : null;
         }
-        return is_file($sPath) ? $sPath : null;
+        return $aCache[$sCacheKey];
     }
 
 

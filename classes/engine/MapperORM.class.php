@@ -637,34 +637,41 @@ class MapperORM extends Mapper
      */
     public static function GetTableName($oEntity)
     {
-        /**
-         * Варианты таблиц:
-         *    prefix_user -> если модуль совпадает с сущностью
-         *    prefix_user_invite -> если модуль не сопадает с сущностью
-         * Если сущность плагина:
-         *    prefix_pluginname_user
-         *    prefix_pluginname_user_invite
-         */
-        $sClass = Engine::getInstance()->Plugin_GetDelegater('entity',
-            is_object($oEntity) ? get_class($oEntity) : $oEntity);
-        $sPluginName = func_underscore(Engine::GetPluginName($sClass));
-        $sModuleName = func_underscore(Engine::GetModuleName($sClass));
-        $sEntityName = func_underscore(Engine::GetEntityName($sClass));
-        if (strpos($sEntityName, $sModuleName) === 0) {
-            $sTable = func_underscore($sEntityName);
-        } else {
-            $sTable = func_underscore($sModuleName) . '_' . func_underscore($sEntityName);
+        static $aCache;
+
+        $sClass = is_object($oEntity) ? get_class($oEntity) : $oEntity;
+        $sCacheKey = $sClass;
+
+        if (!isset($aCache[$sCacheKey])) {
+            /**
+             * Варианты таблиц:
+             *    prefix_user -> если модуль совпадает с сущностью
+             *    prefix_user_invite -> если модуль не сопадает с сущностью
+             * Если сущность плагина:
+             *    prefix_pluginname_user
+             *    prefix_pluginname_user_invite
+             */
+            $sClass = Engine::getInstance()->Plugin_GetDelegater('entity', $sClass);
+            $sPluginName = func_underscore(Engine::GetPluginName($sClass));
+            $sModuleName = func_underscore(Engine::GetModuleName($sClass));
+            $sEntityName = func_underscore(Engine::GetEntityName($sClass));
+            if (strpos($sEntityName, $sModuleName) === 0) {
+                $sTable = func_underscore($sEntityName);
+            } else {
+                $sTable = func_underscore($sModuleName) . '_' . func_underscore($sEntityName);
+            }
+            if ($sPluginName) {
+                $sTable = $sPluginName . '_' . $sTable;
+            }
+            /**
+             * Если название таблиц переопределено в конфиге, то возвращаем его
+             */
+            if (Config::Get('db.table.' . $sTable)) {
+                $aCache[$sCacheKey] = Config::Get('db.table.' . $sTable);
+            } else {
+                $aCache[$sCacheKey] = Config::Get('db.table.prefix') . $sTable;
+            }
         }
-        if ($sPluginName) {
-            $sTable = $sPluginName . '_' . $sTable;
-        }
-        /**
-         * Если название таблиц переопределено в конфиге, то возвращаем его
-         */
-        if (Config::Get('db.table.' . $sTable)) {
-            return Config::Get('db.table.' . $sTable);
-        } else {
-            return Config::Get('db.table.prefix') . $sTable;
-        }
+        return $aCache[$sCacheKey];
     }
 }

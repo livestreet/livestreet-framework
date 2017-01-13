@@ -256,10 +256,6 @@ class ModuleViewer extends Module
          */
         $this->Assign("aBlocks", $this->aBlocks);
         /**
-         * Загружаем в шаблон JS переменные
-         */
-        $this->Assign("aVarsJs", $this->aVarsJs);
-        /**
          * Загружаем HTML заголовки
          */
         $this->Assign("sHtmlTitle", htmlspecialchars($this->GetHtmlTitle(Config::Get('view.title_sort_reverse'))));
@@ -495,6 +491,16 @@ class ModuleViewer extends Module
         } else {
             $this->aVarsJs[$sName] = $value;
         }
+    }
+
+    /**
+     * Возвращает переменные JS
+     *
+     * @return array
+     */
+    public function GetVarsJs()
+    {
+        return $this->aVarsJs;
     }
 
     /**

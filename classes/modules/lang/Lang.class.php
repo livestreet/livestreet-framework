@@ -131,11 +131,20 @@ class ModuleLang extends Module
      */
     protected function AssignToJs()
     {
-        $aLangMsg = array();
-        foreach ($this->aLangMsgJs as $sName) {
-            $aLangMsg[$sName] = $this->Get($sName, array(), false);
+        $this->Viewer_Assign('aLangJs', $this->GetLangJs());
+    }
+
+    public function GetLangJs($bPrepare = true)
+    {
+        if ($bPrepare) {
+            $aLangMsg = array();
+            foreach ($this->aLangMsgJs as $sName) {
+                $aLangMsg[$sName] = $this->Get($sName, array(), false);
+            }
+            return $aLangMsg;
+        } else {
+            return $this->aLangMsgJs;
         }
-        $this->Viewer_Assign('aLangJs', $aLangMsg);
     }
 
     /**
@@ -561,17 +570,5 @@ class ModuleLang extends Module
          * Возвращаем нужную форму слова, либо исходный текст
          */
         return array_key_exists($iForm, $aText) ? $aText[$iForm] : $mText;
-    }
-
-    /**
-     * Завершаем работу модуля
-     *
-     */
-    public function Shutdown()
-    {
-        /**
-         * Делаем выгрузку необходимых текстовок в шаблон в виде js
-         */
-        $this->AssignToJs();
     }
 }

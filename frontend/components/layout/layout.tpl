@@ -117,6 +117,12 @@
     {block 'layout_body_end'}
         {* Подключение скриптов указанных в конфиге *}
         {$aHtmlHeadFiles.js}
+
+
+        <script>
+            ls.lang.load({json var = $LS->Lang_GetLangJs()});
+            ls.registry.set({json var = $LS->Viewer_GetVarsJs()});
+        </script>
     {/block}
 
 

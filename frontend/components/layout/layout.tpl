@@ -56,14 +56,14 @@
         <script>
             {strip}
             var PATH_ROOT                   = '{router page='/'}',
-                PATH_SKIN                   = '{cfg 'path.skin.web'}',
-                PATH_FRAMEWORK_FRONTEND     = '{cfg 'path.framework.frontend.web'}',
-                PATH_FRAMEWORK_LIBS_VENDOR  = '{cfg 'path.framework.libs_vendor.web'}',
+                    PATH_SKIN                   = '{cfg 'path.skin.web'}',
+                    PATH_FRAMEWORK_FRONTEND     = '{cfg 'path.framework.frontend.web'}',
+                    PATH_FRAMEWORK_LIBS_VENDOR  = '{cfg 'path.framework.libs_vendor.web'}',
 
-                LIVESTREET_SECURITY_KEY = '{$LIVESTREET_SECURITY_KEY}',
-                LANGUAGE                = '{Config::Get('lang.current')}',
-                WYSIWYG                 = {if Config::Get('view.wysiwyg')}true{else}false{/if},
-                ACTION = '{$sAction}';
+                    LIVESTREET_SECURITY_KEY = '{$LIVESTREET_SECURITY_KEY}',
+                    LANGUAGE                = '{Config::Get('lang.current')}',
+                    WYSIWYG                 = {if Config::Get('view.wysiwyg')}true{else}false{/if},
+                    ACTION = '{$sAction}';
 
             var aRouter = [];
             {foreach $aRouter as $sPage => $sPath}
@@ -72,14 +72,7 @@
             {/strip}
         </script>
 
-        {**
-         * JavaScript файлы
-         * JS файлы подключаются в конфиге шаблона (ваш_шаблон/settings/config.php)
-         *}
-        {block 'layout_head_scripts'}
-            {* Подключение скриптов указанных в конфиге *}
-            {$aHtmlHeadFiles.js}
-        {/block}
+        {block 'layout_head_scripts'}{/block}
     {/block}
 
     {hook run='html_head_end'}
@@ -115,6 +108,17 @@
     {block 'layout_body'}{/block}
 
     {hook run='body_end'}
+
+
+    {**
+     * JavaScript файлы
+     * JS файлы подключаются в конфиге шаблона (ваш_шаблон/settings/config.php)
+     *}
+    {block 'layout_body_end'}
+        {* Подключение скриптов указанных в конфиге *}
+        {$aHtmlHeadFiles.js}
+    {/block}
+
 
     {$sLayoutAfter}
 </body>

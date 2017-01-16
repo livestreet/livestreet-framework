@@ -323,4 +323,12 @@ class ModuleMail extends Module
     {
         return $this->sError;
     }
+
+    /**
+     * @return phpmailer
+     */
+    public function GetMailer()
+    {
+        return $this->oMailer;
+    }
 }

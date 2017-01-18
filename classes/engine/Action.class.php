@@ -464,6 +464,17 @@ abstract class Action extends LsObject
     }
 
     /**
+     * Перенаправляет на страницу ошибки "доступ запрещен"
+     * @see Router::Action
+     *
+     * @return string
+     */
+    protected function EventForbiddenAccess()
+    {
+        return Router::Action('error', '403');
+    }
+
+    /**
      * Выполняется при завершение экшена, после вызова основного евента
      *
      */

@@ -16,7 +16,7 @@
          * Дефолтные опции
          */
         options: {
-            timeFormat: 'G:i'
+            timeFormat: 'H:i'
         },
 
         /**
@@ -27,7 +27,6 @@
          */
         _create: function() {
             this._super();
-
             this.element.timepicker( this.options );
         }
     });

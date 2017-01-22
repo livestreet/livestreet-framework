@@ -38,6 +38,9 @@
     line-height: 1em;
     font-weight: normal;
 }
+.ls-block-header .ls-block-title > a {
+    color: #fff;
+}
 
 /* Навигация */
 .ls-block .ls-tab-list {

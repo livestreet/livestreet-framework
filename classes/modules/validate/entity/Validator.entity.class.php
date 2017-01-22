@@ -199,7 +199,8 @@ abstract class ModuleValidate_EntityValidator extends Entity
             /**
              * Подставляем имя поля в сообщение об ошибке валидации
              */
-            $sMsg = str_replace('%%field%%', '«' . (is_null($this->label) ? $sField : $this->label) . '»', $sMsg);
+            $sFieldName = is_null($this->label) ? $sField : $this->label;
+            $sMsg = str_replace('%%field%%', $sFieldName ? '«' . $sFieldName . '»' : '', $sMsg);
             $oEntity->_addValidateError($sField, $sMsg);
             return false;
         } else {

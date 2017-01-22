@@ -38,9 +38,6 @@
     line-height: 1em;
     font-weight: normal;
 }
-.ls-block-header .ls-block-title > a {
-    color: #fff;
-}
 
 /* Навигация */
 .ls-block .ls-tab-list {
@@ -100,6 +97,9 @@
     color: #fff;
     background-color: #337ab7;
 }
+.ls-block--primary .ls-block-header .ls-block-title > a {
+    color: #fff;
+}
 
 /**
  * @modifier success
@@ -110,6 +110,9 @@
 .ls-block--success .ls-block-header {
     color: #fff;
     background-color: #5cb85c;
+}
+.ls-block--success .ls-block-header .ls-block-title > a {
+    color: #fff;
 }
 
 /**
@@ -122,6 +125,9 @@
     color: #fff;
     background-color: #5bc0de;
 }
+.ls-block--info .ls-block-header .ls-block-title > a {
+    color: #fff;
+}
 
 /**
  * @modifier warning
@@ -133,6 +139,9 @@
     color: #fff;
     background-color: #f0ad4e;
 }
+.ls-block--warning .ls-block-header .ls-block-title > a {
+    color: #fff;
+}
 
 /**
  * @modifier danger
@@ -143,4 +152,7 @@
 .ls-block--danger .ls-block-header {
     color: #fff;
     background-color: #d9534f;
+}
+.ls-block--danger .ls-block-header .ls-block-title > a {
+    color: #fff;
 }

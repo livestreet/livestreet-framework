@@ -5,7 +5,7 @@
 <p>Для базового использования нужно указать массив с табами в параметре <code>tabs</code> и прописать класс к которому будет привязываться jquery-виджет <code>lsTabs</code>.</p>
 
 <script>
-    jQuery(function($) {
+    domReady(function() {
         $('.js-my-tabs').lsTabs();
     });
 </script>

@@ -4,7 +4,7 @@
 
 {capture 'test_example_content'}
     <script>
-        jQuery(function($) {
+        domReady(function() {
             $('.js-my-lightbox').lsLightbox();
         });
     </script>

@@ -4,7 +4,7 @@
 
 {capture 'test_example_content'}
     <script>
-        $(function () {
+        domReady(function() {
             $('.js-my-tooltip').lsTooltip();
         })
     </script>

@@ -108,7 +108,7 @@
 {test_heading text='Ajax пагинация'}
 
 <script>
-    jQuery(function($) {
+    domReady(function() {
         $('.js-mypagination-ajax').lsPaginationAjax();
         //$('.js-mypagination-ajax').lsPaginationAjax('setTotalPages', 0);
     });

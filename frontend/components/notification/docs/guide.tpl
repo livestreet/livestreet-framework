@@ -2,7 +2,7 @@
 
 {capture 'test_example_content'}
     <script>
-        $(function ($) {
+        domReady(function() {
             $('.js-show-notification').on('click', function () {
                 ls.notification.show("Новое сообщение", "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Deleniti, vero!");
             });

@@ -6,7 +6,7 @@
 </style>
 
 <script>
-    jQuery(function ($) {
+    domReady(function() {
         $('.js-ls-modal-tabs').lsTabs();
     });
 </script>
@@ -54,7 +54,7 @@ jQuery(function ($) {
 
 {capture 'test_example_content'}
     <script>
-        jQuery(function ($) {
+        domReady(function() {
             $('.js-mymodal').lsModal();
         });
     </script>

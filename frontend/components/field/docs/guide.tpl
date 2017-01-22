@@ -67,7 +67,7 @@
 
 {capture 'test_example_content'}
     <script>
-        jQuery(function($) {
+        domReady(function() {
             $('.js-my-datepicker').lsDate({ language: LANGUAGE });
             $('.js-my-timepicker').lsTime();
         });
@@ -195,7 +195,7 @@
 
 {capture 'test_example_content'}
     <script>
-        $(function ($) {
+        domReady(function() {
             $(".js-field-autocomplete-ajax").lsFieldAutocomplete({
                 max_selected_options: 3,
                 urls: {

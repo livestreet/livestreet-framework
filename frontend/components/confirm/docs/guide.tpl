@@ -5,7 +5,7 @@
 
 {capture 'test_example_content'}
     <script>
-        jQuery(function($) {
+        domReady(function() {
             $('.js-my-confirm').lsConfirm({
                 message: "Are you sure?"
             });

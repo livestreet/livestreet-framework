@@ -9,7 +9,7 @@
 ]}
 
 <script>
-    jQuery(function ($) {
+    domReady(function() {
         $('.js-mydropdown').lsDropdown();
     });
 </script>

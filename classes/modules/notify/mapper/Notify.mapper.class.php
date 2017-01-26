@@ -37,7 +37,7 @@ class ModuleNotify_MapperNotify extends Mapper
     {
         $sql = "
 			INSERT INTO " . Config::Get('db.table.notify_task') . "
-				( user_login, user_mail, notify_subject, notify_text, date_created, notify_task_status )
+				( user_login, user_mail, notify_subject, notify_text, notify_text_alt, date_created, notify_task_status )
 			VALUES
 				( ?, ?, ?, ?, ?, ?d )
 		";
@@ -48,6 +48,7 @@ class ModuleNotify_MapperNotify extends Mapper
                 $oNotifyTask->getUserMail(),
                 $oNotifyTask->getNotifySubject(),
                 $oNotifyTask->getNotifyText(),
+                $oNotifyTask->getNotifyTextAlt(),
                 $oNotifyTask->getDateCreated(),
                 $oNotifyTask->getTaskStatus()
             ) === 0
@@ -77,6 +78,7 @@ class ModuleNotify_MapperNotify extends Mapper
                         $this->oDb->escape($oTask->getUserMail()),
                         $this->oDb->escape($oTask->getNotifySubject()),
                         $this->oDb->escape($oTask->getNotifyText()),
+                        $this->oDb->escape($oTask->getNotifyTextAlt()),
                         $this->oDb->escape($oTask->getDateCreated()),
                         $this->oDb->escape($oTask->getTaskStatus())
                     )
@@ -84,8 +86,8 @@ class ModuleNotify_MapperNotify extends Mapper
         }
         $sql = "
 			INSERT INTO " . Config::Get('db.table.notify_task') . "
-				( user_login, user_mail, notify_subject, notify_text, date_created, notify_task_status )
-			VALUES 
+				( user_login, user_mail, notify_subject, notify_text, notify_text_alt, date_created, notify_task_status )
+			VALUES
 				" . implode(', ', $aValues);
 
         return $this->oDb->query($sql);
@@ -102,7 +104,7 @@ class ModuleNotify_MapperNotify extends Mapper
         $sql = "
 			DELETE FROM " . Config::Get('db.table.notify_task') . "
 			WHERE
-				notify_task_id = ?d			
+				notify_task_id = ?d
 		";
         $res = $this->oDb->query($sql, $oNotifyTask->getTaskId());
         return $this->IsSuccessful($res);
@@ -119,7 +121,7 @@ class ModuleNotify_MapperNotify extends Mapper
         $sql = "
 			DELETE FROM " . Config::Get('db.table.notify_task') . "
 			WHERE
-				notify_task_id IN(?a)			
+				notify_task_id IN(?a)
 		";
         $res = $this->oDb->query($sql, $aTaskId);
         return $this->IsSuccessful($res);

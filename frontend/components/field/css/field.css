@@ -26,7 +26,10 @@ select[multiple].ls-field-input { max-width: 300px; }
 /**
  * Inline
  */
-.ls-field--inline { display: inline-block; }
+.ls-field--inline {
+    vertical-align: top;
+    display: inline-block;
+}
 
 /**
  * Checkbox

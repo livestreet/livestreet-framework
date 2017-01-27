@@ -39,7 +39,7 @@ class ModuleNotify_MapperNotify extends Mapper
 			INSERT INTO " . Config::Get('db.table.notify_task') . "
 				( user_login, user_mail, notify_subject, notify_text, notify_text_alt, date_created, notify_task_status )
 			VALUES
-				( ?, ?, ?, ?, ?, ?d )
+				( ?, ?, ?, ?, ?, ?, ?d )
 		";
 
         if ($this->oDb->query(

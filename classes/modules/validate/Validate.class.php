@@ -217,4 +217,24 @@ class ModuleValidate extends Module
     {
         $this->aErrors = array();
     }
+
+    /**
+     * Хелпер для подготовки списка ошибок при передаче в js
+     *
+     * @param $aErrors
+     * @param null $sWrapField
+     * @param array $aSkipWrapFields
+     * @return array
+     */
+    public function PrepareValidateErrors($aErrors, $sWrapField = null, $aSkipWrapFields = array())
+    {
+        $aResult = array();
+        foreach ($aErrors as $sField => $aErrorsItem) {
+            if ($sWrapField and !in_array($sField, $aSkipWrapFields)) {
+                $sField = str_replace('*', $sField, $sWrapField);
+            }
+            $aResult[$sField] = $aErrorsItem;
+        }
+        return $aResult;
+    }
 }

@@ -132,12 +132,12 @@ class ModuleLs extends Module
     {
         /**
          * Ограничения на запуск отправки, чтобы не нагружать сайт
-         * Отправляем 1 раз в день ночью в промежутке 00:00-07:00, делаем по 20 попыток отправки в день
+         * Отправляем 1 раз в день ночью в промежутке 00:00-07:00, делаем по 10 попыток отправки в день
          */
         if ((int)date('G') >= 7) {
             return;
         }
-        if ($aData = $this->GetMarkerFile(date("Y-m-d")) and (isset($aData['is_send']) or (isset($aData['count_try']) and $aData['count_try'] > 20))) {
+        if ($aData = $this->GetMarkerFile(date("Y-m-d")) and (isset($aData['is_send']) or (isset($aData['count_try']) and $aData['count_try'] > 10))) {
             return;
         }
 
@@ -181,7 +181,7 @@ class ModuleLs extends Module
         } else {
             $aData['count_try'] = 1;
         }
-        $this->SetMarkerFile(date("Y-m-d"), $aData);
+        $this->SetMarkerFile($aData);
     }
 
     /**
@@ -189,23 +189,29 @@ class ModuleLs extends Module
      */
     protected function SuccessfulSendToLs()
     {
-        $this->SetMarkerFile(date("Y-m-d"), array('is_send' => 1));
+        $this->SetMarkerFile(array('is_send' => 1));
     }
 
     /**
      * Читает данные из файла
      *
-     * @param string $sDate Дата под которой сохранен файл
+     * @param null $sDateCheck
      * @return bool|mixed
      */
-    protected function GetMarkerFile($sDate)
+    protected function GetMarkerFile($sDateCheck = null)
     {
-        $sFile = Config::Get('sys.cache.dir') . 'lssender-' . $sDate;
+        $sFile = Config::Get('sys.cache.dir') . 'lssender.dat';
         if (!file_exists($sFile)) {
             return false;
         }
         if ($aData = @unserialize(file_get_contents($sFile))) {
-            return $aData;
+            if ($sDateCheck) {
+                if (isset($aData['date']) and $aData['date'] == $sDateCheck) {
+                    return $aData;
+                }
+            } else {
+                return $aData;
+            }
         }
         return false;
     }
@@ -213,13 +219,13 @@ class ModuleLs extends Module
     /**
      * Записывает данные в файл
      *
-     * @param string $sDate Дата
      * @param array $aData Данные
      * @return bool
      */
-    protected function SetMarkerFile($sDate, $aData)
+    protected function SetMarkerFile($aData)
     {
-        $sFile = Config::Get('sys.cache.dir') . 'lssender-' . $sDate;
+        $aData['date'] = date('Y-m-d');
+        $sFile = Config::Get('sys.cache.dir') . 'lssender.dat';
         if (@file_put_contents($sFile, serialize($aData))) {
             return true;
         }

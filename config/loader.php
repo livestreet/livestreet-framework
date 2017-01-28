@@ -18,7 +18,7 @@
 /**
  * Основные константы
  */
-define('LS_VERSION_FRAMEWORK', '2.0.0.dev');
+define('LS_VERSION_FRAMEWORK', '2.0.0');
 /**
  * Operations with Config object
  */

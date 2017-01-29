@@ -23,6 +23,8 @@ CREATE TABLE IF NOT EXISTS `prefix_cron_task` (
   `period_run` int(11) NOT NULL,
   `date_create` datetime NOT NULL,
   `date_run_last` datetime DEFAULT NULL,
+  `time_start` time DEFAULT NULL,
+  `time_end` time DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `count_run` (`count_run`),
   KEY `state` (`state`),

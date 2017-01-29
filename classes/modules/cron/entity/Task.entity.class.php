@@ -41,6 +41,9 @@ class ModuleCron_EntityTask extends EntityORM
         array('method', 'method_check'),
         array('plugin', 'plugin_check'),
         array('state', 'state_check'),
+        array('time_start', 'date', 'format' => 'HH:mm'),
+        array('time_end', 'date', 'format' => 'HH:mm'),
+        array('time_end', 'times_check'),
     );
 
     /**
@@ -85,6 +88,17 @@ class ModuleCron_EntityTask extends EntityORM
     public function ValidateStateCheck($sValue, $aParams)
     {
         $this->setState($this->getState() == ModuleCron::TASK_STATE_ACTIVE ? ModuleCron::TASK_STATE_ACTIVE : ModuleCron::TASK_STATE_NOT_ACTIVE);
+        return true;
+    }
+
+    public function ValidateTimesCheck($sValue, $aParams)
+    {
+        if ($this->getTimeStart() == '') {
+            $this->setTimeStart(null);
+        }
+        if ($this->getTimeEnd() == '') {
+            $this->setTimeEnd(null);
+        }
         return true;
     }
 

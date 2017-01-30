@@ -68,10 +68,9 @@
                 {/if}
 
                 {* Сообщение о пустом списке *}
-                {* TODO: i18n *}
                 {component 'blankslate'
                     visible=false
-                    text='Нет загруженных файлов'
+                    text={lang 'uploader.attach.empty'}
                     mods='no-background'
                     classes="{$component}-list-blankslate js-uploader-list-blankslate"}
 

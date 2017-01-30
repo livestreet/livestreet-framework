@@ -192,6 +192,33 @@ return array(
         'empty'      => 'Больше нечего подгружать'
     ),
     /**
+     * Загрузкчик файлов
+     */
+    'uploader'      => array(
+        'actions' => array(
+            'remove' => '___common.remove___'
+        ),
+        'filter'  => array(
+            'uploaded' => 'Загруженные',
+            'all'      => 'Все'
+        ),
+        'info'    => array(
+            'empty' => 'Выберите файл',
+            'types' => array(
+                'image' => array(
+                    'dimensions' => 'Разрешение',
+                    'title'      => 'Описание'
+                )
+            )
+        ),
+        'attach'  => array(
+            'title'  => 'Прикрепить файлы',
+            'upload' => 'Загрузить',
+            'count'  => '%%count%% файл загружен;%%count%% файла загружено;%%count%% файлов загружено',
+            'empty'  => 'Нет загруженных файлов'
+        )
+    ),
+    /**
      * Дата
      */
     'date'       => array(

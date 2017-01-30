@@ -32,6 +32,13 @@ select[multiple].ls-field-input { max-width: 300px; }
 }
 
 /**
+ * Hide label
+ */
+.ls-field--hide-label .ls-field-label {
+    visibility: hidden;
+}
+
+/**
  * Checkbox
  */
 .ls-field--checkbox {

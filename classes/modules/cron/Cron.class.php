@@ -42,10 +42,10 @@ class ModuleCron extends ModuleORM
          * TODO: можно сделать выборку нужных задач сразу из БД, а не сравнивать в php время
          */
         $aTasks = $this->GetTaskItemsByFilter(array(
-            'state' => self::TASK_STATE_ACTIVE,
+            'state'  => self::TASK_STATE_ACTIVE,
             '#where' => array(
-                '(t.time_start IS ? OR t.time_start <= ?)' => array(null, date('H:i')),
-                '(t.time_end IS ? OR t.time_end >= ?)' => array(null, date('H:i'))
+                '(t.time_start IS NULL OR t.time_start <= ?)' => array(date('H:i')),
+                '(t.time_end IS NULL OR t.time_end >= ?)'     => array(date('H:i'))
             )
         ));
         $aTasksReady = array();

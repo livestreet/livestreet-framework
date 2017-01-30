@@ -93,10 +93,10 @@ class ModuleCron_EntityTask extends EntityORM
 
     public function ValidateTimesCheck($sValue, $aParams)
     {
-        if ($this->getTimeStart() == '') {
+        if (!$this->getTimeStart()) {
             $this->setTimeStart(null);
         }
-        if ($this->getTimeEnd() == '') {
+        if (!$this->getTimeEnd()) {
             $this->setTimeEnd(null);
         }
         return true;

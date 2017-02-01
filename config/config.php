@@ -117,6 +117,8 @@ $config['sys']['session']['name'] = 'PHPSESSID';                      // наз�
 $config['sys']['session']['timeout'] = null;                             // Тайм-аут сессии в секундах
 $config['sys']['session']['host'] = '___sys.cookie.host___'; // хост сессии в куках
 $config['sys']['session']['path'] = '___sys.cookie.path___'; // путь сессии в куках
+$config['sys']['session']['secure'] = false; // опция secure для куки
+$config['sys']['session']['httponly'] = true; // доступность куки http only
 /**
  * Настройки почтовых уведомлений
  */

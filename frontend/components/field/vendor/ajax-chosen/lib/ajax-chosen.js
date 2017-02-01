@@ -103,7 +103,8 @@
             select.trigger("chosen:updated");
           } else {
             select.data().chosen.no_results_clear();
-            select.data().chosen.no_results(field.val());
+            var valEscape = $('<div/>').text($.trim(field.val())).html();
+            select.data().chosen.no_results(valEscape);
           }
           if (settings.success != null) {
             settings.success(data);

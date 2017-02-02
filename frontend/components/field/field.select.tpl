@@ -18,19 +18,21 @@
     {/if}
 
     {function field_select_loop items=[]}
-        {foreach $items as $item}
-            {if is_array( $item.value )}
-                <optgroup label="{$item.text}">
-                    {field_select_loop items=$item.value}
-                </optgroup>
-            {else}
-                {$isSelected = ( is_array( $selectedValue ) ) ? in_array( $item.value, $selectedValue ) : ( $item.value == $selectedValue )}
+        {if is_array($items)}
+            {foreach $items as $item}
+                {if is_array( $item.value )}
+                    <optgroup label="{$item.text}">
+                        {field_select_loop items=$item.value}
+                    </optgroup>
+                {else}
+                    {$isSelected = ( is_array( $selectedValue ) ) ? in_array( $item.value, $selectedValue ) : ( $item.value == $selectedValue )}
 
-                <option value="{$item.value}" {if $isSelected}selected{/if} {cattr list=$item.attributes} {cdata name=$component data=$item.data}>
-                    {$item.text|indent:( $item.level * 5 ):'&nbsp;'}
-                </option>
-            {/if}
-        {/foreach}
+                    <option value="{$item.value}" {if $isSelected}selected{/if} {cattr list=$item.attributes} {cdata name=$component data=$item.data}>
+                        {$item.text|indent:( $item.level * 5 ):'&nbsp;'}
+                    </option>
+                {/if}
+            {/foreach}
+        {/if}
     {/function}
 
     {* data-placeholder нужен для плагина chosen *}

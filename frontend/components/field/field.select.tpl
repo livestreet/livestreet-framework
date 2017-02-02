@@ -12,8 +12,16 @@
     {if $name && $form && ! $selectedValue}
         {field_get_value form=$form name=$name assign=selectedValue}
 
-        {if $isMultiple && ! isset($items)}
+        {if $isMultiple && (! isset($items) || ! $items)}
             {$items = $selectedValue}
+
+            {$_temp = []}
+
+            {foreach $selectedValue as $val}
+                {$_temp[] = $val.value}
+            {/foreach}
+
+            {$selectedValue = $_temp}
         {/if}
     {/if}
 

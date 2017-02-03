@@ -75,51 +75,95 @@ class ModuleComponent extends Module
     public function LoadAll()
     {
         /**
-         * Строим дерево компонентов с учетом зависимостей
+         * Подгрузка из кеша данных компонентов
          */
-        $aTree = array();
+        $this->RetrieveComponentsDataCache();
         /**
          * Для каждого компонента считываем данные из json
          */
         $aComponentsName = array_keys($this->aComponentsList);
-        foreach ($aComponentsName as $sName) {
-            list($sComponentPlugin, $sComponentName) = $this->ParseName($sName);
-            $aTree[$sName] = array();
+        /**
+         * Используем кеширование построения дерева компонентов
+         */
+        $bCacheUse = Config::Get('module.component.cache_tree');
+        $sCacheKey = 'components-tree-' . json_encode($aComponentsName);
+
+        if (!$bCacheUse or false === ($aTree = $this->Cache_Get($sCacheKey))) {
             /**
-             * Считываем данные компонента
+             * Строим дерево компонентов с учетом зависимостей
              */
-            $aData = $this->GetComponentData($sName);
-            $aData = $aData['json'];
-            /**
-             * Проверяем зависимости
-             */
-            if (isset($aData['dependencies']) and is_array($aData['dependencies'])) {
-                foreach ($aData['dependencies'] as $mKey => $mValue) {
-                    if (!is_int($mKey) and $mValue === false) {
-                        /**
-                         * Пропускаем отмененную зависимость
-                         */
-                        continue;
+            $aTree = array();
+            foreach ($aComponentsName as $sName) {
+                list($sComponentPlugin, $sComponentName) = $this->ParseName($sName);
+                $aTree[$sName] = array();
+                /**
+                 * Считываем данные компонента
+                 */
+                $aData = $this->GetComponentData($sName);
+                $aData = $aData['json'];
+                /**
+                 * Проверяем зависимости
+                 */
+                if (isset($aData['dependencies']) and is_array($aData['dependencies'])) {
+                    foreach ($aData['dependencies'] as $mKey => $mValue) {
+                        if (!is_int($mKey) and $mValue === false) {
+                            /**
+                             * Пропускаем отмененную зависимость
+                             */
+                            continue;
+                        }
+                        $sNameDepend = is_int($mKey) ? $mValue : $mKey;
+                        list($sComponentDependPlugin, $sComponentDependName) = $this->ParseName($sNameDepend);
+                        if (!$sComponentDependPlugin and $sComponentPlugin) {
+                            $sNameDepend = $sComponentPlugin . ':' . $sComponentDependName;
+                        }
+                        $aTree[$sName][] = strtolower($sNameDepend);
                     }
-                    $sNameDepend = is_int($mKey) ? $mValue : $mKey;
-                    list($sComponentDependPlugin, $sComponentDependName) = $this->ParseName($sNameDepend);
-                    if (!$sComponentDependPlugin and $sComponentPlugin) {
-                        $sNameDepend = $sComponentPlugin . ':' . $sComponentDependName;
-                    }
-                    $aTree[$sName][] = strtolower($sNameDepend);
                 }
             }
+            /**
+             * Сортируем компоненты с учетом зависимостей
+             */
+            $this->iCountDependsRecursive = 0;
+            $aTree = $this->GetSortedByDepends($aTree);
+
+            if ($bCacheUse) {
+                $this->Cache_Set($aTree, $sCacheKey, array(), 60 * 60 * 24);
+            }
         }
-        /**
-         * Сортируем компоненты с учетом зависимостей
-         */
-        $this->iCountDependsRecursive = 0;
-        $aTree = $this->GetSortedByDepends($aTree);
+
         /**
          * Подключаем каждый компонент
          */
         foreach ($aTree as $sName => $aDepends) {
             $this->Load($sName);
+        }
+        /**
+         * Информация по компонентам сохраняем в кеше
+         */
+        $this->StoreComponentsDataCache();
+    }
+
+    public function StoreComponentsDataCache()
+    {
+        if (!Config::Get('module.component.cache_data')) {
+            return;
+        }
+
+        $sCacheKey = 'components-data-' . json_encode(array_keys($this->aComponentsList));
+        $this->Cache_Set($this->aComponentsData, $sCacheKey, array(), 60 * 60 * 24);
+    }
+
+    public function RetrieveComponentsDataCache()
+    {
+        if (!Config::Get('module.component.cache_data')) {
+            return;
+        }
+        $sCacheKey = 'components-data-' . json_encode(array_keys($this->aComponentsList));
+        if (false !== ($aComponentsData = $this->Cache_Get($sCacheKey))) {
+            foreach ($aComponentsData as $sName => $aData) {
+                $this->aComponentsData[$sName] = $aData;
+            }
         }
     }
 

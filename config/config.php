@@ -314,6 +314,9 @@ $config['module']['asset']['css']['merge'] = true; // указывает на н
 $config['module']['asset']['css']['compress'] = false; // указывает на необходимость компрессии файлов. Компрессия используется только в активированном режиме слияния файлов.
 $config['module']['asset']['js']['merge'] = true; // указывает на необходимость слияния js файлов
 $config['module']['asset']['js']['compress'] = false; // указывает на необходимость компрессии файлов. Компрессия используется только в активированном режиме слияния файлов.
+// Модель Component
+$config['module']['component']['cache_tree'] = false; // кешировать или нет построение дерева компонентов
+$config['module']['component']['cache_data'] = false; // кешировать или нет данные компонентов
 // Модуль Security
 $config['module']['security']['hash'] = "livestreet_security_key"; // "примесь" к строке, хешируемой в качестве security-кода
 // Модуль Cron

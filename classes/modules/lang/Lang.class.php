@@ -107,10 +107,6 @@ class ModuleLang extends Module
         }
 
         $this->LoadLangJs();
-        /**
-         * Загружаем в шаблон
-         */
-        $this->Viewer_Assign('aLang', array(&$this->aLangMsg), false, true);
     }
 
     /**
@@ -123,15 +119,6 @@ class ModuleLang extends Module
         if (is_array($aMsg) and count($aMsg)) {
             $this->aLangMsgJs = $aMsg;
         }
-    }
-
-    /**
-     * Прогружает в шаблон текстовки в виде JS
-     *
-     */
-    protected function AssignToJs()
-    {
-        $this->Viewer_Assign('aLangJs', $this->GetLangJs());
     }
 
     public function GetLangJs($bPrepare = true)
@@ -271,6 +258,16 @@ class ModuleLang extends Module
      * @return array
      */
     public function GetLangMsg()
+    {
+        return $this->aLangMsg;
+    }
+
+    /**
+     * Получить список текстовок по ссылке
+     *
+     * @return array
+     */
+    public function &GetLangMsgRef()
     {
         return $this->aLangMsg;
     }

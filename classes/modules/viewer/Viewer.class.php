@@ -210,7 +210,6 @@ class ModuleViewer extends Module
         $oViewerLocal = new $sClass(Engine::getInstance());
         $oViewerLocal->Init(true);
         $oViewerLocal->VarAssign();
-        $oViewerLocal->Assign('aLang', $this->Lang_GetLangMsg());
         return $oViewerLocal;
     }
 
@@ -285,6 +284,12 @@ class ModuleViewer extends Module
          * Загружаем security-ключ
          */
         $this->Assign("LIVESTREET_SECURITY_KEY", $this->Security_GetSecurityKey());
+        /**
+         * Текстовки
+         */
+        $oModuleLang = Engine::getInstance()->GetModuleObject('Lang');
+        $aLang =& $oModuleLang->GetLangMsgRef();
+        $this->Assign('aLang', array(&$aLang), false, true);
     }
 
     /**

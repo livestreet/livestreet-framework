@@ -114,9 +114,10 @@ class ModuleComponent extends Module
                         }
                         $sNameDepend = is_int($mKey) ? $mValue : $mKey;
                         list($sComponentDependPlugin, $sComponentDependName) = $this->ParseName($sNameDepend);
-                        if (!$sComponentDependPlugin and $sComponentPlugin) {
+                        if (is_null($sComponentDependPlugin) and $sComponentPlugin) {
                             $sNameDepend = $sComponentPlugin . ':' . $sComponentDependName;
                         }
+                        $sNameDepend = trim($sNameDepend, ':');
                         $aTree[$sName][] = strtolower($sNameDepend);
                     }
                 }

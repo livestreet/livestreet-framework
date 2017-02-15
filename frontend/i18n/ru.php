@@ -232,7 +232,7 @@ return array(
         'today_at'          => 'Сегодня в',
         'yesterday_at'      => 'Вчера в',
         'tomorrow_at'       => 'Завтра в',
-        'minutes_back'      => '%%minutes%% минута назад; %%minutes%% минуты назад; %%minutes%% минут назад',
+        'minutes_back'      => '%%minutes%% минуту назад; %%minutes%% минуты назад; %%minutes%% минут назад',
         'minutes_back_less' => 'Менее минуты назад',
         'hours_back'        => '%%hours%% час назад; %%hours%% часа назад; %%hours%% часов назад',
         'hours_back_less'   => 'Менее часа назад',

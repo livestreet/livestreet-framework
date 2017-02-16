@@ -30,7 +30,45 @@
                     custom_elements: '~ls',
                     short_ended_elements: 'ls img br hr param',
                     relative_urls: false,
-                    remove_script_host: false
+                    remove_script_host: false,
+                    style_formats: [
+                        {
+                            title: 'Headings', items: [
+                            { title: 'Heading 4', format: 'h4' },
+                            { title: 'Heading 5', format: 'h5' },
+                            { title: 'Heading 6', format: 'h6' }
+                        ]
+                        },
+
+                        {
+                            title: 'Inline', items: [
+                            { title: 'Bold', icon: 'bold', format: 'bold' },
+                            { title: 'Italic', icon: 'italic', format: 'italic' },
+                            { title: 'Underline', icon: 'underline', format: 'underline' },
+                            { title: 'Strikethrough', icon: 'strikethrough', format: 'strikethrough' },
+                            { title: 'Superscript', icon: 'superscript', format: 'superscript' },
+                            { title: 'Subscript', icon: 'subscript', format: 'subscript' }
+                        ]
+                        },
+
+                        {
+                            title: 'Blocks', items: [
+                            { title: 'Paragraph', format: 'p' },
+                            { title: 'Blockquote', format: 'blockquote' },
+                            { title: 'Code', format: 'code' },
+                            { title: 'Pre', format: 'pre' }
+                        ]
+                        },
+
+                        {
+                            title: 'Alignment', items: [
+                            { title: 'Left', icon: 'alignleft', format: 'alignleft' },
+                            { title: 'Center', icon: 'aligncenter', format: 'aligncenter' },
+                            { title: 'Right', icon: 'alignright', format: 'alignright' },
+                            { title: 'Justify', icon: 'alignjustify', format: 'alignjustify' }
+                        ]
+                        }
+                    ]
                 },
                 default: {
                     toolbar: 'styleselect ls-pre ls-code | bold italic strikethrough underline blockquote table | bullist numlist | link media ls-media ls-user | lsuser removeformat pagebreak code fullscreen'

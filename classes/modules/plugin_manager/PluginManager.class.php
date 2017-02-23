@@ -235,19 +235,29 @@ class ModulePluginManager extends ModuleORM
         /**
          * Проверяем на зависимость других плагинов через опцию requires
          */
+        $aPluginItemsAll = $this->PluginManager_GetPluginsItems();
         $iConflict = 0;
-        foreach ($aPluginItemsActive as $sPlugnCheck) {
-            foreach ($oXml->requires->plugins->children() as $sReqPlugin) {
-                if ($sReqPlugin == $sPlugin) {
-                    $iConflict++;
-                    $this->Message_AddError(
-                        $this->Lang_Get('admin.plugins.notices.deactivation_requires_error',
-                            array('plugin' => func_camelize($sPlugnCheck))),
-                        $this->Lang_Get('common.error.error'), true
-                    );
+
+        foreach ($aPluginItemsAll as $sPluginItemName => $oPluginItem) {
+            if (!$oPluginItem['is_active']) {
+                continue;
+            }
+
+            if ($oPluginItem['property']->requires->plugins) {
+                foreach ($oPluginItem['property']->requires->plugins->children() as $sReqPlugin) {
+                    if ($sReqPlugin == $sPlugin) {
+                        $iConflict++;
+                        $this->Message_AddError(
+                            $this->Lang_Get('admin.plugins.notices.deactivation_requires_error',
+                                array('plugin' => func_camelize($oPluginItem['code']))),
+                            $this->Lang_Get('common.error.error'),
+                            true
+                        );
+                    }
                 }
             }
         }
+
         if ($iConflict) {
             return false;
         }

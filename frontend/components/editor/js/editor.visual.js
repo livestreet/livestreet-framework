@@ -74,7 +74,7 @@
                     toolbar: 'styleselect ls-pre ls-code | bold italic strikethrough underline blockquote table | bullist numlist | link media ls-media ls-user | lsuser removeformat pagebreak code fullscreen'
                 },
                 light: {
-                    toolbar: 'styleselect ls-pre ls-code | bold italic strikethrough underline blockquote | bullist numlist | removeformat pagebreak code'
+                    toolbar: 'styleselect ls-pre ls-code | bold italic strikethrough underline blockquote | bullist numlist | removeformat code'
                 }
             }
         },

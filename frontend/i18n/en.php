@@ -194,7 +194,7 @@ return array(
     /**
      * Загрузкчик файлов
      */
-    'uploader'      => array(
+    'uploader'   => array(
         'actions' => array(
             'remove' => '___common.remove___'
         ),
@@ -217,6 +217,11 @@ return array(
             'count'  => '%%count%% file uploaded;%%count%% files uploaded;%%count%% files uploaded',
             'empty'  => 'No uploaded files'
         )
+    ),
+    'image'      => array(
+        'error' => array(
+            'not_open' => 'Can not open image',
+        ),
     ),
     /**
      * Дата

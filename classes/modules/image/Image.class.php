@@ -228,7 +228,7 @@ class ModuleImage extends Module
             $oImage->setInfoAdditional($aImageInfo);
             return $oImage;
         } catch (Imagine\Exception\Exception $e) {
-            $this->SetLastError($e->getMessage(), self::ERROR_CODE_UNDEFINED);
+            $this->SetLastError($this->Lang_Get('image.error.not_open'), self::ERROR_CODE_UNDEFINED);
             // write to log
             $this->Logger_Warning('Image error: ' . $e->getMessage(), array('exception' => $e));
             return false;

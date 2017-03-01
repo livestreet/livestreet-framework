@@ -194,7 +194,7 @@ return array(
     /**
      * Загрузкчик файлов
      */
-    'uploader'      => array(
+    'uploader'   => array(
         'actions' => array(
             'remove' => '___common.remove___'
         ),
@@ -217,6 +217,11 @@ return array(
             'count'  => '%%count%% файл загружен;%%count%% файла загружено;%%count%% файлов загружено',
             'empty'  => 'Нет загруженных файлов'
         )
+    ),
+    'image'      => array(
+        'error' => array(
+            'not_open' => 'Не удалось открыть изображение',
+        ),
     ),
     /**
      * Дата

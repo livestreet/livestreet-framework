@@ -33,6 +33,10 @@
 {$form = $form|default:$_aRequest}
 {$getValueFromForm = true}
 
+{if $isDisabled}
+    {$mods = "$mods disabled"}
+{/if}
+
 {* Правила валидации *}
 {if $entity}
     {field_make_rule entity=$entity field=$entityField|default:$name scenario=$entityScenario assign=rules}

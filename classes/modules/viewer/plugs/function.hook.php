@@ -36,17 +36,43 @@ function smarty_function_hook($aParams, &$oSmarty)
 
     $sHookName = 'template_' . strtolower($aParams['run']);
     unset($aParams['run']);
-    $aResultHook = Engine::getInstance()->Hook_Run($sHookName, $aParams);
 
-    if (isset($aParams['array']) and $aParams['array']) {
+    $bUseArray = (isset($aParams['array']) and $aParams['array']);
+    if (isset($aParams['array_merge'])) {
+        $bUseArrayMerge = $aParams['array_merge'] ? true : false;
+    } else {
+        $bUseArrayMerge = !$bUseArray;
+    }
+    /**
+     * При использовании массивов передаем параметры в хук по ссылке
+     */
+    if ($bUseArray) {
+        $aArgsRef = array();
+        foreach ($aParams as $key => $v) {
+            $aArgsRef[$key] =& $aParams[$key];
+        }
+    }
+    $aResultHook = Engine::getInstance()->Hook_Run($sHookName, $bUseArray ? $aArgsRef : $aParams);
+
+    if ($bUseArray) {
         /**
          * Если хуку необходимо вернуть результат в виде массива
          */
         $mReturn = array();
         if (array_key_exists('template_result', $aResultHook)) {
-            foreach ($aResultHook['template_result'] as $aResultItem) {
-                if (is_array($aResultItem) and $aResultItem) {
-                    $mReturn = array_merge($mReturn, $aResultItem);
+            if ($bUseArrayMerge) {
+                foreach ($aResultHook['template_result'] as $aResultItem) {
+                    if (is_array($aResultItem) and $aResultItem) {
+                        $mReturn = array_merge($mReturn, $aResultItem);
+                    }
+                }
+            } else {
+                /**
+                 * Берем результат последнего хука
+                 */
+                $mReturn = array_pop($aResultHook['template_result']);
+                if (!is_array($mReturn)) {
+                    $mReturn = array();
                 }
             }
         }

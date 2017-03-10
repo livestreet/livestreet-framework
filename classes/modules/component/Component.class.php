@@ -588,15 +588,19 @@ class ModuleComponent extends Module
         foreach ($aPaths as $sPath) {
             $sFileJson = $sPath . '/component.json';
             if (file_exists($sFileJson)) {
-                if ($sContent = @file_get_contents($sFileJson) and $aData = @json_decode($sContent, true)) {
-                    if (isset($aData['mode']) and $aData['mode'] == 'delegate') {
-                        $aJson = $aData;
-                        /**
-                         * Удаляем прошлые каталоги
-                         */
-                        $aPathsNew = array();
-                    } else {
-                        $aJson = func_array_merge_assoc($aJson, $aData);
+                if ($sContent = @file_get_contents($sFileJson)) {
+                    if ($aData = @json_decode($sContent, true)) {
+                        if (isset($aData['mode']) and $aData['mode'] == 'delegate') {
+                            $aJson = $aData;
+                            /**
+                             * Удаляем прошлые каталоги
+                             */
+                            $aPathsNew = array();
+                        } else {
+                            $aJson = func_array_merge_assoc($aJson, $aData);
+                        }
+                    } elseif (!is_array($aData)) {
+                        $this->Logger_Error('Invalid format component.json', array('file' => $sFileJson));
                     }
                 }
             }

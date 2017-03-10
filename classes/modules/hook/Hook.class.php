@@ -94,6 +94,12 @@ class ModuleHook extends Module
      */
     protected $aHooks = array();
     /**
+     * Список хуков по регулярному выражению
+     *
+     * @var array
+     */
+    protected $aHooksPreg = array();
+    /**
      * Список объектов обработки хуков, для их кеширования
      *
      * @var array
@@ -189,7 +195,7 @@ class ModuleHook extends Module
             foreach ($aHooks as $iKey => $iPr) {
                 $aHook = $this->aHooksBehavior[$sName][$sObjectHash][$iKey];
                 $aHook['type'] = 'callback';
-                $this->RunType($aHook, $aVars);
+                $this->RunType($aHook, $aVars, $sName);
             }
         }
         if ($bWithGlobal) {
@@ -208,19 +214,24 @@ class ModuleHook extends Module
      * @param array $aParams Список дополнительных параметров, анпример, имя класса хука
      * @return bool
      */
-    public function Add($sName, $sType, $sCallBack, $iPriority = 1, $aParams = array())
+    public function Add($sName, $sType, $sCallBack, $iPriority = 1, $aParams = array(), $bPreg = false)
     {
         $sName = strtolower($sName);
         $sType = strtolower($sType);
         if (!in_array($sType, array('module', 'hook', 'function'))) {
             return false;
         }
-        $this->aHooks[$sName][] = array(
+        $aHook = array(
             'type'     => $sType,
             'callback' => $sCallBack,
             'params'   => $aParams,
             'priority' => (int)$iPriority
         );
+        if (!$bPreg) {
+            $this->aHooks[$sName][] = $aHook;
+        } else {
+            $this->aHooksPreg[$sName][] = $aHook;
+        }
     }
 
     /**
@@ -233,9 +244,9 @@ class ModuleHook extends Module
      * @param int $iPriority Приоритер обработки, чем выше, тем раньше сработает хук относительно других
      * @return bool
      */
-    public function AddExecModule($sName, $sCallBack, $iPriority = 1)
+    public function AddExecModule($sName, $sCallBack, $iPriority = 1, $bPreg = false)
     {
-        return $this->Add($sName, 'module', $sCallBack, $iPriority);
+        return $this->Add($sName, 'module', $sCallBack, $iPriority, array(), $bPreg);
     }
 
     /**
@@ -248,9 +259,9 @@ class ModuleHook extends Module
      * @param int $iPriority Приоритер обработки, чем выше, тем раньше сработает хук относительно других
      * @return bool
      */
-    public function AddExecFunction($sName, $sCallBack, $iPriority = 1)
+    public function AddExecFunction($sName, $sCallBack, $iPriority = 1, $bPreg = false)
     {
-        return $this->Add($sName, 'function', $sCallBack, $iPriority);
+        return $this->Add($sName, 'function', $sCallBack, $iPriority, array(), $bPreg);
     }
 
     /**
@@ -265,9 +276,9 @@ class ModuleHook extends Module
      * @param array $aParams Параметры
      * @return bool
      */
-    public function AddExecHook($sName, $sCallBack, $iPriority = 1, $aParams = array())
+    public function AddExecHook($sName, $sCallBack, $iPriority = 1, $aParams = array(), $bPreg = false)
     {
-        return $this->Add($sName, 'hook', $sCallBack, $iPriority, $aParams);
+        return $this->Add($sName, 'hook', $sCallBack, $iPriority, $aParams, $bPreg);
     }
 
     /**
@@ -282,9 +293,9 @@ class ModuleHook extends Module
      * @param int $iPriority Приоритер обработки, чем выше, тем раньше сработает хук относительно других
      * @return bool
      */
-    public function AddDelegateModule($sName, $sCallBack, $iPriority = 1)
+    public function AddDelegateModule($sName, $sCallBack, $iPriority = 1, $bPreg = false)
     {
-        return $this->Add($sName, 'module', $sCallBack, $iPriority, array('delegate' => true));
+        return $this->Add($sName, 'module', $sCallBack, $iPriority, array('delegate' => true), $bPreg);
     }
 
     /**
@@ -298,9 +309,9 @@ class ModuleHook extends Module
      * @param int $iPriority Приоритер обработки, чем выше, тем раньше сработает хук относительно других
      * @return bool
      */
-    public function AddDelegateFunction($sName, $sCallBack, $iPriority = 1)
+    public function AddDelegateFunction($sName, $sCallBack, $iPriority = 1, $bPreg = false)
     {
-        return $this->Add($sName, 'function', $sCallBack, $iPriority, array('delegate' => true));
+        return $this->Add($sName, 'function', $sCallBack, $iPriority, array('delegate' => true), $bPreg);
     }
 
     /**
@@ -316,10 +327,10 @@ class ModuleHook extends Module
      * @param array $aParams Параметры
      * @return bool
      */
-    public function AddDelegateHook($sName, $sCallBack, $iPriority = 1, $aParams = array())
+    public function AddDelegateHook($sName, $sCallBack, $iPriority = 1, $aParams = array(), $bPreg = false)
     {
         $aParams['delegate'] = true;
-        return $this->Add($sName, 'hook', $sCallBack, $iPriority, $aParams);
+        return $this->Add($sName, 'hook', $sCallBack, $iPriority, $aParams, $bPreg);
     }
 
     /**
@@ -333,18 +344,30 @@ class ModuleHook extends Module
     {
         $result = array();
         $sName = strtolower($sName);
-        if (isset($this->aHooks[$sName])) {
+        /**
+         * Массив хуков для исполнения по имени
+         */
+        $aRunHooks = isset($this->aHooks[$sName]) ? $this->aHooks[$sName] : array();
+        /**
+         * Добавляем хуки по регулярке
+         */
+        foreach ((array)$this->aHooksPreg as $sHookPreg => $aHooks) {
+            if (preg_match($sHookPreg, $sName, $aMatch)) {
+                $aRunHooks = array_merge($aRunHooks, $aHooks);
+            }
+        }
+        if ($aRunHooks) {
             $bTemplateHook = strpos($sName, 'template_') === 0 ? true : false;
             $aHookNum = array();
             $aHookNumDelegate = array();
             /**
              * Все хуки делим на обычные(exec) и делигирующие(delegate)
              */
-            for ($i = 0; $i < count($this->aHooks[$sName]); $i++) {
-                if (isset($this->aHooks[$sName][$i]['params']['delegate']) and $this->aHooks[$sName][$i]['params']['delegate']) {
-                    $aHookNumDelegate[$i] = $this->aHooks[$sName][$i]['priority'];
+            for ($i = 0; $i < count($aRunHooks); $i++) {
+                if (isset($aRunHooks[$i]['params']['delegate']) and $aRunHooks[$i]['params']['delegate']) {
+                    $aHookNumDelegate[$i] = $aRunHooks[$i]['priority'];
                 } else {
-                    $aHookNum[$i] = $this->aHooks[$sName][$i]['priority'];
+                    $aHookNum[$i] = $aRunHooks[$i]['priority'];
                 }
             }
             arsort($aHookNum, SORT_NUMERIC);
@@ -353,14 +376,14 @@ class ModuleHook extends Module
              * Сначала запускаем на выполнение простые
              */
             foreach ($aHookNum as $iKey => $iPr) {
-                $aHook = $this->aHooks[$sName][$iKey];
+                $aHook = $aRunHooks[$iKey];
                 if ($bTemplateHook) {
                     /**
                      * Если это шаблонных хук то сохраняем результат
                      */
-                    $result['template_result'][] = $this->RunType($aHook, $aVars);
+                    $result['template_result'][] = $this->RunType($aHook, $aVars, $sName);
                 } else {
-                    $this->RunType($aHook, $aVars);
+                    $this->RunType($aHook, $aVars, $sName);
                 }
             }
             /**
@@ -369,9 +392,9 @@ class ModuleHook extends Module
              *
              */
             foreach ($aHookNumDelegate as $iKey => $iPr) {
-                $aHook = $this->aHooks[$sName][$iKey];
+                $aHook = $aRunHooks[$iKey];
                 $result = array(
-                    'delegate_result' => $this->RunType($aHook, $aVars)
+                    'delegate_result' => $this->RunType($aHook, $aVars, $sName)
                 );
                 /**
                  * На данный момент только один хук может быть делегирующим
@@ -389,18 +412,18 @@ class ModuleHook extends Module
      * @param array $aVars Параметры переданные в хук
      * @return mixed|null
      */
-    protected function RunType($aHook, &$aVars)
+    protected function RunType($aHook, &$aVars, $sName)
     {
         $result = null;
         switch ($aHook['type']) {
             case 'callback':
-                $result = call_user_func_array($aHook['callback'], array(&$aVars));
+                $result = call_user_func_array($aHook['callback'], array(&$aVars, $sName));
                 break;
             case 'module':
-                $result = call_user_func_array(array($this, $aHook['callback']), array(&$aVars));
+                $result = call_user_func_array(array($this, $aHook['callback']), array(&$aVars, $sName));
                 break;
             case 'function':
-                $result = call_user_func_array($aHook['callback'], array(&$aVars));
+                $result = call_user_func_array($aHook['callback'], array(&$aVars, $sName));
                 break;
             case 'hook':
                 $sHookClass = isset($aHook['params']['sClassName']) ? $aHook['params']['sClassName'] : null;
@@ -411,7 +434,7 @@ class ModuleHook extends Module
                         $oHook = new $sHookClass;
                         $this->aHooksObject[$sHookClass] = $oHook;
                     }
-                    $result = call_user_func_array(array($oHook, $aHook['callback']), array(&$aVars));
+                    $result = call_user_func_array(array($oHook, $aHook['callback']), array(&$aVars, $sName));
                 }
                 break;
             default:

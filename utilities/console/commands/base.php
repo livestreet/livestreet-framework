@@ -1,56 +1,19 @@
 <?php
 
-abstract class LSC
+use ConsoleKit\Console,
+    ConsoleKit\Command,
+    ConsoleKit\Colors,
+    ConsoleKit\Utils,
+    ConsoleKit\Widgets\Dialog,
+    ConsoleKit\Widgets\ProgressBar;
+
+/**
+ * Base class for commands
+ */
+abstract class LsConsoleCommandBase extends Command
 {
-
-    /*
-     * Запускаем работу консоли
-     */
-    static function Start()
-    {
-        $aArgs = $_SERVER['argv'];
-
-        // Если не передана команда выводим помощь
-        if (count($aArgs) == 1) {
-            echo self::getHelp() . "\n";
-            return;
-        }
-
-        $sCommandName = ucwords($aArgs[1]);
-        $sCommandClassPath = dirname(__FILE__) . '/commands/' . $sCommandName . '.class.php';
-
-        // Существует ли такой класс, а следовательно и команда
-        if (file_exists($sCommandClassPath)) {
-            // Подключаем класс команды
-            require_once $sCommandClassPath;
-            $sCommandClassName = 'Command' . $sCommandName;
-            $oCommand = new $sCommandClassName();
-            $oCommand->run($aArgs);
-        } else {
-            die("Command not isset\n");
-        }
-    }
-
-    /*
-     * Отдаем управление вызванной команде
-     */
-    public function run($aArgs)
-    {
-        // Если не передана подкоманда или передана подкоманда help выводим помощь
-        if (!isset($aArgs[2]) or $aArgs[2] == 'help') {
-            echo $this->getHelp() . "\n";
-            return;
-        }
-
-        $sMethodName = 'action' . ucwords($aArgs[2]);
-
-        // Оставляем в массиве только параметры для подкоманды
-        array_shift($aArgs);
-        array_shift($aArgs);
-        array_shift($aArgs);
-
-        $this->$sMethodName($aArgs);
-    }
+    /** @var array */
+    protected $defaultFormatOptions = array();
 
     /*
      * Создает массив файлов используемый при копировании
@@ -89,8 +52,10 @@ abstract class LSC
      */
     public function copyFiles($fileList)
     {
+        $progress = new ProgressBar($this->console, count($fileList));
         $overwriteAll = false;
         foreach ($fileList as $name => $file) {
+            $progress->incr();
             $source = strtr($file['source'], '/\\', DIRECTORY_SEPARATOR);
             $target = strtr($file['target'], '/\\', DIRECTORY_SEPARATOR);
 
@@ -115,30 +80,31 @@ abstract class LSC
             if (is_file($target)) {
                 // Если содержимое старого и нового файла совпадают
                 if ($content === file_get_contents($target)) {
-                    echo "  unchanged $name\n";
+                    $this->writeln("  unchanged $name");
                     continue;
                 }
 
                 // Если мы выбрали перезапись в ветке false
                 if ($overwriteAll) {
-                    echo "  overwrite $name\n";
+                    $this->writeln("  overwrite $name", Colors::BLUE);
                 } else {
-                    echo "      exist $name\n";
-                    echo "            ...overwrite? [Yes|No|All|Quit] ";
+                    $this->writeln("      exist $name");
+                    $this->writeln("            ...overwrite? [Yes|No|All|Quit] ");
 
-                    // Спрашиваем у пользователя как поступить
-                    $answer = trim(fgets(STDIN));
+                    $dialog = new Dialog($this->console);
+                    $answer = $dialog->ask('            ...overwrite? [Yes|No|All|Quit] ', 'No');
                     if (!strncasecmp($answer, 'q', 1)) {
+                        $this->writeerr('Copy files break')->writeln('');
                         return;
                     } else {
                         if (!strncasecmp($answer, 'y', 1)) {
-                            echo "  overwrite $name\n";
+                            $this->writeln("  overwrite $name", Colors::BLUE);
                         } else {
                             if (!strncasecmp($answer, 'a', 1)) {
-                                echo "  overwrite $name\n";
+                                $this->writeln("  overwrite $name", Colors::BLUE);
                                 $overwriteAll = true;
                             } else {
-                                echo "       skip $name\n";
+                                $this->writeln("       skip $name");
                                 continue;
                             }
                         }
@@ -148,12 +114,13 @@ abstract class LSC
             else {
                 // Досоздаем папки в случае отсутствия
                 $this->ensureDirectory(dirname($target));
-                echo "   generate $name\n";
+                $this->writeln("   generate $name");
             }
 
             // Создаем файл и записываем в него содержимое
             file_put_contents($target, $content);
         }
+        $progress->stop();
     }
 
     /**
@@ -164,37 +131,8 @@ abstract class LSC
     {
         if (!is_dir($directory)) {
             $this->ensureDirectory(dirname($directory));
-            echo "      mkdir " . strtr($directory, '\\', '/') . "\n";
+            $this->writeln("      mkdir " . strtr($directory, '\\', '/'));
             mkdir($directory);
         }
-    }
-
-    /*
-     * Выводит помощь и список возможных команд
-     */
-    public function getHelp()
-    {
-        $aList = array();
-        $handle = opendir(dirname(__FILE__) . '/commands/');
-        while (($file = readdir($handle)) !== false) {
-            if ($file === '.' || $file === '..') {
-                continue;
-            }
-            if (is_file(dirname(__FILE__) . '/commands/' . $file)) {
-                $aList[] = strtolower(preg_replace("/^(.*)\.(.*)\.(.*)/i", "$1", $file));
-            }
-        }
-        closedir($handle);
-
-        echo "USAGE\n
-  ls ";
-
-        foreach ($aList as $iKey => $sName) {
-            if ($iKey > 0) {
-                echo "     ";
-            }
-            echo $sName . "\n";
-        }
-
     }
 }

@@ -3,19 +3,22 @@
 // Для эмуляции работы, т.к используется в конфиге
 $_SERVER['HTTP_HOST'] = 'localhost';
 /**
- * Формируем путь до фреймворка
- */
-$sPathToFramework = dirname(dirname(__DIR__));
-/**
  * Подключаем ядро
  */
-require_once($sPathToFramework . "/classes/engine/Engine.class.php");
+require_once(dirname(dirname(dirname(__DIR__))) . '/bootstrap/start.php');
 /**
- * Подключаем загрузчик конфигов
+ * Инициализация загрузчика ядра
  */
-require_once($sPathToFramework . "/config/loader.php");
-
-require_once(__DIR__ . '/lsc.php');
-
-
-LSC::Start();
+Engine::getInstance();
+/**
+ * Команды
+ */
+require_once(__DIR__.'/commands/base.php');
+require_once(__DIR__.'/commands/plugin.php');
+/**
+ * Запускаем консоль
+ */
+$console = new \ConsoleKit\Console(array(
+    'plugin' => 'LsConsoleCommandPlugin'
+));
+$console->run();

@@ -1,32 +1,33 @@
 <?php
 
-class CommandPlugin extends LSC
+use ConsoleKit\Console,
+    ConsoleKit\Command,
+    ConsoleKit\Colors,
+    ConsoleKit\Utils,
+    ConsoleKit\Widgets\Dialog,
+    ConsoleKit\Widgets\ProgressBar;
+
+/**
+ * Plugin commands
+ */
+class LsConsoleCommandPlugin extends LsConsoleCommandBase
 {
     protected $_name;
     protected $_name_under;
 
-    /*
-     * Выводим помощь о команде
+    /**
+     * Generate new empty plugin
+     *
+     * @arg code The code of the new plugin. Use only [a-z_] symbols.
      */
-    public function getHelp()
+    public function executeNew(array $args, array $options = array())
     {
-        return <<<EOD
-USAGE
-  ls plugin new <plugin-name>
-EOD;
-    }
-
-    /*
-     * Подкоманда создания нового плагина
-     */
-    public function actionNew($aArgs)
-    {
-        // Передано ли имя нового плагина
-        if (!isset($aArgs[0])) {
-            die("The plugin name is not specified.\n");
+        if (!($code = Utils::get($args, 0))) {
+            $this->writeerr('The plugin code is not specified.')->writeln('');
+            return;
         }
 
-        $this->_name_under = func_underscore($aArgs[0]);
+        $this->_name_under = func_underscore($code);
         $this->_name = func_camelize($this->_name_under);
 
         $path = strtr($this->_name_under, '/\\', DIRECTORY_SEPARATOR);
@@ -37,12 +38,14 @@ EOD;
 
         $dir = rtrim(realpath(dirname($path)), '\\/');
         if ($dir === false || !is_dir($dir)) {
-            die("The directory '$path' is not valid. Please make sure the parent directory exists.\n");
+            $this->writeerr("The directory '{$path}' is not valid. Please make sure the parent directory exists.")->writeln('');
+            return;
         }
 
-        $sourceDir = realpath(dirname(__FILE__) . '/../protected/plugin');
+        $sourceDir = dirname(__DIR__) . '/protected/plugin';
         if ($sourceDir === false) {
-            die("\nUnable to locate the source directory.\n");
+            $this->writeerr('Unable to locate the source directory.')->writeln('');
+            return;
         }
 
         // Создаем массив файлов для функции копирования
@@ -65,7 +68,8 @@ EOD;
 
         // Копируем файлы
         $this->copyFiles($aList);
-        echo "\nYour plugin has been created successfully under {$path}.\n";
+
+        $this->writeln("Your plugin has been created successfully under {$path}", Colors::GREEN);
     }
 
     /*

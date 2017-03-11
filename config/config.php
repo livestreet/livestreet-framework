@@ -444,6 +444,10 @@ $config['memcache']['servers'][0]['host'] = 'localhost';
 $config['memcache']['servers'][0]['port'] = '11211';
 $config['memcache']['servers'][0]['persistent'] = true;
 $config['memcache']['compression'] = true;
+
+$config['libmemcached']['servers'][0]['host'] = 'localhost';
+$config['libmemcached']['servers'][0]['port'] = '11211';
+$config['libmemcached']['servers'][0]['weight'] = 1;		// приоритет сервера
 /**
  * Настройки роутинга
  */

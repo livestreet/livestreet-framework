@@ -63,6 +63,22 @@ abstract class Hook extends LsObject
     }
 
     /**
+     * Добавляет обработчик на хук по регулярному выражению
+     *
+     * @param string $sName Название хука на который вешается обработчик
+     * @param string $sCallBack Название метода обработчика
+     * @param null|string $sClassNameHook Название класса обработчика, по умолчанию это текущий класс хука
+     * @param int $iPriority Приоритет обработчика хука, чем выше число, тем больше приоритет - хук обработчик выполнится раньше остальных
+     */
+    protected function AddHookPreg($sName, $sCallBack, $sClassNameHook = null, $iPriority = 1)
+    {
+        if (is_null($sClassNameHook)) {
+            $sClassNameHook = get_class($this);
+        }
+        $this->Hook_AddExecHook($sName, $sCallBack, $iPriority, array('sClassName' => $sClassNameHook), true);
+    }
+
+    /**
      * Обязательный метод в хуке - в нем происходит регистрация обработчиков хуков
      *
      * @abstract

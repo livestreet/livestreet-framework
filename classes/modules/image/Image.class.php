@@ -225,6 +225,7 @@ class ModuleImage extends Module
             $oImage->setImage($oImageObject);
             $oImage->setParams($aParams);
             $oImage->setInfoSize($aSize);
+            $oImage->setFileOriginalPath($sFile);
             $oImage->setInfoAdditional($aImageInfo);
             return $oImage;
         } catch (Imagine\Exception\Exception $e) {

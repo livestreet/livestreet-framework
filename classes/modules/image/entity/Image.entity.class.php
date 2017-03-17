@@ -365,6 +365,37 @@ class ModuleImage_EntityImage extends Entity
     }
 
     /**
+     * Сохраняет оригинальный файл без изменений
+     *
+     * @param string $sFile Полный путь до файла сохранения
+     * @return bool
+     */
+    public function saveOriginal($sFile)
+    {
+        if ($sFileOriginal = $this->getFileOriginalPath()) {
+            return $this->Image_SaveFile($sFileOriginal, $sFile, 0666);
+        }
+        return false;
+    }
+
+    /**
+     * Сохраняет оригинальный файл без изменений
+     *
+     * @param string $sDir Директория куда нужно сохранить изображение относительно корня сайта (path.root.server)
+     * @param string $sFile Имя файла для сохранения, без расширения (расширение подставляется автоматически в зависимости от типа изображения)
+     * @return bool
+     */
+    public function saveOriginalSmart($sDir, $sFile)
+    {
+        if ($sFileOriginal = $this->getFileOriginalPath()) {
+            $sFormat = ($this->getParam('format_auto') && $this->getFormat()) ? $this->getFormat() : $this->getParam('format');
+            $sFile .= '.' . $sFormat;
+            return $this->Image_SaveFileSmart($sFileOriginal, $sDir, $sFile, 0666);
+        }
+        return false;
+    }
+
+    /**
      * Обертка для удобного вызова методов Imagine с обработкой исключений
      *
      * @param callable $fCallback

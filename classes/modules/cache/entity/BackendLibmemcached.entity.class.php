@@ -47,7 +47,7 @@ class ModuleCache_EntityBackendLibmemcached extends ModuleCache_EntityBackend
      */
     public function IsAllowMultiGet()
     {
-        return true;
+        return false;
     }
 
     /**

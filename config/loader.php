@@ -34,7 +34,10 @@ Config::LoadFromFile(Config::Get('path.application.server') . '/config/config.ph
 /**
  * Вспомогательная функция
  */
-$fGetConfig = create_function('$sPath', '$config=array(); return include $sPath;');
+$fGetConfig = function ($sPath) {
+    $config = array();
+    return include($sPath);
+};
 /**
  * Получаем текущее окружение
  */

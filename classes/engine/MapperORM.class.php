@@ -66,10 +66,9 @@ class MapperORM extends Mapper
             return $aFields ? $this->oDb->query($sql, $aFields) : 0;
         } else {
             $aOriginalData = $oEntity->_getOriginalData();
-            $sWhere = implode(' AND ', array_map(create_function(
-                '$k,$v,$oDb',
-                'return "{$oDb->escape($k,true)} = {$oDb->escape($v)}";'
-            ), array_keys($aOriginalData), array_values($aOriginalData),
+            $sWhere = implode(' AND ', array_map(function($k, $v, $oDb) {
+                return "{$oDb->escape($k, true)} = {$oDb->escape($v)}";
+            }, array_keys($aOriginalData), array_values($aOriginalData),
                 array_fill(0, count($aOriginalData), $this->oDb)));
             $sql = "UPDATE " . $sTableName . " SET ?a WHERE 1=1 AND " . $sWhere;
             $aFields = $oEntity->_getDataFieldsForDb(true);
@@ -101,10 +100,9 @@ class MapperORM extends Mapper
             return $this->oDb->query($sql);
         } else {
             $aOriginalData = $oEntity->_getOriginalData();
-            $sWhere = implode(' AND ', array_map(create_function(
-                '$k,$v,$oDb',
-                'return "{$oDb->escape($k,true)} = {$oDb->escape($v)}";'
-            ), array_keys($aOriginalData), array_values($aOriginalData),
+            $sWhere = implode(' AND ', array_map(function($k, $v, $oDb) {
+                return "{$oDb->escape($k, true)} = {$oDb->escape($v)}";
+            }, array_keys($aOriginalData), array_values($aOriginalData),
                 array_fill(0, count($aOriginalData), $this->oDb)));
             $sql = "DELETE FROM " . $sTableName . " WHERE 1=1 AND " . $sWhere;
             return $this->oDb->query($sql);

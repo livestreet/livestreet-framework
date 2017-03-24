@@ -44,6 +44,7 @@
 {block 'pagination_options'}{/block}
 
 {if ( $showSingle && $total && $current ) || ( ! $showSingle && $total > 1 && $current )}
+    {$current = (int)$current}
     {* Вычисляем следующую страницу *}
     {$next = ( $current == $total ) ? 0 : $current + 1}
 

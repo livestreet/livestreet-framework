@@ -92,6 +92,12 @@ class Router extends LsObject
      */
     static protected $sActionClass = null;
     /**
+     * Коллбэк для обработки запроса минуя стандартную схему с экшенами/евентами
+     *
+     * @var callable|null
+     */
+    static protected $fActionCallback = null;
+    /**
      * Текущий полный ЧПУ url
      *
      * @var string|null
@@ -189,7 +195,11 @@ class Router extends LsObject
     {
         $this->AssignVars();
         $this->oEngine->Shutdown();
-        $this->Viewer_Display($this->oAction->GetTemplate());
+        if (is_callable(self::$fActionCallback)) {
+            echo call_user_func(self::$fActionCallback);
+        } else {
+            $this->Viewer_Display($this->oAction->GetTemplate());
+        }
         if ($bExit) {
             exit();
         }
@@ -320,6 +330,13 @@ class Router extends LsObject
         $this->Hook_Run('init_action');
 
         $sActionClass = $this->DefineActionClass();
+        /**
+         * Если коллбэк, то сразу возвращаем результат
+         */
+        if (is_callable($sActionClass)) {
+            self::$fActionCallback = $sActionClass;
+            return;
+        }
         /**
          * Определяем наличие делегата экшена
          */
@@ -600,6 +617,16 @@ class Router extends LsObject
     static public function GetActionClass()
     {
         return self::$sActionClass;
+    }
+
+    /**
+     * Устанавливает текущий коллбэк
+     *
+     * @param callable $fCallback
+     */
+    static public function SetActionCallback($fCallback)
+    {
+        self::$fActionCallback = $fCallback;
     }
 
     /**

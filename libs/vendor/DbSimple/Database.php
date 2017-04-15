@@ -103,6 +103,11 @@ abstract class DbSimple_Database extends DbSimple_LastError
 	 */
 	protected $dsn;
 
+    public function getDns()
+    {
+        return $this->dsn;
+    }
+
 	/**
      * object blob($blob_id)
      * Create new blob

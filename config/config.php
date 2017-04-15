@@ -428,6 +428,7 @@ $config['db']['params']['user'] = 'root';
 $config['db']['params']['pass'] = '';
 $config['db']['params']['type'] = 'mysqli';
 $config['db']['params']['dbname'] = 'social';
+$config['db']['init_sql'] = "set character_set_client='utf8mb4', character_set_results='utf8mb4', collation_connection='utf8mb4_unicode_ci', sql_mode='' ";
 /**
  * Настройка таблиц базы данных
  */

@@ -31,6 +31,7 @@
                     short_ended_elements: 'ls img br hr param',
                     relative_urls: false,
                     remove_script_host: false,
+                    autoresize_max_height: 500,
                     style_formats: [
                         {
                             title: 'Headings', items: [

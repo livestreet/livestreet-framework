@@ -3,7 +3,7 @@
  *}
 
 {capture 'block_content'}
-    Содержание блока
+    {component 'example:p-test' template='bar' number=1234}
 {/capture}
 
 {component 'block'

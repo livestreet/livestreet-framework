@@ -1,0 +1,16 @@
+{
+    "name": "p-test",
+    "version": "1.0.0",
+    "templates": {
+        "bar": "bar.tpl"
+    },
+    "scripts": {
+        "foo": {
+            "file": "js/foo.js",
+            "merge": true
+        }
+    },
+    "styles": {
+        "foo": "css/foo.css"
+    }
+}

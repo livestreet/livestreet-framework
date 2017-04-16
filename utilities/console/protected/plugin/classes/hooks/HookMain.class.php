@@ -22,7 +22,7 @@ class PluginExample_HookMain extends Hook
          * Хук на старте экшенов. Выполняется один раз в отличии от хука "init_action"
          * Четвертый параметр 1000 - это приоритет выполнение среди остальных навешанных хуков (чем больше, тем раньше будет выполнен обработчик)
          */
-        //$this->AddHook('start_action','HookStartAction', __CLASS__, 1000);
+        $this->AddHook('start_action', 'HookStartAction', __CLASS__, 1000);
     }
 
     /**
@@ -35,5 +35,13 @@ class PluginExample_HookMain extends Hook
          */
         $oTopic = $aParams['oTopic'];
 
+    }
+
+    public function HookStartAction($aParams)
+    {
+        /**
+         * Регистрируем компонент плагина (позволяет автоматически подгружать его css/js)
+         */
+        $this->Component_Add('example:p-test');
     }
 }

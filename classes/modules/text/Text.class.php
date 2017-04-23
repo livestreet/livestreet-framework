@@ -53,8 +53,9 @@ class ModuleText extends Module
     /**
      * Инициализация модуля
      *
+     * @param $bLocal
      */
-    public function Init()
+    public function Init($bLocal = false)
     {
         /**
          * Создаем объект типографа и запускаем его конфигурацию
@@ -300,5 +301,19 @@ class ModuleText extends Module
             return $oParser->parse($sContent, $aParams);
         }
         return '';
+    }
+
+    /**
+     * Получает локальную копию модуля
+     *
+     * @return ModuleText
+     */
+    public function GetLocal()
+    {
+        $sClass = $this->Plugin_GetDelegate('module', __CLASS__);
+
+        $oModuleLocal = new $sClass(Engine::getInstance());
+        $oModuleLocal->Init(true);
+        return $oModuleLocal;
     }
 }

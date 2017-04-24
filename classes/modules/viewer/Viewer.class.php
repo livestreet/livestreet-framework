@@ -806,6 +806,12 @@ class ModuleViewer extends Module
                 foreach ($aRule['blocks'] as $sGroup => $aBlocks) {
                     foreach ((array)$aBlocks as $sName => $aParams) {
                         /**
+                         * Если нужно пропустить блок
+                         */
+                        if ($aParams === false) {
+                            continue;
+                        }
+                        /**
                          * Если название блока указывается в параметрах
                          */
                         if (is_int($sName)) {

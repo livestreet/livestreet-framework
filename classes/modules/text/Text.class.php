@@ -103,7 +103,7 @@ class ModuleText extends Module
              */
             unset($this->oJevix->entities1['&']); // разрешаем в параметрах символ &
             if (Config::Get('view.noindex') and isset($this->oJevix->tagsRules['a'])) {
-                $this->oJevix->cfgSetTagParamDefault('a', 'rel', 'nofollow', true);
+                $this->oJevix->cfgSetTagParamDefault('a', 'rel', 'nofollow noreferrer noopener', true);
             }
         }
     }

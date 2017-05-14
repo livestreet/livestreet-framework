@@ -230,7 +230,7 @@ class ModuleDatabase extends Module
             if ($sQuery != '') {
                 $bResult = $this->GetConnect($aConfig)->query($sQuery);
                 if ($bResult === false) {
-                    $aErrors[] = mysql_error();
+                    $aErrors[] = mysqli_error();
                 }
             }
         }

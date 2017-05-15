@@ -218,6 +218,7 @@ class ModuleDatabase extends Module
         /**
          * Выполняем запросы по очереди
          */
+        $oDb = $this->GetConnect($aConfig);
         foreach ($aQuery as $sQuery) {
             $sQuery = trim($sQuery);
             /**
@@ -228,9 +229,9 @@ class ModuleDatabase extends Module
             }
 
             if ($sQuery != '') {
-                $bResult = $this->GetConnect($aConfig)->query($sQuery);
+                $bResult = $oDb->query($sQuery);
                 if ($bResult === false) {
-                    $aErrors[] = mysql_error();
+                    $aErrors[] = $oDb->errmsg;
                 }
             }
         }

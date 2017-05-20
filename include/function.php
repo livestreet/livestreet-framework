@@ -75,7 +75,7 @@ function getRequest($sName, $default = null, $sType = null)
     /**
      * Выбираем в каком из суперглобальных искать указанный ключ
      */
-    switch (strtolower($sType)) {
+    switch (is_string($sType) ? strtolower($sType) : $sType) {
         default:
         case null:
             $aStorage = $_REQUEST;

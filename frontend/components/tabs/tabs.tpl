@@ -5,7 +5,15 @@
  *}
 
 {$component = 'ls-tabs'}
-{component_define_params params=[ 'activeTab', 'tabs', 'mods', 'classes', 'attributes' ]}
+{component_define_params params=[ 'hook', 'hookParams', 'activeTab', 'tabs', 'mods', 'classes', 'attributes' ]}
+
+
+{* Получаем вкладки установленные плагинами *}
+{if $hook}
+    {hook run="tabs_{$hook}" assign='hookTabs' params=$hookParams tabs=$tabs array=true}
+    {$tabs = ( $hookTabs ) ? $hookTabs : $tabs}
+{/if}
+
 
 {block 'tabs_options'}{/block}
 

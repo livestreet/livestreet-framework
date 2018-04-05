@@ -1352,6 +1352,67 @@ class ModuleViewer extends Module
                     : $this->Lang_Get('date.hours_back_less');
             }
         }
+        
+        /**
+         * Если указана необходимость на проверку days back
+         */
+        if ($aParams['days_back']) {
+            $iTimeDelta = round(($iNow - $iDate) / (60 * 60 * 24));
+            if ($iTimeDelta < $aParams['days_back']) {
+                return ($iTimeDelta != 0)
+                    ? $this->Lang_Pluralize(
+                        $iTimeDelta,
+                        $this->Lang_Get('date.days_back', array('days' => $iTimeDelta))
+                    )
+                    : $this->Lang_Get('date.days_back_less');
+            }
+        }
+
+        /**
+         * Если указана необходимость на проверку weeks back
+         */
+        if ($aParams['weeks_back']) {
+            $iTimeDelta = round(($iNow - $iDate) / (60 * 60 * 24 * 7));
+            if ($iTimeDelta < $aParams['weeks_back']) {
+                return ($iTimeDelta != 0)
+                    ? $this->Lang_Pluralize(
+                        $iTimeDelta,
+                        $this->Lang_Get('date.weeks_back', array('weeks' => $iTimeDelta))
+                    )
+                    : $this->Lang_Get('date.weeks_back_less');
+            }
+        }
+
+        /**
+         * Если указана необходимость на проверку months back
+         */
+        if ($aParams['months_back']) {
+            $iTimeDelta = round(($iNow - $iDate) / (60 * 60 * 24 * 30));
+            if ($iTimeDelta < $aParams['months_back']) {
+                return ($iTimeDelta != 0)
+                    ? $this->Lang_Pluralize(
+                        $iTimeDelta,
+                        $this->Lang_Get('date.months_back', array('months' => $iTimeDelta))
+                    )
+                    : $this->Lang_Get('date.months_back_less');
+            }
+        }
+
+        /**
+         * Если указана необходимость на проверку years back
+         */
+        if ($aParams['years_back']) {
+            $iTimeDelta = round(($iNow - $iDate) / (60 * 60 * 24 * 365));
+            if ($iTimeDelta < $aParams['years_back']) {
+                return ($iTimeDelta != 0)
+                    ? $this->Lang_Pluralize(
+                        $iTimeDelta,
+                        $this->Lang_Get('date.years_back', array('years' => $iTimeDelta))
+                    )
+                    : $this->Lang_Get('date.years_back_less');
+            }
+        }
+
         /**
          * Если указана необходимость автоподстановки "Сегодня", "Вчера", "Завтра".
          */

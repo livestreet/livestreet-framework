@@ -1272,6 +1272,10 @@ class ModuleViewer extends Module
             'day'          => null,
             'minutes_back' => null,
             'hours_back'   => null,
+            'days_back'    => null,
+            'weeks_back'   => null,
+            'months_back'  => null,
+            'years_back'   => null,
             'tz'           => null,
             'notz'         => false,
         );
@@ -1352,7 +1356,7 @@ class ModuleViewer extends Module
                     : $this->Lang_Get('date.hours_back_less');
             }
         }
-        
+
         /**
          * Если указана необходимость на проверку days back
          */

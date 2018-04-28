@@ -23,7 +23,7 @@
 
 {block 'field_input'}
     {**
-     * Select
+     * Select 
      *
      * @param array   $items        Список объектов
      * @param string  $type         Тип объекта

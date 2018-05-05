@@ -28,7 +28,6 @@
         "image-ajax-items": "field.image-ajax-items.tpl",
         "image-ajax": "field.image-ajax.tpl",
         "imageset-ajax": "field.imageset-ajax.tpl",
-        "imageset-ajax-item": "field.imageset-ajax-item.tpl",
         "image": "field.image.tpl",
         "radio": "field.radio.tpl",
         "select": "field.select.tpl",
@@ -61,8 +60,7 @@
         "field-autocomplete": "js/field.autocomplete.js",
         "geo": "js/field.geo.js",
         "image-ajax": "js/field.image-ajax.js",
-        "imageset-ajax": "js/field.imageset-ajax.js",
-        "imageset-ajax-item": "js/field.imageset-ajax-item.js"
+        "imageset-ajax": "js/field.imageset-ajax.js"
     },
     "styles": {
         "vendor-chosen": "vendor/chosen/chosen.css",

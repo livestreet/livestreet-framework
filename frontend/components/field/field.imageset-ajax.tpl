@@ -6,7 +6,7 @@
 {$component = 'ls-field-imageset-ajax'}
 {component_define_params params=[ 'targetType', 'targetId', 'modalTitle', 'label', 'mods', 'classes', 'attributes', 'images' ]}
 
-<div class="{$component} {cmods name=$component mods=$mods} {$classes} fieldset" {cattr list=$attributes}
+<div class="{$component} js-field-imageset-ajax {cmods name=$component mods=$mods} {$classes} fieldset" {cattr list=$attributes}
     data-param-target_type="{$targetType}"
     data-param-target_id="{$targetId}">
 
@@ -16,18 +16,17 @@
 
     <div class="fieldset-body">
         
-        {component 'field.imageset-ajax-item' classes="js-imageset-template-item" attributes=['style' => 'display:none;']}
-        {foreach $images as $image}
-            {component 'field.imageset-ajax-item' params=$image}
-        {/foreach}
+        <ul class="{$component}-container js-field-imageset-items">
+            
+        </ul>
 
         {component 'button'
             type    = 'button'
             text    = {lang 'common.add'}
-            classes = "js-{$component}-but-show-modal" attributes=[ 'style' => ( $imagePreviewItems ) ? 'display: none' : '' ]}
+            classes = "js-field-imageset-but-show-modal" attributes=[ 'style' => ( $imagePreviewItems ) ? 'display: none' : '' ]}
 
         {component 'uploader' template='modal'
-            classes = "js-{$component}-but-modal"
+            classes = "js-field-imageset-modal"
             title   = $modalTitle}
             
         

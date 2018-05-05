@@ -147,6 +147,12 @@ select[multiple].ls-field-input { max-width: 300px; }
     background-color: #fafafa;
 }
 
+/*
+*     Imageset ajax
+*/
+.ls-field-imageset-ajax-container {
+    overflow: auto;
+}
 
 /**
  * Select

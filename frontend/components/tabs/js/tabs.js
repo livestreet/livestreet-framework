@@ -18,8 +18,8 @@
         options: {
             // Селекторы
             selectors: {
-                tab: '.ls-tab-list:first .ls-tab',
-                pane: 'ls-tabs-panes:first .ls-tab-pane'
+                tab: '[data-tab-list]:first [data-tab]',
+                pane: '[data-tab-panes]:first [data-tab-pane]'
             }
         },
 

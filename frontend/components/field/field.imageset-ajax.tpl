@@ -4,7 +4,7 @@
 
 
 {$component = 'ls-field-imageset-ajax'}
-{component_define_params params=[ 'targetType', 'targetId', 'modalTitle', 'label', 'mods', 'classes', 'attributes', 'images' ]}
+{component_define_params params=[ 'targetType', 'targetId', 'modalTitle', 'label', 'mods', 'classes', 'attributes', 'images', 'name' ]}
 
 <div class="{$component} js-field-imageset-ajax {cmods name=$component mods=$mods} {$classes} fieldset" {cattr list=$attributes}
     data-param-target_type="{$targetType}"
@@ -29,6 +29,6 @@
             classes = "js-field-imageset-modal"
             title   = $modalTitle}
             
-        
+        {component 'field.hidden' name=$name attributes = ['data-imageset-input' => null]}
     </div>
 </div>

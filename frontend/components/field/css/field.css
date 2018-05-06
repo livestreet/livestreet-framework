@@ -152,6 +152,17 @@ select[multiple].ls-field-input { max-width: 300px; }
 */
 .ls-field-imageset-ajax-container {
     overflow: auto;
+    
+}
+.ls-field-imageset-ajax-container .fa {
+    top: 5px;
+    right: 5px;
+    position: absolute;
+    font-size: 20px;
+    color: #00000063;
+}
+.ls-field-imageset-ajax-container .fa:hover{
+    color: #e25151;
 }
 
 /**

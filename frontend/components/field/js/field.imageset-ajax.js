@@ -1,7 +1,7 @@
 /**
  * Imageset Ajax
  *
- * @module ls/field/image-ajax
+ * @module ls/field/imageset-ajax
  *
  * @license   GNU General Public License, version 2
  * @copyright 2013 OOO "ЛС-СОФТ" {@link http://livestreetcms.com}
@@ -19,19 +19,17 @@
             // Ссылки
             urls: {
                 create: aRouter['ajax'] + 'media/create-preview-file/',
-                remove: aRouter['ajax'] + 'media/remove-preview-file/',
+                remove: aRouter['ajax'] + 'media/remove-target/',
                 load: aRouter['ajax'] + 'media/load-gallery/'
             },
             // Селекторы
             selectors: {
-//                remove: '.js-field-image-ajax-remove',
-                image: '.js-field-imageset-ajax-image',
-                image_template: '.js-imageset-template-item',
                 image_container:".js-field-imageset-items",
                 modal: '.js-field-imageset-modal',
                 uploader: '.js-field-imageset-modal  .js-uploader-modal',
                 show_modal: '.js-field-imageset-but-show-modal',
-                choose: '.js-uploader-modal-choose'
+                choose: '.js-uploader-modal-choose',
+                input:"[data-imageset-input]"
             },
             // Классы
             classes: {
@@ -53,7 +51,12 @@
                 aftershow: function () {
                     this.elements.uploader.lsUploader( 'getElement', 'list' ).lsUploaderFileList( 'load' );
                     // т.к. генерация происходит после инициализации
-                    this._setParam( 'target_tmp', this.elements.uploader.lsUploader( 'option', 'params.target_tmp' ) );
+                    let targetTmp = this.elements.uploader.lsUploader( 'option', 'params.target_tmp' );
+                    this._setParam( 'target_tmp', targetTmp );
+                    
+                    if(this.elements.input.val() == '' || this.elements.input.val() === undefined){
+                        this.elements.input.val(targetTmp);
+                    }
                 }.bind(this)
             });
                     
@@ -65,9 +68,10 @@
             this.elements.show_modal.on( 'click' + this.eventNamespace, function () {
                 this.elements.modal.lsModal( 'show' );
             }.bind(this));
-//
-//            this.elements.remove.on( 'click' + this.eventNamespace, this.remove.bind( this ) );
+
             this.elements.choose.on( 'click' + this.eventNamespace, this.createPreview.bind( this ) );
+            
+            this.load();
 
         },
 
@@ -81,7 +85,6 @@
                         
             this.elements.show_modal.addClass( this.option( 'classes.loading' ) );
 
-            //this.elements.image_template.show().addClass( this.option( 'classes.loading' ) );
             this.elements.modal.lsModal( 'hide' );
 
             this._load( 'create', { 'id': id }, function( response ) {
@@ -92,16 +95,13 @@
         },
 
         /**
-         * Удаление превью
+         * Удаление превью и таргета
          */
         remove: function(e) {
-            
-            console.log(e.currentTarget)
-//            this._load( 'remove', function( response ) {
-//                this.elements.image.empty().hide();
-//                this.elements.remove.hide();
-//                this.elements.show_modal.show();
-//            });
+            this.options.params['id'] = $(e.currentTarget).parent().data('mediaId');
+            this._load( 'remove', function( response ) {
+                this.load();
+            });
         },
 
         /**
@@ -118,7 +118,7 @@
                 }.bind(this));
                 
                 this.elements.show_modal.removeClass( this.option( 'classes.loading' ) );
-                this.elements.image_container.show().append( images );
+                this.elements.image_container.empty().append( images );
             });
         }
     });

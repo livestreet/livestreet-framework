@@ -11,5 +11,5 @@
 {extends 'component@field.field'}
 
 {block 'field'}
-    <input type="hidden" {field_input_attr_common} />
+    <input type="hidden" {field_input_attr_common} {cattr list=$attributes}/>
 {/block}

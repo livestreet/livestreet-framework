@@ -23,7 +23,7 @@
 
 {block 'field_input'}
     {**
-     * Select
+     * Select 
      *
      * @param array   $items        Список объектов
      * @param string  $type         Тип объекта
@@ -31,7 +31,7 @@
      * @param object  $selectedItem Выбранный объект
      *}
     {function field_geo_select items=[] type='' display=true selectedItem=false}
-        <select class="{$component}-geo-{$type} js-field-geo-{$type}" name="{$name}[{$type}]" {if ! $display}style="display:none;"{/if}>
+        <select class="{$component}-geo-{$type} js-field-geo-{$type}" name="{$name}[{$type}]" {field_input_attr_common} {if ! $display}style="display:none;"{/if}>
             <option value="">{lang "field.geo.select_$type"}</option>
 
             {foreach $items as $item}

@@ -18,8 +18,8 @@
         options: {
             // Селекторы
             selectors: {
-                tab: '[data-tab]',
-                pane: '[data-tab-pane]'
+                tab: '[data-tab-list]:first [data-tab]',
+                pane: '[data-tab-panes]:first [data-tab-pane]'
             }
         },
 
@@ -36,7 +36,7 @@
                 tabs: this.element,
                 beforeactivate: function ( event, data ) {
                     this._trigger( 'tabbeforeactivate', event, data );
-                    this.getTabs().not( data.element ).lsTab( 'deactivate' );
+                    this.getActiveTab().lsTab( 'deactivate' );
                 }.bind(this),
                 activate: function ( event, data ) {
                     this._trigger( 'tabactivate', event, data );

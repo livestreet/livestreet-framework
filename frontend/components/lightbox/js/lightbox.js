@@ -20,7 +20,7 @@ $.widget( "livestreet.lsLightbox", {
      * @constructor
      * @private
      */
-    _create: function() {
+    _create: function() { 
         this.element.colorbox( this.options );
     }
 });

@@ -30,5 +30,6 @@
             title   = $modalTitle}
             
         {component 'field.hidden' value=$targetId name=$name attributes = ['data-imageset-input' => null]}
+
     </div>
 </div>

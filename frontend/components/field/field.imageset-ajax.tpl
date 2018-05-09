@@ -29,6 +29,6 @@
             classes = "js-field-imageset-modal"
             title   = $modalTitle}
             
-        {component 'field.hidden' name=$name attributes = ['data-imageset-input' => null]}
+        {component 'field.hidden' value=$targetId name=$name attributes = ['data-imageset-input' => null]}
     </div>
 </div>

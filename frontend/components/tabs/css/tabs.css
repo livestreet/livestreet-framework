@@ -49,15 +49,15 @@
  *
  * @modifier align-left
  */
-.ls-tabs--align-left .ls-tab-list {
+.ls-tabs--align-left > .ls-tab-list {
     float: left;
-    width: 150px;
+    width: 200px;
     padding-top: 15px;
 }
-.ls-tabs--align-left .ls-tab {
+.ls-tabs--align-left > .ls-tab-list .ls-tab {
     float: none;
 }
-.ls-tabs--align-left .ls-tabs-panes {
+.ls-tabs--align-left > .ls-tabs-panes {
     overflow: hidden;
-    margin-left: 160px;
+    margin-left: 210px;
 }

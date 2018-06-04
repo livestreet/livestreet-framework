@@ -29,7 +29,8 @@
                 uploader: '.js-field-imageset-modal  .js-uploader-modal',
                 show_modal: '.js-field-imageset-but-show-modal',
                 choose: '.js-uploader-modal-choose',
-                input:"[data-imageset-input]"
+                input:"[data-imageset-input]",
+                count_input:".field-count-image"
             },
             // Классы
             classes: {
@@ -109,7 +110,13 @@
          */
         load: function() {
             this._load( 'load', function( response ) {
-                var images = $(response.html)
+                var images = $(response.html);                
+                
+                this.elements.count_input.val(response.count_loaded).change();      
+                /*
+                 * Костыль. От чего то не срабатывает событие change для parsley
+                 */
+                this.elements.count_input.parsley().validate();
                 
                 var remove = $('<i class="fa fa-trash"></i>');
                 

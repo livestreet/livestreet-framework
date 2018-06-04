@@ -529,6 +529,8 @@ class ModuleComponent extends Module
         list($sPlugin, $sName) = $this->ParseName($sName);
         $sPath = 'components/' . $sName;
         $aPaths = array();
+        
+            
         if ($sPlugin) {
             /**
              * Проверяем наличие компонента в каталоге текущего шаблона плагина
@@ -544,14 +546,14 @@ class ModuleComponent extends Module
             if (file_exists($sPathTemplate . '/' . $sPath)) {
                 $aPaths[] = $sPathTemplate . '/' . $sPath;
             }
-        } else {
-            /**
-             * Проверяем наличие компонента в каталоге текущего шаблона
-             */
-            $sPathTemplate = $this->Fs_GetPathServerFromWeb(Config::Get('path.skin.web'));
-            if (file_exists($sPathTemplate . '/' . $sPath)) {
-                $aPaths[] = $sPathTemplate . '/' . $sPath;
-            }
+        }
+        
+        /**
+        * Проверяем наличие компонента в каталоге текущего шаблона
+        */
+        $sPathTemplate = $this->Fs_GetPathServerFromWeb(Config::Get('path.skin.web'));
+        if (file_exists($sPathTemplate . '/' . $sPath)) {
+            $aPaths[] = $sPathTemplate . '/' . $sPath;
         }
 
         /**

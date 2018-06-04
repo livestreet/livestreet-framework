@@ -70,7 +70,7 @@
     color: #333;
     padding: 7px 10px;
 }
-.ls-nav.ls-dropdown-menu li a:hover {
+.ls-nav.ls-dropdown-menu > li > a:hover {
     background: #f7f7f7;
     color: #333;
 }

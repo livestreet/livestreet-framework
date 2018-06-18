@@ -155,6 +155,12 @@ class ModuleViewer extends Module
         if (!$bLocal) {
             if (file_exists($sFile = Config::Get('path.smarty.template') . '/settings/config/config.php')) {
                 Config::LoadFromFile($sFile, false);
+                /*
+                * Конфиг скинов должен загрузиться раньше инициализации модуля компонентов
+                */
+                if(Engine::getInstance()->isInitModule('ModuleComponent')){
+                    $this->Component_Init();
+                }
             }
         }
         /**

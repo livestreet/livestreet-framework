@@ -62,7 +62,14 @@ class ModuleComponent extends Module
      */
     public function InitComponentsList()
     {
-        if ($aList = Config::Get('components') and is_array($aList)) {
+        if ($aList = Config::Get('components') and is_array($aList)) { 
+            /*
+             * TODO:Конфиг скинов должен загрузиться раньше инициализации модуля компонентов
+             */
+            if(!Engine::getInstance()->isInitModule('ModuleViewer')){
+                $this->Viewer_Init();
+            }
+            
             func_array_simpleflip($aList, array());
             $this->aComponentsList = array_merge_recursive($this->aComponentsList, $aList);
         }

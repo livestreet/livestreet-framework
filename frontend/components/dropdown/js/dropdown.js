@@ -193,7 +193,6 @@ $.widget( "livestreet.lsDropdown", $.livestreet.lsComponent, {
         }
 
         this.hide( true );
-        return false;
     },
 
     /**

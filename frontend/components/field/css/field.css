@@ -150,6 +150,9 @@ select[multiple].ls-field-input { max-width: 300px; }
 /*
 *     Imageset ajax
 */
+.ls-field-imageset-ajax .fieldset-body{
+    padding-top: 15px;
+}
 .ls-field-imageset-ajax-container {
     overflow: auto;
     

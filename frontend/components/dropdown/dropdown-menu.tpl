@@ -7,9 +7,10 @@
  * @param array  items
  *}
 
-{component_define_params params=[ 'items', 'name', 'text', 'activeItem', 'mods', 'classes', 'attributes' ]}
+{component_define_params params=[ 'items', 'name', 'text', 'activeItem', 'mods', 'classes', 'attributes', 'isSubnav' ]}
 
 {component 'nav'
+    isSubnav=$isSubnav
     name       = ( $name ) ? "{$name}_menu" : ''
     activeItem = $activeItem
     mods       = 'stacked dropdown'

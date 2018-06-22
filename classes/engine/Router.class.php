@@ -157,7 +157,7 @@ class Router extends LsObject
     public function __construct()
     {
         parent::__construct();
-        $this->LoadConfig();
+        $this->LoadConfig(); // TODO: Из за этого нельзя использовать обьект Router в конфиге плагинов;
     }
 
     /**

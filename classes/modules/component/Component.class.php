@@ -61,14 +61,16 @@ class ModuleComponent extends Module
      * Инициализация начального списка необходимых для загрузки компонентов
      */
     public function InitComponentsList()
-    {
+    {       
+        /*
+        * Конфиг скинов должен загрузиться раньше инициализации компонентов
+        */
+        if(!Engine::getInstance()->isInitModule('ModuleViewer')){
+            $this->Viewer_GetHtmlTitleSeparation();
+        }
+        
         if ($aList = Config::Get('components') and is_array($aList)) {
-            /*
-            * Конфиг скинов должен загрузиться раньше инициализации компонентов
-            */
-            if(!Engine::getInstance()->isInitModule('ModuleViewer')){
-                $this->Viewer_GetHtmlTitleSeparation();
-            }
+            
             
             func_array_simpleflip($aList, array());
             $this->aComponentsList = array_merge_recursive($this->aComponentsList, $aList);

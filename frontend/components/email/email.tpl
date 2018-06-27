@@ -54,7 +54,7 @@
                             <td valign="top">
                                 <table width="100%" cellpadding="0" cellspacing="0" style="border-collapse: collapse; font: normal 13px/1.4em Verdana, Arial; color: #{$contentTextColor};">
                                     {* Заголовок *}
-                                    {if $sTitle}
+                                    {if $title}
                                         <tr>
                                             <td valign="top">
                                                 <span style="font: normal 19px Arial; line-height: 1.3em; color: #{$contentTitleColor}">{$title}</span>

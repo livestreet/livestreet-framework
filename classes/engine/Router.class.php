@@ -44,6 +44,12 @@ class Router extends LsObject
      */
     static protected $sPrefixUrl = null;
     /**
+     * Фактическое наличие пефикса в URL
+     *
+     * @var bool
+     */
+    static protected $bHavePrefixUrl = false;
+    /**
      * Порт при http запросе
      *
      * @var null
@@ -221,9 +227,11 @@ class Router extends LsObject
         /**
          * Проверяем на наличие префикса в URL
          */
+        self::$bHavePrefixUrl = false;
         if ($sPrefixRule = Config::Get('router.prefix')) {
             if (isset($aRequestUrl[0]) and preg_match('#^' . $sPrefixRule . '$#i', $aRequestUrl[0])) {
                 self::$sPrefixUrl = array_shift($aRequestUrl);
+                self::$bHavePrefixUrl = true;
             } elseif ($sPrefixDefault = Config::Get('router.prefix_default')) {
                 self::$sPrefixUrl = $sPrefixDefault;
             }
@@ -560,6 +568,16 @@ class Router extends LsObject
     }
 
     /**
+     * Возвращает факт наличия префикса в URL
+     *
+     * @return bool
+     */
+    static public function IsHavePrefixUrl()
+    {
+        return self::$bHavePrefixUrl;
+    }
+
+    /**
      * Устанавливает текущий префикс URL
      *
      * @param string $sPrefix
@@ -723,7 +741,7 @@ class Router extends LsObject
     static public function GetIsSecureConnection()
     {
         return isset($_SERVER['HTTPS']) && (strcasecmp($_SERVER['HTTPS'], 'on') === 0 || $_SERVER['HTTPS'] == 1)
-        || isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && strcasecmp($_SERVER['HTTP_X_FORWARDED_PROTO'], 'https') === 0;
+            || isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && strcasecmp($_SERVER['HTTP_X_FORWARDED_PROTO'], 'https') === 0;
     }
 
     /**
@@ -743,8 +761,13 @@ class Router extends LsObject
      */
     static public function GetPath($sAction)
     {
+        if (Config::Get('router.prefix_default_skip')) {
+            $sPrefixUrl = (self::$sPrefixUrl and self::$sPrefixUrl != Config::Get('router.prefix_default')) ? self::$sPrefixUrl : '';
+        } else {
+            $sPrefixUrl = self::$sPrefixUrl;
+        }
         if (!$sAction or $sAction == '/') {
-            return self::GetPathRootWeb() . (self::$sPrefixUrl ? '/' . self::$sPrefixUrl : '') . '/';
+            return self::GetPathRootWeb() . ($sPrefixUrl ? '/' . self::$sPrefixUrl : '') . '/';
         }
         // Если пользователь запросил action по умолчанию
         $sPage = ($sAction == 'default')
@@ -775,7 +798,7 @@ class Router extends LsObject
                 self::$bHttpNotSecureForce = true;
             }
         }
-        $sPath = self::GetPathRootWeb() . (self::$sPrefixUrl ? '/' . self::$sPrefixUrl : '') . "/$sPage/" . ($sAdditional ? "{$sAdditional}" : '');
+        $sPath = self::GetPathRootWeb() . ($sPrefixUrl ? '/' . $sPrefixUrl : '') . "/$sPage/" . ($sAdditional ? "{$sAdditional}" : '');
         /**
          * Возвращаем значения обратно
          */

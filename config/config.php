@@ -454,6 +454,7 @@ $config['libmemcached']['servers'][0]['weight'] = 1;		// приоритет се
  */
 $config['router']['prefix'] = null; // Позволяет задать префикс URL, например, текущий язык сайта ru. В качестве значения используется регулярное выражение, например, '(ru)|(en)|(de)'
 $config['router']['prefix_default'] = null; // Дефолтный префикс URL, указывается если в URL не определен свой префикс
+$config['router']['prefix_default_skip'] = false; // Принудительно не выставлять дефолтный префикс в URL
 $config['router']['rewrite'] = array();
 // Правила реврайта для REQUEST_URI
 $config['router']['uri'] = array();

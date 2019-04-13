@@ -37,6 +37,8 @@
                     {$subtitle}
                 </h2>
             {/if}
+            
+            {$content}
         {/block}
     </div>
 </div>

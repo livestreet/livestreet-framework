@@ -296,7 +296,11 @@ class MapperORM extends Mapper
                 $oEntity->_setDataFromDb($aData);
                 unset($aData['_relation_entity']);
                 $oEntity->_setOriginalData($aData);
-                $aItems[] = $oEntity;
+                if (isset($aFilter['#index-from']) && $oEntity->_getDataOne($aFilter['#index-from']) !== ''){
+                    $aItems[$oEntity->_getDataOne($aFilter['#index-from'])] = $oEntity;
+                } else {
+                    $aItems[] = $oEntity;
+                }
             }
         }
         return $aItems;

@@ -238,12 +238,6 @@ class Engine
         $this->iTimeInit = microtime(true);
         $this->SetUseAutoHooks(Config::Get('sys.module.use_auto_hooks'));
         $this->AutoloadRegister();
-        if (get_magic_quotes_gpc()) {
-            func_stripslashes($_REQUEST);
-            func_stripslashes($_GET);
-            func_stripslashes($_POST);
-            func_stripslashes($_COOKIE);
-        }
     }
 
     /**

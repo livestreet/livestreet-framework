@@ -78,25 +78,29 @@ ls.lang = ls.i18n = (function ($) {
      * @param  {String} sLanguage Язык, опциональный параметр, по дефолту берется из настроек
      * @return {String}
      */
-    this.pluralize = function(iNumber, mText, sLanguage) {
-        var aWords        = $.isArray(mText) ? mText : this.get(mText).split(';'),
-            sLanguage     = sLanguage || LANGUAGE,
-            n             = Math.abs(iNumber);
+    this.pluralize = function (iNumber, mText, sLanguage, bSkipNumber) {
+        bSkipNumber = bSkipNumber || false;
+        var aWords = $.isArray(mText) ? mText : this.get(mText).split(';'),
+            sLanguage = sLanguage || LANGUAGE,
+            n = Math.abs(iNumber);
 
         if (!this.oPluralRules[sLanguage]) {
-            var mIndex=0;
+            var mIndex = 0;
         } else {
-            var mIndex=eval(this.oPluralRules[sLanguage]);
+            var mIndex = eval(this.oPluralRules[sLanguage]);
         }
         // fix type
-        mIndex=(typeof mIndex === 'boolean') ? (mIndex ? 1 : 0) : mIndex;
+        mIndex = (typeof mIndex === 'boolean') ? (mIndex ? 1 : 0) : mIndex;
         if (aWords[mIndex]) {
-            var sWord=aWords[mIndex];
+            var sWord = aWords[mIndex];
         } else {
-            var sWord=aWords[0] ? aWords[0] : '';
+            var sWord = aWords[0] ? aWords[0] : '';
         }
-        var sReplacedWord = this.replace( sWord, { count: iNumber } );
-        return sWord === sReplacedWord ? iNumber + ' ' + sWord : sReplacedWord;
+        var sReplacedWord = this.replace(sWord, {count: iNumber});
+        if (sWord !== sReplacedWord || bSkipNumber) {
+            return sReplacedWord;
+        }
+        return iNumber + ' ' + sWord;
     };
 
     return this;

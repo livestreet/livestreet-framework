@@ -42,6 +42,13 @@ if (!function_exists('mb_strtolower')) {
     }
 }
 
+if (!function_exists('mb_ucfirst')) {
+    function mb_ucfirst($string, $sEncode = "UTF-8")
+    {
+        return mb_strtoupper(mb_substr($string, 0, 1, $sEncode), $sEncode) . mb_strtolower(mb_substr($string, 1, null, $sEncode), $sEncode);
+    }
+}
+
 /**
  * Проверяет запрос послан как ajax или нет
  * Пришлось продублировать здесь, чтобы получить к ней доступ до подключения роутера
@@ -122,7 +129,7 @@ function getRequestStr($sName, $default = null, $sType = null)
  * @param  string|null $sName
  * @return bool
  */
-function isPost($sName=null)
+function isPost($sName = null)
 {
     if (is_null($sName)) {
         return $_SERVER['REQUEST_METHOD'] == 'POST';
@@ -571,7 +578,7 @@ function func_ini_return_bytes($sSizeStr)
 /**
  * Позволяет получить значение объекта в многомерном массиве задав путь до него
  *
- * @param  array $aArr  Массив с данными, например: [ "user" => [ "name" => "John", "id" => 15 ] ]
+ * @param  array $aArr Массив с данными, например: [ "user" => [ "name" => "John", "id" => 15 ] ]
  * @param  array $aKeys Путь до объекта, например: [ "user", "name" ]
  * @return mixed        Значение параметра, путь до которого указан в $aKeys
  */
@@ -580,8 +587,10 @@ function func_array_multisearch($aArr, $aKeys)
     $mTemp = $aArr;
 
     foreach ($aKeys as $mKey) {
-        if (!isset($mTemp[$mKey])) return false;
-        
+        if (!isset($mTemp[$mKey])) {
+            return false;
+        }
+
         $mTemp = $mTemp[$mKey];
     }
 

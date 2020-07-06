@@ -84,6 +84,7 @@ abstract class Entity extends LsObject
         parent::__construct();
         $this->_setData($aParam);
         $this->Init();
+        $this->RunBehaviorHook('after_init', array());
     }
 
     /**
@@ -267,6 +268,11 @@ abstract class Entity extends LsObject
     public function _getValidateRules()
     {
         return $this->aValidateRules;
+    }
+
+    public function _addValidateRule($aRule)
+    {
+        $this->aValidateRules[] = $aRule;
     }
 
     /**

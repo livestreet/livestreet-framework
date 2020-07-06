@@ -13,12 +13,14 @@ Engine::getInstance();
 /**
  * Команды
  */
-require_once(__DIR__.'/commands/base.php');
-require_once(__DIR__.'/commands/plugin.php');
+require_once(__DIR__ . '/commands/base.php');
+require_once(__DIR__ . '/commands/plugin.php');
+require_once(__DIR__ . '/commands/migration.php');
 /**
  * Запускаем консоль
  */
 $console = new \ConsoleKit\Console(array(
-    'plugin' => 'LsConsoleCommandPlugin'
+    'plugin'    => 'LsConsoleCommandPlugin',
+    'migration' => 'LsConsoleCommandMigration'
 ));
 $console->run();

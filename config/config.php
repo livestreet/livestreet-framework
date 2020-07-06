@@ -263,6 +263,8 @@ $config['sys']['logs']['instances'] = array(
  * Дополнительные настройки отладки
  */
 $config['sys']['debug']['action_error'] = true;        // Выводить или нет отладочную информацию при использовании метода Action->EventErrorDebug();
+
+$config['sys']['use_fix_path'] = true;
 /**
  * Языковые настройки
  */
@@ -436,6 +438,7 @@ $config['db']['table']['prefix'] = 'prefix_';
 $config['db']['table']['notify_task'] = '___db.table.prefix___notify_task';
 $config['db']['table']['plugin_manager_migration'] = '___db.table.prefix___plugin_migration';
 $config['db']['table']['plugin_manager_version'] = '___db.table.prefix___plugin_version';
+$config['db']['table']['migration'] = '___db.table.prefix___migration';
 $config['db']['table']['storage'] = '___db.table.prefix___storage';
 $config['db']['tables']['engine'] = 'InnoDB';  // InnoDB или MyISAM
 /**

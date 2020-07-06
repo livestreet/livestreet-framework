@@ -56,6 +56,9 @@ class ModuleValidate_EntityValidatorInline extends ModuleValidate_EntityValidato
     public function validate($sValue)
     {
         $sMethod = $this->method;
+        if ($this->sFieldCurrent) {
+            $this->params['field_current'] = $this->sFieldCurrent;
+        }
         return $this->object->$sMethod($sValue, $this->params);
     }
 }

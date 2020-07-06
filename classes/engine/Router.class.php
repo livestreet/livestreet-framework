@@ -508,7 +508,11 @@ class Router extends LsObject
      */
     static public function GetPathRootWeb($bWithScheme = true)
     {
-        return self::GetFixPathWeb(Config::Get('path.root.web'), $bWithScheme);
+        if (Config::Get('sys.use_fix_path')) {
+            return self::GetFixPathWeb(Config::Get('path.root.web'), $bWithScheme);
+        } else {
+            return Config::Get('path.root.web');
+        }
     }
 
     /**

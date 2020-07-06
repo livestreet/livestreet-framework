@@ -761,6 +761,40 @@ class Engine
         return null;
     }
 
+    public static function GetEntityById($sEntity, $sId)
+    {
+        if (!$sEntity or !class_exists($sEntity)) {
+            return null;
+        }
+        $aParents = class_parents($sEntity);
+        if (!($aParents and array_key_exists('Entity', $aParents))) {
+            return null;
+        }
+        try {
+            $oModule = self::getInstance()->GetModuleObject($sEntity);
+            return $oModule->GetByFilter(array('id' => $sId), $sEntity);
+        } catch (Exception $e) {
+            return null;
+        }
+    }
+
+    public static function GetEntityEmpty($sEntity)
+    {
+        if (!$sEntity or !class_exists($sEntity)) {
+            return null;
+        }
+        $aParents = class_parents($sEntity);
+        if (!($aParents and array_key_exists('Entity', $aParents))) {
+            return null;
+        }
+        try {
+            $oEntity = self::GetEntity($sEntity);
+            return $oEntity;
+        } catch (Exception $e) {
+            return null;
+        }
+    }
+
     /**
      * Возвращает класс сущности, контролируя варианты кастомизации
      *
@@ -844,9 +878,11 @@ class Engine
             ? 'Plugin' . $sPlugin . '_Module' . $sModule . '_Entity' . $sEntity
             : 'Module' . $sModule . '_Entity' . $sEntity;
 
+
         /**
          * If Plugin Entity doesn't exist, search among it's Module delegates
          */
+        $bModuleForce = false;
         if (isset($sPlugin) && !self::GetClassPath($sClass)) {
             $aModulesChain = Engine::GetInstance()->Plugin_GetDelegationChain('module',
                 'Plugin' . $sPlugin . '_Module' . $sModule);
@@ -859,6 +895,7 @@ class Engine
             }
             if (!self::GetClassPath($sClass)) {
                 $sClass = 'Module' . $sModule . '_Entity' . $sEntity;
+                $bModuleForce = true;
             }
         }
 
@@ -867,6 +904,15 @@ class Engine
          * Делегирование указывается только в полной форме!
          */
         $sClass = self::getInstance()->Plugin_GetDelegate('entity', $sClass);
+        if (!self::GetClassPath($sClass)) {
+            /**
+             * Обработка случая, когда один плагин создает класс для другого через делегирование
+             */
+            if ($bModuleForce and $sPlugin) {
+                $sClass = 'Plugin' . $sPlugin . '_Module' . $sModule . '_Entity' . $sEntity;
+                $sClass = self::getInstance()->Plugin_GetDelegate('entity', $sClass);
+            }
+        }
         return $sClass;
     }
 

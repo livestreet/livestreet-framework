@@ -79,16 +79,57 @@ abstract class LsObject
     }
 
     /**
-     * Возвращает объект поведения по его имени
+     * Возвращает объект поведения по его имени, при необходимости проверяет соответствие классу
      *
      * @param string $sName
+     * @param string $sClass
      *
      * @return Behavior|null
      */
-    public function GetBehavior($sName)
+    public function GetBehavior($sName, $sClass = null)
     {
         $this->PrepareBehaviors();
-        return isset($this->_aBehaviors[$sName]) ? $this->_aBehaviors[$sName] : null;
+        if ($sName and isset($this->_aBehaviors[$sName])) {
+            $oBehavior = $this->_aBehaviors[$sName];
+            if ($sClass) {
+                if ($oBehavior instanceof $sClass) {
+                    return $oBehavior;
+                }
+            } else {
+                return $oBehavior;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Возвращет объект поведения по классу с дополнительной возможностью сверки по параметрам
+     *
+     * @param $sClass
+     * @param array $aParamsCompare
+     * @return mixed|null
+     */
+    public function GetBehaviorByClass($sClass, $aParamsCompare = array())
+    {
+        if ($aBehaviors = $this->GetBehaviors()) {
+            foreach ($aBehaviors as $oBehavior) {
+                if ($oBehavior instanceof $sClass) {
+                    $bOk = true;
+                    if ($aParamsCompare) {
+                        foreach ($aParamsCompare as $k => $v) {
+                            if ($oBehavior->getParam($k) != $v) {
+                                $bOk = false;
+                                break;
+                            }
+                        }
+                    }
+                    if ($bOk) {
+                        return $oBehavior;
+                    }
+                }
+            }
+        }
+        return null;
     }
 
     /**

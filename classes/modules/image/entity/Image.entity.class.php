@@ -150,10 +150,15 @@ class ModuleImage_EntityImage extends Entity
      *
      * @param float $fProp Пропорция в которой вырезать кроп, расчитывается как Width/Height
      * @param string $sPosition Вырезать из центра
+     * @param array $aParams Дополнительные параметры
      * @return ModuleImage_EntityImage
      */
-    public function cropProportion($fProp, $sPosition = 'center')
+    public function cropProportion($fProp, $sPosition = 'center', $aParams = array())
     {
+        $aParamsDefault = array(
+            'offsetH' => null // смещение по вертикале в процентах от высоты исходного изображения, если + то вверх, - вниз.
+        );
+        $aParams = array_merge($aParamsDefault, $aParams);
         if ($oImage = $this->getImage()) {
             try {
                 $oBox = $oImage->getSize();
@@ -177,9 +182,30 @@ class ModuleImage_EntityImage extends Entity
                     $iNewWidth = $iNewHeight * $iProp;
                 }
 
+                /**
+                 * Дополнительное смещение
+                 */
+                $iOffsetH = 0;
+                if ($aParams['offsetH']) {
+                    if (strpos($aParams['offsetH'], '%') !== false) {
+                        $aParams['offsetH'] = str_replace('%', '', $aParams['offsetH']);
+                        if ($iOffsetPercentH = (int)$aParams['offsetH']) {
+                            $iOffsetH = ($iHeight / 100) * $iOffsetPercentH;
+                        }
+                    } else {
+                        $iOffsetH = (int)$aParams['offsetH'];
+                    }
+                }
+
                 $oBoxCrop = new Imagine\Image\Box($iNewWidth, $iNewHeight);
                 if ($sPosition == 'center') {
-                    $oPointStart = new Imagine\Image\Point(($iWidth - $iNewWidth) / 2, ($iHeight - $iNewHeight) / 2);
+                    if ($iOffsetH) {
+                        $iOffsetSign = ($iOffsetH > 0) - ($iOffsetH < 0);
+                        if (abs($iOffsetH) > (($iHeight - $iNewHeight) / 2)) {
+                            $iOffsetH = $iOffsetSign * round(floor(($iHeight - $iNewHeight) / 2));
+                        }
+                    }
+                    $oPointStart = new Imagine\Image\Point(($iWidth - $iNewWidth) / 2, ($iHeight - $iNewHeight) / 2 + $iOffsetH);
                 } else {
                     $oPointStart = new Imagine\Image\Point(0, 0);
                 }

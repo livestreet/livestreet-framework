@@ -27,6 +27,11 @@
  */
 class MapperORM extends Mapper
 {
+    public function GetDbCachePrefix()
+    {
+        return $this->oDb->getCachePrefix();
+    }
+
     /**
      * Добавление сущности в БД
      *
@@ -66,7 +71,7 @@ class MapperORM extends Mapper
             return $aFields ? $this->oDb->query($sql, $aFields) : 0;
         } else {
             $aOriginalData = $oEntity->_getOriginalData();
-            $sWhere = implode(' AND ', array_map(function($k, $v, $oDb) {
+            $sWhere = implode(' AND ', array_map(function ($k, $v, $oDb) {
                 return "{$oDb->escape($k, true)} = {$oDb->escape($v)}";
             }, array_keys($aOriginalData), array_values($aOriginalData),
                 array_fill(0, count($aOriginalData), $this->oDb)));
@@ -100,7 +105,7 @@ class MapperORM extends Mapper
             return $this->oDb->query($sql);
         } else {
             $aOriginalData = $oEntity->_getOriginalData();
-            $sWhere = implode(' AND ', array_map(function($k, $v, $oDb) {
+            $sWhere = implode(' AND ', array_map(function ($k, $v, $oDb) {
                 return "{$oDb->escape($k, true)} = {$oDb->escape($v)}";
             }, array_keys($aOriginalData), array_values($aOriginalData),
                 array_fill(0, count($aOriginalData), $this->oDb)));
@@ -296,7 +301,7 @@ class MapperORM extends Mapper
                 $oEntity->_setDataFromDb($aData);
                 unset($aData['_relation_entity']);
                 $oEntity->_setOriginalData($aData);
-                if (isset($aFilter['#index-from']) && $oEntity->_getDataOne($aFilter['#index-from']) !== ''){
+                if (isset($aFilter['#index-from']) && $oEntity->_getDataOne($aFilter['#index-from']) !== '') {
                     $aItems[$oEntity->_getDataOne($aFilter['#index-from'])] = $oEntity;
                 } else {
                     $aItems[] = $oEntity;
@@ -575,7 +580,7 @@ class MapperORM extends Mapper
      */
     public function ShowColumnsFromTable($sTableName)
     {
-        if (false === ($aItems = Engine::getInstance()->Cache_Get("columns_table_{$sTableName}", 'file_orm', true,
+        if (false === ($aItems = Engine::getInstance()->Cache_Get($this->GetDbCachePrefix() . "columns_table_{$sTableName}", 'file_orm', true,
                 true))
         ) {
             $sql = "SHOW COLUMNS FROM " . $sTableName;
@@ -588,7 +593,7 @@ class MapperORM extends Mapper
                     }
                 }
             }
-            Engine::getInstance()->Cache_Set($aItems, "columns_table_{$sTableName}", array(), 60 * 60 * 4, 'file_orm',
+            Engine::getInstance()->Cache_Set($aItems, $this->GetDbCachePrefix() . "columns_table_{$sTableName}", array(), 60 * 60 * 4, 'file_orm',
                 true);
         }
         return $aItems;
@@ -614,7 +619,7 @@ class MapperORM extends Mapper
      */
     public function ShowPrimaryIndexFromTable($sTableName)
     {
-        if (false === ($aItems = Engine::getInstance()->Cache_Get("index_table_{$sTableName}", 'file_orm', true, true))
+        if (false === ($aItems = Engine::getInstance()->Cache_Get($this->GetDbCachePrefix() . "index_table_{$sTableName}", 'file_orm', true, true))
         ) {
             $sql = "SHOW INDEX FROM " . $sTableName;
             $aItems = array();
@@ -625,7 +630,7 @@ class MapperORM extends Mapper
                     }
                 }
             }
-            Engine::getInstance()->Cache_Set($aItems, "index_table_{$sTableName}", array(), 60 * 60 * 4, 'file_orm',
+            Engine::getInstance()->Cache_Set($aItems, $this->GetDbCachePrefix() . "index_table_{$sTableName}", array(), 60 * 60 * 4, 'file_orm',
                 true);
         }
         return $aItems;

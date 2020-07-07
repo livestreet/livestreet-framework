@@ -325,6 +325,11 @@ abstract class DbSimple_Database extends DbSimple_LastError
         return $old;
     }
 
+    public function getCachePrefix()
+    {
+        return $this->_cachePrefix;
+    }
+
     /**
      * Задает имя класса строки
      *

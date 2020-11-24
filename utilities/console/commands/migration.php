@@ -79,6 +79,25 @@ class LsConsoleCommandMigration extends LsConsoleCommandBase
             $this->writeln($aLocation['path'], Colors::YELLOW);
         }
 
+        if (!Engine::getInstance()->Database_IsTableExists('prefix_migration')) {
+            Engine::getInstance()->Database_ExportSQLQuery('CREATE TABLE `prefix_migration` (
+              `id` int(11) NOT NULL,
+              `plugin` varchar(30) DEFAULT NULL,
+              `version` varchar(15) NOT NULL,
+              `date_create` datetime NOT NULL,
+              `state` tinyint(1) NOT NULL DEFAULT \'1\'
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+            
+            ALTER TABLE `prefix_migration`
+              ADD PRIMARY KEY (`id`),
+              ADD KEY `plugin` (`plugin`),
+              ADD KEY `state` (`state`),
+              ADD KEY `version` (`version`);
+            
+            ALTER TABLE `prefix_migration`
+              MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;');
+        }
+
         $aMigrationCompleted = array();
         foreach ($aLocations as $aLocation) {
             $aMigrationFiles = Engine::getInstance()->Migration_GetNewMigrationFiles($aLocation);

@@ -561,6 +561,15 @@ class Engine
         return $this->aPlugins;
     }
 
+    public static function IsHavePlugin($sCode)
+    {
+        $aPlugins = self::getInstance()->GetPlugins();
+        if (isset($aPlugins[strtolower($sCode)])) {
+            return true;
+        }
+        return false;
+    }
+
     /**
      * Вызывает метод нужного модуля
      *

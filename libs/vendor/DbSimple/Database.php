@@ -103,6 +103,11 @@ abstract class DbSimple_Database extends DbSimple_LastError
 	 */
 	protected $dsn;
 
+    public function getDns()
+    {
+        return $this->dsn;
+    }
+
 	/**
      * object blob($blob_id)
      * Create new blob
@@ -318,6 +323,11 @@ abstract class DbSimple_Database extends DbSimple_LastError
         $old = $this->_cachePrefix;
         if ($prx !== null) $this->_cachePrefix = $prx;
         return $old;
+    }
+
+    public function getCachePrefix()
+    {
+        return $this->_cachePrefix;
     }
 
     /**

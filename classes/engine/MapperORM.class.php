@@ -177,14 +177,14 @@ class MapperORM extends Mapper
         $oEntitySample = Engine::GetEntity($sEntityFull);
         $sTableName = self::GetTableName($sEntityFull);
 
-        list($aFilterFields, $sFilterFields, $sJoinTables) = $this->BuildFilter($aFilter, $oEntitySample);
+        list($aFilterFields, $sFilterFields, $sJoinTables, $sIndexUse) = $this->BuildFilter($aFilter, $oEntitySample);
         list($sOrder, $sLimit, $sGroup, $sSelect) = $this->BuildFilterMore($aFilter, $oEntitySample);
 
         if (!$sSelect) {
             $sSelect = 't.*';
         }
 
-        $sql = "SELECT {$sSelect} FROM " . $sTableName . " t {$sJoinTables} WHERE 1=1 {$sFilterFields} {$sGroup} {$sOrder} {$sLimit} ";
+        $sql = "SELECT {$sSelect} FROM " . $sTableName . " t {$sIndexUse} {$sJoinTables} WHERE 1=1 {$sFilterFields} {$sGroup} {$sOrder} {$sLimit} ";
         $aQueryParams = array_merge(array($sql), array_values($aFilterFields));
         $aItems = array();
         if ($aRows = call_user_func_array(array($this->oDb, 'select'), $aQueryParams)) {
@@ -209,16 +209,16 @@ class MapperORM extends Mapper
         $oEntitySample = Engine::GetEntity($sEntityFull);
         $sTableName = self::GetTableName($sEntityFull);
 
-        list($aFilterFields, $sFilterFields, $sJoinTables) = $this->BuildFilter($aFilter, $oEntitySample);
+        list($aFilterFields, $sFilterFields, $sJoinTables, $sIndexUse) = $this->BuildFilter($aFilter, $oEntitySample);
         list($sOrder, $sLimit, $sGroup) = $this->BuildFilterMore($aFilter, $oEntitySample);
 
         if ($sGroup) {
             /**
              * Т.к. count меняет свою логику при наличии группировки
              */
-            $sql = "SELECT SQL_CALC_FOUND_ROWS * FROM `" . $sTableName . "` t {$sJoinTables} WHERE 1=1 {$sFilterFields} {$sGroup} ";
+            $sql = "SELECT SQL_CALC_FOUND_ROWS * FROM `" . $sTableName . "` t {$sIndexUse} {$sJoinTables} WHERE 1=1 {$sFilterFields} {$sGroup} ";
         } else {
-            $sql = "SELECT count(*) as c FROM " . $sTableName . " t {$sJoinTables} WHERE 1=1 {$sFilterFields} {$sGroup} ";
+            $sql = "SELECT count(*) as c FROM " . $sTableName . " t {$sIndexUse} {$sJoinTables} WHERE 1=1 {$sFilterFields} {$sGroup} ";
         }
         $aQueryParams = array_merge(array($sql), array_values($aFilterFields));
         if ($aRow = call_user_func_array(array($this->oDb, 'selectRow'), $aQueryParams)) {
@@ -405,7 +405,14 @@ class MapperORM extends Mapper
             }
             $aFilterFields = array_merge($aValuesForMerge, $aFilterFields);
         }
-        return array($aFilterFields, $sFilterFields, $sJoinTables);
+        /**
+         * Поисковый индекс
+         */
+        $sIndexUse = '';
+        if (isset($aFilter['#index-use']) and is_string($aFilter['#index-use']) and $aFilter['#index-use']) {
+            $sIndexUse = ' USE INDEX(' . $aFilter['#index-use'] . ')';
+        }
+        return array($aFilterFields, $sFilterFields, $sJoinTables, $sIndexUse);
     }
 
     /**
